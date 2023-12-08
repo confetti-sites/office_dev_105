@@ -1,0 +1,27 @@
+@font-face {
+  font-family: "pluto";
+  src: url("/view/assets/fonts/plutomedium-webfont.woff2")
+      format("woff2"),
+    url("/view/assets/fonts/plutomedium-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "pluto";
+  src: url("/view/assets/fonts/plutoregular-webfont.woff2")
+      format("woff2"),
+    url("/view/assets/fonts/plutoregular-webfont.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "pluto";
+  src: url("/view/assets/fonts/plutothin-webfont.woff2") format("woff2"),
+    url("/view/assets/fonts/plutothin-webfont.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,300&display=swap");

@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "pluto";
+}
+
+.container {
+  @apply mx-auto;
+  @apply px-4;
+  @apply sm:px-6;
+  @apply lg:px-8;
+  @apply xl:px-0;
+  @apply xl:max-w-6xl;
+}
+
+@layer base {
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+@layer utilities {
+  @keyframes slide-in-left {
+    0% {
+      transform: translateX(-50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  .slide-in-left {
+    animation: slide-in-left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+  @keyframes slide-in-right {
+    0% {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  .slide-in-right {
+    animation: slide-in-right 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+  @keyframes slide-in-top {
+    0% {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  .slide-in-top {
+    animation: slide-in-top 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+}
+
+input {
+  @apply bg-gray-100;
+}
+
+.button {
+  @apply text-dark py-2 px-4 rounded;
+}
+
+.button-primary {
+  @apply bg-primary hover:bg-primary-dark text-white;
+}
+
+.button-clear {
+  @apply hover:bg-gray-100 text-dark hover:text-dark;
+}
+
+.button-round {
+  @apply rounded-full;
+}
+
+.button-ghost {
+  @apply border-2 border-primary hover:bg-primary-dark text-dark hover:text-white;
+}
+
+.button-icon {
+  @apply flex items-center;
+}
+
+.button-icon-only {
+  @apply flex items-center justify-center;
+  width: 44px;
+  height: 44px;
+}
+
+.button-icon-only .icon {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
