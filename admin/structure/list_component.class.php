@@ -22,26 +22,26 @@ return new class implements IteratorAggregate {
      */
     protected array $items = [];
 
-    protected string $key;
+    protected string $componentKey;
 
     /** @noinspection DuplicatedCode */
     public function __construct(
-        protected string         $id,
+        protected string         $contentId,
         protected ComponentStore $componentStore,
         protected ContentStore   $contentStore,
     )
     {
         $this->id  .= '~';
-        $this->key = ComponentStandard::keyFromId($this->id);
+        $this->key = ComponentStandard::componentKeyFromContentId($this->id);
 
-        $items = $this->contentStore->findMany($this->id);
+        $items = $this->contentStore->findMany($this->contentId);
         if (count($items) === 0) {
             $this->items = $this->getFakeComponents();
             return;
         }
 
         foreach ($items as $item) {
-            $this->items[] = new Map($item->id, $this->componentStore, $this->contentStore);
+            $this->items[] = new Map($item->contentId, $this->componentStore, $this->contentStore);
         }
     }
 
@@ -64,13 +64,13 @@ return new class implements IteratorAggregate {
         foreach ($data as $item) {
             // Ensure row exists even if there is no data
             if ($item->value === '__is_parent') {
-                $rows[$item->id] = $rows[$item->id] ?? [];
+                $rows[$item->contentId] = $rows[$item->contentId] ?? [];
                 continue;
             }
 
             // Trim relative id
             $regex             = '/\/(?:' . implode('|', $fields) . ')$/';
-            $parentId          = preg_replace($regex, '', $item->id, 1);
+            $parentId          = preg_replace($regex, '', $item->contentId, 1);
             $rows[$parentId][] = $item;
         }
 
@@ -148,7 +148,9 @@ return new class implements IteratorAggregate {
 
     private function getFakeComponents(): array
     {
-        $component = $this->componentStore->find($this->key);
+        $component = $this->componentStore->find($this->componentKey);
+        $this->contentId    .= '~';
+        $this->componentKey = ComponentStandard::componentKeyFromContentId($this->contentId);
 
         $max = $component->getDecoration('max')['value'] ?? 100;
         $min = $component->getDecoration('min')['value'] ?? 1;
@@ -160,7 +162,7 @@ return new class implements IteratorAggregate {
         while ($i <= $amount) {
             $i++;
             $items[] = new Map(
-                $this->id,
+                $this->contentId,
                 $this->componentStore,
                 $this->contentStore,
             );

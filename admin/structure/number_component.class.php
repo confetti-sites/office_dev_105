@@ -15,13 +15,13 @@ return new class extends ComponentStandard {
     public function toInt(): int
     {
         // Get saved value
-        $content = $this->contentStore->find($this->id);
+        $content = $this->contentStore->find($this->contentId);
         if ($content !== null) {
             return (int)$content->value;
         }
 
         // Use default value
-        $component = $this->componentStore->find($this->id);
+        $component = $this->componentStore->find($this->componentKey);
         if ($component->hasDecoration('default')) {
             return (int)$component->getDecoration('default')['value'];
         }

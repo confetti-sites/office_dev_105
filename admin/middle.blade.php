@@ -4,7 +4,7 @@
      * @var \Confetti\Helpers\ComponentStore $componentStore
      * @var string $currentContentId
      */
-    $componentKey = Confetti\Helpers\ComponentStandard::keyFromId($currentContentId);
+    $componentKey = Confetti\Helpers\ComponentStandard::componentKeyFromContentId($currentContentId);
     // Get parent content id
     // \w|~ remove word characters (with ulid)
     // /-/ remove target ids

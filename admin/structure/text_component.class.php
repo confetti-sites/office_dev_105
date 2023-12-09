@@ -10,13 +10,13 @@ return new class extends ComponentStandard {
     public function get(): string
     {
         // Get saved value
-        $content = $this->contentStore->find($this->id);
+        $content = $this->contentStore->find($this->contentId);
         if ($content !== null) {
             return $content->value;
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->key);
+        $component = $this->componentStore->find($this->componentKey);
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default')['value'];
         }

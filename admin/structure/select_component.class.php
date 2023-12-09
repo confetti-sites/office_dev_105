@@ -14,11 +14,11 @@ use RuntimeException;
 return new class extends ComponentStandard implements HasMapInterface {
     public function get(): string
     {
-        $component = $this->componentStore->findOrNull($this->key);
+        $component = $this->componentStore->findOrNull($this->contentId);
         if ($component !== null) {
             return $this->getValueFromOptions($component);
         }
-        $component = $this->componentStore->findOrNull($this->key . '/-');
+        $component = $this->componentStore->findOrNull($this->componentKey . '/-');
         if ($component !== null) {
             return $this->getValueFromFileInDirectories($component);
         }
@@ -28,7 +28,7 @@ return new class extends ComponentStandard implements HasMapInterface {
     public function getValueFromOptions(ComponentEntity $component): string
     {
         // Get saved value
-        $content = $this->contentStore->find($this->id);
+        $content = $this->contentStore->find($this->contentId);
         if ($content !== null) {
             return $content->value;
         }
@@ -51,7 +51,7 @@ return new class extends ComponentStandard implements HasMapInterface {
     public function getValueFromFileInDirectories(ComponentEntity $component): string
     {
         // Get saved value
-        $filePath = $this->contentStore->find($this->id)?->value;
+        $filePath = $this->contentStore->find($this->contentId)?->value;
         if ($filePath !== null) {
             if (str_ends_with($filePath, '.blade.php')) {
                 return self::getViewByPath($filePath);
@@ -94,8 +94,8 @@ return new class extends ComponentStandard implements HasMapInterface {
     public function toMap(): Map
     {
         return new Map(
-            $this->id . '/-',
-            ComponentStore::newWherePrefix($this->id . '/-'),
+            $this->contentId . '/-',
+            ComponentStore::newWherePrefix($this->contentId . '/-'),
             new ContentStore(),
         );
     }
