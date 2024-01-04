@@ -9,7 +9,7 @@
 @endphp
 <!-- border rounded -->
 <div class="container px-6 py-4 m-10 mx-auto grid border border-purple-600 rounded-lg">
-    @php([$columns, $rows] = List_::getColumnsAndRows($component, $contentStore, $contentId))
+    @php([$columns, $rows] = List_::getColumnsAndRows($componentStore, $component, $contentStore, $contentId))
     <table class="table-auto">
         <thead class="text-left border-b border-purple-300">
             <tr>

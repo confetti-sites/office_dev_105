@@ -5,7 +5,7 @@
      * @var \Confetti\Helpers\ComponentEntity[] $menuComponents
      * @var string $currentContentId
      */
-    $menuComponents = $componentStore->whereType('section');
+    $menuComponents = $componentStore->whereType('model');
     $mainItems = [];
     $subItems = [];
     // Separate main items from sub items

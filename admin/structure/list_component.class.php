@@ -49,13 +49,25 @@ return new class implements IteratorAggregate {
      * @return array<string, array<string, \Confetti\Helpers\ContentEntity[]>>
      */
     public static function getColumnsAndRows(
+        ComponentStore  $componentStore,
         ComponentEntity $component,
         ContentStore    $contentStore,
         string          $contentId,
     ): array
     {
-        $columns = $component->getDecoration('columns')['columns'] ?? throw new \Exception('Error: No columns defined. Use ->columns([]) to define columns. In ' . $component->source);
-        $fields  = array_map(static fn($column) => $column['id'], $columns);
+        $columns = $component->getDecoration('columns')['columns'] ?? null;
+        if ($columns === null) {
+            // Use default columns
+            $columns = $componentStore->whereParentKey(ComponentStandard::componentKeyFromContentId($contentId));
+            $columns = array_filter($columns, static fn(ComponentEntity $column) => $column->type === 'text');
+            $columns = array_slice($columns, 0, 4);
+            $columns = array_map(static function (ComponentEntity $column) {
+                $key = explode('/', $column->key);
+                $key = end($key);
+                return ['id' => $key, 'label' => $key];
+            }, $columns);
+        }
+        $fields = array_map(static fn($column) => $column['id'], $columns);
 
         $data = $contentStore->whereIn($contentId, $fields, true);
 
