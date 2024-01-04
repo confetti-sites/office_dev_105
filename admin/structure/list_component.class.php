@@ -31,8 +31,8 @@ return new class implements IteratorAggregate {
         protected ContentStore   $contentStore,
     )
     {
-        $this->id  .= '~';
-        $this->key = ComponentStandard::componentKeyFromContentId($this->id);
+        $this->contentId    .= '~';
+        $this->componentKey = ComponentStandard::componentKeyFromContentId($this->contentId);
 
         $items = $this->contentStore->findMany($this->contentId);
         if (count($items) === 0) {
@@ -49,7 +49,6 @@ return new class implements IteratorAggregate {
      * @return array<string, array<string, \Confetti\Helpers\ContentEntity[]>>
      */
     public static function getColumnsAndRows(
-        ComponentStore  $componentStore,
         ComponentEntity $component,
         ContentStore    $contentStore,
         string          $contentId,
@@ -161,8 +160,6 @@ return new class implements IteratorAggregate {
     private function getFakeComponents(): array
     {
         $component = $this->componentStore->find($this->componentKey);
-        $this->contentId    .= '~';
-        $this->componentKey = ComponentStandard::componentKeyFromContentId($this->contentId);
 
         $max = $component->getDecoration('max')['value'] ?? 100;
         $min = $component->getDecoration('min')['value'] ?? 1;
