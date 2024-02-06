@@ -15,7 +15,7 @@ function model(\Confetti\Components\Map $target): mixed
     $componentStore = new ComponentStore();
     $contentStore = new ContentStore();
     $model = $target->new(
-        $target->getContentId(),
+        $target->getComponentKey(),
         $componentStore,
         $contentStore
     );

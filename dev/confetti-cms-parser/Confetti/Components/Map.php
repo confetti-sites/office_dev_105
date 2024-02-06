@@ -7,7 +7,7 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 
-class Map
+abstract class Map
 {
     public function __construct(
         protected ?string         $contentId = null,
@@ -17,7 +17,12 @@ class Map
     {
     }
 
-    abstract public function getContentId(): string;
+    abstract public function getComponentKey(): string;
+
+    public function getContentId(): string
+    {
+        return $this->contentId;
+    }
 
     public function new(
         string         $contentId,

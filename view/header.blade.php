@@ -1,4 +1,5 @@
 @php($header = model(new \model\homepage\header)->label('Header'))
+
 <header class="fixed z-50 bg-white/80 backdrop-blur border-b border-gray-100 dark:border-gray-700/30 dark:bg-gray-900/80 w-full">
     <nav
             id="navbar"
