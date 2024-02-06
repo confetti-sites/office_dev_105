@@ -1,7 +1,4 @@
-@php
-    /** @var \Confetti\Helpers\HasMapInterface $parent */
-    $footer = on($parent);
-@endphp
+@php($footer = extendModel($parent))
 <footer class="border-t border-gray-100 pt-10 pb-8 dark:border-gray-800 dark:bg-gray-900/80">
     <div>
         <div

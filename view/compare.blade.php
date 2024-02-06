@@ -1,4 +1,4 @@
-@php($compare = section('homepage/compare')->label('Compare'))
+@php($compare = \model\homepage\compare::new()->label('Compare'))
 <div class="bg-gray-50 flex items-center justify-center">
     @php($cases = $compare->list('cases')->columns(['title', 'description'])->min(1)->max(4))
     <div class="relative w-full" x-data="{ tab: '0'}">

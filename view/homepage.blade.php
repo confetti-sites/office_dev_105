@@ -1,4 +1,5 @@
-@php($homepage = section('homepage')->label('Homepage'))
+@php(model(new \model\homepage)->label('Homepage'))
+
 @include('view.hero')
 @include('view.usps')
 @include('view.demo')

@@ -9,7 +9,7 @@ use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 
-return new class extends \Confetti\Helpers\BasicQuery {
+class List_ extends \Confetti\Helpers\BasicQuery {
     /**
      * The items contained in the collection.
      *
@@ -105,4 +105,22 @@ return new class extends \Confetti\Helpers\BasicQuery {
         }
         return $items;
     }
-};
+
+    // Minimum number of items
+    public function min(int $min): self
+    {
+        return $this;
+    }
+
+    // Maximum number of items
+    public function max(int $max): self
+    {
+        return $this;
+    }
+
+    // This becomes the headers of the table in de admin
+    public function columns(array $columns): self
+    {
+        return $this;
+    }
+}

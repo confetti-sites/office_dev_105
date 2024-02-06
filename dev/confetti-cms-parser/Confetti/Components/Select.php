@@ -11,7 +11,7 @@ use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\HasMapInterface;
 use RuntimeException;
 
-return new class extends ComponentStandard implements HasMapInterface {
+class Select extends ComponentStandard implements HasMapInterface {
     public function get(): string
     {
         $component = $this->componentStore->findOrNull($this->contentId);
@@ -63,4 +63,22 @@ return new class extends ComponentStandard implements HasMapInterface {
             new ContentStore(),
         );
     }
-};
+
+    // Before saving this will be the default.
+    public function default(string $default): self
+    {
+        return $this;
+    }
+
+    // Label is used as a field title in the admin panel
+    public function label(string $label): self
+    {
+        return $this;
+    }
+
+    // List of options. For now, only values are supported.
+    public function options(array $options): self
+    {
+        return $this;
+    }
+}

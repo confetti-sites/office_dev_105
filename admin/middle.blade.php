@@ -14,7 +14,7 @@
     $total = 0;
 @endphp
 <div class="container pt-6 px-6 mx-auto grid">
-    @if($parentContentId && $parentContentId !== '/section')
+    @if($parentContentId && $parentContentId !== '/model')
         <div class="gap-6 mb-4">
             <a
                     class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
@@ -25,7 +25,7 @@
         </div>
     @endif
     @foreach($components as $component)
-        @if($component->type == 'section')
+        @if($component->type == 'model')
             <a href="/admin{{ $component->key }}">
                 <div class="flex items-center justify-between w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-600 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
                     {{ $component->getDecoration('label')['value'] }}

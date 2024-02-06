@@ -26,4 +26,18 @@
         <option value="{{ $value }}">{{ $optionLabel }}</option>
     @endforeach
 </select>
+@if($component->hasDecoration('inDirectories'))
+    @php($children = $componentStore->whereParentKey($component->key))
+        @foreach($children as $child)
+            @php($suffix = str_replace($component->key, '', $child->key))
+            <div x-show="{{ hashId($child->getDecoration('condition')['pointer_key']) }} == '{{ $child->getDecoration('condition')['pointed_key'] }}'">
+                @include("admin.structure.{$child->type}_component_admin", ['componentRepository' => $componentStore, 'component' => $child, 'contentId' => $contentId . $suffix])
+            </div>
+        @endforeach
+@endif
 </div>
+@pushonce('script_select')
+    <script>
+        console.log('select');
+    </script>
+@endpushonce

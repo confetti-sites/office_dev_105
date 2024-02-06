@@ -1,4 +1,4 @@
-@php($steps = section('homepage/steps')->label('Steps'))
+@php($steps = model(new \model\homepage\steps)->label('Steps'))
 <section class="text-gray-600 body-font">
     <div class="container py-24 mx-auto flex flex-wrap">
         <div class="flex relative py-10 sm:items-center md:w-2/3">
