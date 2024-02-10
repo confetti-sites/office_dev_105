@@ -12,12 +12,13 @@ use Confetti\Helpers\Request;
  */
 function model(\Confetti\Components\Map $target): mixed
 {
-    $componentStore = new ComponentStore();
-    $contentStore = new ContentStore();
-    $model = $target->new(
+    $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+    $as = $location['file'] . ':' . $location['line'];
+
+    $contentStore = new ContentStore($target->getComponentKey(), $as);
+    $model = $target->newRoot(
         $target->getComponentKey(),
-        $componentStore,
-        $contentStore
+        $as,
     );
 
     return $model;

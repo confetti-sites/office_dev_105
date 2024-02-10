@@ -9,7 +9,6 @@ use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\HasMapInterface;
-use RuntimeException;
 
 class Select extends ComponentStandard implements HasMapInterface {
     public function get(): string

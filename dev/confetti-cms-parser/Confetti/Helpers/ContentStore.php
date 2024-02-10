@@ -4,55 +4,40 @@ declare(strict_types=1);
 
 namespace Confetti\Helpers;
 
-use JsonException;
-
 class ContentStore
 {
-    public function find(string $id): ?ContentEntity
+    private QueryBuilder $queryBuilder;
+    private array $content = [];
+    private bool $alreadyInit = false;
+
+    public function __construct(string $from, string $as)
     {
-        $contents = $this->findMany($id);
-        if (count($contents) === 0) {
+        $this->queryBuilder = new QueryBuilder($from, $as);
+    }
+
+    public function init(): void
+    {
+        if ($this->alreadyInit) {
+            return;
+        }
+        $this->content = $this->queryBuilder->get();
+        $this->alreadyInit = true;
+    }
+
+    public function find(string $id): mixed
+    {
+        $this->queryBuilder->select([$id]);
+        $result = $this->queryBuilder->get();
+        if (count($result) === 0) {
             return null;
         }
-        return $contents[0];
+        return $result[0]['data'][$id] ?? null;
     }
 
-    /**
-     * @return ContentEntity[]
-     */
     public function findMany(string $id): array
     {
-        $client   = new Client();
-        $response = $client->get('confetti-cms-content/contents?id=' . $id, [
-            'accept' => 'application/vnd.confetti.seperated+json',
-        ]);
-        try {
-            $contents = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
-        return ContentEntity::byDbRows($contents['data']);
-    }
-
-    /**
-     * @return ContentEntity[]
-     */
-    public function whereIn(string $parentId, array $relativeIds, bool $includePrefixAsId = false): array
-    {
-        $client   = new Client();
-        $query    = http_build_query([
-            'id_prefix'            => $parentId,
-            'id'                   => implode(',', $relativeIds),
-            'include_prefix_as_id' => $includePrefixAsId ? 'true' : 'false',
-        ]);
-        $response = $client->get('confetti-cms-content/contents?' . $query, [
-            'accept' => 'application/vnd.confetti.seperated+json',
-        ]);
-        try {
-            $contents = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
-        return ContentEntity::byDbRows($contents['data']);
+        exit('todo');
+        $this->content = $this->queryBuilder->get();
+        return $this->content["data"];
     }
 }

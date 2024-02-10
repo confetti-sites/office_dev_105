@@ -9,7 +9,7 @@ use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 
-return new class extends \Confetti\Helpers\BasicQuery {
+return new class extends \Confetti\Helpers\QueryBuilder {
     /**
      * The items contained in the collection.
      *

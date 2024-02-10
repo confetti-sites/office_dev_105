@@ -12,7 +12,7 @@ abstract class Map
     public function __construct(
         protected ?string         $contentId = null,
         protected ?ComponentStore $componentStore = null,
-        protected ?ContentStore   $contentRepository = null,
+        protected ?ContentStore   $contentStore = null,
     )
     {
     }
@@ -24,13 +24,11 @@ abstract class Map
         return $this->contentId;
     }
 
-    public function new(
-        string         $contentId,
-        ComponentStore $componentStore,
-        ContentStore   $contentRepository
-    ): self
+    public function newRoot(string $contentId, string $as): self
     {
-        return new static($contentId, $componentStore, $contentRepository);
+        $componentStore = new ComponentStore();
+        $contentStore = new ContentStore($contentId, $as);
+        return new static($contentId, $componentStore, $contentStore);
     }
 
     public function label(string $value): self
@@ -41,63 +39,63 @@ abstract class Map
     public function color(string $key): Color
     {
         return new Color(
-            "{$this->key}/{$key}",
+            "{$this->contentId}/{$key}",
             $this->componentStore,
-            $this->contentRepository,
+            $this->contentStore,
         );
     }
 
     public function image(string $key): Image
     {
         return new Image(
-            "{$this->key}/{$key}",
+            "{$this->contentId}/{$key}",
             $this->componentStore,
-            $this->contentRepository,
+            $this->contentStore,
         );
     }
 
     public function list(string $key): List_
     {
         return new List_(
-            "{$this->key}/{$key}",
+            "{$this->contentId}/{$key}",
             $this->componentStore,
-            $this->contentRepository,
+            $this->contentStore,
         );
     }
 
     public function number(string $key): Number
     {
         return new Number(
-            "{$this->key}/{$key}",
+            "{$this->contentId}/{$key}",
             $this->componentStore,
-            $this->contentRepository,
+            $this->contentStore,
         );
     }
 
     public function select(string $key): Select
     {
         return new Select(
-            "{$this->key}/{$key}",
+            "{$this->contentId}/{$key}",
             $this->componentStore,
-            $this->contentRepository,
+            $this->contentStore,
         );
     }
 
     public function selectFiles(string $key): SelectFiles
     {
         return new SelectFiles(
-            "{$this->key}/{$key}",
+            "{$this->contentId}/{$key}",
             $this->componentStore,
-            $this->contentRepository,
+            $this->contentStore,
         );
     }
 
     public function text(string $key): Text
     {
         return new Text(
-            "{$this->key}/{$key}",
+            "{$this->contentId}/{$key}",
             $this->componentStore,
-            $this->contentRepository,
+            $this->contentStore,
         );
     }
 

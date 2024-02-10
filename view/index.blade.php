@@ -17,7 +17,7 @@
 {{--    @guest()--}}
 {{--        @include('view.under_construction')--}}
 {{--    @else()--}}
-@include('view.header')
+{{--@include('view.header')--}}
 
 @if(request()->uri() === '/waiting-list-step-2')
     @include('view.waiting-list-step-2')
@@ -29,9 +29,9 @@
     @include('view.homepage')
 @endif
 
-@php($target = model(new \model\footer)->selectFiles('template')->inDirectories(['/view/footers/*.blade.php'])->default('/view/footers/footer_small.blade.php'))
-
-@include($target->get(), ['parent' => $target])
+{{--@php($target = model(new \model\footer)->selectFiles('template')->inDirectories(['/view/footers/*.blade.php'])->default('/view/footers/footer_small.blade.php'))--}}
+{{----}}
+{{--@include($target->get(), ['parent' => $target])--}}
 {{--    @endguest--}}
 @stack('script_*')
 </body>

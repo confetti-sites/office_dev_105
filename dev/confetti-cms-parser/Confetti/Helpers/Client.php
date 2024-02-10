@@ -6,9 +6,14 @@ namespace Confetti\Helpers;
 
 class Client
 {
-    public function get(string $url, array $headers = []): string
+    public function get(string $url, array $headers = [], ?array $body = null): string
     {
         $curl = curl_init();
+
+        if ($body) {
+            $headers[] = 'Content-Type: application/json';
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($body));
+        }
 
         // get from cookie access_token
         $accessToken = $_COOKIE['access_token'] ?? null;

@@ -12,7 +12,7 @@ class Text extends ComponentStandard {
         // Get saved value
         $content = $this->contentStore->find($this->contentId);
         if ($content !== null) {
-            return $content->value;
+            return $content;
         }
 
         // Get default value
