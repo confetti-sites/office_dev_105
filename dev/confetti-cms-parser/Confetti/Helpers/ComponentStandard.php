@@ -12,7 +12,8 @@ abstract class ComponentStandard
     public function __construct(
         protected ?string         $contentId = null,
         protected ?ComponentStore $componentStore = null,
-        protected ?ContentStore   $contentStore = null,
+        // We use the reference because we want to init the rest of the content store
+        protected ?ContentStore   &$contentStore = null,
     )
     {
         $this->componentKey = self::componentKeyFromContentId($contentId);

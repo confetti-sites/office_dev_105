@@ -6,12 +6,18 @@ use Confetti\Components\Map;
 
 class QueryBuilder
 {
+    private const DEFAULT_OPTIONS = ['response_with_full_id' => true];
     private array $queryStack = [];
     private array $query;
 
     public function __construct(string $from, string $as = null)
     {
-        $this->newQuery($from, $as, ['response_with_full_id' => true]);
+        $this->newQuery($from, $as, self::DEFAULT_OPTIONS);
+    }
+
+    public function getQuery(): array
+    {
+        return $this->query;
     }
 
     /**
@@ -29,18 +35,18 @@ class QueryBuilder
     /**
      * @param string[] $options
      */
-    public function options(array $options): self
+    public function setOptions(array $options): self
     {
-        $this->query['options'] = +$options;
+        $this->query['options'] = array_merge(self::DEFAULT_OPTIONS, $options);
         return $this;
     }
 
     /**
      * @param string[] $select
      */
-    public function select(array $select): self
+    public function setSelect(array $select): self
     {
-        $this->query['select'] = array_merge($this->query['select'], $select);
+        $this->query['select'] = $select;
         return $this;
     }
 
@@ -98,7 +104,6 @@ class QueryBuilder
         if (!empty($options)) {
             $this->query['options'] = $options;
         }
-        $this->query['select'] = [];
         $this->query['from'] = $from;
         if ($as) {
             $this->query['as'] = $as;
