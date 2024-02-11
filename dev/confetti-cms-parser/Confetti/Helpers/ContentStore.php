@@ -62,7 +62,7 @@ class ContentStore
     // This is to prevent n+1 problems. We need to load the
     // first item. And then later (in another function) we
     // load the rest of the items in one go.
-    public function findOneOfMany(string $from): ?array
+    public function findFirstOfJoin(string $from): ?array
     {
         // Get the content and cache the selection
         $this->queryBuilder->setOptions([
@@ -75,7 +75,6 @@ class ContentStore
         if (count($result) === 0) {
             return null;
         }
-        var_dump($result[0]);
-        return $result[0]['data'][$from] ?? [];
+        return $result[0];
     }
 }

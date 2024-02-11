@@ -60,13 +60,12 @@ class List_
 
             public function getIterator(): Traversable
             {
-                $content = $this->contentStore->findOneOfMany($this->contentId);
+                $content = $this->contentStore->findFirstOfJoin($this->contentId);
                 if ($content === null) {
                     return;
                 }
-                $first = $content[0];
                 $class = ComponentStandard::componentClassFromKey($this->contentId);
-                yield new $class($first['id'], $this->componentStore, $this->contentStore);
+                yield new $class($content['id'], $this->componentStore, $this->contentStore);
 //                yield new $class('todo2', $this->componentStore, $this->contentStore);
             }
         };
