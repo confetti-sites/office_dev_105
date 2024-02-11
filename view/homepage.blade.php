@@ -1,7 +1,10 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
-<h3>{{ $homepage->text('title') }}</h3>
-<p>{{ $homepage->text('description') }}</p>
 
+<ul>
+    @foreach($homepage->list('feature')->get() as $feature)
+        <li>{{ $feature->text('feature_title') }}</li>
+    @endforeach
+</ul>
 
 
 {{--@include('view.hero')--}}

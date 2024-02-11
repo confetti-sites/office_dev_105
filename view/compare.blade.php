@@ -1,6 +1,6 @@
 @php($compare = model(new \model\homepage\compare)->label('Compare')->get())
 <div class="bg-gray-50 flex items-center justify-center">
-    @php($cases = $compare->list('cases')->columns(['title', 'description'])->min(1)->max(4))
+    @php($cases = $compare->list('cases')->columns(['title', 'description'])->min(1)->max(4)->get())
     <div class="relative w-full" x-data="{ tab: '0'}">
         <div class="absolute top-0 right-0 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         <div class="absolute top-20 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob "></div>
@@ -18,12 +18,12 @@
             </div>
             @foreach($cases as $tapNr => $case)
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2" x-show="tab == {{ $tapNr }}">
-                    @foreach($case->list('columns')->columns(['title'])->min(2)->max(2) as $column)
+                    @foreach($case->list('columns')->columns(['title'])->min(2)->max(2)->get() as $column)
                         <div class="m-10 mt-0 relative space-y-4">
                             <div class="rounded-lg p-4 bg-blue-300 text-xl flex justify-center m-8">
                                 <h3>{{ $column->text('title')->min(1)->max(50) }}</h3>
                             </div>
-                            @foreach($column->list('step')->columns(['description'])->min(1)->max(10) as $nr => $step)
+                            @foreach($column->list('step')->columns(['description'])->min(1)->max(10)->get() as $nr => $step)
                                 <div class="bg-white rounded-lg">
                                     <div class="p-4 flex items-center justify-between space-x-8">
                                         <div class="rounded-lg p-2 bg-blue-300 text-white">

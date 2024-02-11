@@ -8,12 +8,15 @@ use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
+use IteratorAggregate;
+use Traversable;
 
-class List_ {
+class List_
+{
     /**
      * The items contained in the collection.
      *
-     * @var array<string, Map>
+     * @var array<Map>
      */
     protected array $items = [];
 
@@ -24,20 +27,49 @@ class List_ {
         protected string         $contentId,
         protected ComponentStore $componentStore,
         protected ContentStore   $contentStore,
+        string $as,
     )
     {
-//        $this->contentId    .= '~';
-//        $this->componentKey = ComponentStandard::componentKeyFromContentId($this->contentId);
-//
-//        $items = $this->contentStore->findMany($this->contentId);
-//        if (count($items) === 0) {
-//            $this->items = $this->getFakeComponents();
-//            return;
-//        }
-//
-//        foreach ($items as $item) {
-//            $this->items[] = new Map($item->contentId, $this->componentStore, $this->contentStore);
-//        }
+        $this->contentId    .= '~';
+        $this->componentKey = ComponentStandard::componentKeyFromContentId($this->contentId);
+        $this->contentStore->join($this->contentId, $as);
+    }
+
+    /**
+     * @return \IteratorAggregate|Map[]
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function get(): IteratorAggregate
+    {
+        // Ensure that the content is initialized
+        // @todo get data from already existing loaded data
+
+        // @todo cache query
+
+        // When the content is not present, we want to load all the data
+        // But to prevent n+1 problem, we need to load the first item
+        // and then load the rest of the items in one go
+        return new class($this->contentId, $this->componentStore, $this->contentStore) implements IteratorAggregate {
+            public function __construct(
+                protected string         $contentId,
+                protected ComponentStore $componentStore,
+                protected ContentStore   $contentStore,
+            )
+            {
+            }
+
+            public function getIterator(): Traversable
+            {
+                $content = $this->contentStore->findOneOfMany($this->contentId);
+                if ($content === null) {
+                    return;
+                }
+                $first = $content[0];
+                $class = ComponentStandard::componentClassFromKey($this->contentId);
+                yield new $class($first['id'], $this->componentStore, $this->contentStore);
+//                yield new $class('todo2', $this->componentStore, $this->contentStore);
+            }
+        };
     }
 
     /**
@@ -109,18 +141,21 @@ class List_ {
     }
 
     // Minimum number of items
+
     public function min(int $min): self
     {
         return $this;
     }
 
     // Maximum number of items
+
     public function max(int $max): self
     {
         return $this;
     }
 
     // This becomes the headers of the table in de admin
+
     public function columns(array $columns): self
     {
         return $this;

@@ -6,6 +6,75 @@ namespace Confetti\Helpers;
 
 abstract class ComponentStandard
 {
+    private const FORBIDDEN_PHP_KEYWORDS = [
+        "abstract",
+        "and",
+        "array",
+        "as",
+        "break",
+        "callable",
+        "case",
+        "catch",
+        "class",
+        "clone",
+        "const",
+        "continue",
+        "declare",
+        "default",
+        "die",
+        "do",
+        "echo",
+        "else",
+        "elseif",
+        "empty",
+        "enddeclare",
+        "endfor",
+        "endforeach",
+        "endif",
+        "endswitch",
+        "endwhile",
+        "eval",
+        "exit",
+        "extends",
+        "final",
+        "finally",
+        "for",
+        "foreach",
+        "function",
+        "global",
+        "goto",
+        "if",
+        "implements",
+        "include",
+        "include_once",
+        "instanceof",
+        "insteadof",
+        "interface",
+        "isset",
+        "list",
+        "namespace",
+        "new",
+        "or",
+        "print",
+        "private",
+        "protected",
+        "public",
+        "require",
+        "require_once",
+        "return",
+        "static",
+        "switch",
+        "throw",
+        "trait",
+        "try",
+        "unset",
+        "use",
+        "var",
+        "while",
+        "xor",
+        "yield",
+    ];
+
     // Component key
     protected string $componentKey;
 
@@ -24,11 +93,34 @@ abstract class ComponentStandard
         return preg_replace('/~[A-Z0-9_]+/', '~', $contentId);
     }
 
+    public static function componentClassFromKey(string $key): string
+    {
+        // Remove pointers banner/image~ -> banner/image
+        $class = str_replace('~', '', $key);
+
+        // Remove pointers banner/template- -> banner/template
+        $class = str_replace('-', '', $class);
+
+        // Rename forbidden class names
+        $parts  = explode('/', $class);
+        $result = [];
+        foreach ($parts as $part) {
+            if (in_array($part, self::FORBIDDEN_PHP_KEYWORDS)) {
+                $part .= '_';
+            }
+            $result[] = $part;
+        }
+        $class = implode('/', $result);
+
+        // Replace Banner/Title with Banner\Title
+        return str_replace('/', '\\', $class);
+    }
+
     abstract public function get(): mixed;
 
 
     public function __toString(): string
     {
-        return (string)$this->get();
+        return (string) $this->get();
     }
 }

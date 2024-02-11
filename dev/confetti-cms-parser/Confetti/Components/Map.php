@@ -56,10 +56,13 @@ abstract class Map
 
     public function list(string $key): List_
     {
+        $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+        $as = $location['file'] . ':' . $location['line'];
         return new List_(
             "{$this->contentId}/{$key}",
             $this->componentStore,
             $this->contentStore,
+            $as,
         );
     }
 
