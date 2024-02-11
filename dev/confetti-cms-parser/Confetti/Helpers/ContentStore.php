@@ -30,12 +30,15 @@ class ContentStore
         $this->alreadyInit = true;
     }
 
+    public function join(string $from, string $as): void
+    {
+        $this->queryBuilder->join($from, $as);
+    }
+
     public function find(string $id): mixed
     {
         // Ensure that the content is initialized
-        if (!$this->alreadyInit) {
-            $this->init();
-        }
+        $this->init();
         // Check if content is present
         // If key is not present, then the query is never cached before
         if (array_key_exists('data', $this->content) && array_key_exists($id, $this->content["data"])) {
@@ -54,16 +57,15 @@ class ContentStore
         return $result[0]['data'][$id] ?? null;
     }
 
-    public function join(string $from, string $as): void
-    {
-        $this->queryBuilder->join($from, $as);
-    }
-
     // This is to prevent n+1 problems. We need to load the
     // first item. And then later (in another function) we
     // load the rest of the items in one go.
     public function findFirstOfJoin(string $from): ?array
     {
+        // Ensure that the content is initialized
+        if (!$this->alreadyInit) {
+            $this->init();
+        }
         // Get the content and cache the selection
         $this->queryBuilder->setOptions([
             'patch_cache_join' => true,

@@ -42,7 +42,7 @@ class List_
     public function get(): IteratorAggregate
     {
         // Ensure that the content is initialized
-        // @todo get data from already existing loaded data
+        $this->contentStore->init();
 
         // @todo cache query
 
