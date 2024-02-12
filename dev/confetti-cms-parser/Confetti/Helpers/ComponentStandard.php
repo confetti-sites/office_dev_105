@@ -79,13 +79,19 @@ abstract class ComponentStandard
     protected string $componentKey;
 
     public function __construct(
-        protected ?string         $contentId = null,
+        protected ?string         $parentContentId = null,
+        protected ?string         $relativeContentId = null,
         protected ?ComponentStore $componentStore = null,
         // We use the reference because we want to init the rest of the content store
         protected ?ContentStore   &$contentStore = null,
     )
     {
-        $this->componentKey = self::componentKeyFromContentId($contentId);
+        $this->componentKey = self::componentKeyFromContentId($this->getFullContentId());
+    }
+
+    public function getFullContentId(): string
+    {
+        return self::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
     public static function componentKeyFromContentId(string $contentId): string
@@ -93,8 +99,9 @@ abstract class ComponentStandard
         return preg_replace('/~[A-Z0-9_]+/', '~', $contentId);
     }
 
-    public static function componentClassFromKey(string $key): string
+    public static function componentClassByContentId(string $parentId, string $relativeId): string
     {
+        $key = self::mergeIds($parentId, $relativeId);
         // Remove pointers banner/image~ -> banner/image
         $class = str_replace('~', '', $key);
 
@@ -122,5 +129,13 @@ abstract class ComponentStandard
     public function __toString(): string
     {
         return (string) $this->get();
+    }
+
+    public static function mergeIds(string $parent, string $relative): string
+    {
+        if (str_starts_with($relative, '/')) {
+            return $relative;
+        }
+        return $parent . '/' . $relative;
     }
 }

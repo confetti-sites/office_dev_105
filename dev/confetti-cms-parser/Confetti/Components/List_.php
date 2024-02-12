@@ -21,18 +21,21 @@ class List_
     protected array $items = [];
 
     protected string $componentKey;
+    private string $as;
 
     /** @noinspection DuplicatedCode */
     public function __construct(
-        protected string         $contentId,
+        protected string         $parentContentId,
+        protected string         $relativeContentId,
         protected ComponentStore $componentStore,
         protected ContentStore   $contentStore,
-        string $as,
+        string                   $as,
     )
     {
-        $this->contentId    .= '~';
-        $this->componentKey = ComponentStandard::componentKeyFromContentId($this->contentId);
-        $this->contentStore->join($this->contentId, $as);
+        $this->relativeContentId .= '~';
+        $this->as                = $as;
+        $this->componentKey      = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
+        $this->contentStore->join($this->relativeContentId, $as);
     }
 
     /**
@@ -49,24 +52,31 @@ class List_
         // When the content is not present, we want to load all the data
         // But to prevent n+1 problem, we need to load the first item
         // and then load the rest of the items in one go
-        return new class($this->contentId, $this->componentStore, $this->contentStore) implements IteratorAggregate {
+        return new class($this->parentContentId, $this->relativeContentId, $this->componentStore, $this->contentStore, $this->as) implements IteratorAggregate {
             public function __construct(
-                protected string         $contentId,
+                protected string         $parentContentId,
+                protected string         $relativeContentId,
                 protected ComponentStore $componentStore,
                 protected ContentStore   $contentStore,
+                protected string         $as,
             )
             {
             }
 
             public function getIterator(): Traversable
             {
-                $content = $this->contentStore->findFirstOfJoin($this->contentId);
+                $content = $this->contentStore->findFirstOfJoin();
                 if ($content === null) {
                     return;
                 }
-                $class = ComponentStandard::componentClassFromKey($this->contentId);
-                yield new $class($content['id'], $this->componentStore, $this->contentStore);
-//                yield new $class('todo2', $this->componentStore, $this->contentStore);
+                $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                // Cache and load the first item
+                yield new $class($this->parentContentId, $content['id'], $this->componentStore, $this->contentStore);
+                // After the first item is cached, we can load the rest of the items in one go
+                $contents = $this->contentStore->findRestOfJoin();
+                foreach ($contents[0]['join'][$this->as] as $content) {
+                    yield new $class($content['id'], $this->componentStore, $this->contentStore);
+                }
             }
         };
     }
@@ -119,7 +129,7 @@ class List_
     private function getFakeComponents(): array
     {
         return [];
-//        $component = $this->componentStore->find($this->componentKey);
+//        $component = $this->componentStore->find($this->getFullContentId());
 //
 //        $max = $component->getDecoration('max')['value'] ?? 100;
 //        $min = $component->getDecoration('min')['value'] ?? 1;

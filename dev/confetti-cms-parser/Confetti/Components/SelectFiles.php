@@ -24,7 +24,7 @@ class SelectFiles extends ComponentStandard implements HasMapInterface {
     public function getValueFromInDirectories(ComponentEntity $component): string
     {
         // Get saved value
-        $filePath = $this->contentStore->find($this->contentId)?->value;
+        $filePath = $this->contentStore->find($this->getFullContentId())?->value;
         if ($filePath !== null) {
             if (str_ends_with($filePath, '.blade.php')) {
                 return self::getViewByPath($filePath);
@@ -43,8 +43,8 @@ class SelectFiles extends ComponentStandard implements HasMapInterface {
     public function toMap(): Map
     {
         return new Map(
-            $this->contentId . '-',
-            ComponentStore::newWherePrefix($this->contentId . '-'),
+            $this->relativeContentId . '-',
+            ComponentStore::newWherePrefix($this->relativeContentId . '-'),
             new ContentStore(),
         );
     }

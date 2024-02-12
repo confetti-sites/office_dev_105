@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Confetti\Components;
 
+use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 
 abstract class Map
 {
     public function __construct(
-        protected ?string         $contentId = null,
+        protected ?string         $parentContentId = null,
+        protected ?string         $relativeContentId = null,
         protected ?ComponentStore $componentStore = null,
         protected ?ContentStore   $contentStore = null,
     )
@@ -19,16 +21,16 @@ abstract class Map
 
     abstract public function getComponentKey(): string;
 
-    public function getContentId(): string
+    public function getFullId(): string
     {
-        return $this->contentId;
+        return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
     public function newRoot(string $contentId, string $as): self
     {
         $componentStore = new ComponentStore();
         $contentStore = new ContentStore($contentId, $as);
-        return new static($contentId, $componentStore, $contentStore);
+        return new static("", $contentId, $componentStore, $contentStore);
     }
 
     public function label(string $value): self
@@ -39,7 +41,8 @@ abstract class Map
     public function color(string $key): Color
     {
         return new Color(
-            "{$this->contentId}/{$key}",
+            $this->getFullId(),
+            $key,
             $this->componentStore,
             $this->contentStore,
         );
@@ -48,7 +51,8 @@ abstract class Map
     public function image(string $key): Image
     {
         return new Image(
-            "{$this->contentId}/{$key}",
+            $this->getFullId(),
+            $key,
             $this->componentStore,
             $this->contentStore,
         );
@@ -59,7 +63,8 @@ abstract class Map
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
         $as = $location['file'] . ':' . $location['line'];
         return new List_(
-            "{$this->contentId}/{$key}",
+            $this->getFullId(),
+            $key,
             $this->componentStore,
             $this->contentStore,
             $as,
@@ -69,7 +74,8 @@ abstract class Map
     public function number(string $key): Number
     {
         return new Number(
-            "{$this->contentId}/{$key}",
+            $this->getFullId(),
+            $key,
             $this->componentStore,
             $this->contentStore,
         );
@@ -78,7 +84,8 @@ abstract class Map
     public function select(string $key): Select
     {
         return new Select(
-            "{$this->contentId}/{$key}",
+            $this->getFullId(),
+            $key,
             $this->componentStore,
             $this->contentStore,
         );
@@ -87,7 +94,8 @@ abstract class Map
     public function selectFiles(string $key): SelectFiles
     {
         return new SelectFiles(
-            "{$this->contentId}/{$key}",
+            $this->getFullId(),
+            $key,
             $this->componentStore,
             $this->contentStore,
         );
@@ -96,7 +104,8 @@ abstract class Map
     public function text(string $key): Text
     {
         return new Text(
-            "{$this->contentId}/{$key}",
+            $this->getFullId(),
+            $key,
             $this->componentStore,
             $this->contentStore,
         );

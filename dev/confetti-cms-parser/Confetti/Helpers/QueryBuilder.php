@@ -6,7 +6,7 @@ use Confetti\Components\Map;
 
 class QueryBuilder
 {
-    private const DEFAULT_OPTIONS = ['response_with_full_id' => true];
+    private const DEFAULT_OPTIONS = ['response_with_full_id' => false];
     private array $queryStack = [];
     private array $query;
 
@@ -23,12 +23,12 @@ class QueryBuilder
     /**
      * @throws \JsonException
      */
-    public function get(): array
+    public function run(): array
     {
         $client   = new Client();
         $response = $client->get('confetti-cms-content/contents', [
             'accept' => 'application/json',
-        ], $this->query);
+        ], $this->getFullQuery());
         return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
     }
 
@@ -50,14 +50,18 @@ class QueryBuilder
         return $this;
     }
 
-    public function join(string $from, string $as = null): self
+    public function wrapJoin(string $from, string $as = null): self
     {
-        $this->queryStack[] = $this->query;
-        $this->newQuery($from, $as);
-        return $this;
+        // Copy query so the rest of the page has the old query
+        $child = $this;
+        // We don't want to select anything from the parent
+        $child->query['select'] = [];
+        $child->queryStack[] = $child->query;
+        $child->newQuery($from, $as);
+        return $child;
     }
 
-    public function where(string $key, string $operator, mixed $value): self
+    public function appendWhere(string $key, string $operator, mixed $value): self
     {
         if ($value instanceof ComponentInterface) {
             $this->query['where'][] = [
@@ -76,7 +80,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function orderBy(string $key, string $direction = 'ascending'): self
+    public function appendOrderBy(string $key, string $direction = 'ascending'): self
     {
         $this->query['order_by'][] = [
             'key'       => $key,
@@ -86,13 +90,23 @@ class QueryBuilder
         return $this;
     }
 
-    public function limit(int $limit): self
+    public function getLimit(): ?int
+    {
+        return $this->query['limit'] ?? null;
+    }
+
+    public function setLimit(int $limit): self
     {
         $this->query['limit'] = $limit;
         return $this;
     }
 
-    public function offset(int $offset): self
+    public function getOffset(): int
+    {
+        return $this->query['offset'] ?? 0;
+    }
+
+    public function setOffset(int $offset): self
     {
         $this->query['offset'] = $offset;
         return $this;
@@ -108,5 +122,19 @@ class QueryBuilder
         if ($as) {
             $this->query['as'] = $as;
         }
+    }
+
+    private function getFullQuery(): array
+    {
+        $result = $this->query;
+        $options = $result['options'] ?? throw new \RuntimeException('No options set');
+        unset($result['options']);
+        foreach (array_reverse($this->queryStack) as $parent) {
+            $parent['join'] = [$result];
+            $result         = $parent;
+        }
+        // Only the root query should have the options
+        $result['options'] = $options;
+        return $result;
     }
 }

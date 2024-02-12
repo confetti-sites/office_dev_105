@@ -86,7 +86,7 @@ return new class extends \Confetti\Helpers\QueryBuilder {
 
     private function getFakeComponents(): array
     {
-        $component = $this->componentStore->find($this->componentKey);
+        $component = $this->componentStore->find($this->getFullContentId());
 
         $max = $component->getDecoration('max')['value'] ?? 100;
         $min = $component->getDecoration('min')['value'] ?? 1;

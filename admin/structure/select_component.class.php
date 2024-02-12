@@ -14,7 +14,7 @@ use RuntimeException;
 return new class extends ComponentStandard implements HasMapInterface {
     public function get(): string
     {
-        $component = $this->componentStore->findOrNull($this->contentId);
+        $component = $this->componentStore->findOrNull($this->relativeContentId);
         if ($component !== null) {
             return $this->getValueFromOptions($component);
         }
@@ -24,7 +24,7 @@ return new class extends ComponentStandard implements HasMapInterface {
     public function getValueFromOptions(ComponentEntity $component): string
     {
         // Get saved value
-        $content = $this->contentStore->find($this->contentId);
+        $content = $this->contentStore->find($this->getFullContentId());
         if ($content !== null) {
             return $content->value;
         }
@@ -58,8 +58,8 @@ return new class extends ComponentStandard implements HasMapInterface {
     public function toMap(): Map
     {
         return new Map(
-            $this->contentId,
-            ComponentStore::newWherePrefix($this->contentId),
+            $this->relativeContentId,
+            ComponentStore::newWherePrefix($this->relativeContentId),
             new ContentStore(),
         );
     }
