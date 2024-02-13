@@ -46,7 +46,7 @@ use Confetti\Helpers\ComponentStandard;
 return new class extends ComponentStandard {
     public function get(): string
     {
-        return $this->contentStore->find($this->id) ?? '#000000';
+        return $this->contentStore->findOneData($this->id) ?? '#000000';
     }
 };
 ```

@@ -10,7 +10,7 @@ class Text extends ComponentStandard {
     public function get(): string
     {
         // Get saved value
-        $content = $this->contentStore->find($this->relativeContentId);
+        $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
             return $content;
         }

@@ -24,7 +24,7 @@ return new class extends ComponentStandard implements HasMapInterface {
     public function getValueFromOptions(ComponentEntity $component): string
     {
         // Get saved value
-        $content = $this->contentStore->find($this->relativeContentId);
+        $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
             return $content->value;
         }

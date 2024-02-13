@@ -40,14 +40,23 @@ class List_
 
     /**
      * @return \IteratorAggregate|Map[]
-     * @noinspection PhpDocSignatureInspection
      */
-    public function get(): IteratorAggregate
+    public function get(): IteratorAggregate|array
     {
         // Ensure that the content is initialized
-        $this->contentStore->init();
+        $this->contentStore->init($this->as);
 
-        // @todo cache query
+        // Check if content is present
+        // If key is not present, then the query is never cached before
+        $items = $this->contentStore->getCurrentLevelCachedData();
+        if ($items !== null) {
+            $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+            $result = [];
+            foreach ($items as $item) {
+                $result[] = new $class($this->parentContentId, $item['id'], $this->componentStore, $this->contentStore, $this->as);
+            }
+            return $result;
+        }
 
         // When the content is not present, we want to load all the data
         // But to prevent n+1 problem, we need to load the first item

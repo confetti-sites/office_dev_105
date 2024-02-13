@@ -35,7 +35,7 @@
 </div> --}}
 
 @php
-    $value = $contentStore->find($component->key) ?? $component->getDecoration('default')['value'] ?? '';
+    $value = $contentStore->findOneData($component->key) ?? $component->getDecoration('default')['value'] ?? '';
     $textPars1 = [
         'id' => $contentId,
         'value' => $value,

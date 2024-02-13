@@ -11,6 +11,8 @@ class ContentStore
 {
     private QueryBuilder $queryBuilder;
     private array $content = [];
+    // When null, we have not cached the content yet
+    private ?array $contentCurrentLevel = null;
     private bool $alreadyInit = false;
 
     public function __construct(string $from, string $as)
@@ -18,7 +20,11 @@ class ContentStore
         $this->queryBuilder = new QueryBuilder($from, $as);
     }
 
-    public function init(): void
+    /**
+     * @param string|null $firstAs The first as to use to determine the level.
+     *                             if null, then we are at the top level.
+     */
+    public function init(?string $firstAs = null): void
     {
         if ($this->alreadyInit) {
             echo "Already initialized\n";
@@ -28,16 +34,33 @@ class ContentStore
         $this->queryBuilder->setOptions([
             'use_cache' => true,
         ]);
-        $this->content     = $this->queryBuilder->run()[0] ?? [];
-        $this->alreadyInit = true;
+        $this->content             = $this->queryBuilder->run()[0] ?? ['join' => []];
+//        echo "<pre>";
+//        var_dump('$this->content');
+//        echo "</pre>";
+//        echo "<pre>";
+//        var_dump($this->content);
+//        echo "</pre>";
+//        echo "<pre>";
+//        var_dump($this->content['join'][$firstAs]);
+//        echo "</pre>";
+//        exit('asdf');
+        $this->contentCurrentLevel = $firstAs ? $this->content['join'][$firstAs] : $this->content;
+        $this->alreadyInit         = true;
+    }
+
+    public function getCurrentLevelCachedData(): ?array
+    {
+        return $this->contentCurrentLevel;
     }
 
     public function join(string $from, string $as): void
     {
+        $this->contentCurrentLevel = $this->contentCurrentLevel[$as] ?? null;
         $this->queryBuilder->wrapJoin($from, $as);
     }
 
-    public function find(string $id): mixed
+    public function findOneData(string $id): mixed
     {
         // Ensure that the content is initialized
         $this->init();
@@ -90,7 +113,7 @@ class ContentStore
     {
         $child = $this->queryBuilder;
         $child->setOptions([
-            'use_cache' => true,
+            'use_cache'            => true,
             'use_cache_only_joins' => true,
         ]);
         $limit = $child->getLimit();

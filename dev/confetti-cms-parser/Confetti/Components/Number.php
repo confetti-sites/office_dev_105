@@ -15,7 +15,7 @@ class Number extends ComponentStandard {
     public function toInt(): int
     {
         // Get saved value
-        $content = $this->contentStore->find($this->relativeContentId);
+        $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
             return (int)$content->value;
         }
