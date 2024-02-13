@@ -56,7 +56,8 @@ class ContentStore
 
     public function join(string $from, string $as): void
     {
-        $this->contentCurrentLevel = $this->contentCurrentLevel[$as] ?? null;
+        $joins = $this->contentCurrentLevel['join'] ?? [];
+        $this->contentCurrentLevel = $joins[$as] ?? null;
         $this->queryBuilder->wrapJoin($from, $as);
     }
 

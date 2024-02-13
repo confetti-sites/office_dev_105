@@ -45,6 +45,7 @@ class List_
     {
         // Ensure that the content is initialized
         $this->contentStore->init($this->as);
+        $fullId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
 
         // Check if content is present
         // If key is not present, then the query is never cached before
@@ -53,7 +54,7 @@ class List_
             $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
             $result = [];
             foreach ($items as $item) {
-                $result[] = new $class($this->parentContentId, $item['id'], $this->componentStore, $this->contentStore, $this->as);
+                $result[] = new $class($fullId, $item['id'], $this->componentStore, $this->contentStore, $this->as);
             }
             return $result;
         }
