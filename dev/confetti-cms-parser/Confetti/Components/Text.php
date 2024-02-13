@@ -16,7 +16,7 @@ class Text extends ComponentStandard {
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->relativeContentId);
+        $component = $this->componentStore->find($this->getFullContentId());
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default')['value'];
         }

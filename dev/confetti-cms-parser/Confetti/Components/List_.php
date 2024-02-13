@@ -27,7 +27,7 @@ class List_
     public function __construct(
         protected string         $parentContentId,
         protected string         $relativeContentId,
-        protected ComponentStore $componentStore,
+        protected ComponentStore &$componentStore,
         protected ContentStore   $contentStore,
         string                   $as,
     )
@@ -41,27 +41,11 @@ class List_
     /**
      * @return \IteratorAggregate|Map[]
      */
-    public function get(): IteratorAggregate|array
+    public function get(): IteratorAggregate
     {
         // Ensure that the content is initialized
         $this->contentStore->init($this->as);
-        $fullId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
 
-        // Check if content is present
-        // If key is not present, then the query is never cached before
-        $items = $this->contentStore->getCurrentLevelCachedData();
-        if ($items !== null) {
-            $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
-            $result = [];
-            foreach ($items as $item) {
-                $result[] = new $class($fullId, $item['id'], $this->componentStore, $this->contentStore, $this->as);
-            }
-            return $result;
-        }
-
-        // When the content is not present, we want to load all the data
-        // But to prevent n+1 problem, we need to load the first item
-        // and then load the rest of the items in one go
         return new class($this->parentContentId, $this->relativeContentId, $this->componentStore, $this->contentStore, $this->as) implements IteratorAggregate {
             public function __construct(
                 protected string         $parentContentId,
@@ -75,6 +59,24 @@ class List_
 
             public function getIterator(): Traversable
             {
+                $fullId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
+
+                // Check if content is present
+                // If key is not present, then the query is never cached before
+                $items = $this->contentStore->getCurrentLevelCachedData();
+                if ($items !== null) {
+                    $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                    foreach ($items as $item) {
+                        $deeperContentStore = $this->contentStore;
+                        $deeperContentStore->setCurrentLevelCachedData($item);
+                        yield new $class($fullId, $item['id'], $this->componentStore, $deeperContentStore, $this->as);
+                    }
+                    return;
+                }
+
+                // When the content is not present, we want to load all the data
+                // But to prevent n+1 problem, we need to load the first item
+                // and then load the rest of the items in one go
                 $content = $this->contentStore->findFirstOfJoin();
                 if ($content === null) {
                     return;
@@ -87,6 +89,7 @@ class List_
                 foreach ($contents[0]['join'][$this->as] as $content) {
                     yield new $class($this->parentContentId, $content['id'], $this->componentStore, $this->contentStore);
                 }
+                return;
             }
         };
     }
@@ -139,7 +142,7 @@ class List_
     private function getFakeComponents(): array
     {
         return [];
-//        $component = $this->componentStore->find($this->relativeContentId);
+//        $component = $this->componentStore->find($this->getFullContentId());
 //
 //        $max = $component->getDecoration('max')['value'] ?? 100;
 //        $min = $component->getDecoration('min')['value'] ?? 1;

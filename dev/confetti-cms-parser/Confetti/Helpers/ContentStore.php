@@ -35,16 +35,6 @@ class ContentStore
             'use_cache' => true,
         ]);
         $this->content             = $this->queryBuilder->run()[0] ?? ['join' => []];
-//        echo "<pre>";
-//        var_dump('$this->content');
-//        echo "</pre>";
-//        echo "<pre>";
-//        var_dump($this->content);
-//        echo "</pre>";
-//        echo "<pre>";
-//        var_dump($this->content['join'][$firstAs]);
-//        echo "</pre>";
-//        exit('asdf');
         $this->contentCurrentLevel = $firstAs ? $this->content['join'][$firstAs] : $this->content;
         $this->alreadyInit         = true;
     }
@@ -52,6 +42,11 @@ class ContentStore
     public function getCurrentLevelCachedData(): ?array
     {
         return $this->contentCurrentLevel;
+    }
+
+    public function setCurrentLevelCachedData(array $data): void
+    {
+        $this->contentCurrentLevel = $data;
     }
 
     public function join(string $from, string $as): void
@@ -67,8 +62,8 @@ class ContentStore
         $this->init();
         // Check if content is present
         // If key is not present, then the query is never cached before
-        if (array_key_exists('data', $this->content) && array_key_exists($id, $this->content["data"])) {
-            return $this->content["data"][$id];
+        if (array_key_exists('data', $this->contentCurrentLevel) && array_key_exists($id, $this->contentCurrentLevel["data"])) {
+            return $this->contentCurrentLevel["data"][$id];
         }
         // Get the content and cache the selection
         $this->queryBuilder->setOptions([

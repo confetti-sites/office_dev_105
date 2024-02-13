@@ -21,7 +21,7 @@ return new class extends ComponentStandard {
         }
 
         // Use default value
-        $component = $this->componentStore->find($this->relativeContentId);
+        $component = $this->componentStore->find($this->getFullContentId());
         if ($component->hasDecoration('default')) {
             return (int)$component->getDecoration('default')['value'];
         }
