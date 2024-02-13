@@ -5,6 +5,16 @@
         <li>{{ $feature->text('feature_title') }}</li>
     @endforeach
 </ul>
+
+
+
+
+
+
+
+
+
+
 {{--<ul>--}}
 {{--    @foreach($homepage->features()->get() as $feature)--}}
 {{--        <li>{{ $feature->feature_title }}</li>--}}

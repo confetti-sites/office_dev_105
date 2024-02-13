@@ -27,7 +27,6 @@ class ContentStore
     public function init(?string $firstAs = null): void
     {
         if ($this->alreadyInit) {
-            echo "Already initialized\n";
             return;
         }
         echo "Initializing\n";
