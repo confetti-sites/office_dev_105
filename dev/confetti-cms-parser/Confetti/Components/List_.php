@@ -65,9 +65,9 @@ class List_
                 if ($this->isValidDataFromCache($items)) {
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
-                        $deeperContentStore = $this->contentStore;
-                        $deeperContentStore->setCurrentLevelCachedData($item);
-                        yield new $class($fullId, $item['id'], $this->componentStore, $deeperContentStore, $this->as);
+                        $childContentStore = $this->contentStore;
+                        $childContentStore->setCurrentLevelCachedData($item);
+                        yield new $class($fullId, $item['id'], $this->componentStore, $childContentStore, $this->as);
                     }
                     return;
                 }
@@ -83,9 +83,9 @@ class List_
                 // After the first item is loaded and cached, we can load the rest of the items in one go
                 $contents = $this->contentStore->findRestOfJoin();
                 foreach ($contents[0]['join'][$this->as] as $content) {
-                    $deeperContentStore = $this->contentStore;
-                    $deeperContentStore->setCurrentLevelCachedData($content);
-                    yield  new $class($this->parentContentId, $content['id'], $this->componentStore, $deeperContentStore);
+                    $childContentStore = $this->contentStore;
+                    $childContentStore->setCurrentLevelCachedData($content);
+                    yield  new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
                 }
             }
 
