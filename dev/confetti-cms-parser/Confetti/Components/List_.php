@@ -59,12 +59,10 @@ class List_
 
             public function getIterator(): Traversable
             {
-                $fullId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
-
                 // Check if content is present
-                // If key is not present, then the query is never cached before
+                $fullId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
                 $items = $this->contentStore->getCurrentLevelCachedData();
-                if ($items !== null) {
+                if ($this->isValidDataFromCache($items)) {
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $deeperContentStore = $this->contentStore;
@@ -75,21 +73,36 @@ class List_
                 }
 
                 // When the content is not present, we want to load all the data
-                // But to prevent n+1 problem, we need to load the first item
-                // and then load the rest of the items in one go
+                // But to prevent n+1 problem, we need to load the first item.
                 $content = $this->contentStore->findFirstOfJoin();
                 if ($content === null) {
                     return;
                 }
                 $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
-                // Cache and load the first item
                 yield new $class($this->parentContentId, $content['id'], $this->componentStore, $this->contentStore);
-                // After the first item is cached, we can load the rest of the items in one go
+                // After the first item is loaden and cached, we can load the rest of the items in one go
                 $contents = $this->contentStore->findRestOfJoin();
                 foreach ($contents[0]['join'][$this->as] as $content) {
                     yield new $class($this->parentContentId, $content['id'], $this->componentStore, $this->contentStore);
                 }
-                return;
+            }
+
+            private function isValidDataFromCache(?array $items): bool
+            {
+                // If null is not present, then the query is never cached before
+                if ($items === null) {
+                    return false;
+                }
+                // If empty, then the query is cached but there is no content
+                if (count($items) === 0) {
+                    return true;
+                }
+                // If ['data'] and ['join'] are empty, then this data is useless;
+                // because we want to fetch child content with cached queries
+                if (empty($items[0]['data']) && empty($items[0]['join'])) {
+                    return false;
+                }
+                return true;
             }
         };
     }
