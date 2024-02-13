@@ -60,14 +60,13 @@ class List_
             public function getIterator(): Traversable
             {
                 // Check if content is present
-                $fullId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
                 $items = $this->contentStore->getCurrentLevelCachedData();
                 if ($this->isValidDataFromCache($items)) {
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $childContentStore = $this->contentStore;
                         $childContentStore->setCurrentLevelCachedData($item);
-                        yield new $class($fullId, $item['id'], $this->componentStore, $childContentStore, $this->as);
+                        yield new $class($this->parentContentId, $item['id'], $this->componentStore, $childContentStore, $this->as);
                     }
                     return;
                 }

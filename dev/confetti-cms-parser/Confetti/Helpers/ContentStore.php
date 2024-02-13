@@ -29,7 +29,6 @@ class ContentStore
         if ($this->alreadyInit) {
             return;
         }
-        echo "Initializing\n";
         $this->queryBuilder->setOptions([
             'use_cache' => true,
         ]);
@@ -127,11 +126,14 @@ class ContentStore
     private function searchSelectedData(array $items): mixed
     {
         $item = array_pop($items);
-        if (empty($item['data']) && !empty($item['join'])) {
+        if (!empty($item['join'])) {
             // Get first join from the array with string keys
             $join = array_pop($item['join']);
             return $this->searchSelectedData($join);
 
+        }
+        if (empty($item['data'])) {
+            return null;
         }
         return array_pop($item['data']);
     }

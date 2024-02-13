@@ -26,8 +26,9 @@ class ComponentStore
         return new self(['key_prefix', '/']);
     }
 
-    public function find(string $key): ComponentEntity
+    public function find(string $id): ComponentEntity
     {
+        $key = ComponentStandard::componentKeyFromContentId($id);
         if (!isset($this->components[$key])) {
             throw new \RuntimeException("Component {$key} not found");
         }

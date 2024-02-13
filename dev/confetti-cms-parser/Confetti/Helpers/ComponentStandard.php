@@ -102,8 +102,11 @@ abstract class ComponentStandard
     public static function componentClassByContentId(string $parentId, string $relativeId): string
     {
         $key = self::mergeIds($parentId, $relativeId);
+        // Remove id banner/image~0123456789 -> banner/image
+        $class = preg_replace('/~[A-Z0-9_]{10}/', '', $key);
+
         // Remove pointers banner/image~ -> banner/image
-        $class = str_replace('~', '', $key);
+        $class = str_replace('~', '', $class);
 
         // Remove pointers banner/template- -> banner/template
         $class = str_replace('-', '', $class);
