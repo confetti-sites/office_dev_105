@@ -75,7 +75,7 @@ class List_
                 // After the first item is cached, we can load the rest of the items in one go
                 $contents = $this->contentStore->findRestOfJoin();
                 foreach ($contents[0]['join'][$this->as] as $content) {
-                    yield new $class($content['id'], $this->componentStore, $this->contentStore);
+                    yield new $class($this->parentContentId, $content['id'], $this->componentStore, $this->contentStore);
                 }
             }
         };
@@ -129,7 +129,7 @@ class List_
     private function getFakeComponents(): array
     {
         return [];
-//        $component = $this->componentStore->find($this->getFullContentId());
+//        $component = $this->componentStore->find($this->relativeContentId);
 //
 //        $max = $component->getDecoration('max')['value'] ?? 100;
 //        $min = $component->getDecoration('min')['value'] ?? 1;

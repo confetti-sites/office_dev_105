@@ -10,13 +10,13 @@ class Color extends ComponentStandard {
     public function get(): string
     {
         // Get saved value
-        $value = $this->contentStore->find($this->getFullContentId());
+        $value = $this->contentStore->find($this->relativeContentId);
         if ($value !== null) {
             return $value->value;
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->getFullContentId());
+        $component = $this->componentStore->find($this->relativeContentId);
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default')['value'];
         }

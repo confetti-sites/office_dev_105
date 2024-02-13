@@ -91,6 +91,7 @@ class ContentStore
         $child = $this->queryBuilder;
         $child->setOptions([
             'use_cache' => true,
+            'use_cache_only_joins' => true,
         ]);
         $limit = $child->getLimit();
         if ($limit !== null) {

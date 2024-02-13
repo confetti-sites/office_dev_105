@@ -10,13 +10,13 @@ class Text extends ComponentStandard {
     public function get(): string
     {
         // Get saved value
-        $content = $this->contentStore->find($this->getFullContentId());
+        $content = $this->contentStore->find($this->relativeContentId);
         if ($content !== null) {
             return $content;
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->getFullContentId());
+        $component = $this->componentStore->find($this->relativeContentId);
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default')['value'];
         }
