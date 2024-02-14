@@ -70,15 +70,10 @@ class QueryBuilder
         }
         $offset = $this->getOffset();
         $this->setOffset($offset + 1);
-        // Ignore the first row of all parent levels
+        // We only want to fetch one row for the parent queries
         $queryStack = [];
         foreach ($this->queryStack as $parent) {
-            $limit = $parent['limit'] ?? null;
-            if ($limit !== null) {
-                $parent['limit'] = $limit - 1;
-            }
-            $offset = $parent['offset'] ?? 0;
-            $parent['offset'] = $offset + 1;
+            $parent['limit'] = 1;
             $queryStack[] = $parent;
         }
         $this->queryStack = $queryStack;

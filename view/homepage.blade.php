@@ -1,13 +1,9 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
-{{ $homepage->text('title') }}
+{{--{{ $homepage->text('title') }}--}}
 <ul>
     @foreach($homepage->list('feature')->get() as $feature)
-        <li>{{ $feature->text('title')->default('default feature title') }}</li>
-        <ul>
-            @foreach($feature->list('image')->get() as $image)
-                <li>{{ $image->text('alt') }}</li>
-            @endforeach
-        </ul>
+{{--        <li>{{ $feature->text('title')->default('default feature title') }}</li>--}}
+        {{ $feature->text('cat') }}
     @endforeach
 </ul>
 
