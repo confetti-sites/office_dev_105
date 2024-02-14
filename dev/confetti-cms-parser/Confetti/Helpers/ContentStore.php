@@ -31,6 +31,7 @@ class ContentStore
         }
         $this->queryBuilder->setOptions([
             'use_cache' => true,
+            'patch_cache_select' => true,
         ]);
         $this->content             = $this->queryBuilder->run()[0] ?? ['join' => []];
         $this->contentCurrentLevel = $firstAs ? $this->content['join'][$firstAs] : $this->content;
@@ -57,6 +58,7 @@ class ContentStore
     public function findOneData(string $id): mixed
     {
         // Ensure that the content is initialized
+        $this->queryBuilder->setSelect([$id]);
         $this->init();
         // Check if content is present
         // If key is not present, then the query is never cached before
@@ -105,7 +107,7 @@ class ContentStore
     // to load the rest of the items with all cached queries
     public function findRestOfJoin(): ?array
     {
-        $child = $this->queryBuilder;
+        $child = clone $this->queryBuilder;
         $child->setOptions([
             'use_cache'            => true,
             'use_cache_only_joins' => true,

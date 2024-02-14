@@ -1,5 +1,5 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
-{{--{{ $homepage->text('title') }}--}}
+{{ $homepage->text('title') }}
 <ul>
     @foreach($homepage->list('feature')->get() as $feature)
         <li>{{ $feature->text('title')->default('default feature title') }}</li>
@@ -10,6 +10,7 @@
         </ul>
     @endforeach
 </ul>
+
 
 
 {{--<ul>--}}
