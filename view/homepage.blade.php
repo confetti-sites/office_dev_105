@@ -2,12 +2,12 @@
 {{--{{ $homepage->text('title') }}--}}
 <ul>
     @foreach($homepage->list('feature')->get() as $feature)
-        <li>{{ $feature->text('title') }}</li>
-{{--        <ul>--}}
-{{--            @foreach($feature->list('image')->get() as $image)--}}
-{{--                <li>{{ $image->text('alt') }}</li>--}}
-{{--            @endforeach--}}
-{{--        </ul>--}}
+        <li>{{ $feature->text('title')->default('default feature title') }}</li>
+        <ul>
+            @foreach($feature->list('image')->get() as $image)
+                <li>{{ $image->text('alt') }}</li>
+            @endforeach
+        </ul>
     @endforeach
 </ul>
 

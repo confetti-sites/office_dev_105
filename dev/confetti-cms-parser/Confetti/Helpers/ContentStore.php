@@ -60,7 +60,7 @@ class ContentStore
         $this->init();
         // Check if content is present
         // If key is not present, then the query is never cached before
-        if (array_key_exists('data', $this->contentCurrentLevel) && array_key_exists($id, $this->contentCurrentLevel["data"])) {
+        if ($this->contentCurrentLevel && array_key_exists('data', $this->contentCurrentLevel) && array_key_exists($id, $this->contentCurrentLevel["data"])) {
             return $this->contentCurrentLevel["data"][$id];
         }
         // Get the content and cache the selection
@@ -110,12 +110,7 @@ class ContentStore
             'use_cache'            => true,
             'use_cache_only_joins' => true,
         ]);
-        $limit = $child->getLimit();
-        if ($limit !== null) {
-            $child->setLimit($limit - 1);
-        }
-        $offset = $child->getOffset();
-        $child->setOffset($offset + 1);
+        $child->ignoreFirstRow();
         return $child->run();
     }
 
@@ -130,7 +125,6 @@ class ContentStore
             // Get first join from the array with string keys
             $join = array_pop($item['join']);
             return $this->searchSelectedData($join);
-
         }
         if (empty($item['data'])) {
             return null;

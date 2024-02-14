@@ -61,6 +61,29 @@ class QueryBuilder
         return $child;
     }
 
+    public function ignoreFirstRow(): void
+    {
+        // Ignore first row of this leven
+        $limit = $this->getLimit();
+        if ($limit !== null) {
+            $this->setLimit($limit - 1);
+        }
+        $offset = $this->getOffset();
+        $this->setOffset($offset + 1);
+        // Ignore the first row of all parent levels
+        $queryStack = [];
+        foreach ($this->queryStack as $parent) {
+            $limit = $parent['limit'] ?? null;
+            if ($limit !== null) {
+                $parent['limit'] = $limit - 1;
+            }
+            $offset = $parent['offset'] ?? 0;
+            $parent['offset'] = $offset + 1;
+            $queryStack[] = $parent;
+        }
+        $this->queryStack = $queryStack;
+    }
+
     public function appendWhere(string $key, string $operator, mixed $value): self
     {
         if ($value instanceof ComponentInterface) {
