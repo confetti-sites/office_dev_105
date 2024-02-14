@@ -71,12 +71,12 @@ class QueryBuilder
         $offset = $this->getOffset();
         $this->setOffset($offset + 1);
         // We only want to fetch one row for the parent queries
-        $queryStack = [];
-        foreach ($this->queryStack as $parent) {
-            $parent['limit'] = 1;
-            $queryStack[] = $parent;
-        }
-        $this->queryStack = $queryStack;
+//        $queryStack = [];
+//        foreach ($this->queryStack as $parent) {
+//            $parent['limit'] = 1;
+//            $queryStack[] = $parent;
+//        }
+//        $this->queryStack = $queryStack;
     }
 
     public function appendWhere(string $key, string $operator, mixed $value): self

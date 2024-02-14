@@ -61,7 +61,16 @@ class List_
             {
                 // Check if content is present
                 $items = $this->contentStore->getCurrentLevelCachedData();
-                if ($this->isValidDataFromCache($items)) {
+
+                // If ['data'] and ['join'] are empty, then this data is useless;
+                // because we want to fetch child content with cached queries
+                $firstEmptyContent = null;
+                if (!empty($items) && empty($items[0]['data']) && empty($items[0]['join'])) {
+                    $firstEmptyContent = $items[0];
+                }
+
+                // If data is present and useful, then we can use it
+                if ($items !== null && !$firstEmptyContent) {
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $childContentStore = $this->contentStore;
@@ -71,14 +80,15 @@ class List_
                     return;
                 }
 
+                // $firstEmptyContent can be loaded due init
                 // When the content is not present, we want to load all the data
                 // But to prevent n+1 problem, we need to load the first item.
-                $content = $this->contentStore->findFirstOfJoin();
-                if ($content === null) {
+                $firstEmptyContent ??= $this->contentStore->findFirstOfJoin();
+                if ($firstEmptyContent === null) {
                     return;
                 }
                 $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
-                yield new $class($this->parentContentId, $content['id'], $this->componentStore, $this->contentStore);
+                yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $this->contentStore);
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin();
@@ -90,24 +100,6 @@ class List_
                     $childContentStore->setCurrentLevelCachedData($content);
                     yield  new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
                 }
-            }
-
-            private function isValidDataFromCache(?array $items): bool
-            {
-                // If null is not present, then the query is never cached before
-                if ($items === null) {
-                    return false;
-                }
-                // If empty, then the query is cached but there is no content
-                if (count($items) === 0) {
-                    return true;
-                }
-                // If ['data'] and ['join'] are empty, then this data is useless;
-                // because we want to fetch child content with cached queries
-                if (empty($items[0]['data']) && empty($items[0]['join'])) {
-                    return false;
-                }
-                return true;
             }
         };
     }
