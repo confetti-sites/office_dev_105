@@ -38,6 +38,11 @@ class ContentStore
         $this->alreadyInit = true;
     }
 
+    public function getBreadcrumbs(): array
+    {
+        return $this->breadcrumbs;
+    }
+
     public function setCurrentLevel(string $relativeId): void
     {
         $this->breadcrumbs[] = ['type' => 'id', 'path' => $relativeId];
@@ -60,10 +65,7 @@ class ContentStore
         // Check if content is present
         // If key is not present, then the query is never cached before
         $result = $this->getContentOfThisLevel();
-        if ($result) {
-            if (empty($result["data"][$id])) {
-                return null;
-            }
+        if ($result && !empty($result["data"][$id])) {
             return $result["data"][$id];
         }
         // Get the content and cache the selection
@@ -77,6 +79,12 @@ class ContentStore
         if (count($result) === 0) {
             return null;
         }
+//        if ($id == 'title') {
+//            echo '<pre>';
+//            var_dump($result);
+//            echo '</pre>';
+//            exit('debug asdf');
+//        }
         return $this->getContentOfThisLevel($result)['data'][$id];
     }
 
@@ -123,10 +131,6 @@ class ContentStore
     public function getContentOfThisLevel(array $content = null): ?array
     {
         $content ??= $this->content;
-//        echo '<pre>';
-//        var_dump($this->breadcrumbs);
-//        var_dump($content);
-//        echo '</pre>';
         foreach ($this->breadcrumbs as $breadcrumb) {
             switch ($breadcrumb['type']) {
                 case 'id':
@@ -135,10 +139,15 @@ class ContentStore
                         break;
                     }
                     // Find the correct level in an array
+                    $found = false;
                     foreach ($content as $item) {
                         if ($item['id'] === $breadcrumb['path']) {
                             $content = $item;
+                            $found   = true;
                         }
+                    }
+                    if (!$found) {
+                        return null;
                     }
                     break;
                 case 'join':
