@@ -1,15 +1,25 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
-{{--<ul>--}}
+{{ $homepage->text('homepage_title')->default('The default homepage title') }}
+
+
+{{--@foreach($homepage->list('feature')->get() as $feature)--}}
+{{--    <ul>--}}
+{{--        {{ $feature->text('title')->default('The feature title default title') }}--}}
+{{--    </ul>--}}
+{{--@endforeach--}}
+
+
+<ul>
     @foreach($homepage->list('feature')->get() as $feature)
-{{--        <ul>--}}
+        <ul>
             @foreach($feature->list('image')->get() as $image)
-{{--                <li>--}}
-                <br>{{ $image->text('title') }}<br>
-{{--                </li>--}}
+                <li>
+                <br>{{ $image->text('title')->default('The feature image default title') }}<br>
+                </li>
             @endforeach
-{{--        </ul>--}}
+        </ul>
     @endforeach
-{{--</ul>--}}
+</ul>
 
 
 

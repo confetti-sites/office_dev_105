@@ -60,21 +60,15 @@ class List_
             public function getIterator(): Traversable
             {
                 // Check if content is present
-                $items = $this->contentStore->getCurrentLevelCachedData();
-
-                // If ['data'] and ['join'] are empty, then this data is useless;
-                // because we want to fetch child content with cached queries
-                $firstEmptyContent = null;
-                if (!empty($items) && empty($items[0]['data']) && empty($items[0]['join'])) {
-                    $firstEmptyContent = $items[0];
-                }
+                $items = $this->contentStore->getContentOfThisLevel();
 
                 // If data is present and useful, then we can use it
-                if ($items !== null && !$firstEmptyContent) {
+//                    if ($items !== null && !$firstEmptyContent) {
+                if ($items !== null) {
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
-                        $childContentStore = $this->contentStore;
-                        $childContentStore->setCurrentLevelCachedData($item);
+                        $childContentStore = clone $this->contentStore;
+                        $childContentStore->setCurrentLevel($item['id']);
                         yield new $class($this->parentContentId, $item['id'], $this->componentStore, $childContentStore, $this->as);
                     }
                     return;
@@ -85,21 +79,64 @@ class List_
                 // But to prevent n+1 problem, we need to load the first item.
                 $firstEmptyContent ??= $this->contentStore->findFirstOfJoin();
                 if ($firstEmptyContent === null) {
-                    return;
+                    throw new \Exception('null first empty content,  @todo implement');
+                }
+                if (count($firstEmptyContent) === 0) {
+                    throw new \Exception('no first empty content,  @todo implement');
                 }
                 $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
-                yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $this->contentStore);
+                $childContentStore = clone $this->contentStore;
+                $childContentStore->setCurrentLevel($firstEmptyContent[0]['id']);
+                yield new $class($this->parentContentId, $firstEmptyContent[0]['id'], $this->componentStore, $childContentStore);
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin();
-                if (empty($contents) || empty($contents[0]['join'][$this->as])) {
-                    return;
-                }
-                foreach ($contents[0]['join'][$this->as] as $content) {
-                    $childContentStore = $this->contentStore;
-                    $childContentStore->setCurrentLevelCachedData($content);
+                foreach ($contents as $content) {
+                    $childContentStore = clone $this->contentStore;
+                    $childContentStore->setCurrentLevel($content['id']);
                     yield  new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
                 }
+
+//                // If ['data'] and ['join'] are empty, then this data is useless;
+//                // because we want to fetch child content with cached queries
+//                $firstEmptyContent = null;
+//                if (!empty($items) && empty($items[0]['data']) && empty($items[0]['join'])) {
+//                    $firstEmptyContent = $items[0];
+//                }
+//
+//                // If data is present and useful, then we can use it
+//                if ($items !== null && !$firstEmptyContent) {
+//                    $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+//                    foreach ($items as $item) {
+//                        $childContentStore = $this->contentStore;
+//                        $childContentStore->setCurrentLevel($item['id']);
+//                        yield new $class($this->parentContentId, $item['id'], $this->componentStore, $childContentStore, $this->as);
+//                    }
+//                    return;
+//                }
+//
+//                // $firstEmptyContent can be loaded due init
+//                // When the content is not present, we want to load all the data
+//                // But to prevent n+1 problem, we need to load the first item.
+//                $firstEmptyContent ??= $this->contentStore->findFirstOfJoin();
+//                if ($firstEmptyContent === null) {
+//                    return;
+//                }
+//                $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+//                $childContentStore = $this->contentStore;
+//                $childContentStore->setCurrentLevel($firstEmptyContent['id']);
+//                yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $childContentStore);
+//
+//                // After the first item is loaded and cached, we can load the rest of the items in one go.
+//                $contents = $this->contentStore->findRestOfJoin();
+//                if (empty($contents)) {
+//                    return;
+//                }
+//                foreach ($contents as $content) {
+//                    $childContentStore = $this->contentStore;
+//                    $childContentStore->setCurrentLevel($content['id']);
+//                    yield  new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
+//                }
             }
         };
     }
