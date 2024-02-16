@@ -40,17 +40,27 @@ class List_
 
     /**
      * @return \IteratorAggregate|Map[]
+     * @noinspection PhpDocSignatureInspection
      */
     public function get(): IteratorAggregate
     {
         // Ensure that the content is initialized
         $this->contentStore->init($this->as);
 
+        // Most of the time we run the entire query once. But when we are
+        // missing some data, we want to run a second query very efficiently
+        // to prevent n+1 problems. With yield, we can fetch the first item and
+        // cache the part of the query. When we now the first item, the query is
+        // cached, and we can fetch the rest of the items in one go. Traditionally, with
+        // an n+1 problem, the number of queries is equal to the number of items x child items.
+        // With this method, the number of queries is less than the number of component types. Most
+        // of the time, the number of component types is less than 2 because when you adjust one part
+        // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
         return new class($this->parentContentId, $this->relativeContentId, $this->componentStore, $this->contentStore, $this->as) implements IteratorAggregate {
             public function __construct(
                 protected string         $parentContentId,
                 protected string         $relativeContentId,
-                protected ComponentStore $componentStore,
+                protected ComponentStore &$componentStore,
                 protected ContentStore   $contentStore,
                 protected string         $as,
             )
