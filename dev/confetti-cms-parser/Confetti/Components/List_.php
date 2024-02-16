@@ -59,14 +59,14 @@ class List_
 
             public function getIterator(): Traversable
             {
-                // Check if content is present
+                // Get items if present
                 $items = $this->contentStore->getContentOfThisLevel();
-
-                // @todo $firstEmptyContent
+                // If items are present, but without data. Then it looks useless,
+                // but we can use to skip findFirstOfJoin()
+                $firstEmptyContent = $this->getFirstEmptyContent($items);
 
                 // If data is present and useful, then we can use it
-//                    if ($items !== null && !$firstEmptyContent) {
-                if ($items !== null) {
+                if ($items !== null && $firstEmptyContent === null) {
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
@@ -79,15 +79,15 @@ class List_
                 // $firstEmptyContent can be loaded due init
                 // When the content is not present, we want to load all the data
                 // But to prevent n+1 problem, we need to load the first item.
-                $firstEmptyContent ??= $this->contentStore->findFirstOfJoin();
+                $firstEmptyContent ??= $this->contentStore->findFirstOfJoin()[0] ?? null;
                 if ($firstEmptyContent === null) {
-                    throw new \Exception('null first empty content,  @todo implement');
+                    return;
                 }
-                $class             = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                 if (!empty($firstEmptyContent)) {
                     $childContentStore = clone $this->contentStore;
-                    $childContentStore->appendCurrentJoin($firstEmptyContent[0]['id']);
-                    yield new $class($this->parentContentId, $firstEmptyContent[0]['id'], $this->componentStore, $childContentStore);
+                    $childContentStore->appendCurrentJoin($firstEmptyContent['id']);
+                    yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $childContentStore);
                 }
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
@@ -97,6 +97,21 @@ class List_
                     $childContentStore->appendCurrentJoin($content['id']);
                     yield new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
                 }
+            }
+
+            /**
+             * If items are present, but without data. Then it looks useless,
+             * but we can use to skip findFirstOfJoin()
+             */
+            private function getFirstEmptyContent(?array $items): ?array
+            {
+                if ($items === null) {
+                    return null;
+                }
+                if (count($items) > 0 && empty($items[0]['data'] && empty($items[0]['join']))) {
+                    return $items[0];
+                }
+                return null;
             }
         };
     }

@@ -1,12 +1,5 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
-{{ $homepage->text('homepage_title')->default('The default homepage title') }}
-
-
-{{--@foreach($homepage->list('feature')->get() as $feature)--}}
-{{--    <ul>--}}
-{{--        {{ $feature->text('title')->default('The feature title default title') }}--}}
-{{--    </ul>--}}
-{{--@endforeach--}}
+{{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
 
 
 <ul>
