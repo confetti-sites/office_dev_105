@@ -43,9 +43,15 @@ class ContentStore
         return $this->breadcrumbs;
     }
 
-    public function setCurrentLevel(string $relativeId): void
+    public function appendCurrentJoin(string $relativeId): void
     {
         $this->breadcrumbs[] = ['type' => 'id', 'path' => $relativeId];
+        // The item in a list is first abstract `/model/item~`, so we can fetch
+        // all the children when we loop over the children, we want to replace
+        // de abstract "from" with the specific id `/model/item~1y63jg9kej`.
+        // That way we can fetch new data when data is missing. This is
+        // important because we want to get only new data from this item
+        $this->queryBuilder->replaceFrom($relativeId);
     }
 
     public function join(string $from, string $as): void
@@ -57,6 +63,11 @@ class ContentStore
         $this->queryBuilder->wrapJoin($last['path'], $from, $as);
     }
 
+    /**
+     * This is a function to fetch one data. Most of the time, the data
+     * is already present because it was fetched before during a cached query.
+     * When the data is not present, we want to fetch the data.
+     */
     public function findOneData(string $id): mixed
     {
         // Ensure that the content is initialized
@@ -69,23 +80,18 @@ class ContentStore
             return $result["data"][$id];
         }
         // Get the content and cache the selection
-        $this->queryBuilder->setOptions([
+        $query = $this->queryBuilder;
+        $query->setOptions([
             'patch_cache_select' => true,
             'only_first'         => true,
             'use_cache'          => false,
         ]);
-        $this->queryBuilder->setSelect([$id]);
-        $result = $this->queryBuilder->run();
+        $query->setSelect([$id]);
+        $result = $query->run();
         if (count($result) === 0) {
             return null;
         }
-//        if ($id == 'title') {
-//            echo '<pre>';
-//            var_dump($result);
-//            echo '</pre>';
-//            exit('debug asdf');
-//        }
-        return $this->getContentOfThisLevel($result)['data'][$id];
+        return $this->getContentOfThisLevel($result)['data'][$id] ?? null;
     }
 
     // This is to prevent n+1 problems. We need to load the
@@ -128,7 +134,7 @@ class ContentStore
         return $this->getContentOfThisLevel($result);
     }
 
-    public function getContentOfThisLevel(array $content = null): ?array
+    public function getContentOfThisLevel(array $content = null, bool $debug = false): ?array
     {
         $content ??= $this->content;
         foreach ($this->breadcrumbs as $breadcrumb) {

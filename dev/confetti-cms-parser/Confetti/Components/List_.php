@@ -70,7 +70,7 @@ class List_
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
-                        $childContentStore->setCurrentLevel($item['id']);
+                        $childContentStore->appendCurrentJoin($item['id']);
                         yield new $class($this->parentContentId, $item['id'], $this->componentStore, $childContentStore, $this->as);
                     }
                     return;
@@ -86,20 +86,15 @@ class List_
                 $class             = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                 if (!empty($firstEmptyContent)) {
                     $childContentStore = clone $this->contentStore;
-                    $childContentStore->setCurrentLevel($firstEmptyContent[0]['id']);
+                    $childContentStore->appendCurrentJoin($firstEmptyContent[0]['id']);
                     yield new $class($this->parentContentId, $firstEmptyContent[0]['id'], $this->componentStore, $childContentStore);
-                }/* else {
-                    echo '<pre>';
-                    var_dump($this->contentStore->getBreadcrumbs());
-                    echo '</pre>';
-                    exit('debug asdf');
-                }*/
+                }
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin();
                 foreach ($contents as $content) {
                     $childContentStore = clone $this->contentStore;
-                    $childContentStore->setCurrentLevel($content['id']);
+                    $childContentStore->appendCurrentJoin($content['id']);
                     yield new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
                 }
             }

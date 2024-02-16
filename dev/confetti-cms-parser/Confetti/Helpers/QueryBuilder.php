@@ -20,6 +20,11 @@ class QueryBuilder
         return $this->query;
     }
 
+    public function replaceFrom(string $relativeId): void
+    {
+        $this->query['from'] = $relativeId;
+    }
+
     /**
      * @throws \JsonException
      */
