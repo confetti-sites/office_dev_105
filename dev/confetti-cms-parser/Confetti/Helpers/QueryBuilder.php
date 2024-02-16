@@ -28,8 +28,11 @@ class QueryBuilder
     /**
      * @throws \JsonException
      */
-    public function run(): array
+    public function run(bool $fake): array
     {
+        if ($fake) {
+            return [];
+        }
         $client   = new Client();
         $response = $client->get('confetti-cms-content/contents', [
             'accept' => 'application/json',

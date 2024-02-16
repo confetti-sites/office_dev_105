@@ -3,12 +3,11 @@
 
 
 <ul>
-    @foreach($homepage->list('feature')->get() as $feature)
+    @foreach($homepage->list('feature_fake')->get() as $feature)
+        <h2>{{ $feature->text('feature_title')->max(10) }}</h2>
         <ul>
             @foreach($feature->list('image')->get() as $image)
-                <li>
-                <br>{{ $image->text('title')->default('The feature image default title') }}<br>
-                </li>
+                <li>{{ $image->text('image_title')->max(5) }}</li>
             @endforeach
         </ul>
     @endforeach

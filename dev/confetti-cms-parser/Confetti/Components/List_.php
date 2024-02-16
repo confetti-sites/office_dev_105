@@ -69,6 +69,13 @@ class List_
 
             public function getIterator(): Traversable
             {
+                $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                if ($this->contentStore->isFake()) {
+                    foreach ($this->getFakeComponents($class) as $item) {
+                        yield $item;
+                    }
+                    return;
+                }
                 // Get items if present
                 $items = $this->contentStore->getContentOfThisLevel();
                 // If items are present, but without data. Then it looks useless,
@@ -77,6 +84,12 @@ class List_
 
                 // If data is present and useful, then we can use it
                 if ($items !== null && $firstEmptyContent === null) {
+                    if (count($items) === 0) {
+                        foreach ($this->getFakeComponents($class) as $item) {
+                            yield $item;
+                        }
+                        return;
+                    }
                     $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
@@ -93,7 +106,6 @@ class List_
                 if ($firstEmptyContent === null) {
                     return;
                 }
-                $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                 if (!empty($firstEmptyContent)) {
                     $childContentStore = clone $this->contentStore;
                     $childContentStore->appendCurrentJoin($firstEmptyContent['id']);
@@ -122,6 +134,34 @@ class List_
                     return $items[0];
                 }
                 return null;
+            }
+
+            private function getFakeComponents(string $class): array
+            {
+                $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
+                $component = $this->componentStore->find($contentId);
+
+                // Get the number of items. If not present, then use default values.
+                $max = $component->getDecoration('max')['value'] ?? 10;
+                $min = $component->getDecoration('min')['value'] ?? 1;
+                $amount = random_int($min, $max);
+
+                $i     = 1;
+                $items = [];
+                while ($i <= $amount) {
+                    $childContentStore = clone $this->contentStore;
+                    $childContentStore->appendCurrentJoin($contentId);
+                    $childContentStore->setIsFake();
+                    $i++;
+                    $idSuffix = str_pad((string) $i, 10, '0', STR_PAD_LEFT);
+                    $items[] = new $class(
+                        $this->parentContentId,
+                        $contentId . $idSuffix,
+                        $this->componentStore,
+                        $childContentStore,
+                    );
+                }
+                return $items;
             }
         };
     }
@@ -169,29 +209,6 @@ class List_
 //        }
 //
 //        return [$columns, $rows];
-    }
-
-    private function getFakeComponents(): array
-    {
-        return [];
-//        $component = $this->componentStore->find($this->getFullContentId());
-//
-//        $max = $component->getDecoration('max')['value'] ?? 100;
-//        $min = $component->getDecoration('min')['value'] ?? 1;
-//
-//        $amount = random_int($min, $max);
-//
-//        $i     = 1;
-//        $items = [];
-//        while ($i <= $amount) {
-//            $i++;
-//            $items[] = new Map(
-//                $this->contentId,
-//                $this->componentStore,
-//                $this->contentStore,
-//            );
-//        }
-//        return $items;
     }
 
     // Minimum number of items

@@ -9,6 +9,9 @@ class ContentStore
     private QueryBuilder $queryBuilder;
     private array $content = [];
     private bool $alreadyInit = false;
+    // This is a fake store, used for mocking
+    // data for development No database queries are made
+    private bool $isFake = false;
 
     /**
      * @var array array with 'type' and 'path'
@@ -34,13 +37,18 @@ class ContentStore
             'use_cache'          => true,
             'patch_cache_select' => true,
         ]);
-        $this->content     = $this->queryBuilder->run()[0] ?? ['join' => []];
+        $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? ['join' => []];
         $this->alreadyInit = true;
     }
 
-    public function getBreadcrumbs(): array
+    public function isFake(): bool
     {
-        return $this->breadcrumbs;
+        return $this->isFake;
+    }
+
+    public function setIsFake(): void
+    {
+        $this->isFake = true;
     }
 
     public function appendCurrentJoin(string $relativeId): void
@@ -87,7 +95,7 @@ class ContentStore
             'use_cache'          => false,
         ]);
         $query->setSelect([$id]);
-        $result = $query->run();
+        $result = $query->run($this->isFake);
         if (count($result) === 0) {
             return null;
         }
@@ -112,7 +120,7 @@ class ContentStore
             'use_cache'                       => false,
         ]);
         /// so we can use where and so forth
-        $result = $child->run();
+        $result = $child->run($this->isFake);
         if (count($result) === 0) {
             return null;
         }
@@ -129,12 +137,12 @@ class ContentStore
             'use_cache_only_missing_children' => true,
         ]);
         $child->ignoreFirstRow();
-        $result        = $child->run();
+        $result        = $child->run($this->isFake);
         $this->content = $result;
         return $this->getContentOfThisLevel($result);
     }
 
-    public function getContentOfThisLevel(array $content = null, bool $debug = false): ?array
+    public function getContentOfThisLevel(array $content = null): ?array
     {
         $content ??= $this->content;
         foreach ($this->breadcrumbs as $breadcrumb) {
