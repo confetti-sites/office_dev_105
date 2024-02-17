@@ -1,4 +1,4 @@
-@php($usps = model(new \model\homepage\demo\blocks)->all())
+@php($usps = model(new \model\homepage\demo\blocks))
 
 <div class="bg-gray-50 dark:bg-gray-900/80">
     <div

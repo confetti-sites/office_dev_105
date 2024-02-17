@@ -24,11 +24,7 @@ class ContentStore
         $this->queryBuilder  = new QueryBuilder($from, $as);
     }
 
-    /**
-     * @param string|null $firstAs The first as to use to determine the level.
-     *                             if null, then we are at the top level.
-     */
-    public function init(?string $firstAs = null): void
+    public function init(): void
     {
         if ($this->alreadyInit) {
             return;
@@ -37,7 +33,7 @@ class ContentStore
             'use_cache'          => true,
             'patch_cache_select' => true,
         ]);
-        $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? ['join' => []];
+        $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? [];
         $this->alreadyInit = true;
     }
 

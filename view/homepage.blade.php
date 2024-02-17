@@ -2,16 +2,15 @@
 {{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
 
 
-<ul>
-    @foreach($homepage->list('feature_fake')->get() as $feature)
-        <h2>{{ $feature->text('feature_title')->max(10) }}</h2>
-        <ul>
-            @foreach($feature->list('image')->get() as $image)
-                <li>{{ $image->text('image_title')->max(5) }}</li>
-            @endforeach
-        </ul>
-    @endforeach
-</ul>
+{{--<ul>--}}
+{{--    @foreach($homepage->list('feature')->get() as $feature)--}}
+{{--        <ul>--}}
+{{--            @foreach($feature->list('image')->get() as $image)--}}
+{{--                <li>{{ $image->text('title')->max(5) }}</li>--}}
+{{--            @endforeach--}}
+{{--        </ul>--}}
+{{--    @endforeach--}}
+{{--</ul>--}}
 
 
 
@@ -26,5 +25,5 @@
 {{--@include('view.usps')--}}
 {{--@include('view.demo')--}}
 {{--@include('view.compare')--}}
-{{--@include('view.steps')--}}
+@include('view.steps')
 {{--@include('view.newsletter')--}}
