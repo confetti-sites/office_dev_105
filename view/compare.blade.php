@@ -1,4 +1,4 @@
-@php($compare = model(new \model\homepage\compare)->label('Compare')->get())
+@php($compare = model(new \model\homepage\compare)->label('Compare'))
 <div class="bg-gray-50 flex items-center justify-center">
     @php($cases = $compare->list('cases')->columns(['title', 'description'])->min(1)->max(4)->get())
     <div class="relative w-full" x-data="{ tab: '0'}">
@@ -18,7 +18,7 @@
             </div>
             @foreach($cases as $tapNr => $case)
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2" x-show="tab == {{ $tapNr }}">
-                    @foreach($case->list('columns')->columns(['title'])->min(2)->max(2)->get() as $column)
+                    @foreach($case->list('column')->columns(['title'])->min(2)->max(2)->get() as $column)
                         <div class="m-10 mt-0 relative space-y-4">
                             <div class="rounded-lg p-4 bg-blue-300 text-xl flex justify-center m-8">
                                 <h3>{{ $column->text('title')->min(1)->max(50) }}</h3>

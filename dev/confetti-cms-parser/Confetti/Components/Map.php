@@ -68,13 +68,7 @@ abstract class Map
     {
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
         $as = $location['file'] . ':' . $location['line'];
-        return new List_(
-            $this->getFullId(),
-            $key,
-            $this->componentStore,
-            $this->contentStore,
-            $as,
-        );
+        return new List_($this->getFullId(), $key, $this->componentStore, $this->contentStore, $as);
     }
 
     public function number(string $key): Number
