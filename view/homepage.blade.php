@@ -1,17 +1,20 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
-{{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
 
 
 {{--<ul>--}}
-{{--    @foreach($homepage->list('feature')->get() as $feature)--}}
-{{--        <ul>--}}
-{{--            @foreach($feature->list('image')->get() as $image)--}}
-{{--                <li>{{ $image->text('title')->max(5) }}</li>--}}
-{{--            @endforeach--}}
-{{--        </ul>--}}
-{{--    @endforeach--}}
+{{--@foreach($homepage->list('step')->columns(['title'])->min(1)->max(10)->get() as $i => $step)--}}
+{{--    <li>{{ $step->text('title')->max(50) }}</li>--}}
+{{--@endforeach--}}
 {{--</ul>--}}
 
+
+{{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
+
+{{--<ul>--}}
+{{--@foreach($homepage->list('step')->columns(['title'])->min(1)->max(10)->get() as $i => $step)--}}
+{{--    <li>{{ $step->text('title')->max(50) }}</li>--}}
+{{--@endforeach--}}
+{{--</ul>--}}
 
 
 {{--<ul>--}}
@@ -25,5 +28,7 @@
 {{--@include('view.usps')--}}
 {{--@include('view.demo')--}}
 {{--@include('view.compare')--}}
-@include('view.steps')
-{{--@include('view.newsletter')--}}
+
+{{--@include('view.steps')--}}
+
+@include('view.newsletter')

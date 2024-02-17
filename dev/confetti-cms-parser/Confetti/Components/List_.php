@@ -104,6 +104,9 @@ class List_
                 // But to prevent n+1 problem, we need to load the first item.
                 $firstEmptyContent ??= $this->contentStore->findFirstOfJoin()[0] ?? null;
                 if ($firstEmptyContent === null) {
+                    foreach ($this->getFakeComponents($class) as $item) {
+                        yield $item;
+                    }
                     return;
                 }
                 if (!empty($firstEmptyContent)) {
@@ -140,9 +143,12 @@ class List_
             {
                 $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
                 $component = $this->componentStore->find($contentId);
+                $deeper = $this->contentStore->isFake();
 
-                // Get the number of items. If not present, then use default values.
-                $max = $component->getDecoration('max')['value'] ?? 10;
+                // Get the number of items. If not present,
+                // then use default values. To prevent rendering too
+                // many items, we don't fake to many items in deeper levels.
+                $max = $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 50);
                 $min = $component->getDecoration('min')['value'] ?? 1;
                 $amount = random_int($min, $max);
 
