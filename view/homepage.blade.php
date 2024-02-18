@@ -1,11 +1,11 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
 
 
-{{--<ul>--}}
-{{--@foreach($homepage->list('step')->columns(['title'])->min(1)->max(10)->get() as $i => $step)--}}
-{{--    <li>{{ $step->text('title')->max(50) }}</li>--}}
-{{--@endforeach--}}
-{{--</ul>--}}
+<ul>
+    @foreach($homepage->list('feature')->columns(['title'])->min(1)->max(10)->whereCategory('!=', 'red')->get() as $i => $feature)
+        <li>{{ $feature->text('category')->default('none') }}: {{ $feature->text('title')->max(50) }}</li>
+    @endforeach
+</ul>
 
 
 {{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
@@ -27,7 +27,7 @@
 {{--@include('view.hero')--}}
 {{--@include('view.usps')--}}
 {{--@include('view.demo')--}}
-@include('view.compare')
+{{--@include('view.compare')--}}
 
 {{--@include('view.steps')--}}
 

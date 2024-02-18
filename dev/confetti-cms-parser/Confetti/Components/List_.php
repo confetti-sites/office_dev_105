@@ -38,6 +38,12 @@ class List_
         $this->contentStore->join($this->relativeContentId, $as);
     }
 
+    public function where(string $key, string $operator, mixed $value): self
+    {
+        $this->contentStore->where($key, $operator, $value);
+        return $this;
+    }
+
     /**
      * @return \IteratorAggregate|Map[]
      * @noinspection PhpDocSignatureInspection

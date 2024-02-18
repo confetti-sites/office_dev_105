@@ -67,6 +67,11 @@ class ContentStore
         $this->queryBuilder->wrapJoin($last['path'], $from, $as);
     }
 
+    public function where(string $key, string $operator, mixed $value): void
+    {
+        $this->queryBuilder->appendWhere($key, $operator, $value);
+    }
+
     /**
      * This is a function to fetch one data. Most of the time, the data
      * is already present because it was fetched before during a cached query.

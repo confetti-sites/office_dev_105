@@ -6,6 +6,8 @@ use Confetti\Components\Map;
 
 class QueryBuilder
 {
+    private const MODEL_PREFIX = '/model/';
+
     private const DEFAULT_OPTIONS = ['response_with_full_id' => false];
     private array $queryStack = [];
     private array $query;
@@ -64,8 +66,8 @@ class QueryBuilder
         $child = $this;
         // We don't want to select anything from the parent
         $child->query['select'] = [];
-        $child->query['from'] = $parentFrom;
-        $child->queryStack[] = $child->query;
+        $child->query['from']   = $parentFrom;
+        $child->queryStack[]    = $child->query;
         $child->newQuery($from, $as);
     }
 
@@ -82,15 +84,15 @@ class QueryBuilder
 
     public function appendWhere(string $key, string $operator, mixed $value): self
     {
-        if ($value instanceof ComponentInterface) {
+        if ($value instanceof ComponentInterface || str_starts_with($value, self::MODEL_PREFIX)) {
             $this->query['where'][] = [
-                'field'          => $key,
+                'key'            => $key,
                 'operator'       => $operator,
                 'expression_key' => $value,
             ];
         } else {
             $this->query['where'][] = [
-                'field'            => $key,
+                'key'              => $key,
                 'operator'         => $operator,
                 'expression_value' => $value,
             ];
@@ -145,7 +147,7 @@ class QueryBuilder
 
     private function getFullQuery(): array
     {
-        $result = $this->query;
+        $result  = $this->query;
         $options = $result['options'] ?? throw new \RuntimeException('No options set');
         unset($result['options']);
         foreach (array_reverse($this->queryStack) as $parent) {

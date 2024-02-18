@@ -23,12 +23,6 @@ abstract class Map
 
     public function getFullId(): string
     {
-        if ($this->relativeContentId === null) {
-            echo '<pre>';
-            var_dump($this->parentContentId);
-            echo '</pre>';
-            exit('debug getFullId');
-        }
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
