@@ -67,9 +67,24 @@ class ContentStore
         $this->queryBuilder->wrapJoin($last['path'], $from, $as);
     }
 
-    public function where(string $key, string $operator, mixed $value): void
+    public function appendWhere(string $key, string $operator, mixed $value): void
     {
         $this->queryBuilder->appendWhere($key, $operator, $value);
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->queryBuilder->getLimit();
+    }
+
+    public function setLimit(int $limit): void
+    {
+        $this->queryBuilder->setLimit($limit);
+    }
+
+    public function setOffset(int $offset): void
+    {
+        $this->queryBuilder->setOffset($offset);
     }
 
     /**

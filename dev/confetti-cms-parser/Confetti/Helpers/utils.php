@@ -10,7 +10,7 @@ use Confetti\Helpers\Request;
  * @param M $target
  * @return M|\Confetti\Components\Map
  */
-function model(\Confetti\Components\Map $target): mixed
+function model(\Confetti\Components\Map $target): \Confetti\Components\Map
 {
     $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
     $as = $location['file'] . ':' . $location['line'];

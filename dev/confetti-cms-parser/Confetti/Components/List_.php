@@ -40,7 +40,19 @@ class List_
 
     public function where(string $key, string $operator, mixed $value): self
     {
-        $this->contentStore->where($key, $operator, $value);
+        $this->contentStore->appendWhere($key, $operator, $value);
+        return $this;
+    }
+
+    public function limit(int $limit): self
+    {
+        $this->contentStore->setLimit($limit);
+        return $this;
+    }
+
+    public function offset(int $offset): self
+    {
+        $this->contentStore->setOffset($offset);
         return $this;
     }
 
@@ -154,7 +166,7 @@ class List_
                 // Get the number of items. If not present,
                 // then use default values. To prevent rendering too
                 // many items, we don't fake to many items in deeper levels.
-                $max = $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 50);
+                $max = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 50);
                 $min = $component->getDecoration('min')['value'] ?? 1;
                 $amount = random_int($min, $max);
 

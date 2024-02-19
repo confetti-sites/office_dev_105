@@ -84,19 +84,20 @@ class QueryBuilder
 
     public function appendWhere(string $key, string $operator, mixed $value): self
     {
-        if ($value instanceof ComponentInterface || str_starts_with($value, self::MODEL_PREFIX)) {
+        if ($value !== null && ($value instanceof ComponentInterface || str_starts_with($value, self::MODEL_PREFIX))) {
             $this->query['where'][] = [
                 'key'            => $key,
                 'operator'       => $operator,
                 'expression_key' => $value,
             ];
-        } else {
-            $this->query['where'][] = [
-                'key'              => $key,
-                'operator'         => $operator,
-                'expression_value' => $value,
-            ];
+            return $this;
         }
+
+        $this->query['where'][] = [
+            'key'              => $key,
+            'operator'         => $operator,
+            'expression_value' => $value,
+        ];
 
         return $this;
     }
