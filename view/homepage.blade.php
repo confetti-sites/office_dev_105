@@ -1,7 +1,7 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
 
 <ul>
-    @foreach($homepage->list('feature')->columns(['title'])->min(1)->max(10)->limit(2)->offset(1)->get() as $i => $feature)
+    @foreach($homepage->list('feature')->columns(['title'])->min(1)->max(10)->orderDescBy('title')->get() as $i => $feature)
         <li>{{ $feature->text('title')->max(50) }}</li>
     @endforeach
 </ul>

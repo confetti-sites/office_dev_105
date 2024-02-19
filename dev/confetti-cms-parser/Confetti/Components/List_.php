@@ -44,6 +44,22 @@ class List_
         return $this;
     }
 
+    // Example of descending order:
+    // 5, 4, 3, 2, 1
+    public function orderDescBy(string $key): self
+    {
+        $this->contentStore->appendOrderBy($key, 'descending');
+        return $this;
+    }
+
+    // Example of ascending order:
+    // 1, 2, 3, 4, 5
+    public function orderAscBy(string $key): self
+    {
+        $this->contentStore->appendOrderBy($key, 'ascending');
+        return $this;
+    }
+
     public function limit(int $limit): self
     {
         $this->contentStore->setLimit($limit);
