@@ -38,8 +38,14 @@ class List_
         $this->contentStore->join($this->relativeContentId, $as);
     }
 
-    public function where(string $key, string $operator, mixed $value): self
+    public function where(string|ComponentStandard $key, string $operator, mixed $value): self
     {
+        if ($key instanceof ComponentStandard) {
+            $key = $key->getComponentKey();
+        }
+        if ($value instanceof ComponentStandard) {
+            $value = $value->getComponentKey();
+        }
         $this->contentStore->appendWhere($key, $operator, $value);
         return $this;
     }
@@ -48,6 +54,9 @@ class List_
     // 5, 4, 3, 2, 1
     public function orderDescBy(string|ComponentStandard $key): self
     {
+        if ($key instanceof ComponentStandard) {
+            $key = $key->getComponentKey();
+        }
         $this->contentStore->appendOrderBy($key, 'descending');
         return $this;
     }
@@ -56,6 +65,9 @@ class List_
     // 1, 2, 3, 4, 5
     public function orderAscBy(string|ComponentStandard $key): self
     {
+        if ($key instanceof ComponentStandard) {
+            $key = $key->getComponentKey();
+        }
         $this->contentStore->appendOrderBy($key, 'ascending');
         return $this;
     }

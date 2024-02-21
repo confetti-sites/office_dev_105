@@ -72,11 +72,8 @@ class ContentStore
         $this->queryBuilder->appendWhere($key, $operator, $value);
     }
 
-    public function appendOrderBy(string|ComponentStandard $key, string $direction): void
+    public function appendOrderBy(string $key, string $direction): void
     {
-        if ($key instanceof ComponentStandard) {
-            $key = $key->getComponentKey();
-        }
         $this->queryBuilder->appendOrderBy($key, $direction);
     }
 
