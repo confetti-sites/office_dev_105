@@ -54,7 +54,7 @@ class List_
 
     // Example of ascending order:
     // 1, 2, 3, 4, 5
-    public function orderAscBy(string $key): self
+    public function orderAscBy(string|ComponentStandard $key): self
     {
         $this->contentStore->appendOrderBy($key, 'ascending');
         return $this;

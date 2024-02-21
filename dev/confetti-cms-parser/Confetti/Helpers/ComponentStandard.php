@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Confetti\Helpers;
 
+use http\Exception\RuntimeException;
+
 abstract class ComponentStandard
 {
     private const FORBIDDEN_PHP_KEYWORDS = [

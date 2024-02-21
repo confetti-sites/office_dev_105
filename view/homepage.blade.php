@@ -2,9 +2,9 @@
 @php($homepage = model(new \model\homepage)->label('Homepage'))
 
 <ul>
-    @foreach($homepage->list('home_blocks')->where('category', '!=', 'dog')->orderAscBy('title')->limit(2)->get() as $i => $feature)
+    @foreach($homepage->list('feature')->where('category', '!=', 'dog')->orderDescBy(new title)->get() as $i => $feature)
         <li>{{ $feature->text('title')->max(50) }}</li>
-        <li>{{ $feature->text('category') }}</li>
+        <li>{{ $feature->text('category')->max(5) }}</li>
     @endforeach
 </ul>
 
