@@ -8,7 +8,7 @@ use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 
-abstract class Map
+class Map
 {
     public function __construct(
         protected ?string         $parentContentId = null,
@@ -18,8 +18,6 @@ abstract class Map
     )
     {
     }
-
-    abstract public function getComponentKey(): string;
 
     public function getFullId(): string
     {

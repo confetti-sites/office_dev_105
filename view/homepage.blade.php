@@ -1,8 +1,10 @@
+@php use model\homepage\feature\title; @endphp
 @php($homepage = model(new \model\homepage)->label('Homepage'))
 
 <ul>
-    @foreach($homepage->list('feature')->columns(['title'])->min(1)->max(10)->orderDescBy('title')->get() as $i => $feature)
+    @foreach($homepage->list('home_blocks')->where('category', '!=', 'dog')->orderAscBy('title')->limit(2)->get() as $i => $feature)
         <li>{{ $feature->text('title')->max(50) }}</li>
+        <li>{{ $feature->text('category') }}</li>
     @endforeach
 </ul>
 

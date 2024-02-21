@@ -75,9 +75,6 @@ abstract class ComponentStandard
         "yield",
     ];
 
-    // Component key
-    protected string $componentKey;
-
     public function __construct(
         protected ?string         $parentContentId = null,
         protected ?string         $relativeContentId = null,
@@ -86,7 +83,13 @@ abstract class ComponentStandard
         protected ?ContentStore   &$contentStore = null,
     )
     {
-        $this->componentKey = self::componentKeyFromContentId($this->getFullContentId());
+    }
+
+    public function getComponentKey(): string
+    {
+        // When using the abstract component (\Confetti\Components\Text) we use this method.
+        // The specific component (\model\homepage\feature\title) will override this method.
+        return static::componentKeyFromContentId($this->getFullContentId());
     }
 
     public function getFullContentId(): string

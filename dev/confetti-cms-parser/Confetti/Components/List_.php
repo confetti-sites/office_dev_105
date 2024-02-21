@@ -46,7 +46,7 @@ class List_
 
     // Example of descending order:
     // 5, 4, 3, 2, 1
-    public function orderDescBy(string $key): self
+    public function orderDescBy(string|ComponentStandard $key): self
     {
         $this->contentStore->appendOrderBy($key, 'descending');
         return $this;
