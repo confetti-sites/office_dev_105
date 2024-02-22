@@ -4,22 +4,25 @@
 
 <ul>
     @php($features = $homepage->list('feature')
-            ->min(1)->max(2)->columns(['title_first', 'title_second'])
-            ->where(new title_first, '!=', new title_second)
+            ->min(1)->max(2)/*->columns(['title_first', 'title_second'])*/
+//            ->where(new title_first, '!=', new title_second)
             ->limit(1)
             ->get())
 
     @foreach($features as $i => $feature)
         <li>{{ $feature->text('title_first')->max(50) }}</li>
-        <li>{{ $feature->text('title_second')->max(50) ?? 'test' }}</li>
     @endforeach
 </ul>
 
 <ul>
     @foreach($homepage->features()->get() as $feature)
+        <li>SECOND FEATURES</li>
         <li>{{ $feature->title_first }}</li>
     @endforeach
 </ul>
+
+
+{{-- @todo new query when where changes --}}
 
 {{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
 

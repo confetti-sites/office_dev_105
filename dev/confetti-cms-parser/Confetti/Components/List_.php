@@ -35,6 +35,7 @@ class List_
         $this->relativeContentId .= '~';
         $this->as                = $as;
         $this->componentKey      = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
+        $this->contentStore      = clone $this->contentStore;
         $this->contentStore->join($this->relativeContentId, $as);
     }
 
@@ -189,13 +190,13 @@ class List_
             {
                 $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
                 $component = $this->componentStore->find($contentId);
-                $deeper = $this->contentStore->isFake();
+                $deeper    = $this->contentStore->isFake();
 
                 // Get the number of items. If not present,
                 // then use default values. To prevent rendering too
                 // many items, we don't fake to many items in deeper levels.
-                $max = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 50);
-                $min = $component->getDecoration('min')['value'] ?? 1;
+                $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 50);
+                $min    = $component->getDecoration('min')['value'] ?? 1;
                 $amount = random_int($min, $max);
 
                 $i     = 1;
@@ -206,7 +207,7 @@ class List_
                     $childContentStore->setIsFake();
                     $i++;
                     $idSuffix = str_pad((string) $i, 10, '0', STR_PAD_LEFT);
-                    $items[] = new $class(
+                    $items[]  = new $class(
                         $this->parentContentId,
                         $contentId . $idSuffix,
                         $this->componentStore,

@@ -62,13 +62,11 @@ class QueryBuilder
 
     public function wrapJoin(string $parentFrom, string $from, string $as = null): void
     {
-        // Copy query so the rest of the page has the old query
-        $child = $this;
         // We don't want to select anything from the parent
-        $child->query['select'] = [];
-        $child->query['from']   = $parentFrom;
-        $child->queryStack[]    = $child->query;
-        $child->newQuery($from, $as);
+        $this->query['select'] = [];
+        $this->query['from']   = $parentFrom;
+        $this->queryStack[]    = $this->query;
+        $this->newQuery($from, $as);
     }
 
     public function ignoreFirstRow(): void

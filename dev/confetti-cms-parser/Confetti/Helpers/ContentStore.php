@@ -50,6 +50,7 @@ class ContentStore
     public function appendCurrentJoin(string $relativeId): void
     {
         $this->breadcrumbs[] = ['type' => 'id', 'path' => $relativeId];
+
         // The item in a list is first abstract `/model/item~`, so we can fetch
         // all the children when we loop over the children, we want to replace
         // de abstract "from" with the specific id `/model/item~1y63jg9kej`.
