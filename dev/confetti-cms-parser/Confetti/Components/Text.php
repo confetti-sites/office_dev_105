@@ -7,7 +7,7 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentStandard;
 
 class Text extends ComponentStandard {
-    public function get(): string
+    public function get(): ?string
     {
         if ($this->contentStore === null) {
             throw new \RuntimeException('This component is only used as a reference. therefore, you can\'t call __toString() or get().');

@@ -1,13 +1,25 @@
-{{--@php use model\homepage\feature\title_first; @endphp--}}
-{{--@php use model\homepage\feature\title_second; @endphp--}}
+@php use model\homepage\feature\title_first; @endphp
+@php use model\homepage\feature\title_second; @endphp
 @php($homepage = model(new \model\homepage)->label('Homepage'))
 
-{{--<ul>--}}
-{{--    @foreach($homepage->list('feature')->where(new title_first, '!=', new title_second)->get() as $i => $feature)--}}
-{{--        <li>{{ $feature->text('title_first')->max(50) }}</li>--}}
-{{--        <li>{{ $feature->text('title_second')->max(50) }}</li>--}}
-{{--    @endforeach--}}
-{{--</ul>--}}
+<ul>
+    @php($features = $homepage->list('feature')
+            ->min(1)->max(2)->columns(['title_first', 'title_second'])
+            ->where(new title_first, '!=', new title_second)
+            ->limit(1)
+            ->get())
+
+    @foreach($features as $i => $feature)
+        <li>{{ $feature->text('title_first')->max(50) }}</li>
+        <li>{{ $feature->text('title_second')->max(50) ?? 'test' }}</li>
+    @endforeach
+</ul>
+
+<ul>
+    @foreach($homepage->features()->get() as $feature)
+        <li>{{ $feature->title_first }}</li>
+    @endforeach
+</ul>
 
 {{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
 
@@ -26,8 +38,8 @@
 {{--@include('view.hero')--}}
 {{--@include('view.usps')--}}
 {{--@include('view.demo')--}}
-@include('view.compare')
+{{--@include('view.compare')--}}
 
-@include('view.steps')
+{{--@include('view.steps')--}}
 
 {{--@include('view.newsletter')--}}

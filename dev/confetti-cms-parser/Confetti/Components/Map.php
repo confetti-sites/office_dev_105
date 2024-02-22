@@ -31,6 +31,18 @@ class Map
         return new static("", $contentId, $componentStore, $contentStore);
     }
 
+    protected function getParamsForChild(string $key): array
+    {
+        // We need to know where this method is called from so that we can store
+        // it as a very specific small part in the advanced caching mechanism.
+        // This allows us to replace a specific component in a large caching content.
+        $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+        $as = $location['file'] . ':' . $location['line'];
+
+        // Parameters for the constructor of the child classes.
+        return [$this->getFullId(), $key, $this->componentStore, $this->contentStore, $as];
+    }
+
     public function label(string $value): self
     {
         return $this;
