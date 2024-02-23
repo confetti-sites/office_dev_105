@@ -85,6 +85,8 @@ class ContentStore
 
     public function setLimit(int $limit): void
     {
+        // Ensure that the content is initialized
+        $this->init();
         $this->queryBuilder->setLimit($limit);
     }
 

@@ -15,8 +15,13 @@ class Text extends ComponentStandard {
         // Get saved value
         $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
+            echo '<pre>';
+            var_dump('if ($content !== null) {');
+            var_dump($content);
+            echo '</pre>';
             return $content;
         }
+        exit('Text.php: get() is null');
 
         // Get default value
         $component = $this->componentStore->find($this->getFullContentId());

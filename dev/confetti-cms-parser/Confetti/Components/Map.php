@@ -31,6 +31,12 @@ class Map
         return new static("", $contentId, $componentStore, $contentStore);
     }
 
+    protected function getParamsForProperty(string $key): array
+    {
+        // Parameters for the constructor of the child classes.
+        return [$this->getFullId(), $key, $this->componentStore, $this->contentStore];
+    }
+
     protected function getParamsForChild(string $key): array
     {
         // We need to know where this method is called from so that we can store
