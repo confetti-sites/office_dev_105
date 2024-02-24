@@ -113,9 +113,6 @@ class Map
 
     public function text(string $key): Text
     {
-        if (!$this->contentStore->alreadyInit) {
-            exit('@todo; Content not initialized ' . $key);
-        }
         return new Text(
             $this->getFullId(),
             $key,

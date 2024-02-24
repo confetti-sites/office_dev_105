@@ -223,6 +223,12 @@ class List_
         };
     }
 
+    public function first(): ?Map
+    {
+        $this->contentStore->setLimit(1);
+        return $this->get()->getIterator()->current();
+    }
+
     /**
      * @return array<string, array<string, \Confetti\Helpers\ContentEntity[]>>
      */

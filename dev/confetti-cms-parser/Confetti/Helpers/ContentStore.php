@@ -125,7 +125,7 @@ class ContentStore
         if ($result && array_key_exists($id, $result["data"])) {
             return $result["data"][$id];
         }
-        // Get the content and cache the selection
+        // Query the content and cache the selection
         $query = $this->queryBuilder;
         $query->setOptions([
             'patch_cache_select' => true,
