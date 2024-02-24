@@ -122,7 +122,7 @@ class ContentStore
         // Check if content is present
         // If key is not present, then the query is never cached before
         $result = $this->getContentOfThisLevel();
-        if ($result && !empty($result["data"][$id])) {
+        if ($result && array_key_exists($id, $result["data"])) {
             return $result["data"][$id];
         }
         // Get the content and cache the selection
