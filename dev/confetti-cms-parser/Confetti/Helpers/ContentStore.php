@@ -24,10 +24,10 @@ class ContentStore
         $this->queryBuilder  = new QueryBuilder($from, $as);
     }
 
-    public function init(): void
+    public function init(): bool
     {
         if ($this->alreadyInit) {
-            return;
+            return false;
         }
         $this->queryBuilder->setOptions([
             'use_cache'           => true,
@@ -36,6 +36,7 @@ class ContentStore
         ]);
         $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? [];
         $this->alreadyInit = true;
+        return true;
     }
 
     public function isFake(): bool

@@ -91,8 +91,12 @@ class List_
     public function get(): IteratorAggregate
     {
         // Ensure that the content is initialized
-        $this->contentStore->init();
-        $this->parentContentStore->setContent($this->contentStore->getContent());
+        $runInit = $this->contentStore->init();
+        if ($runInit) {
+            // When the content is init (because of the list is the first component) we
+            // we want to use the content for the parent. So the parent has all the data.
+            $this->parentContentStore->setContent($this->contentStore->getContent());
+        }
 
         // Most of the time we run the entire query once. But when we are
         // missing some data, we want to run a second query very efficiently
@@ -180,7 +184,7 @@ class List_
                 if ($items === null) {
                     return null;
                 }
-                if (count($items) > 0 && empty($items[0]['data'] && empty($items[0]['join']))) {
+                if (count($items) > 0 && empty($items[0]['data']) && empty($items[0]['join'])) {
                     return $items[0];
                 }
                 return null;
