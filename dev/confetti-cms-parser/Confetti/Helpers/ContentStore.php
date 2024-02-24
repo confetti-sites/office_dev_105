@@ -8,7 +8,7 @@ class ContentStore
 {
     private QueryBuilder $queryBuilder;
     private array $content = [];
-    private bool $alreadyInit = false;
+    public bool $alreadyInit = false;
     // This is a fake store, used for mocking
     // data for development No database queries are made
     private bool $isFake = false;
@@ -30,8 +30,9 @@ class ContentStore
             return;
         }
         $this->queryBuilder->setOptions([
-            'use_cache'          => true,
-            'patch_cache_select' => true,
+            'use_cache'           => true,
+            'use_cache_from_root' => true, // We want all the data. Even if it is for the parent.
+            'patch_cache_select'  => true,
         ]);
         $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? [];
         $this->alreadyInit = true;
@@ -45,6 +46,17 @@ class ContentStore
     public function setIsFake(): void
     {
         $this->isFake = true;
+    }
+
+    public function getContent(): array
+    {
+        return $this->content;
+    }
+
+    public function setContent(array $content): void
+    {
+        $this->content = $content;
+        $this->alreadyInit = true;
     }
 
     public function appendCurrentJoin(string $relativeId): void
@@ -85,8 +97,6 @@ class ContentStore
 
     public function setLimit(int $limit): void
     {
-        // Ensure that the content is initialized
-        $this->init();
         $this->queryBuilder->setLimit($limit);
     }
 
@@ -138,10 +148,9 @@ class ContentStore
         $child = $this->queryBuilder;
         // Get the content and cache the selection
         $child->setOptions([
-            'patch_cache_join'                => true,
-            'only_first'                      => true,
-            'use_cache_only_missing_children' => true,
-            'use_cache'                       => false,
+            'patch_cache_join' => true,
+            'only_first'       => true,
+            'use_cache'        => false,
         ]);
         /// so we can use where and so forth
         $result = $child->run($this->isFake);
@@ -157,8 +166,7 @@ class ContentStore
     {
         $child = clone $this->queryBuilder;
         $child->setOptions([
-            'use_cache'                       => true,
-            'use_cache_only_missing_children' => true,
+            'use_cache' => true,
         ]);
         $child->ignoreFirstRow();
         $result        = $child->run($this->isFake);

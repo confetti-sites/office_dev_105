@@ -21,21 +21,20 @@ class List_
     protected array $items = [];
 
     protected string $componentKey;
-    private string $as;
+    private ContentStore $contentStore;
 
     /** @noinspection DuplicatedCode */
     public function __construct(
         protected string         $parentContentId,
         protected string         $relativeContentId,
         protected ComponentStore &$componentStore,
-        protected ContentStore   $contentStore,
-        string                   $as,
+        protected ContentStore   &$parentContentStore,
+        private readonly string  $as,
     )
     {
-        $this->relativeContentId .= '~';
-        $this->as                = $as;
-        $this->componentKey      = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
-        $this->contentStore      = clone $this->contentStore;
+        $this->relativeContentId  .= '~';
+        $this->componentKey       = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
+        $this->contentStore       = clone $this->parentContentStore;
         $this->contentStore->join($this->relativeContentId, $as);
     }
 
@@ -93,6 +92,7 @@ class List_
     {
         // Ensure that the content is initialized
         $this->contentStore->init();
+        $this->parentContentStore->setContent($this->contentStore->getContent());
 
         // Most of the time we run the entire query once. But when we are
         // missing some data, we want to run a second query very efficiently
