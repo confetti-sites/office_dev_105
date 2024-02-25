@@ -148,14 +148,15 @@ class QueryBuilder
 
     public function getCurrentCondition(): string
     {
-        $result = "where 1=1";
-        foreach ($this->query['where'] ?? [] as $where) {
+        $result = "";
+        foreach ($this->query['where'] ?? [] as $i => $where) {
+            $prefix = $i == 0 ? 'where' : 'and';
             $expressionKey = $where['expression_key'] ?? '';
             $expressionValue = $where['expression_value'] ?? '';
-            $result .= " and {$where['key']} {$where['operator']} {$expressionKey}{$expressionValue}";
+            $result .= " $prefix {$where['key']} {$where['operator']} {$expressionKey}{$expressionValue}";
         }
         foreach ($this->query['order_by'] ?? [] as $i => $orderBy) {
-            $prefix = $i > 0 ? ',' : ' order_by';
+            $prefix = $i == 0 ? ' order_by' : ',';
             $result .= "{$prefix} {$orderBy['key']} {$orderBy['direction']}";
         }
         if (($this->query['limit'] ?? 0) > 0) {
@@ -164,7 +165,7 @@ class QueryBuilder
         if (($this->query['offset'] ?? 0) > 0) {
             $result .= " offset {$this->query['offset']}";
         }
-        return $result;
+        return ltrim($result, ' ');
     }
 
     private function newQuery(string $from, ?string $as, array $options = []): void

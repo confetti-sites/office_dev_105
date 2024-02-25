@@ -1,28 +1,43 @@
-@php use model\homepage\feature\title_first; @endphp
-@php use model\homepage\feature\title_second; @endphp
-@php($homepage = model(new \model\homepage)->label('Homepage'))
 
-<ul>
-    @php($features = $homepage->list('feature')
-            ->min(1)->max(2)/*->columns(['title_first', 'title_second'])*/
-//            ->where(new title_first, '!=', new title_second)
-            ->limit(1)
-            ->get())
+@php($pages = model(new \model\pages))
 
-    @foreach($features as $i => $feature)
-        <li>{{ $feature->text('title_first')->max(50) }}</li>
-    @endforeach
-</ul>
+{{ $pages->text('general_title')->default('General') }}
 
-<ul>
-    @foreach($homepage->features()->get() as $feature)
-        <li>SECOND FEATURES</li>
-        <li>{{ $feature->title_first }}</li>
-    @endforeach
-</ul>
+<br>
+<br>
+
+
+@php($all = $pages->list('page')
+    ->whereActiveIs(request()->parameter('active') ?? 'unknown')
+    ->get())
+
+@foreach($all as $page)
+    @php($page->text('active'))
+    <h1>{{ $page->text('title')}}</h1>
+@endforeach
+
+
+
+
+
+
+
+
 
 
 {{-- @todo new query when where changes --}}
+
+{{--@todo  component store has to many items. Remove files items I think.
+{{--object(Confetti\Helpers\ComponentStore)#15 (1) {--}}
+{{--["components":"Confetti\Helpers\ComponentStore":private]=>--}}
+{{--array(153) {--}}
+{{--["/README.md"]=>--}}
+{{--object(Confetti\Helpers\ComponentEntity)#17 (5) {--}}
+
+
+
+
+
 
 {{--{{ $homepage->text('homepage_title')->default('The default homepage title') }}--}}
 
