@@ -30,9 +30,10 @@ class ContentStore
             return false;
         }
         $this->queryBuilder->setOptions([
-            'use_cache'           => true,
-            'use_cache_from_root' => true, // We want all the data. Even if it is for the parent.
-            'patch_cache_select'  => true,
+            'use_cache'               => true,
+            'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
+            'patch_cache_select'      => true,
+            'response_with_condition' => true,
         ]);
         $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? [];
         $this->alreadyInit = true;
@@ -204,10 +205,23 @@ class ContentStore
                     if (array_key_exists($breadcrumb['path'], $content['join'] ?? []) === false) {
                         return null;
                     }
+                    // We need to check if the condition is the same.
+                    // Data from joins with dynamic conditions do
+                    // not always match the result when a query is cached.
+                    // We need to be able to verify if the data from
+                    // the cache matches the data from the given condition.
+                    if (
+                        array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []) &&
+                        $content['join_condition'][$breadcrumb['path']] !== $this->queryBuilder->getCurrentCondition()
+                    ) {
+                        return null;
+                    }
                     $content = $content['join'][$breadcrumb['path']];
                     break;
             }
         }
+
+
         return $content;
     }
 

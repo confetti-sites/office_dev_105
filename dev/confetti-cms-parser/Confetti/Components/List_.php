@@ -133,7 +133,7 @@ class List_
                 // but we can use to skip findFirstOfJoin()
                 $firstEmptyContent = $this->getFirstEmptyContent($items);
 
-                // If data is present and useful, then we can use it
+                // If data is present and not empty, then we can use it
                 if ($items !== null && $firstEmptyContent === null) {
                     if (count($items) === 0) {
                         foreach ($this->getFakeComponents($class) as $item) {

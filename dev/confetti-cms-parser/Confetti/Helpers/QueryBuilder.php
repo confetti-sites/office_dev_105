@@ -132,18 +132,6 @@ class QueryBuilder
         return $this;
     }
 
-    private function newQuery(string $from, ?string $as, array $options = [])
-    {
-        $this->query = [];
-        if (!empty($options)) {
-            $this->query['options'] = $options;
-        }
-        $this->query['from'] = $from;
-        if ($as) {
-            $this->query['as'] = $as;
-        }
-    }
-
     private function getFullQuery(): array
     {
         $result  = $this->query;
@@ -156,5 +144,38 @@ class QueryBuilder
         // Only the root query should have the options
         $result['options'] = $options;
         return $result;
+    }
+
+    public function getCurrentCondition(): string
+    {
+        $result = "where 1=1";
+        foreach ($this->query['where'] ?? [] as $where) {
+            $expressionKey = $where['expression_key'] ?? '';
+            $expressionValue = $where['expression_value'] ?? '';
+            $result .= " and {$where['key']} {$where['operator']} {$expressionKey}{$expressionValue}";
+        }
+        foreach ($this->query['order_by'] ?? [] as $i => $orderBy) {
+            $prefix = $i > 0 ? ',' : ' order_by';
+            $result .= "{$prefix} {$orderBy['key']} {$orderBy['direction']}";
+        }
+        if (($this->query['limit'] ?? 0) > 0) {
+            $result .= " limit {$this->query['limit']}";
+        }
+        if (($this->query['offset'] ?? 0) > 0) {
+            $result .= " offset {$this->query['offset']}";
+        }
+        return $result;
+    }
+
+    private function newQuery(string $from, ?string $as, array $options = []): void
+    {
+        $this->query = [];
+        if (!empty($options)) {
+            $this->query['options'] = $options;
+        }
+        $this->query['from'] = $from;
+        if ($as) {
+            $this->query['as'] = $as;
+        }
     }
 }
