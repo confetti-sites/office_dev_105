@@ -32,9 +32,9 @@ class List_
         private readonly string  $as,
     )
     {
-        $this->relativeContentId  .= '~';
-        $this->componentKey       = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
-        $this->contentStore       = clone $this->parentContentStore;
+        $this->relativeContentId .= '~';
+        $this->componentKey      = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
+        $this->contentStore      = clone $this->parentContentStore;
         $this->contentStore->join($this->relativeContentId, $as);
     }
 
@@ -93,7 +93,7 @@ class List_
         // Ensure that the content is initialized
         $runInit = $this->contentStore->init();
         if ($runInit) {
-            // When the content is init (because of the list is the first component) we
+            // When the content is init (because of the list is the first component),
             // we want to use the content for the parent. So the parent has all the data.
             $this->parentContentStore->setContent($this->contentStore->getContent());
         }
@@ -160,14 +160,16 @@ class List_
                     }
                     return;
                 }
-                if (!empty($firstEmptyContent)) {
-                    $childContentStore = clone $this->contentStore;
-                    $childContentStore->appendCurrentJoin($firstEmptyContent['id']);
-                    yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $childContentStore);
+
+                if (empty($firstEmptyContent)) {
+                    return;
                 }
+                $childContentStore = clone $this->contentStore;
+                $childContentStore->appendCurrentJoin($firstEmptyContent['id']);
+                yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $childContentStore);
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
-                $contents = $this->contentStore->findRestOfJoin();
+                $contents = $this->contentStore->findRestOfJoin() ?? [];
                 foreach ($contents as $content) {
                     $childContentStore = clone $this->contentStore;
                     $childContentStore->appendCurrentJoin($content['id']);

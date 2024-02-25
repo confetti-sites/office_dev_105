@@ -33,7 +33,7 @@ class ContentStore
             'use_cache'               => true,
             'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
             'patch_cache_select'      => true,
-            'response_with_condition' => true,
+            'response_with_condition' => true, // We want to know if the data is retrieved with the same conditions.
         ]);
         $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? [];
         $this->alreadyInit = true;
@@ -153,9 +153,10 @@ class ContentStore
         $child = $this->queryBuilder;
         // Get the content and cache the selection
         $child->setOptions([
-            'patch_cache_join' => true,
-            'only_first'       => true,
-            'use_cache'        => false,
+            'patch_cache_join'        => true,
+            'only_first'              => true,
+            'use_cache'               => false,
+            'response_with_condition' => true,
         ]);
         /// so we can use where and so forth
         $result = $child->run($this->isFake);
@@ -171,7 +172,8 @@ class ContentStore
     {
         $child = clone $this->queryBuilder;
         $child->setOptions([
-            'use_cache' => true,
+            'use_cache'               => true,
+            'response_with_condition' => true,
         ]);
         $child->ignoreFirstRow();
         $result        = $child->run($this->isFake);
