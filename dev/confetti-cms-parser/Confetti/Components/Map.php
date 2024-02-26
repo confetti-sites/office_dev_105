@@ -26,7 +26,7 @@ class Map
 
     public function newRoot(string $contentId, string $as): self
     {
-        $componentStore = new ComponentStore();
+        $componentStore = new ComponentStore(ComponentStandard::componentKeyFromContentId($contentId));
         $contentStore = new ContentStore($contentId, $as);
         return new static("", $contentId, $componentStore, $contentStore);
     }

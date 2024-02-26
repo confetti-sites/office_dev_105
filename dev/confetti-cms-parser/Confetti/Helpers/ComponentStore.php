@@ -12,8 +12,13 @@ class ComponentStore
      */
     private array $components = [];
 
-    public function __construct(array $params = [])
+    public function __construct($componentKey)
     {
+        $params = [
+            'only_modelable' => true,
+            'key_prefix'     => $componentKey,
+        ];
+
         try {
             $this->components = self::fetchComponents($params);
         } catch (\JsonException $e) {
@@ -23,7 +28,7 @@ class ComponentStore
 
     public static function newWherePrefix(string $key): self
     {
-        return new self(['key_prefix', '/']);
+        return new self('/');
     }
 
     public function find(string $id): ComponentEntity
@@ -114,23 +119,23 @@ class ComponentStore
 
     private static function fetchComponents(array $params): array
     {
-        $client = new Client();
-        $query = http_build_query($params);
-        $response = $client->get('confetti-cms-structure:80/components?' . $query);
+        $client     = new Client();
+        $query      = http_build_query($params);
+        $response   = $client->get('confetti-cms-structure:80/components?' . $query);
         $components = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-        $result = [];
+        $result     = [];
         foreach ($components as $component) {
             $result[$component['key']] = new ComponentEntity(
-                key: $component['key'],
-                type: $component['type'],
-                parentKey: $component['parent_key'],
+                key        : $component['key'],
+                type       : $component['type'],
+                parentKey  : $component['parent_key'],
                 decorations: self::getDecorations($component['decorations']),
-                source: new SourceEntity(
+                source     : new SourceEntity(
                     directory: $component['source']['directory'],
-                    file: $component['source']['file'],
-                    line: $component['source']['line'],
-                    from: $component['source']['from'],
-                    to: $component['source']['to'],
+                    file     : $component['source']['file'],
+                    line     : $component['source']['line'],
+                    from     : $component['source']['from'],
+                    to       : $component['source']['to'],
                 )
             );
         }
