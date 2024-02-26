@@ -3,38 +3,15 @@
 
 {{ $pages->text('general_title')->default('General') }}
 
-<br>
-<br>
-
-
-@php($all = $pages->list('page')
-    ->whereActiveIs(request()->parameter('active') ?? 'unknown')
-    ->get())
-
-@foreach($all as $page)
+<ul>
+@foreach($pages->list('page')->whereActiveIs(request()->parameter('active'))->get() as $page)
     @php($page->text('active'))
-    <h1>{{ $page->text('title')}}</h1>
+    <li>- {{ $page->text('title') }}</li>
+    @foreach($page->list('subpage')->get() as $subpage)
+        <li>-- {{ $subpage->text('title') }}</li>
+    @endforeach
 @endforeach
-
-
-
-
-
-
-
-
-
-
-{{-- @todo new query when where changes --}}
-
-{{--@todo  component store has to many items. Remove files items I think.
-{{--object(Confetti\Helpers\ComponentStore)#15 (1) {--}}
-{{--["components":"Confetti\Helpers\ComponentStore":private]=>--}}
-{{--array(153) {--}}
-{{--["/README.md"]=>--}}
-{{--object(Confetti\Helpers\ComponentEntity)#17 (5) {--}}
-
-
+</ul>
 
 
 
