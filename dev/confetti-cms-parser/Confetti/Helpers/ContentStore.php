@@ -40,6 +40,16 @@ class ContentStore
         return true;
     }
 
+    public function fetchCurrentQuery(): array|null
+    {
+        $this->queryBuilder->setOptions([
+            'use_cache'               => true,
+            'response_with_condition' => true, // The children need to know if the data is retrieved with the same conditions.
+        ]);
+        $this->content = $this->queryBuilder->run($this->isFake)[0] ?? [];
+        return $this->getContentOfThisLevel();
+    }
+
     public function isFake(): bool
     {
         return $this->isFake;
@@ -155,7 +165,7 @@ class ContentStore
         $child->setOptions([
             'patch_cache_join'        => true,
             'only_first'              => true,
-            'use_cache'               => false,
+            'use_cache'               => true,
             'response_with_condition' => true,
         ]);
         /// so we can use where and so forth
@@ -216,7 +226,7 @@ class ContentStore
                         array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []) &&
                         $content['join_condition'][$breadcrumb['path']] !== $this->queryBuilder->getCurrentCondition()
                     ) {
-                        return null;
+                        throw new OtherContentFound('The content is not the same as the cached content.');
                     }
                     $content = $content['join'][$breadcrumb['path']];
                     break;

@@ -8,6 +8,7 @@ use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
+use Confetti\Helpers\OtherContentFound;
 use IteratorAggregate;
 use Traversable;
 
@@ -127,8 +128,14 @@ class List_
                     }
                     return;
                 }
-                // Get items if present
-                $items = $this->contentStore->getContentOfThisLevel();
+                try {
+                    // Get items if present
+                    $items = $this->contentStore->getContentOfThisLevel();
+                } catch (OtherContentFound) {
+                    // When the content is present but received with another query condition
+                    $items = $this->contentStore->fetchCurrentQuery();
+                }
+
                 // If items are present, but without data. Then it looks useless,
                 // but we can use to skip findFirstOfJoin()
                 $firstEmptyContent = $this->getFirstEmptyContent($items);
@@ -153,20 +160,20 @@ class List_
                 // $firstEmptyContent can be loaded due init
                 // When the content is not present, we want to load all the data
                 // But to prevent n+1 problem, we need to load the first item.
-                $firstEmptyContent ??= $this->contentStore->findFirstOfJoin()[0] ?? null;
-                if ($firstEmptyContent === null) {
+                $first = $firstEmptyContent ?? $this->contentStore->findFirstOfJoin()[0] ?? null;
+                if ($first === null) {
                     foreach ($this->getFakeComponents($class) as $item) {
                         yield $item;
                     }
                     return;
                 }
 
-                if (empty($firstEmptyContent)) {
+                if (empty($first)) {
                     return;
                 }
                 $childContentStore = clone $this->contentStore;
-                $childContentStore->appendCurrentJoin($firstEmptyContent['id']);
-                yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $childContentStore);
+                $childContentStore->appendCurrentJoin($first['id']);
+                yield new $class($this->parentContentId, $first['id'], $this->componentStore, $childContentStore);
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin() ?? [];
