@@ -132,9 +132,13 @@ class ContentStore
         $this->init();
         // Check if content is present
         // If key is not present, then the query is never cached before
-        $result = $this->getContentOfThisLevel();
-        if ($result && array_key_exists($id, $result["data"])) {
-            return $result["data"][$id];
+        try {
+            $result = $this->getContentOfThisLevel();
+            if ($result && array_key_exists($id, $result["data"])) {
+                return $result["data"][$id];
+            }
+        } catch (OtherContentFound) {
+            // We need to fetch the content with the correct condition
         }
         // Query the content and cache the selection
         $query = $this->queryBuilder;
@@ -222,11 +226,11 @@ class ContentStore
                     // not always match the result when a query is cached.
                     // We need to be able to verify if the data from
                     // the cache matches the data from the given condition.
-                    if (
-                        array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []) &&
-                        $content['join_condition'][$breadcrumb['path']] !== $this->queryBuilder->getCurrentCondition()
-                    ) {
-                        throw new OtherContentFound('The content is not the same as the cached content.');
+                    $currentCondition    = $this->queryBuilder->getCurrentCondition();
+                    $checkIfQueryMatches = array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []);
+                    $contentCondition    = $checkIfQueryMatches ? $content['join_condition'][$breadcrumb['path']] : null;
+                    if ($checkIfQueryMatches && $contentCondition !== $currentCondition) {
+                        throw new OtherContentFound("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");
                     }
                     $content = $content['join'][$breadcrumb['path']];
                     break;

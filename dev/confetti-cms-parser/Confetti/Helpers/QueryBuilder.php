@@ -146,14 +146,21 @@ class QueryBuilder
         return $result;
     }
 
+    /**
+     * This function returns the current condition of the query
+     * With this condition, we can check if the desired condition
+     * is met with the condition of the already retrieved content.
+     */
     public function getCurrentCondition(): string
     {
         $result = "";
         foreach ($this->query['where'] ?? [] as $i => $where) {
             $prefix = $i == 0 ? 'where' : 'and';
-            $expressionKey = $where['expression_key'] ?? '';
-            $expressionValue = $where['expression_value'] ?? '';
-            $result .= " $prefix {$where['key']} {$where['operator']} {$expressionKey}{$expressionValue}";
+            $expression = $where['expression_key'] ?? '';
+            if ($expression === '') {
+                $expression = $where['expression_value'] ?? 'null';
+            }
+            $result .= sprintf(" %s %s %s %s", $prefix, $where['key'], $where['operator'], $expression);
         }
         foreach ($this->query['order_by'] ?? [] as $i => $orderBy) {
             $prefix = $i == 0 ? ' order_by' : ',';
