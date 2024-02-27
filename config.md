@@ -1,32 +1,31 @@
 # Container Configuration
 
-This configuration is used to match a HTTP request to a service (Docker container).
-When a container exists without a matching configuration, the configurations with prefix `/default` key is used.
+This configuration is used to associate an HTTP request with a service (Docker container).
 
 ## Development
 
-| key               | value                                 | description                     |
-|-------------------|---------------------------------------|---------------------------------|
-| /default          | *                                     | Match all other container names |
-| /default/hosts~1  | office_dev_105.confetti-cms.localhost | Match container when this host  |
-| /default/path~1   | /{service_name}/conf_api              | Match container when this path  |
-| /view-php         | confetti-cms/view-php                 | Name of the container           |
-| /view-php/hosts~1 | office_dev_105.confetti-cms.localhost | Match container when this host  |
-| /view-php/path~1  | /                                     | Match container when this path  |
+| container/config      | value                       |
+|-----------------------|-----------------------------|
+|                       |                             |
+| web/host              | dev.camping-tools.localhost |
+| web/path              | /                           |
+|                       |                             |
+| {container_name}/host | dev.camping-tools.localhost |
+| {container_name}/path | /{service_name}/api         |
 
 ## Production
 
-| key               | value                    | description                     |
-|-------------------|--------------------------|---------------------------------|
-| /default          | *                        | Match all other container names |
-| /default/hosts~1  | confetti-cms.com         | Match container when this host  |
-| /default/path~1   | /{service_name}/conf_api | Match container when this path  |
-| /view-php         | confetti-cms/view-php    | Name of the container           |
-| /view-php/hosts~1 | confetti-cms.com         | Match container when this host  |
-| /view-php/path~1  | /                        | Match container when this path  |
-
-
-
+| container/config    | value               |
+|---------------------|---------------------|
+|                     |                     |
+| web/host            | camping-tools.com   |
+| web/host            | camping-tools.nl    |
+| web/host            | camping-tools.fr    |
+| web/host            | camping-tools.de    |
+| web/path            | /                   |
+|                     |                     |
+| {service_name}/host | camping-tools.com   |
+| {service_name}/path | /{service_name}/api |
 
 
 

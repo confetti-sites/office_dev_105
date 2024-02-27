@@ -1,13 +1,13 @@
 {
   environments: [
     {
-      key: 'sandbox',
+      key: 'development',
       containers: [
         // Main view service
         {
-          name: 'confetti-cms/view-php',
+          name: 'web',
           hosts: [
-            'office_dev_105.confetti-cms.localhost',
+            'dev.camping-tools.localhost',
           ],
           paths: [
             '/',
@@ -16,12 +16,11 @@
         // For all other services
         {
           hosts: [
-            'office_dev_105.confetti-cms.localhost',
+            'dev.camping-tools.localhost',
           ],
           paths: [
-            '/conf_api',
+            '/{service_name}/api',
           ],
-          user_service_in_uri: true,
         },
       ],
     },
@@ -30,9 +29,12 @@
       containers: [
         // Main view service
         {
-          name: 'confetti-cms/view-php',
+          name: 'web',
           hosts: [
-            'office_dev_105.confetti-cms.localhost',
+            'camping-tools.com',
+            'camping-tools.nl',
+            'camping-tools.fr',
+            'camping-tools.de',
           ],
           paths: [
             '/',
@@ -41,12 +43,11 @@
         // For all other services
         {
           hosts: [
-            'office_dev_105.confetti-cms.localhost',
+            'camping-tools.com',
           ],
           paths: [
-            '/conf_api',
+            '/{service_name}/api',
           ],
-          user_service_in_uri: true,
         },
       ],
     },
