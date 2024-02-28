@@ -15,7 +15,6 @@ return new class extends ComponentStandard {
             return $content->value;
         }
 
-        // Get default value
         $component = $this->componentStore->findOrNull($this->componentKey);
         $width = $component?->getDecoration('width')['value'] ?? 300;
         $height = $component?->getDecoration('height')['value'] ?? 200;

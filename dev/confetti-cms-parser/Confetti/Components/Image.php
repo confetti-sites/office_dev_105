@@ -16,7 +16,7 @@ class Image extends ComponentStandard {
         }
 
         // Get default value
-        $component = $this->componentStore->findOrNull($this->componentKey);
+        $component = $this->componentStore->findOrNull($this->getComponentKey());
         $width = $component?->getDecoration('width')['value'] ?? 300;
         $height = $component?->getDecoration('height')['value'] ?? 200;
 
