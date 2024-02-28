@@ -37,7 +37,7 @@
                     @include('admin.header')
 
                     <main class="h-full pb-16 overflow-y-auto" >
-                        @include('admin.middle')
+{{--                        @include('admin.middle')--}}
                     </main>
                 </div>
             </div>

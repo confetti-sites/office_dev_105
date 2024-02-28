@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Confetti\Components;
 
+use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
+use Confetti\Helpers\SourceEntity;
 
 class Map
 {
@@ -24,6 +26,25 @@ class Map
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
+    public function getComponent(): ComponentEntity
+    {
+        return new ComponentEntity(
+            ComponentStandard::componentKeyFromContentId($this->getFullId()),
+            'map',
+            ['bla' => json_decode('{"second_level":"It\'s cool"}', true, 512, JSON_THROW_ON_ERROR)],
+            new SourceEntity(
+                'view',
+                'map.blade.php',
+                1,
+                1,
+                10,
+            ),
+        );
+    }
+
+    /**
+     * @internal This method is not part of the public API and should not be used.
+     */
     public function newRoot(string $contentId, string $as): self
     {
         $componentStore = new ComponentStore(ComponentStandard::componentKeyFromContentId($contentId));
@@ -31,12 +52,18 @@ class Map
         return new static("", $contentId, $componentStore, $contentStore);
     }
 
+    /**
+     * @internal This method is not part of the public API and should not be used.
+     */
     protected function getParamsForProperty(string $key): array
     {
         // Parameters for the constructor of the child classes.
         return [$this->getFullId(), $key, $this->componentStore, $this->contentStore];
     }
 
+    /**
+     * @internal This method is not part of the public API and should not be used.
+     */
     protected function getParamsForChild(string $key): array
     {
         // We need to know where this method is called from so that we can store

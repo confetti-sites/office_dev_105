@@ -61,20 +61,6 @@ class ComponentStore
     }
 
     /**
-     * @return \Confetti\Helpers\ComponentEntity[]
-     */
-    public function whereType(string $type): array
-    {
-        $components = [];
-        foreach ($this->components as $component) {
-            if ($component->type === $type) {
-                $components[] = $component;
-            }
-        }
-        return $components;
-    }
-
-    /**
      * @param string $pattern A glob pattern.
      *
      * The ? matches 1 of any character except a /

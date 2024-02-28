@@ -9,3 +9,4 @@
 @include('view.steps')
 
 @include('view.newsletter')
+

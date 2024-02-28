@@ -12,7 +12,6 @@ class ComponentEntity
     public function __construct(
         public readonly string       $key,
         public readonly string       $type,
-        public readonly string       $parentKey,
         public readonly array        $decorations,
         public readonly SourceEntity $source,
     )
