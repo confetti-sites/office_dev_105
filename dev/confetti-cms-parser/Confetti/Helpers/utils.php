@@ -1,7 +1,6 @@
 <?php /** @noinspection ALL */
 
 use Confetti\Components\Map;
-use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\Request;
 

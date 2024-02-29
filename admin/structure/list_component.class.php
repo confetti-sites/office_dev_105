@@ -27,7 +27,6 @@ return new class extends \Confetti\Helpers\QueryBuilder
     public function __construct(
         protected string         $parentContentId,
         protected string         $relativeContentId,
-        protected ComponentStore &$componentStore,
         protected ContentStore   $contentStore,
         string                   $as,
     )
@@ -56,11 +55,10 @@ return new class extends \Confetti\Helpers\QueryBuilder
         // With this method, the number of queries is less than the number of component types. Most
         // of the time, the number of component types is less than 2 because when you adjust one part
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
-        return new class($this->parentContentId, $this->relativeContentId, $this->componentStore, $this->contentStore, $this->as) implements IteratorAggregate {
+        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as) implements IteratorAggregate {
             public function __construct(
                 protected string         $parentContentId,
                 protected string         $relativeContentId,
-                protected ComponentStore &$componentStore,
                 protected ContentStore   $contentStore,
                 protected string         $as,
             )
@@ -94,7 +92,7 @@ return new class extends \Confetti\Helpers\QueryBuilder
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
                         $childContentStore->appendCurrentJoin($item['id']);
-                        yield new $class($this->parentContentId, $item['id'], $this->componentStore, $childContentStore, $this->as);
+                        yield new $class($this->parentContentId, $item['id'], $childContentStore, $this->as);
                     }
                     return;
                 }
@@ -112,7 +110,7 @@ return new class extends \Confetti\Helpers\QueryBuilder
                 if (!empty($firstEmptyContent)) {
                     $childContentStore = clone $this->contentStore;
                     $childContentStore->appendCurrentJoin($firstEmptyContent['id']);
-                    yield new $class($this->parentContentId, $firstEmptyContent['id'], $this->componentStore, $childContentStore);
+                    yield new $class($this->parentContentId, $firstEmptyContent['id'], $childContentStore);
                 }
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
@@ -120,7 +118,7 @@ return new class extends \Confetti\Helpers\QueryBuilder
                 foreach ($contents as $content) {
                     $childContentStore = clone $this->contentStore;
                     $childContentStore->appendCurrentJoin($content['id']);
-                    yield new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
+                    yield new $class($this->parentContentId, $content['id'], $childContentStore);
                 }
             }
 
@@ -142,7 +140,7 @@ return new class extends \Confetti\Helpers\QueryBuilder
             private function getFakeComponents(string $class): array
             {
                 $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
-                $component = $this->componentStore->find($contentId);
+                $component = $this->getComponent();
                 $deeper = $this->contentStore->isFake();
 
                 // Get the number of items. If not present,

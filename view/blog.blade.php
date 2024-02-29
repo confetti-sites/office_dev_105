@@ -2,4 +2,4 @@
 
 {{ $blog->title }}
 {{ $blog->description }}
-{{ $blog->text('content') }}
+{{ $blog->text('content')->max(200) }}

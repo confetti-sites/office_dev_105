@@ -1,7 +1,6 @@
 @php
     /**
      * @var \Confetti\Helpers\ContentStore $contentStore
-     * @var \Confetti\Helpers\ComponentStore $componentStore
      * @var string $currentContentId
      */
     $componentKey = Confetti\Helpers\ComponentStandard::componentKeyFromContentId($currentContentId);
@@ -10,7 +9,7 @@
     // /-/ remove target ids
     $parentContentId = preg_replace('#/(\w|~|/-/)+$#', '', $currentContentId);
     $hasParent = str_contains($currentContentId, '~');
-    $components = $componentStore->whereParentKey($componentKey);
+//    $components = $componentStore->whereParentKey($componentKey);
     $total = 0;
 @endphp
 <div class="container pt-6 px-6 mx-auto grid">
@@ -34,7 +33,7 @@
             @continue
         @endif
         @php($suffix = str_replace($componentKey, '', $component->key))
-        @include("admin.structure.{$component->type}_component_admin", ['componentStore' => $componentStore, 'component' => $component, 'contentStore' => $contentStore, 'contentId' => $currentContentId . $suffix])
+        @include("admin.structure.{$component->type}_component_admin", ['component' => $component, 'contentStore' => $contentStore, 'contentId' => $currentContentId . $suffix])
         @php($total++)
     @endforeach
     @if($total > 0)

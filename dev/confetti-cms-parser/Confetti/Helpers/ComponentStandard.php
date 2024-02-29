@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Confetti\Helpers;
 
-use http\Exception\RuntimeException;
-
 abstract class ComponentStandard
 {
     private const FORBIDDEN_PHP_KEYWORDS = [
@@ -77,14 +75,30 @@ abstract class ComponentStandard
         "yield",
     ];
 
+    private array $decorations = [];
+
     public function __construct(
         protected ?string         $parentContentId = null,
         protected ?string         $relativeContentId = null,
-        protected ?ComponentStore $componentStore = null,
         // We use the reference because we want to init the rest of the content store
         protected ?ContentStore   &$contentStore = null,
     )
     {
+    }
+
+    abstract public function getComponentType(): string;
+
+    /**
+     * When using the abstract component (\Confetti\Components\Text) we use this method.
+     * The specific component (\model\homepage\feature\title) will override this method.
+     */
+    public function getComponent(): ComponentEntity
+    {
+        return new ComponentEntity(
+            $this->getComponentKey(),
+            $this->getComponentType(),
+            $this->decorations,
+        );
     }
 
     public function getComponentKey(): string
@@ -97,6 +111,11 @@ abstract class ComponentStandard
     public function getFullContentId(): string
     {
         return self::mergeIds($this->parentContentId, $this->relativeContentId);
+    }
+
+    public function setDecoration(string $key, mixed $value): void
+    {
+        $this->decorations[$key] = $value;
     }
 
     public static function componentKeyFromContentId(string $contentId): string

@@ -15,9 +15,9 @@ return new class extends ComponentStandard {
             return $content->value;
         }
 
-        $component = $this->componentStore->findOrNull($this->componentKey);
-        $width = $component?->getDecoration('width')['value'] ?? 300;
-        $height = $component?->getDecoration('height')['value'] ?? 200;
+        $component = $this->getComponent();
+        $width = $component->getDecoration('width')['value'] ?? 300;
+        $height = $component->getDecoration('height')['value'] ?? 200;
 
         return "https://picsum.photos/$width/$height?random=" . rand(0, 10000);
     }

@@ -6,7 +6,6 @@ namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
-use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\SourceEntity;
 
@@ -15,7 +14,6 @@ class Map
     public function __construct(
         protected ?string         $parentContentId = null,
         protected ?string         $relativeContentId = null,
-        protected ?ComponentStore $componentStore = null,
         protected ?ContentStore   $contentStore = null,
     )
     {
@@ -47,9 +45,8 @@ class Map
      */
     public function newRoot(string $contentId, string $as): self
     {
-        $componentStore = new ComponentStore(ComponentStandard::componentKeyFromContentId($contentId));
         $contentStore = new ContentStore($contentId, $as);
-        return new static("", $contentId, $componentStore, $contentStore);
+        return new static("", $contentId, $contentStore);
     }
 
     /**
@@ -58,7 +55,7 @@ class Map
     protected function getParamsForProperty(string $key): array
     {
         // Parameters for the constructor of the child classes.
-        return [$this->getFullId(), $key, $this->componentStore, $this->contentStore];
+        return [$this->getFullId(), $key, $this->contentStore];
     }
 
     /**
@@ -73,7 +70,7 @@ class Map
         $as = $location['file'] . ':' . $location['line'];
 
         // Parameters for the constructor of the child classes.
-        return [$this->getFullId(), $key, $this->componentStore, $this->contentStore, $as];
+        return [$this->getFullId(), $key, $this->contentStore, $as];
     }
 
     public function label(string $value): self
@@ -86,7 +83,6 @@ class Map
         return new Color(
             $this->getFullId(),
             $key,
-            $this->componentStore,
             $this->contentStore,
         );
     }
@@ -96,7 +92,6 @@ class Map
         return new Image(
             $this->getFullId(),
             $key,
-            $this->componentStore,
             $this->contentStore,
         );
     }
@@ -105,7 +100,7 @@ class Map
     {
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
         $as = $location['file'] . ':' . $location['line'];
-        return new List_($this->getFullId(), $key, $this->componentStore, $this->contentStore, $as);
+        return new List_($this->getFullId(), $key, $this->contentStore, $as);
     }
 
     public function number(string $key): Number
@@ -113,7 +108,6 @@ class Map
         return new Number(
             $this->getFullId(),
             $key,
-            $this->componentStore,
             $this->contentStore,
         );
     }
@@ -123,7 +117,6 @@ class Map
         return new Select(
             $this->getFullId(),
             $key,
-            $this->componentStore,
             $this->contentStore,
         );
     }
@@ -133,7 +126,6 @@ class Map
         return new SelectFiles(
             $this->getFullId(),
             $key,
-            $this->componentStore,
             $this->contentStore,
         );
     }
@@ -143,7 +135,6 @@ class Map
         return new Text(
             $this->getFullId(),
             $key,
-            $this->componentStore,
             $this->contentStore,
         );
     }

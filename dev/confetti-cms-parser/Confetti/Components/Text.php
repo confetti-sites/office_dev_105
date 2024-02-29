@@ -10,7 +10,7 @@ class Text extends ComponentStandard {
     public function get(): ?string
     {
         if ($this->contentStore === null) {
-            throw new \RuntimeException('This component is only used as a reference. therefore, you can\'t call __toString() or get().');
+            throw new \RuntimeException('This component is only used as a reference. Therefore, you can\'t call __toString() or get().');
         }
         // Get saved value
         $content = $this->contentStore->findOneData($this->relativeContentId);
@@ -19,10 +19,12 @@ class Text extends ComponentStandard {
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->getFullContentId());
+        $component = $this->getComponent();
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default')['value'];
         }
+
+        exit('@todo set default value via default() method (save it in the property)');
 
         // Guess value
         $label = $component->getDecoration('label')['value'] ?? '';
@@ -36,6 +38,9 @@ class Text extends ComponentStandard {
         if (str_contains($haystack, 'last') && str_contains($haystack, 'name')) {
             return 'Müller';
         }
+        if (str_contains($haystack, 'name')) {
+            return 'Sébastien Müller';
+        }
         if (str_contains($haystack, 'company') || str_contains($haystack, 'business')) {
             return 'ABC Corporation';
         }
@@ -47,9 +52,6 @@ class Text extends ComponentStandard {
         }
         if (str_contains($haystack, 'city')) {
             return 'Anytown';
-        }
-        if (str_contains($haystack, 'name')) {
-            return 'Sébastien Müller';
         }
 
         // Generate Lorem Ipsum

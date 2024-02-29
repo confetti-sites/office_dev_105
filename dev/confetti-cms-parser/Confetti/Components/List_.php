@@ -108,11 +108,11 @@ class List_
         // With this method, the number of queries is less than the number of component types. Most
         // of the time, the number of component types is less than 2 because when you adjust one part
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
-        return new class($this->parentContentId, $this->relativeContentId, $this->componentStore, $this->contentStore, $this->as) implements IteratorAggregate {
+        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as) implements IteratorAggregate {
             public function __construct(
                 protected string         $parentContentId,
                 protected string         $relativeContentId,
-                protected ComponentStore &$componentStore,
+//                protected ComponentStore &$componentStore,
                 protected ContentStore   $contentStore,
                 protected string         $as,
             )
@@ -152,7 +152,7 @@ class List_
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
                         $childContentStore->appendCurrentJoin($item['id']);
-                        yield new $class($this->parentContentId, $item['id'], $this->componentStore, $childContentStore, $this->as);
+                        yield new $class($this->parentContentId, $item['id'], $childContentStore, $this->as);
                     }
                     return;
                 }
@@ -173,14 +173,14 @@ class List_
                 }
                 $childContentStore = clone $this->contentStore;
                 $childContentStore->appendCurrentJoin($first['id']);
-                yield new $class($this->parentContentId, $first['id'], $this->componentStore, $childContentStore);
+                yield new $class($this->parentContentId, $first['id'], $childContentStore);
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin() ?? [];
                 foreach ($contents as $content) {
                     $childContentStore = clone $this->contentStore;
                     $childContentStore->appendCurrentJoin($content['id']);
-                    yield new $class($this->parentContentId, $content['id'], $this->componentStore, $childContentStore);
+                    yield new $class($this->parentContentId, $content['id'], $childContentStore);
                 }
             }
 
@@ -201,9 +201,10 @@ class List_
 
             private function getFakeComponents(string $class): array
             {
-                $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
-                $component = $this->componentStore->find($contentId);
-                $deeper    = $this->contentStore->isFake();
+                /** @var ComponentEntity $component */
+                $component = (new $class())->getComponent();
+                $contentId  = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
+                $deeper     = $this->contentStore->isFake();
 
                 // Get the number of items. If not present,
                 // then use default values. To prevent rendering too
@@ -223,7 +224,6 @@ class List_
                     $items[]  = new $class(
                         $this->parentContentId,
                         $contentId . $idSuffix,
-                        $this->componentStore,
                         $childContentStore,
                     );
                 }
