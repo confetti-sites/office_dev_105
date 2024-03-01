@@ -20,14 +20,15 @@ class Text extends ComponentStandard {
 
         // Get default value
         $component = $this->getComponent();
-        if ($component->hasDecoration('default')) {
-            return $component->getDecoration('default')['value'];
+        $default = $component->getDecoration('default');
+        if ($default) {
+            return (string) $default;
         }
 
         exit('@todo set default value via default() method (save it in the property)');
 
         // Guess value
-        $label = $component->getDecoration('label')['value'] ?? '';
+        $label = $component->getDecoration('label.value') ?? '';
         $haystack = strtolower($component->key . $label);
         if (str_contains($haystack, 'address')) {
             return '123 Main St, Anytown, USA 12345';
@@ -99,7 +100,7 @@ class Text extends ComponentStandard {
     // Label is used as a field title in the admin panel
     public function label(string $label): self
     {
-        $this->setDecoration('default', [
+        $this->setDecoration('label', [
             'label' => $label,
         ]);
         return $this;
@@ -108,7 +109,7 @@ class Text extends ComponentStandard {
     // Minimum number of characters
     public function min(int $min): self
     {
-        $this->setDecoration('default', [
+        $this->setDecoration('min', [
             'min' => $min,
         ]);
         return $this;
@@ -117,7 +118,7 @@ class Text extends ComponentStandard {
     // Maximum number of characters
     public function max(int $max): self
     {
-        $this->setDecoration('default', [
+        $this->setDecoration('max', [
             'max' => $max,
         ]);
         return $this;
@@ -126,7 +127,7 @@ class Text extends ComponentStandard {
     // The placeholder text for the input field
     public function placeholder(string $placeholder): self
     {
-        $this->setDecoration('default', [
+        $this->setDecoration('placeholder', [
             'placeholder' => $placeholder,
         ]);
         return $this;

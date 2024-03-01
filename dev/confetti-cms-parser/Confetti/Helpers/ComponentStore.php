@@ -128,15 +128,12 @@ class ComponentStore
         return $result;
     }
 
-    private static function getDecorations($decorations1): array
+    private static function getDecorations($decorations): array
     {
-        $decorations = [];
-        foreach ($decorations1 as $decoration) {
-            $decorations[] = new DecorationEntity(
-                type: $decoration['type'],
-                data: $decoration['data'],
-            );
+        $result = [];
+        foreach ($decorations as $decoration) {
+            $result[$decoration['type']] = $decoration['data'];
         }
-        return $decorations;
+        return $result;
     }
 }

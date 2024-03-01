@@ -6,9 +6,6 @@ namespace Confetti\Helpers;
 
 class ComponentEntity
 {
-    /**
-     * @param \Confetti\Helpers\DecorationEntity[] $decorations
-     */
     public function __construct(
         public readonly string       $key,
         public readonly string       $type,
@@ -19,27 +16,40 @@ class ComponentEntity
 
     }
 
-    public function hasDecoration(string $string): bool
+    public function hasDecoration(string $key): bool
     {
-        foreach ($this->decorations as $decoration) {
-            if ($decoration->type === $string) {
-                return true;
-            }
+        if ($this->getDecoration($key) !== null) {
+            return true;
         }
-        return false;
     }
 
     /**
-     * @return array<string, mixed>|null
+     * @param string|null $parameter to search deep, you can use dot notation: `size.min`
      */
-    public function getDecoration(string $string): ?array
+    public function getDecoration(string $method, ?string $parameter = null): mixed
     {
-        foreach ($this->decorations as $decoration) {
-            if ($decoration->type === $string) {
-                return $decoration->data;
+        $data = $this->decorations[$method] ?? null;
+        if ($data === null) {
+            return null;
+        }
+
+        // If no parameter is given, and no parameter is given, and the data is an array,
+        // the value is not a value (for example, an boolean or an integer). In that case,
+        // we use are assumed that the parameter name is the same as the method name.
+        if ($parameter === null && is_array($data) && array_key_exists($method, $data)) {
+            return $data[$method] ?? null;
+        }
+
+        // Search with parameter
+        $parameters = explode('.', $parameter);
+        foreach ($parameters as $parameter) {
+            if (isset($data[$parameter])) {
+                $data = $data[$parameter];
+            } else {
+                return null;
             }
         }
-        return null;
+        return $data;
     }
 
     public function dumpDecorations(): void
