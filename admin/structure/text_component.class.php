@@ -9,14 +9,17 @@ use Confetti\Helpers\ComponentStandard;
 return new class extends ComponentStandard {
     public function get(): string
     {
+        if ($this->contentStore === null) {
+            throw new \RuntimeException('This component is only used as a reference. Therefore, you can\'t call __toString() or get().');
+        }
         // Get saved value
         $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
-            return $content->value;
+            return $content;
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->getFullContentId());
+        $component = $this->getComponent();
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default')['value'];
         }
@@ -33,6 +36,9 @@ return new class extends ComponentStandard {
         if (str_contains($haystack, 'last') && str_contains($haystack, 'name')) {
             return 'Müller';
         }
+        if (str_contains($haystack, 'name')) {
+            return 'Sébastien Müller';
+        }
         if (str_contains($haystack, 'company') || str_contains($haystack, 'business')) {
             return 'ABC Corporation';
         }
@@ -44,9 +50,6 @@ return new class extends ComponentStandard {
         }
         if (str_contains($haystack, 'city')) {
             return 'Anytown';
-        }
-        if (str_contains($haystack, 'name')) {
-            return 'Sébastien Müller';
         }
 
         // Generate Lorem Ipsum

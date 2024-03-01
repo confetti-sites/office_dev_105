@@ -7,7 +7,7 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentStandard;
 
 class Text extends ComponentStandard {
-    public function get(): ?string
+    public function get(): string
     {
         if ($this->contentStore === null) {
             throw new \RuntimeException('This component is only used as a reference. Therefore, you can\'t call __toString() or get().');
@@ -82,33 +82,53 @@ class Text extends ComponentStandard {
         return $possibilities[array_rand($possibilities)];
     }
 
+    public function getComponentType(): string
+    {
+        return 'text';
+    }
+
     // Default will be used if no value is saved
     public function default(string $default): self
     {
+        $this->setDecoration('default', [
+            'default' => $default,
+        ]);
         return $this;
     }
 
     // Label is used as a field title in the admin panel
     public function label(string $label): self
     {
+        $this->setDecoration('default', [
+            'label' => $label,
+        ]);
         return $this;
     }
 
     // Minimum number of characters
     public function min(int $min): self
     {
+        $this->setDecoration('default', [
+            'min' => $min,
+        ]);
         return $this;
     }
 
     // Maximum number of characters
     public function max(int $max): self
     {
+        $this->setDecoration('default', [
+            'max' => $max,
+        ]);
         return $this;
     }
 
     // The placeholder text for the input field
     public function placeholder(string $placeholder): self
     {
+        $this->setDecoration('default', [
+            'placeholder' => $placeholder,
+        ]);
         return $this;
     }
 }

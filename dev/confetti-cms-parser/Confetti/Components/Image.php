@@ -7,6 +7,11 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentStandard;
 
 class Image extends ComponentStandard {
+    public function getComponentType(): string
+    {
+        return 'image';
+    }
+
     public function get(): string
     {
         // Get saved value

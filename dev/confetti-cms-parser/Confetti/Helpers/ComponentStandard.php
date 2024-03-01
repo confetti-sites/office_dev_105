@@ -94,10 +94,20 @@ abstract class ComponentStandard
      */
     public function getComponent(): ComponentEntity
     {
+        $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+        $dir = dirname($location['file']);
+        $file = basename($location['file']);
         return new ComponentEntity(
             $this->getComponentKey(),
             $this->getComponentType(),
             $this->decorations,
+            new SourceEntity(
+                $dir,
+                $file,
+                $location['line'],
+                0,
+                0,
+            ),
         );
     }
 
