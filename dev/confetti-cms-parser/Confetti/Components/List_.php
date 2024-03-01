@@ -8,7 +8,7 @@ use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
-use Confetti\Helpers\OtherContentFound;
+use Confetti\Helpers\ConditionDoesNotMatchConditionFromContent;
 use IteratorAggregate;
 use Traversable;
 
@@ -28,7 +28,6 @@ class List_
     public function __construct(
         protected string         $parentContentId,
         protected string         $relativeContentId,
-        protected ComponentStore &$componentStore,
         protected ContentStore   &$parentContentStore,
         private readonly string  $as,
     )
@@ -112,7 +111,6 @@ class List_
             public function __construct(
                 protected string         $parentContentId,
                 protected string         $relativeContentId,
-//                protected ComponentStore &$componentStore,
                 protected ContentStore   $contentStore,
                 protected string         $as,
             )
@@ -131,7 +129,7 @@ class List_
                 try {
                     // Get items if present
                     $items = $this->contentStore->getContentOfThisLevel();
-                } catch (OtherContentFound) {
+                } catch (ConditionDoesNotMatchConditionFromContent) {
                     // When the content is present but received with another query condition
                     $items = $this->contentStore->fetchCurrentQuery();
                 }
@@ -204,11 +202,11 @@ class List_
                 /** @var ComponentEntity $component */
                 $component = (new $class())->getComponent();
                 $contentId  = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
-                $deeper     = $this->contentStore->isFake();
 
                 // Get the number of items. If not present,
                 // then use default values. To prevent rendering too
                 // many items, we don't fake to many items in deeper levels.
+                $deeper     = $this->contentStore->isFake();
                 $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 50);
                 $min    = $component->getDecoration('min')['value'] ?? 1;
                 $amount = random_int($min, $max);

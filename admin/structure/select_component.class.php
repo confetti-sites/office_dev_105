@@ -14,43 +14,36 @@ use RuntimeException;
 return new class extends ComponentStandard implements HasMapInterface {
     public function get(): string
     {
-        $component = $this->componentStore->findOrNull($this->relativeContentId);
-        if ($component !== null) {
-            return $this->getValueFromOptions($component);
-        }
-        return '!!! Error: Component with type `select` need to have decoration `options` !!!';
-    }
-
-    public function getValueFromOptions(ComponentEntity $component): string
-    {
         // Get saved value
         $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
             return $content->value;
         }
 
+        $component = $this->getComponent();
+
         // Get default value
-        if ($component->hasDecoration('default')) {
-            return $component->getDecoration('default')['value'];
+        $default = $component->getDecoration('default');
+        if ($default) {
+            return (string) $default;
         }
 
         // Get random value from all options
-        $options = $component->getDecoration('options')['options'];
+        $options = $component->getDecoration('options');
         if (count($options) === 0) {
             return '';
         }
+
         // random index from 0 to count($options) - 1
         $index = rand(0, count($options) - 1);
-        return $options[$index]['id'];
+        return $options[$index];
     }
 
-    public static function getAllOptions(ComponentStore $store, ComponentEntity $component): array
+    public static function getAllOptions(ComponentEntity $component): array
     {
         $options = [];
-        if ($component->hasDecoration('options')) {
-            foreach ($component->getDecoration('options')['options'] as $option) {
-                $options[$option['id']] = $option['label'];
-            }
+        foreach ($component->getDecoration('options') ?? [] as $option) {
+            $options[$option['id']] = $option['label'];
         }
         return $options;
     }

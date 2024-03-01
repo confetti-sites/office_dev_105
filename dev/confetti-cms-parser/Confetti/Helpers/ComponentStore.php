@@ -14,6 +14,7 @@ class ComponentStore
 
     public function __construct($componentKey)
     {
+        throw new \RuntimeException('Probably not necessary');
         $params = [
             'only_modelable' => true,
             'key_prefix'     => $componentKey,

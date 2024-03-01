@@ -11,7 +11,7 @@ use Confetti\Helpers\ContentStore;
 use IteratorAggregate;
 use Traversable;
 
-return new class extends \Confetti\Helpers\QueryBuilder
+return new class
 {
     /**
      * The items contained in the collection.

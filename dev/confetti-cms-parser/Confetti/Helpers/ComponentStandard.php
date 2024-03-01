@@ -165,6 +165,9 @@ abstract class ComponentStandard
 
     public function __toString(): string
     {
+        if ($this->contentStore === null) {
+            throw new \RuntimeException("Component '{$this->getComponent()->key}' is only used as a reference. Therefore, you can't convert `new {$this->getComponent()->key}` to a string.");
+        }
         return (string) $this->get();
     }
 

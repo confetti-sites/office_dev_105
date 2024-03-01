@@ -21,9 +21,9 @@ class Image extends ComponentStandard {
         }
 
         // Get default value
-        $component = $this->componentStore->findOrNull($this->getComponentKey());
-        $width = $component?->getDecoration('width')['value'] ?? 300;
-        $height = $component?->getDecoration('height')['value'] ?? 200;
+        $component = $this->getComponent();
+        $width = $component->getDecoration('width') ?? 300;
+        $height = $component->getDecoration('height') ?? 200;
 
         return "https://picsum.photos/$width/$height?random=" . rand(0, 10000);
     }

@@ -9,9 +9,6 @@ use Confetti\Helpers\ComponentStandard;
 class Text extends ComponentStandard {
     public function get(): string
     {
-        if ($this->contentStore === null) {
-            throw new \RuntimeException('This component is only used as a reference. Therefore, you can\'t call __toString() or get().');
-        }
         // Get saved value
         $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
@@ -24,8 +21,6 @@ class Text extends ComponentStandard {
         if ($default) {
             return (string) $default;
         }
-
-        exit('@todo set default value via default() method (save it in the property)');
 
         // Guess value
         $label = $component->getDecoration('label.value') ?? '';

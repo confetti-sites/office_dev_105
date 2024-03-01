@@ -137,7 +137,7 @@ class ContentStore
             if ($result && array_key_exists($id, $result["data"])) {
                 return $result["data"][$id];
             }
-        } catch (OtherContentFound) {
+        } catch (ConditionDoesNotMatchConditionFromContent) {
             // We need to fetch the content with the correct condition
         }
         // Query the content and cache the selection
@@ -230,7 +230,7 @@ class ContentStore
                     $checkIfQueryMatches = array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []);
                     $contentCondition    = $checkIfQueryMatches ? $content['join_condition'][$breadcrumb['path']] : null;
                     if ($checkIfQueryMatches && $contentCondition !== $currentCondition) {
-                        throw new OtherContentFound("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");
+                        throw new ConditionDoesNotMatchConditionFromContent("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");
                     }
                     $content = $content['join'][$breadcrumb['path']];
                     break;
