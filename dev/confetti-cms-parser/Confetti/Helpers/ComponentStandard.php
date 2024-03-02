@@ -78,10 +78,10 @@ abstract class ComponentStandard
     private array $decorations = [];
 
     public function __construct(
-        protected ?string         $parentContentId = null,
-        protected ?string         $relativeContentId = null,
+        protected ?string       $parentContentId = null,
+        protected ?string       $relativeContentId = null,
         // We use the reference because we want to init the rest of the content store
-        protected ?ContentStore   &$contentStore = null,
+        protected ?ContentStore &$contentStore = null,
     )
     {
     }
@@ -95,8 +95,8 @@ abstract class ComponentStandard
     public function getComponent(): ComponentEntity
     {
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-        $dir = dirname($location['file']);
-        $file = basename($location['file']);
+        $dir      = dirname($location['file']);
+        $file     = basename($location['file']);
         return new ComponentEntity(
             $this->getComponentKey(),
             $this->getComponentType(),
@@ -121,6 +121,15 @@ abstract class ComponentStandard
     public function getFullContentId(): string
     {
         return self::mergeIds($this->parentContentId, $this->relativeContentId);
+    }
+
+    public function guessLabel(): string
+    {
+        $label = $this->getComponent()->getDecoration('label');
+        if ($label) {
+            return $label;
+        }
+        return titleByKey($this->getComponentKey());
     }
 
     public function setDecoration(string $key, mixed $value): void

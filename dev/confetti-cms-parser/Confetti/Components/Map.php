@@ -49,6 +49,15 @@ class Map
         return new static("", $contentId, $contentStore);
     }
 
+    public function guessLabel(): string
+    {
+        $label = $this->getComponent()->getDecoration('label');
+        if ($label) {
+            return $label;
+        }
+        return titleByKey($this->getComponentKey());
+    }
+
     /**
      * @internal This method is not part of the public API and should not be used.
      */

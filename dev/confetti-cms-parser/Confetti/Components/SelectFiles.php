@@ -14,15 +14,7 @@ use RuntimeException;
 class SelectFiles extends ComponentStandard implements HasMapInterface {
     public function get(): string
     {
-        $component = $this->componentStore->findOrNull($this->componentKey . '-');
-        if ($component !== null) {
-            return $this->getValueFromInDirectories($component);
-        }
-        return '!!! Error: Component with type `select` need to have decoration `options` or `inDirectories` !!!';
-    }
 
-    public function getValueFromInDirectories(ComponentEntity $component): string
-    {
         // Get saved value
         $filePath = $this->contentStore->findOneData($this->getFullContentId())?->value;
         if ($filePath !== null) {
@@ -31,9 +23,10 @@ class SelectFiles extends ComponentStandard implements HasMapInterface {
             }
             return $filePath;
         }
+        $component = $this->getComponent();
 
         // Get default view
-        $filePath = $component->getDecoration('default')['value'] ?? throw new RuntimeException('Error: No default defined. Use ->default(\'filename_without_directory\') to define the default value. In ' . $component->source);
+        $filePath = $component->getDecoration('default') ?? throw new RuntimeException('Error: No default defined. Use ->default(\'filename_without_directory\') to define the default value. In ' . $component->source);
         if (str_ends_with($filePath, '.blade.php')) {
             return self::getViewByPath($filePath);
         }
@@ -55,32 +48,46 @@ class SelectFiles extends ComponentStandard implements HasMapInterface {
         return str_replace('/', '.', $path);
     }
 
+    public function getComponentType(): string
+    {
+        return 'selectFiles';
+    }
+
     // List all files by directories. You can use the glob pattern. For example: `->inDirectories(['/view/footers'])`
-    // 
+    //
     // @param string $pattern A glob pattern.
-    // 
+    //
     // The ? matches 1 of any character except a /
     // The * matches 0 or more of any character except a /
     // The ** matches 0 or more of any character including a /
     // The [abc] matches 1 of any character in the set
     // The [!abc] matches 1 of any character not in the set
     // The [a-z] matches 1 of any character in the range
-    // 
+    //
     // Examples: *.css /templates/**.css
     public function inDirectories(array $inDirectories): self
     {
+        $this->setDecoration('inDirectories', [
+            'inDirectories' => $inDirectories,
+        ]);
         return $this;
     }
 
     // Before saving this will be the default file. With inDirectories, the file must be in the directory.
     public function default(string $default): self
     {
+        $this->setDecoration('default', [
+            'default' => $default,
+        ]);
         return $this;
     }
 
     // Label is used as a field title in the admin panel
     public function label(string $label): self
     {
+        $this->setDecoration('label', [
+            'label' => $label,
+        ]);
         return $this;
     }
 }

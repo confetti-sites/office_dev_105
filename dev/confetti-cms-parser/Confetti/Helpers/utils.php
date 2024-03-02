@@ -63,6 +63,30 @@ function request(): Request
     return new Request();
 }
 
+/**
+ * @param array $variables exmpale: ['currentContentId', 'The value']
+ * Use reference so the blade template doesn't get idea errors 🤫
+ */
+function variables(&$variables)
+{
+    // Ignore the keys (present in even indexes)
+    $variables = array_values($variables);
+    $result = [];
+    for ($i = 0; $i < count($variables); $i += 2) {
+        $result[] = $variables[$i + 1];
+    }
+    return $result;
+}
+
+function titleByKey(string $key): string
+{
+    // Guess label from the last part of the relative content id
+    $parts = explode('/', $key);
+    $part  = end($parts);
+    $part  = str_replace('_', ' ', $part);
+    return ucwords($part);
+}
+
 // This function is used to generate an id for a part of
 // a content id. This id is always prefixed with a ~.
 // Example: '/model/pages/page~' . newId()

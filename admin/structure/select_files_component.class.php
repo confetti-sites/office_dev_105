@@ -14,15 +14,8 @@ use RuntimeException;
 return new class extends ComponentStandard implements HasMapInterface {
     public function get(): string
     {
-        $component = $this->componentStore->findOrNull($this->componentKey . '-');
-        if ($component !== null) {
-            return $this->getValueFromInDirectories($component);
-        }
-        return '!!! Error: Component with type `select` need to have decoration `options` or `inDirectories` !!!';
-    }
+        $component = $this->getComponent();
 
-    public function getValueFromInDirectories(ComponentEntity $component): string
-    {
         // Get saved value
         $filePath = $this->contentStore->findOneData($this->getFullContentId())?->value;
         if ($filePath !== null) {
@@ -33,7 +26,7 @@ return new class extends ComponentStandard implements HasMapInterface {
         }
 
         // Get default view
-        $filePath = $component->getDecoration('default')['value'] ?? throw new RuntimeException('Error: No default defined. Use ->default(\'filename_without_directory\') to define the default value. In ' . $component->source);
+        $filePath = $component->getDecoration('default') ?? throw new RuntimeException('Error: No default defined. Use ->default(\'filename_without_directory\') to define the default value. In ' . $component->source);
         if (str_ends_with($filePath, '.blade.php')) {
             return self::getViewByPath($filePath);
         }
