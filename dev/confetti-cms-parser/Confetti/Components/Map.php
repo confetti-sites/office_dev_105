@@ -51,11 +51,17 @@ class Map
 
     public function guessLabel(): string
     {
-        $label = $this->getComponent()->getDecoration('label');
+        $component = $this->getComponent();
+        $label = $component->getDecoration('label');
         if ($label) {
             return $label;
         }
-        return titleByKey($this->getComponentKey());
+        return titleByKey($this->getComponent()->key);
+    }
+
+    public function getChildren(): array
+    {
+        return [];
     }
 
     /**
@@ -98,11 +104,14 @@ class Map
 
     public function image(string $key): Image
     {
-        return new Image(
+        exit('asdfdsafdsf');
+        $result = new Image(
             $this->getId(),
             $key,
             $this->contentStore,
         );
+        exit('asdfdsafdsf');
+        return $result;
     }
 
     public function list(string $key): List_

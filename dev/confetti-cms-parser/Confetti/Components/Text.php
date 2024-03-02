@@ -17,6 +17,9 @@ class Text extends ComponentStandard {
 
         // Get default value
         $component = $this->getComponent();
+        if ($this->getComponent() === null) {
+            throw new \RuntimeException("j67j6 !!! Component '{$this->getComponentKey()}' is null!!!");
+        }
         $default = $component->getDecoration('default');
         if ($default) {
             return (string) $default;
@@ -52,8 +55,8 @@ class Text extends ComponentStandard {
 
         // Generate Lorem Ipsum
         // Use different lengths for max to make it more interesting
-        $min     = $component->getDecoration('min')['value'] ?? 6;
-        $max     = $component->getDecoration('max')['value'] ?? $this->randomOf([10, 100, 1000, 10000]);
+        $min     = $component->getDecoration('min') ?? 6;
+        $max     = $component->getDecoration('max') ?? $this->randomOf([10, 100, 1000, 10000]);
         if ($min > $max) {
             $min = $max;
         }

@@ -1,16 +1,9 @@
-@php
-    /**
-     * @var \Confetti\Helpers\ComponentStore $componentStore
-     * @var \Confetti\Helpers\ComponentEntity $component
-     * @var \Confetti\Helpers\ContentStore $contentStore
-     * @var string $contentId
-     */
-@endphp
+@php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
 <div class="block text-bold text-xl mt-8 mb-4">
-    {{ $component->getDecoration('label')['value'] }}
+    {{ $model->guessLabel() }}
 </div>
 @php
-    $content = rawurlencode($contentStore->findOneData($contentId) ?? $component->getDecoration('default')['value'] ?? '')
+//    $content = rawurlencode($contentStore->findOneData($model->getContentId()) ?? $component->getDecoration('default') ?? '');
 @endphp
 
 {{-- <div x-data="editor2(decodeURIComponent('{!! $content !!}'), '{{ $contentId }}')">

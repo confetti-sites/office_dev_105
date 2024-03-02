@@ -1,4 +1,5 @@
 @php
+exit('in section template');
     /**
      * @var \Confetti\Helpers\ComponentEntity $component
      * @var \Confetti\Helpers\ComponentStore $componentStore

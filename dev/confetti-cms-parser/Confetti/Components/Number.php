@@ -21,7 +21,7 @@ class Number extends ComponentStandard {
         }
 
         // Use default value
-        $component = $this->componentStore->find($this->getFullContentId());
+        $component = $this->componentStore->find($this->getContentId());
         if ($component->hasDecoration('default')) {
             return (int)$component->getDecoration('default')['value'];
         }

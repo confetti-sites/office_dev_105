@@ -23,15 +23,16 @@ function model(\Confetti\Components\Map $target): \Confetti\Components\Map
     return $model;
 }
 
-/**
- * @template M
- * @param M $alias
- * @return M|\Confetti\Components\Map
- */
-function query(string $alias): mixed
+function modelById(string $contentId): \Confetti\Components\Map
 {
-    // Same logic as model()
-    return model($alias);
+    $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+    $as = $location['file'] . ':' . $location['line'];
+
+    $contentStore = new ContentStore($contentId, $as);
+    $className = str_replace('/', '\\', $contentId);
+    $model = (new $className)->newRoot($contentId, $as);
+
+    return $model;
 }
 
 /**

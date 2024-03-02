@@ -1,15 +1,12 @@
 @php
-    /**
-     * @var \Confetti\Helpers\ContentStore $contentStore
-     * @var string $currentContentId
-     */
-    $componentKey = Confetti\Helpers\ComponentStandard::componentKeyFromContentId($currentContentId);
+    [$currentContentId] = variables($variables);
     // Get parent content id
     // \w|~ remove word characters (with ulid)
     // /-/ remove target ids
     $parentContentId = preg_replace('#/(\w|~|/-/)+$#', '', $currentContentId);
     $hasParent = str_contains($currentContentId, '~');
-//    $components = $componentStore->whereParentKey($componentKey);
+    $model = modelById($currentContentId);
+    $children = $model->getChildren();
     $total = 0;
 @endphp
 <div class="container pt-6 px-6 mx-auto grid">
@@ -23,17 +20,18 @@
             </a>
         </div>
     @endif
-    @foreach($components as $component)
+    @foreach($children as $child)
+        @php($component = $child->getComponent())
         @if($component->type == 'model')
-            <a href="/admin{{ $component->key }}">
+            <a href="/admin{{ $child->getId() }}">
                 <div class="flex items-center justify-between w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-600 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
-                    {{ $component->getDecoration('label')['value'] }}
+                    {{ $component->getDecoration('label') }}
                 </div>
             </a>
             @continue
         @endif
-        @php($suffix = str_replace($componentKey, '', $component->key))
-        @include("admin.structure.{$component->type}_component_admin", ['component' => $component, 'contentStore' => $contentStore, 'contentId' => $currentContentId . $suffix])
+{{--        @php($suffix = str_replace($childKey, '', $child->key))--}}
+        @include("admin.structure.{$component->type}_component_admin", ['model' => $child])
         @php($total++)
     @endforeach
     @if($total > 0)
@@ -50,7 +48,7 @@
             Save
         </button>
     @endif
-    @if(count($components) === 0)
+    @if(count($children) === 0)
         {{--        show welcome first page in dashboard, documentation, handy links, ... --}}
         <div class="flex items-center justify-center w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             <a href="/admin/blog">Create your first page</a>

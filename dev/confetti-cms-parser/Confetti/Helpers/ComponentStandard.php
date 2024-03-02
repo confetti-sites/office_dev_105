@@ -115,21 +115,29 @@ abstract class ComponentStandard
     {
         // When using the abstract component (\Confetti\Components\Text) we use this method.
         // The specific component (\model\homepage\feature\title) will override this method.
-        return static::componentKeyFromContentId($this->getFullContentId());
+        return static::componentKeyFromContentId($this->getContentId());
     }
 
-    public function getFullContentId(): string
+    public function getContentId(): string
     {
         return self::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
     public function guessLabel(): string
     {
+        if ($this->getComponent() === null) {
+            throw new \RuntimeException("Error rt8iktn: Component '{$this->getComponentKey()}' is null!!!");
+        }
         $label = $this->getComponent()->getDecoration('label');
         if ($label) {
             return $label;
         }
         return titleByKey($this->getComponentKey());
+    }
+
+    public function getChildren(): array
+    {
+        return [];
     }
 
     public function setDecoration(string $key, mixed $value): void

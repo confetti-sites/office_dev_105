@@ -36,10 +36,10 @@
                 </aside>
 
                 <div class="flex flex-col flex-1">
-                    @include('admin.header')
+                    @include('admin.header', [$currentContentId])
 
                     <main class="h-full pb-16 overflow-y-auto" >
-{{--                        @include('admin.middle')--}}
+                        @include('admin.middle', [$currentContentId])
                     </main>
                 </div>
             </div>

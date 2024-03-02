@@ -16,7 +16,7 @@ class SelectFiles extends ComponentStandard implements HasMapInterface {
     {
 
         // Get saved value
-        $filePath = $this->contentStore->findOneData($this->getFullContentId())?->value;
+        $filePath = $this->contentStore->findOneData($this->getContentId())?->value;
         if ($filePath !== null) {
             if (str_ends_with($filePath, '.blade.php')) {
                 return self::getViewByPath($filePath);

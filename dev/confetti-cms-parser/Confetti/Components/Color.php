@@ -16,7 +16,7 @@ class Color extends ComponentStandard {
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->getFullContentId());
+        $component = $this->componentStore->find($this->getContentId());
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default')['value'];
         }

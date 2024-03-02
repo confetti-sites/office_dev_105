@@ -1,17 +1,10 @@
-@php
-    /**
-     * @var \Confetti\Helpers\ComponentStore $componentStore
-     * @var \Confetti\Helpers\ComponentEntity $component
-     * @var \Confetti\Helpers\ContentStore $contentStore
-     * @var string $contentId
-     */
-@endphp
+@php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
 
 <div class="block text-bold text-xl mt-8 mb-4">
-    {{ $component->getDecoration('label')['value'] }}
+    {{ $model->guessLabel() }}
 </div>
 
-{{-- <img x-show="!!$store.form.previewImage" :src="$store.form.previewImage">
+<img x-show="!!$store.form.previewImage" :src="$store.form.previewImage">
 
 <div x-show="!$store.form.previewImage" class="flex items-center justify-center w-full">
     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -27,22 +20,22 @@
             id="dropzone-file"
             type="file"
             x-bind="field"
-            name="{{ $contentId }}"
-            value="{{ $contentStore->find($component->key) }}"
+            name="{{ $model->getContentId() }}"
+            value="{{ $model->get() ?? $model->getComponent()->getDecoration('default') }}"
             class="hidden"
         />
     </label>
-</div> --}}
+</div>
 
 @php
-    $value = $contentStore->findOneData($component->key) ?? $component->getDecoration('default')['value'] ?? '';
+    $value = $model->get() ?? $model->getComponent()->getDecoration('default');
     $textPars1 = [
-        'id' => $contentId,
+        'id' => $model->getContentId(),
         'value' => $value,
         'placeholder' => 'SVG, PNG, JPG or GIF (MAX. 800x400px)',
     ];
 @endphp
-@component('admin.structure.input.upload', $textPars1) @endcomponent
+{{--@component('admin.structure.input.upload', $textPars1) @endcomponent--}}
 
 
 
@@ -51,6 +44,6 @@
             type="file"
             x-bind="field"
             name="{{ $contentId }}"
-            value="{{ $contentStore->find($component->key) }}"
+            value="{{ $contentStore->find($model->key) }}"
     > --}}
 </label>
