@@ -38,6 +38,14 @@ class List_
         $this->contentStore->join($this->relativeContentId, $as);
     }
 
+    public function getId(): string
+    {
+        if ($this->relativeContentId === null) {
+            throw new \RuntimeException("Component {{ $this->componentKey }} is used as a reference, so there is no content id.");
+        }
+        return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
+    }
+
     public function where(string|ComponentStandard $key, string $operator, mixed $value): self
     {
         if ($key instanceof ComponentStandard) {
@@ -239,26 +247,24 @@ class List_
     /**
      * @return array<string, array<string, \Confetti\Helpers\ContentEntity[]>>
      */
-    public static function getColumnsAndRows(
-        ComponentStore  $componentStore,
-        ComponentEntity $component,
-        ContentStore    $contentStore,
-        string          $contentId,
+    public static function getDefaultColumns(
+        \Confetti\Components\List_ $model,
     ): array
     {
-        return [];
-//        $columns = $component->getDecoration('columns')['columns'] ?? null;
-//        if ($columns === null) {
-//            // Use default columns
-//            $columns = $componentStore->whereParentKey(ComponentStandard::componentKeyFromContentId($contentId));
-//            $columns = array_filter($columns, static fn(ComponentEntity $column) => $column->type === 'text');
-//            $columns = array_slice($columns, 0, 4);
-//            $columns = array_map(static function (ComponentEntity $column) {
-//                $key = explode('/', $column->key);
-//                $key = end($key);
-//                return ['id' => $key, 'label' => $key];
-//            }, $columns);
-//        }
+        // Use default columns
+        $columns = $model->getChildren();
+        echo '<pre>';
+        var_dump($columns);
+        echo '</pre>';
+        exit('debug asdf');
+        $columns = array_filter($columns, static fn(ComponentEntity $column) => $column->type === 'text');
+        $columns = array_slice($columns, 0, 4);
+        $columns = array_map(static function (ComponentEntity $column) {
+            $key = explode('/', $column->key);
+            $key = end($key);
+            return ['id' => $key, 'label' => $key];
+        }, $columns);
+        return $columns;
 //        $fields = array_map(static fn($column) => $column['id'], $columns);
 //
 //        $data = $contentStore->whereIn($contentId, $fields, true);

@@ -26,18 +26,7 @@ class Map
 
     public function getComponent(): ComponentEntity
     {
-        return new ComponentEntity(
-            ComponentStandard::componentKeyFromContentId($this->getId()),
-            'map',
-            ['bla' => json_decode('{"second_level":"It\'s cool"}', true, 512, JSON_THROW_ON_ERROR)],
-            new SourceEntity(
-                'view',
-                'map.blade.php',
-                1,
-                1,
-                10,
-            ),
-        );
+        throw new \RuntimeException('This method should be overridden in the child class.');
     }
 
     /**
@@ -56,7 +45,7 @@ class Map
         if ($label) {
             return $label;
         }
-        return titleByKey($this->getComponent()->key);
+        return titleByKey($component->key);
     }
 
     public function getChildren(): array
@@ -104,13 +93,11 @@ class Map
 
     public function image(string $key): Image
     {
-        exit('asdfdsafdsf');
         $result = new Image(
             $this->getId(),
             $key,
             $this->contentStore,
         );
-        exit('asdfdsafdsf');
         return $result;
     }
 

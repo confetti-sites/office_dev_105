@@ -30,7 +30,6 @@
             </a>
             @continue
         @endif
-{{--        @php($suffix = str_replace($childKey, '', $child->key))--}}
         @include("admin.structure.{$component->type}_component_admin", ['model' => $child])
         @php($total++)
     @endforeach
@@ -51,7 +50,8 @@
     @if(count($children) === 0)
         {{--        show welcome first page in dashboard, documentation, handy links, ... --}}
         <div class="flex items-center justify-center w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <a href="/admin/blog">Create your first page</a>
+            ? link to something ?
+{{--            <a href="/admin/{{ $model->getId() . '/~' . newId() }}">Create your first page</a>--}}
         </div>
     @endif
 </div>

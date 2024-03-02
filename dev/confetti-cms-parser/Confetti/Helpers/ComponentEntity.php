@@ -41,7 +41,7 @@ class ComponentEntity
         }
 
         // Search with parameter
-        $parameters = explode('.', $parameter);
+        $parameters = explode('.', $parameter ?? '');
         foreach ($parameters as $parameter) {
             if (isset($data[$parameter])) {
                 $data = $data[$parameter];
