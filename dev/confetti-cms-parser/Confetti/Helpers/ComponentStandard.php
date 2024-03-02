@@ -150,9 +150,11 @@ abstract class ComponentStandard
         return preg_replace('/~[A-Z0-9_]+/', '~', $contentId);
     }
 
-    public static function componentClassByContentId(string $parentId, string $relativeId): string
+    public static function componentClassByContentId(string $key, string $relativeId = null): string
     {
-        $key = self::mergeIds($parentId, $relativeId);
+        if ($relativeId !== null) {
+            $key = self::mergeIds($key, $relativeId);
+        }
         // Remove id banner/image~0123456789 -> banner/image
         $class = preg_replace('/~[A-Z0-9_]{10}/', '', $key);
 
