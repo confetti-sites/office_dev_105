@@ -69,13 +69,7 @@ function request(): Request
  */
 function variables(&$variables)
 {
-    // Ignore the keys (present in even indexes)
-    $variables = array_values($variables);
-    $result = [];
-    for ($i = 0; $i < count($variables); $i += 2) {
-        $result[] = $variables[$i + 1];
-    }
-    return $result;
+    return array_values($variables);
 }
 
 function titleByKey(string $key): string

@@ -19,7 +19,7 @@ class Map
     {
     }
 
-    public function getFullId(): string
+    public function getId(): string
     {
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
@@ -27,7 +27,7 @@ class Map
     public function getComponent(): ComponentEntity
     {
         return new ComponentEntity(
-            ComponentStandard::componentKeyFromContentId($this->getFullId()),
+            ComponentStandard::componentKeyFromContentId($this->getId()),
             'map',
             ['bla' => json_decode('{"second_level":"It\'s cool"}', true, 512, JSON_THROW_ON_ERROR)],
             new SourceEntity(
@@ -64,7 +64,7 @@ class Map
     protected function getParamsForProperty(string $key): array
     {
         // Parameters for the constructor of the child classes.
-        return [$this->getFullId(), $key, $this->contentStore];
+        return [$this->getId(), $key, $this->contentStore];
     }
 
     /**
@@ -79,7 +79,7 @@ class Map
         $as = $location['file'] . ':' . $location['line'];
 
         // Parameters for the constructor of the child classes.
-        return [$this->getFullId(), $key, $this->contentStore, $as];
+        return [$this->getId(), $key, $this->contentStore, $as];
     }
 
     public function label(string $value): self
@@ -90,7 +90,7 @@ class Map
     public function color(string $key): Color
     {
         return new Color(
-            $this->getFullId(),
+            $this->getId(),
             $key,
             $this->contentStore,
         );
@@ -99,7 +99,7 @@ class Map
     public function image(string $key): Image
     {
         return new Image(
-            $this->getFullId(),
+            $this->getId(),
             $key,
             $this->contentStore,
         );
@@ -109,13 +109,13 @@ class Map
     {
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
         $as = $location['file'] . ':' . $location['line'];
-        return new List_($this->getFullId(), $key, $this->contentStore, $as);
+        return new List_($this->getId(), $key, $this->contentStore, $as);
     }
 
     public function number(string $key): Number
     {
         return new Number(
-            $this->getFullId(),
+            $this->getId(),
             $key,
             $this->contentStore,
         );
@@ -124,7 +124,7 @@ class Map
     public function select(string $key): Select
     {
         return new Select(
-            $this->getFullId(),
+            $this->getId(),
             $key,
             $this->contentStore,
         );
@@ -133,7 +133,7 @@ class Map
     public function selectFiles(string $key): SelectFiles
     {
         return new SelectFiles(
-            $this->getFullId(),
+            $this->getId(),
             $key,
             $this->contentStore,
         );
@@ -142,7 +142,7 @@ class Map
     public function text(string $key): Text
     {
         return new Text(
-            $this->getFullId(),
+            $this->getId(),
             $key,
             $this->contentStore,
         );
