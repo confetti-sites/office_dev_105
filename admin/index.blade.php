@@ -1,6 +1,5 @@
-@php
-    $currentContentId = str_replace('/admin', '', request()->uri());
-@endphp<!DOCTYPE html>
+@php($currentContentId = str_replace('/admin', '', request()->uri()))
+<!DOCTYPE html>
 <html x-data="data()" lang="en">
 
 <head>

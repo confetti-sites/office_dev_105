@@ -41,9 +41,18 @@ class List_
     public function getId(): string
     {
         if ($this->relativeContentId === null) {
-            throw new \RuntimeException("Component {{ $this->componentKey }} is used as a reference, so there is no content id.");
+            throw new \RuntimeException("Component {{ $this->componentKey }} is used as a reference, so you can't call getId().");
         }
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
+    }
+
+
+    /**
+     * @return ComponentEntity[]
+     */
+    public function getComponentsFromChildren(): array
+    {
+        throw new \RuntimeException("Component {{ $this->componentKey }} is used as a reference, so you can't call getComponentsFromChildren().");
     }
 
     public function where(string|ComponentStandard $key, string $operator, mixed $value): self
@@ -251,40 +260,16 @@ class List_
         \Confetti\Components\List_ $model,
     ): array
     {
-        // Use default columns
-        $columns = $model->getChildren();
-        echo '<pre>';
-        var_dump($columns);
-        echo '</pre>';
-        exit('debug asdf');
+        $columns = $model->getComponentsFromChildren();
+        // Filter out non-text columns
         $columns = array_filter($columns, static fn(ComponentEntity $column) => $column->type === 'text');
+        // Get max 4 columns
         $columns = array_slice($columns, 0, 4);
-        $columns = array_map(static function (ComponentEntity $column) {
+        return array_map(static function (ComponentEntity $column) {
             $key = explode('/', $column->key);
             $key = end($key);
             return ['id' => $key, 'label' => $key];
         }, $columns);
-        return $columns;
-//        $fields = array_map(static fn($column) => $column['id'], $columns);
-//
-//        $data = $contentStore->whereIn($contentId, $fields, true);
-//
-//        // Make rows by grouping on the id minus the relative id
-//        $rows = [];
-//        foreach ($data as $item) {
-//            // Ensure row exists even if there is no data
-//            if ($item->value === '__is_parent') {
-//                $rows[$item->contentId] = $rows[$item->contentId] ?? [];
-//                continue;
-//            }
-//
-//            // Trim relative id
-//            $regex             = '/\/(?:' . implode('|', $fields) . ')$/';
-//            $parentId          = preg_replace($regex, '', $item->contentId, 1);
-//            $rows[$parentId][] = $item;
-//        }
-//
-//        return [$columns, $rows];
     }
 
     // Minimum number of items

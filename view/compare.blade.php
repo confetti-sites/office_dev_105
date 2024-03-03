@@ -1,6 +1,6 @@
 @php($compare = model(new \model\homepage\compare)->label('Compare'))
 <div class="bg-gray-50 flex items-center justify-center">
-    @php($cases = $compare->list('case')->columns(['title', 'description'])->min(1)->max(4)->get())
+    @php($cases = $compare->list('case')->min(1)->max(4)->get())
     <div class="relative w-full" x-data="{ tab: '0'}">
         <div class="absolute top-0 right-0 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         <div class="absolute top-20 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob "></div>
