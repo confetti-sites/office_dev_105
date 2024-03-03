@@ -187,15 +187,18 @@ class ContentStore
         $child = clone $this->queryBuilder;
         $child->setOptions([
             'use_cache'               => true,
+            // although we ignore the condition in the next getContentOfThisLevel,
+            // we still want to know if the data is retrieved with the same conditions
+            // for when the children need to know if the data is retrieved with the same conditions.
             'response_with_condition' => true,
         ]);
         $child->ignoreFirstRow();
         $result        = $child->run($this->isFake);
         $this->content = $result;
-        return $this->getContentOfThisLevel($result);
+        return $this->getContentOfThisLevel($result, true);
     }
 
-    public function getContentOfThisLevel(array $content = null): ?array
+    public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false): ?array
     {
         $content ??= $this->content;
         foreach ($this->breadcrumbs as $breadcrumb) {
@@ -227,7 +230,7 @@ class ContentStore
                     // We need to be able to verify if the data from
                     // the cache matches the data from the given condition.
                     $currentCondition    = $this->queryBuilder->getCurrentCondition();
-                    $checkIfQueryMatches = array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []);
+                    $checkIfQueryMatches = !$ignoreCondition && array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []);
                     $contentCondition    = $checkIfQueryMatches ? $content['join_condition'][$breadcrumb['path']] : null;
                     if ($checkIfQueryMatches && $contentCondition !== $currentCondition) {
                         throw new ConditionDoesNotMatchConditionFromContent("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");

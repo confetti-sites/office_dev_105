@@ -9,7 +9,6 @@ use Confetti\Helpers\ComponentStandard;
 class Image extends ComponentStandard {
     public function get(): string
     {
-        exit('asdfe asdfdsaf!!!');
         // Get saved value
         $content = $this->contentStore->findOneData($this->relativeContentId);
         if ($content !== null) {
@@ -18,9 +17,6 @@ class Image extends ComponentStandard {
 
         $component = $this->getComponent();
 
-        if ($this->getComponent() === null) {
-            throw new \RuntimeException("asdfe !!! Component '{$this->getComponentKey()}' is null!!!");
-        }
         $width = $component->getDecoration('width') ?? 300;
         $height = $component->getDecoration('height') ?? 200;
 

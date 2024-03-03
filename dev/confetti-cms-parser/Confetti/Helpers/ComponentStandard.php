@@ -125,9 +125,6 @@ abstract class ComponentStandard
 
     public function guessLabel(): string
     {
-        if ($this->getComponent() === null) {
-            throw new \RuntimeException("Error rt8iktn: Component '{$this->getComponentKey()}' is null!!!");
-        }
         $label = $this->getComponent()->getDecoration('label');
         if ($label) {
             return $label;

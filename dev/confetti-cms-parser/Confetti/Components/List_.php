@@ -224,7 +224,7 @@ class List_
                 // then use default values. To prevent rendering too
                 // many items, we don't fake to many items in deeper levels.
                 $deeper     = $this->contentStore->isFake();
-                $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 50);
+                $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 20);
                 $min    = $component->getDecoration('min')['value'] ?? 1;
                 $amount = random_int($min, $max);
 
