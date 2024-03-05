@@ -1,9 +1,9 @@
 @php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
 <div class="block text-bold text-xl mt-8 mb-4">
-    {{ $model->guessLabel() }}
+    {{ $model->getLabel() }}
 </div>
 @php
-//    $content = rawurlencode($contentStore->findOneData($model->getContentId()) ?? $component->getDecoration('default') ?? '');
+    //    $content = rawurlencode($contentStore->findOneData($model->getContentId()) ?? $component->getDecoration('default') ?? '');
 @endphp
 
 {{-- <div x-data="editor2(decodeURIComponent('{!! $content !!}'), '{{ $contentId }}')">

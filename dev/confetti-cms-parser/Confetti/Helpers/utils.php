@@ -35,9 +35,9 @@ function modelById(string $contentId): \Confetti\Components\Map
 /**
  * You can use this in situations where you don't know what the parent classes are.
  */
-function extendModel(\Confetti\Helpers\HasMapInterface $component): Map
+function extendModel(\Confetti\Components\Map &$component): Map
 {
-    return $component->toMap();
+    return $component;
 }
 
 function hashId(string $id): string
@@ -63,7 +63,6 @@ function request(): Request
 
 /**
  * @param array $variables exmpale: ['currentContentId', 'The value']
- * Use reference so the blade template doesn't get idea errors 🤫
  */
 function variables(&$variables)
 {

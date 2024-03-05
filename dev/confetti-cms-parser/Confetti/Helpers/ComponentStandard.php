@@ -123,7 +123,7 @@ abstract class ComponentStandard
         return self::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
-    public function guessLabel(): string
+    public function getLabel(): string
     {
         $label = $this->getComponent()->getDecoration('label');
         if ($label) {

@@ -174,15 +174,15 @@ class List_
 
                 // $firstEmptyContent can be loaded due init
                 // When the content is not present, we want to load all the data
-                // But to prevent n+1 problem, we need to load the first item.
+                // But to prevent n+1 the problem, we need to load the first item.
                 $first = $firstEmptyContent ?? $this->contentStore->findFirstOfJoin()[0] ?? null;
+                // If key not even present, then we need to use the fake components
                 if ($first === null) {
                     foreach ($this->getFakeComponents($class) as $item) {
                         yield $item;
                     }
                     return;
                 }
-
                 if (empty($first)) {
                     return;
                 }

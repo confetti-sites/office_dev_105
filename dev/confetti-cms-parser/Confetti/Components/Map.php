@@ -126,9 +126,9 @@ class Map
         );
     }
 
-    public function selectFiles(string $key): SelectFiles
+    public function selectFiles(string $key): SelectFile
     {
-        return new SelectFiles(
+        return new SelectFile(
             $this->getId(),
             $key,
             $this->contentStore,

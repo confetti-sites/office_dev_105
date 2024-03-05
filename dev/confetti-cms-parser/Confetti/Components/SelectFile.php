@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace Confetti\Components;
 
-use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
-use Confetti\Helpers\ComponentStore;
-use Confetti\Helpers\ContentStore;
-use Confetti\Helpers\HasMapInterface;
-use RuntimeException;
 
-class SelectFiles extends ComponentStandard implements HasMapInterface {
+class SelectFile extends ComponentStandard {
     public function get(): string
     {
-
         // Get saved value
-        $filePath = $this->contentStore->findOneData($this->getContentId())?->value;
+        $filePath = $this->contentStore->findOneData($this->getContentId());
         if ($filePath !== null) {
             if (str_ends_with($filePath, '.blade.php')) {
                 return self::getViewByPath($filePath);
@@ -26,20 +20,14 @@ class SelectFiles extends ComponentStandard implements HasMapInterface {
         $component = $this->getComponent();
 
         // Get default view
-        $filePath = $component->getDecoration('default') ?? throw new RuntimeException('Error: No default defined. Use ->default(\'filename_without_directory\') to define the default value. In ' . $component->source);
+        $filePath = $component->getDecoration('default');
+        if ($filePath === null) {
+            return '';
+        }
         if (str_ends_with($filePath, '.blade.php')) {
             return self::getViewByPath($filePath);
         }
         return $filePath;
-    }
-
-    public function toMap(): Map
-    {
-        return new Map(
-            $this->relativeContentId . '-',
-            ComponentStore::newWherePrefix($this->relativeContentId . '-'),
-            new ContentStore(),
-        );
     }
 
     private static function getViewByPath(string $path): string

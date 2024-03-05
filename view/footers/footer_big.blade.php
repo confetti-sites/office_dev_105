@@ -11,7 +11,7 @@
                     >
                         <div>
                             <a
-                                    href="/index.html"
+                                    href="/"
                                     class="flex items-center"
                             >
                                 Confetti CMS
@@ -109,8 +109,7 @@
                         @endforeach
                     </div>
                     <div class="flex justify-between text-sm md:pl-16">
-                        @php($year = date('Y'))
-                        <span>© Confetti CMS {{ $year }} - Present</span>
+                        <span>© Confetti CMS 2023 - Present</span>
                         <span>All right reserved</span>
                     </div>
                 </div>
