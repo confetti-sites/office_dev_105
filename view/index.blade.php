@@ -15,20 +15,20 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="text-md overflow-x-hidden" :class="{ 'dark': dark }" x-data="data()">
-{{--    @guest()--}}
-{{--        @include('view.under_construction')--}}
-{{--    @else()--}}
-{{--@include('view.header')--}}
+{{--@guest()--}}
+{{--    @include('view.under_construction')--}}
+{{--@else()--}}
+@include('view.header')
 
-{{--@if(request()->uri() === '/waiting-list-step-2')--}}
-{{--    @include('view.waiting-list-step-2')--}}
-{{--@elseif(request()->uri() === '/pricing')--}}
-{{--    @include('view.pricing')--}}
-{{--@elseif(str_starts_with(request()->uri(), '/docs'))--}}
-{{--    @include('view.docs')--}}
-{{--@else--}}
-{{--    @include('view.homepage')--}}
-{{--@endif--}}
+@if(request()->uri() === '/waiting-list-step-2')
+    @include('view.waiting-list-step-2')
+@elseif(request()->uri() === '/pricing')
+    @include('view.pricing')
+@elseif(str_starts_with(request()->uri(), '/docs'))
+    @include('view.docs')
+@else
+    @include('view.homepage')
+@endif
 
 @php($target = model(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_big.blade.php'))
 @include($target, ['model' => $target])
