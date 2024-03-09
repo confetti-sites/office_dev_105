@@ -17,7 +17,7 @@ return new class extends ComponentStandard implements HasMapInterface {
         $component = $this->getComponent();
 
         // Get saved value
-        $filePath = $this->contentStore->findOneData($this->getContentId())?->value;
+        $filePath = $this->contentStore->findOneData($this->getId())?->value;
         if ($filePath !== null) {
             if (str_ends_with($filePath, '.blade.php')) {
                 return self::getViewByPath($filePath);

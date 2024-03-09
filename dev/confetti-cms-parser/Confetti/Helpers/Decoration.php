@@ -6,7 +6,7 @@ namespace Confetti\Helpers;
 
 enum Decoration: string
 {
-    case BY_DIRECTORY = 'inDirectories';
+    case MATCH = 'match';
     case BY_MODEL = 'byModel';
     case COLUMNS = 'columns';
     case CROP_AUTOMATICALLY = 'cropAutomatically';

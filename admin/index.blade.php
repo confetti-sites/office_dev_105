@@ -1,4 +1,9 @@
-@php($currentContentId = str_replace('/admin', '', request()->uri()))
+@php
+$currentContentId = str_replace('/admin', '', request()->uri());
+if ($currentContentId === '') {
+    $currentContentId = '/model';
+}
+@endphp
 <!DOCTYPE html>
 <html x-data="data()" lang="en">
 

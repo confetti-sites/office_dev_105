@@ -115,10 +115,10 @@ abstract class ComponentStandard
     {
         // When using the abstract component (\Confetti\Components\Text) we use this method.
         // The specific component (\model\homepage\feature\title) will override this method.
-        return static::componentKeyFromContentId($this->getContentId());
+        return static::componentKeyFromContentId($this->getId());
     }
 
-    public function getContentId(): string
+    public function getId(): string
     {
         return self::mergeIds($this->parentContentId, $this->relativeContentId);
     }
@@ -135,11 +135,6 @@ abstract class ComponentStandard
     public function getChildren(): array
     {
         return [];
-    }
-
-    public function setDecoration(string $key, mixed $value): void
-    {
-        $this->decorations[$key] = $value;
     }
 
     public static function componentKeyFromContentId(string $contentId): string
@@ -178,7 +173,6 @@ abstract class ComponentStandard
 
     abstract public function get(): mixed;
 
-
     public function __toString(): string
     {
         if ($this->contentStore === null) {
@@ -187,11 +181,41 @@ abstract class ComponentStandard
         return (string) $this->get();
     }
 
+
     public static function mergeIds(string $parent, string $relative): string
     {
         if (str_starts_with($relative, '/')) {
             return $relative;
         }
         return $parent . '/' . $relative;
+    }
+
+    /**
+     * @internal This method is not part of the public API and should not be used.
+     */
+    protected function getParamsForSelectedModel(): array
+    {
+        // We need to know where this method is called from so that we can store
+        // it as a very specific small part in the advanced caching mechanism.
+        // This allows us to replace a specific component in a large caching content.
+        $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+        $as       = $location['file'] . ':' . $location['line'];
+
+        // Parameters for the constructor of the child classes.
+        return [$this->parentContentId, $this->relativeContentId, $this->contentStore, $as];
+    }
+
+    protected function setDecoration(string $key, mixed $value): void
+    {
+        $this->decorations[$key] = $value;
+    }
+
+    protected function decode(string $json): mixed
+    {
+        try {
+            return json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return 'Error 7o8h5edg4n5jk: can\'t decode options: ' . $json . ', Message ' . $e->getMessage();
+        }
     }
 }

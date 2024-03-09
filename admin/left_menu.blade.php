@@ -16,7 +16,7 @@
                         class="inline-flex items-center w-full text-sm font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
                         href="/admin{{ $firstChild->getId() }}"
                 >
-                    <span class="ml-4">{{ $firstChild->guessLabel()}}</span>
+                    <span class="ml-4">{{ $firstChild->getLabel()}}</span>
                 </a>
                 {{-- Where are only interested in the children that are maps (not a list or value field). --}}
                 @php($children = method_exists($firstChild, 'getChildren') ? array_filter($firstChild->getChildren(), fn($c) => $c instanceof Map) : [])
@@ -34,7 +34,7 @@
                                         </span>
                                     @endif
                                     <a class="w-full"
-                                       href="/admin{{ $secondChild->getId() }}">{{ $secondChild->guessLabel() }}</a>
+                                       href="/admin{{ $secondChild->getId() }}">{{ $secondChild->getLabel() }}</a>
                                 </li>
                             @endif
                         @endforeach

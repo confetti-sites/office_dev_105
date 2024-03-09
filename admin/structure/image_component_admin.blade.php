@@ -24,7 +24,7 @@
                 id="dropzone-file"
                 type="file"
                 x-bind="field"
-                name="{{ $model->getContentId() }}"
+                name="{{ $model->getId() }}"
                 value="{{ $model->get() ?? $model->getComponent()->getDecoration('default') }}"
                 class="hidden"
         />
@@ -34,7 +34,7 @@
 @php
     $value = $model->get() ?? $model->getComponent()->getDecoration('default');
     $textPars1 = [
-        'id' => $model->getContentId(),
+        'id' => $model->getId(),
         'value' => $value,
         'placeholder' => 'SVG, PNG, JPG or GIF (MAX. 800x400px)',
     ];

@@ -38,7 +38,7 @@ class Map
         return new static("", $contentId, $contentStore);
     }
 
-    public function guessLabel(): string
+    public function getLabel(): string
     {
         $component = $this->getComponent();
         $label = $component->getDecoration('label');
@@ -50,7 +50,7 @@ class Map
 
     public function getChildren(): array
     {
-        return [];
+        throw new \RuntimeException('This method should be overridden in the child class.');
     }
 
     /**
@@ -126,7 +126,7 @@ class Map
         );
     }
 
-    public function selectFiles(string $key): SelectFile
+    public function selectFile(string $key): SelectFile
     {
         return new SelectFile(
             $this->getId(),
