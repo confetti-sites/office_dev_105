@@ -8,7 +8,8 @@
         @foreach($root->getChildren() as $firstChild)
             <li class="relative px-3 py-3">
                 @php($component = $firstChild->getComponent())
-                @if($firstChild->getId() === $currentContentId)
+                @php($isCurrent = $firstChild->getId() === $currentContentId)
+                @if($isCurrent)
                     <span class="absolute inset-y-0 left-0 w-1 rounded-tr-lg rounded-br-lg bg-primary-600"
                           aria-hidden="true"></span>
                 @endif
