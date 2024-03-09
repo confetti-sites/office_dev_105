@@ -11,7 +11,7 @@ use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\HasMapInterface;
 use RuntimeException;
 
-return new class extends ComponentStandard implements HasMapInterface {
+return new class extends ComponentStandard implements \Confetti\Contracts\SelectModelInterface {
     public function get(): string
     {
         // Get saved value
@@ -46,14 +46,5 @@ return new class extends ComponentStandard implements HasMapInterface {
             $options[$option['id']] = $option['label'];
         }
         return $options;
-    }
-
-    public function toMap(): Map
-    {
-        return new Map(
-            $this->relativeContentId,
-            ComponentStore::newWherePrefix($this->relativeContentId),
-            new ContentStore(),
-        );
     }
 };

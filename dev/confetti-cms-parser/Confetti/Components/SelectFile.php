@@ -47,6 +47,11 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
         return 'selectFile';
     }
 
+    public function getSelected(): Map
+    {
+        throw new \RuntimeException('This method should be overridden in the child class.');
+    }
+
     /**
      * @return \Confetti\Components\Map[]
      */

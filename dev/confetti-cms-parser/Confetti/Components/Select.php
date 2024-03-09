@@ -8,10 +8,8 @@ use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
-use Confetti\Helpers\HasMapInterface;
-use RuntimeException;
 
-class Select extends ComponentStandard implements HasMapInterface {
+class Select extends ComponentStandard {
     public function get(): string
     {
         // Get saved value
@@ -34,27 +32,18 @@ class Select extends ComponentStandard implements HasMapInterface {
             return '';
         }
 
-        // random index from 0 to count($options) - 1
-        $index = rand(0, count($options) - 1);
-        return $options[$index];
+        $key = array_rand($options, 1);
+        return $options[$key];
     }
 
-    public static function getAllOptions(ComponentEntity $component): array
+    public function getOptions(): array
     {
         $options = [];
-        foreach ($component->getDecoration('options') ?? [] as $option) {
+        $decorations = $this->getComponent()->getDecoration('options') ?? [];
+        foreach ($decorations as $option) {
             $options[$option['id']] = $option['label'];
         }
         return $options;
-    }
-
-    public function toMap(): Map
-    {
-        return new Map(
-            $this->relativeContentId,
-            ComponentStore::newWherePrefix($this->relativeContentId),
-            new ContentStore(),
-        );
     }
 
     public function getComponentType(): string

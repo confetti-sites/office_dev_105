@@ -40,8 +40,12 @@ function extendModel(\Confetti\Components\Map &$component): Map
     return $component;
 }
 
+/**
+ * @deprecated
+ */
 function hashId(string $id): string
 {
+    throw new \RuntimeException('This function is deprecated');
     return '_' . hash('crc32b', $id);
 }
 

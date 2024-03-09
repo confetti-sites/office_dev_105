@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Confetti\Components;
 
-use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\HasMapInterface;
 use RuntimeException;
 
-return new class extends ComponentStandard implements HasMapInterface {
+return new class extends ComponentStandard implements \Confetti\Contracts\SelectModelInterface {
     public function get(): string
     {
         $component = $this->getComponent();

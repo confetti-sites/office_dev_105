@@ -184,6 +184,7 @@ class List_
                     return;
                 }
                 if (empty($first)) {
+                    throw new \RuntimeException('Probably not necessary');
                     return;
                 }
                 $childContentStore = clone $this->contentStore;
@@ -270,6 +271,15 @@ class List_
             $key = end($key);
             return ['id' => $key, 'label' => $key];
         }, $columns);
+    }
+
+    protected function decode(string $json): mixed
+    {
+        try {
+            return json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return 'Error 7o8h5edg4n5jk: can\'t decode options: ' . $json . ', Message ' . $e->getMessage();
+        }
     }
 
     // Minimum number of items
