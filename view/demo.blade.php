@@ -1,5 +1,7 @@
 @php($demo = model(new \model\homepage\demo)->label('Demo'))
 
+
+
 <div class="dark:bg-gray-900 pt-8">
     @php($blocks = $demo->list('block')->columns(['title'])->min(1)->max(6)->get())
     @foreach($blocks as $block)

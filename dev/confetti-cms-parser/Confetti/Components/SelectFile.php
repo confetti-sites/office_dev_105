@@ -49,7 +49,7 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
 
     public function getSelected(): Map
     {
-        throw new \RuntimeException('This method should be overridden in the child class.');
+        throw new \RuntimeException('This method `getSelected` should be overridden in the child class.');
     }
 
     /**
@@ -57,7 +57,7 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
      */
     public function getOptions(): array
     {
-        throw new \RuntimeException('This method should be overridden in the child class.');
+        throw new \RuntimeException('This method `getOptions` should be overridden in the child class.');
     }
 
     // List all files by directories. You can use the glob pattern. For example: `->match(['/view/footers'])`

@@ -26,7 +26,7 @@ class Map
 
     public function getComponent(): ComponentEntity
     {
-        throw new \RuntimeException('This method should be overridden in the child class.');
+        throw new \RuntimeException('This method `getComponent` should be overridden in the child class.');
     }
 
     /**
@@ -53,7 +53,12 @@ class Map
      */
     public function getChildren(): array
     {
-        throw new \RuntimeException('This method should be overridden in the child class.');
+        // Normally, this method should be overridden in the child class.
+        // As situations may be:
+        // 1. Create a file with ->list('blogs')->get()
+        // 2. Use ->blogs()->get() in another file.
+        // 3. Remove ->list('blogs')->get()
+        return [];
     }
 
     /**
