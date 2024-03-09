@@ -1,4 +1,5 @@
-@php($footer = extendModel($parent))
+@php($footer = extendModel($model))
+
 <footer class="border-t border-gray-100 pt-10 pb-8 dark:border-gray-800 dark:bg-gray-900/80">
     <div>
         <div
@@ -17,7 +18,7 @@
                                 Confetti CMS
                             </a>
                             <a href="https://tailus.io" class="mt-2 inline-block text-sm">
-                                {{ $footer->text('main_subtitle')->min(1)->max(30) }}
+                                {{ $footer->text('subtitle')->min(1)->max(30) }}
                             </a>
                         </div>
 
@@ -86,9 +87,11 @@
                         </div>
                     </div>
                 </div>
+
+
                 <div class="col-span-8 md:col-span-6 lg:col-span-5 text-gray-600 dark:text-gray-400">
                     <div class="grid grid-cols-2 gap-6 pb-16 sm:grid-cols-3 md:pl-16">
-                        @foreach($footer->list('main_list')->columns(['header_title'])->min(1)->max(3)->get() as $list)
+                        @foreach($footer->list('item')->columns(['header_title'])->min(1)->max(3)->get() as $list)
                             <div>
                                 <h2 class="text-base font-medium text-gray-800 dark:text-gray-200">
                                     {{ $list->text('header_title')->min(2)->max(30) }}
@@ -117,3 +120,4 @@
         </div>
     </div>
 </footer>
+

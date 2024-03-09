@@ -31,9 +31,7 @@
 {{--@endif--}}
 
 @php($target = model(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_big.blade.php'))
-
-
-@include($target->get(), ['parent' => $target])
+@include($target, ['model' => $target])
 {{--    @endguest--}}
 @stack('script_*')
 </body>

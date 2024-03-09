@@ -46,7 +46,6 @@ class List_
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
-
     /**
      * @return ComponentEntity[]
      */
@@ -102,6 +101,14 @@ class List_
     }
 
     /**
+     * @internal This method is not part of the public API and should not be used.
+     */
+    protected function generates(): string
+    {
+        throw new \RuntimeException('This method `generate` should be overridden in the child class.');
+    }
+
+    /**
      * @return \IteratorAggregate|Map[]
      * @noinspection PhpDocSignatureInspection
      */
@@ -114,6 +121,7 @@ class List_
             // we want to use the content for the parent. So the parent has all the data.
             $this->parentContentStore->setContent($this->contentStore->getContent());
         }
+        $className = $this->generates();
 
         // Most of the time we run the entire query once. But when we are
         // missing some data, we want to run a second query very efficiently
@@ -124,21 +132,22 @@ class List_
         // With this method, the number of queries is less than the number of component types. Most
         // of the time, the number of component types is less than 2 because when you adjust one part
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
-        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as) implements IteratorAggregate {
+        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate {
             public function __construct(
                 protected string         $parentContentId,
                 protected string         $relativeContentId,
                 protected ContentStore   $contentStore,
                 protected string         $as,
+                protected string         $className,
             )
             {
             }
 
             public function getIterator(): Traversable
             {
-                $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                // @todo key can be a pointer !!!!!
                 if ($this->contentStore->isFake()) {
-                    foreach ($this->getFakeComponents($class) as $item) {
+                    foreach ($this->getFakeComponents($this->className) as $item) {
                         yield $item;
                     }
                     return;
@@ -158,16 +167,16 @@ class List_
                 // If data is present and not empty, then we can use it
                 if ($items !== null && $firstEmptyContent === null) {
                     if (count($items) === 0) {
-                        foreach ($this->getFakeComponents($class) as $item) {
+                        foreach ($this->getFakeComponents($this->className) as $item) {
                             yield $item;
                         }
                         return;
                     }
-                    $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                    $this->className = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
                         $childContentStore->appendCurrentJoin($item['id']);
-                        yield new $class($this->parentContentId, $item['id'], $childContentStore, $this->as);
+                        yield new $this->className($this->parentContentId, $item['id'], $childContentStore, $this->as);
                     }
                     return;
                 }
@@ -178,7 +187,7 @@ class List_
                 $first = $firstEmptyContent ?? $this->contentStore->findFirstOfJoin()[0] ?? null;
                 // If key not even present, then we need to use the fake components
                 if ($first === null) {
-                    foreach ($this->getFakeComponents($class) as $item) {
+                    foreach ($this->getFakeComponents($this->className) as $item) {
                         yield $item;
                     }
                     return;
@@ -189,14 +198,14 @@ class List_
                 }
                 $childContentStore = clone $this->contentStore;
                 $childContentStore->appendCurrentJoin($first['id']);
-                yield new $class($this->parentContentId, $first['id'], $childContentStore);
+                yield new $this->className($this->parentContentId, $first['id'], $childContentStore);
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin() ?? [];
                 foreach ($contents as $content) {
                     $childContentStore = clone $this->contentStore;
                     $childContentStore->appendCurrentJoin($content['id']);
-                    yield new $class($this->parentContentId, $content['id'], $childContentStore);
+                    yield new $this->className($this->parentContentId, $content['id'], $childContentStore);
                 }
             }
 

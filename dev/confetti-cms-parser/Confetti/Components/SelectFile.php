@@ -10,7 +10,6 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
 {
     public function get(): string
     {
-        exit('asdfadsfdsf');
         // Get saved value
         $filePath = $this->contentStore->findOneData($this->getId());
         if ($filePath !== null) {
@@ -27,10 +26,6 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
             return '';
         }
         if (str_ends_with($filePath, '.blade.php')) {
-            echo '<pre>';
-            var_dump($filePath);
-            echo '</pre>';
-            exit('debug asdf');
             return self::getViewByPath($filePath);
         }
         return $filePath;

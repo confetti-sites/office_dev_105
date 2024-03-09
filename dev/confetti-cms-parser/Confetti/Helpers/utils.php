@@ -35,8 +35,11 @@ function modelById(string $contentId): \Confetti\Components\Map
 /**
  * You can use this in situations where you don't know what the parent classes are.
  */
-function extendModel(\Confetti\Components\Map &$component): Map
+function extendModel(\Confetti\Components\Map|\Confetti\Contracts\SelectModelInterface &$component): Map
 {
+    if ($component instanceof \Confetti\Contracts\SelectModelInterface) {
+        return $component->getSelected();
+    }
     return $component;
 }
 

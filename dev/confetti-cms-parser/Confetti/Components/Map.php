@@ -7,7 +7,6 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
-use Confetti\Helpers\SourceEntity;
 
 class Map
 {
@@ -85,6 +84,15 @@ class Map
         return [$this->getId(), $key, $this->contentStore, $as];
     }
 
+    protected function decode(string $json): mixed
+    {
+        try {
+            return json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return 'Error 7o8h5edg4n5jk: can\'t decode options: ' . $json . ', Message ' . $e->getMessage();
+        }
+    }
+
     public function label(string $value): self
     {
         return $this;
@@ -136,7 +144,8 @@ class Map
 
     public function selectFile(string $key): SelectFile
     {
-        return new SelectFile(
+        $className = \Confetti\Helpers\ComponentStandard::componentClassByContentId($this->getId() . '/' . $key);
+        return new $className(
             $this->getId(),
             $key,
             $this->contentStore,
