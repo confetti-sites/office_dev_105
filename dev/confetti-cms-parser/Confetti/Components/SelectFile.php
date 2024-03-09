@@ -47,32 +47,12 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
         return 'selectFile';
     }
 
-    // @todo move to parent class, and trow exception that it is overridden in the parent class
-    public function getSelected(): \Confetti\Components\Map|\model\view\footers\footer_small
-    {
-        // Get saved value
-        $file = $this->contentStore->findOneData($this->relativeContentId);
-        // Get default value
-        if ($file === null) {
-            $component = $this->getComponent();
-            $file      = $component->getDecoration('default');
-        }
-
-        return match ($file) {
-            '/view/footers/small_footer.blade.php' => new \model\view\footers\footer_small(...$this->getParamsForSelectedModel()),
-            default                                => throw new \RuntimeException(sprintf('Unknown extended model: %s', $value)),
-        };
-    }
-
-    // @todo move to parent class, and trow exception that it is overridden in the parent class
     /**
-     * @return \model\view\footers\footer_small[]
+     * @return \Confetti\Components\Map[]
      */
     public function getOptions(): array
     {
-        return [
-            '/view/footers/small_footer.blade.php' => new \model\view\footers\footer_small(...$this->getParamsForSelectedModel()),
-        ];
+        throw new \RuntimeException('This method should be overridden in the child class.');
     }
 
     // List all files by directories. You can use the glob pattern. For example: `->match(['/view/footers'])`

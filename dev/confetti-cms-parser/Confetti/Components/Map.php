@@ -48,6 +48,9 @@ class Map
         return titleByKey($component->key);
     }
 
+    /**
+     * @return \Confetti\Components\Map[]|\Confetti\Components\List_[]
+     */
     public function getChildren(): array
     {
         throw new \RuntimeException('This method should be overridden in the child class.');

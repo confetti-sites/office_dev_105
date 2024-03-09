@@ -12,6 +12,9 @@ class ComponentStore
      */
     private array $components = [];
 
+    /**
+     * @deprecated Probably not necessary
+     */
     public function __construct($componentKey)
     {
         throw new \RuntimeException('Probably not necessary');
@@ -27,13 +30,21 @@ class ComponentStore
         }
     }
 
+    /**
+     * @deprecated Probably not necessary
+     */
     public static function newWherePrefix(string $key): self
     {
+        throw new \RuntimeException('Probably not necessary');
         return new self('/');
     }
 
+    /**
+     * @deprecated Probably not necessary
+     */
     public function find(string $id): ComponentEntity
     {
+        throw new \RuntimeException('Probably not necessary');
         $key = ComponentStandard::componentKeyFromContentId($id);
         if (!isset($this->components[$key])) {
             throw new \RuntimeException("Component {$key} not found");
@@ -42,16 +53,23 @@ class ComponentStore
         return $this->components[$key];
     }
 
+    /**
+     * @deprecated Probably not necessary
+     */
     public function findOrNull(string $key): ?ComponentEntity
     {
+        throw new \RuntimeException('Probably not necessary');
         return $this->components[$key] ?? null;
     }
 
     /**
+     * @deprecated Probably not necessary
      * @return \Confetti\Helpers\ComponentEntity[]
      */
     public function whereParentKey(string $key): array
     {
+
+        throw new \RuntimeException('Probably not necessary');
         $components = [];
         foreach ($this->components as $component) {
             if ($component->parentKey === $key) {
@@ -62,6 +80,8 @@ class ComponentStore
     }
 
     /**
+     * @deprecated Probably not necessary
+     *
      * @param string $pattern A glob pattern.
      *
      * The ? matches 1 of any character except a /
@@ -79,6 +99,7 @@ class ComponentStore
      */
     public function whereMatch(string $pattern): array
     {
+        throw new \RuntimeException('Probably not necessary');
         $components = [];
         foreach ($this->components as $component) {
             if (fnmatch($pattern, $component->key, FNM_PATHNAME | FNM_CASEFOLD)) {
@@ -97,10 +118,12 @@ class ComponentStore
     }
 
     /**
+     * @deprecated Probably not necessary
      * @return \Confetti\Helpers\ComponentEntity[]
      */
     public function toArray(): array
     {
+        throw new \RuntimeException('Probably not necessary');
         return $this->components;
     }
 
