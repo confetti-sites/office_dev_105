@@ -38,7 +38,7 @@
         @break
 @endswitch
 
-@php($target = model(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_big.blade.php'))
+@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_big.blade.php'))
 @include($target, ['model' => $target])
 {{--    @endguest--}}
 @stack('script_*')

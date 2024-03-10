@@ -1,5 +1,4 @@
-
-@php(model(new \model\homepage))
+@php(newRoot(new \model\homepage))
 
 @include('view.hero')
 @include('view.usps')

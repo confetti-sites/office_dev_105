@@ -1,4 +1,4 @@
-@php($hero = model(new \model\homepage\hero)->label('Hero'))
+@php($hero = newRoot(new \model\homepage\hero)->label('Hero'))
 <div class="flex items-center justify-center bg-white dark:bg-gray-900 pt-[70px]">
     <div
             class="container py-28 md:flex md:items-center"

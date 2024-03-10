@@ -2,7 +2,8 @@
 @php([$currentContentId] = variables($variables))
 
 @php /** @var string $currentContentId */ @endphp
-@php($root = model(new \model))
+@php($root = newRoot(new \model))
+
 <div class="py-4 text-gray-500 dark:text-gray-400">
     <ul class="mt-6">
         @foreach($root->getChildren() as $firstChild)
