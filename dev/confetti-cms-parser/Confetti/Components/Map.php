@@ -23,6 +23,11 @@ class Map
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
+    public static function getComponentKey(): string
+    {
+        throw new \RuntimeException('This method `getComponentKey` should be overridden in the child class.');
+    }
+
     public function getComponent(): ComponentEntity
     {
         throw new \RuntimeException('This method `getComponent` should be overridden in the child class.');
@@ -63,6 +68,24 @@ class Map
     /**
      * @internal This method is not part of the public API and should not be used.
      */
+    protected static function getParamsForNewQuery(): array
+    {
+        // We need to know where this method is called from so that we can store
+        // it as a very specific small part in the advanced caching mechanism.
+        // This allows us to replace a specific component in a large caching content.
+        $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+        $as = $location['file'] . ':' . $location['line'];
+        // Get relative and parent from the key.
+        $key = static::getComponentKey();
+        $found = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key,$matches);
+        $parent = $found === 0 ? $key : $matches['parent'];
+        $relative = $found === 0 ? '' : $matches['relative'];
+        return [$parent, $relative, new ContentStore($key, $as), $as];
+    }
+
+    /**
+     * @internal This method is not part of the public API and should not be used.
+     */
     protected function getParamsForProperty(string $key): array
     {
         // Parameters for the constructor of the child classes.
@@ -72,7 +95,7 @@ class Map
     /**
      * @internal This method is not part of the public API and should not be used.
      */
-    protected function getParamsForChild(string $key): array
+    protected function getParamsForList(string $key): array
     {
         // We need to know where this method is called from so that we can store
         // it as a very specific small part in the advanced caching mechanism.

@@ -1,5 +1,4 @@
-@php($blocks = useModel(new \model\homepage\demo)->blocks()->get())
-{{--!!!!!!--}}
+@php($blocks = \model\homepage\demo\block_list::query()->get())
 <div class="bg-gray-50 dark:bg-gray-900/80">
     <div
             class="container pb-12 md:flex md:items-center pt-12"
@@ -30,6 +29,9 @@
                         </div>
                         <p class="mt-2 text-base text-gray-500 dark:text-white font-body">
                             {{ $usp->description }}
+                        </p>
+                        <p class="mt-2 text-base text-gray-500 dark:text-white font-body">
+                            {{ $usp->text('extra_description') }}
                         </p>
                     </div>
                 </div>

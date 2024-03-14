@@ -149,17 +149,20 @@ abstract class ComponentStandard
         }
         // Remove id banner/image~0123456789 -> banner/image
         $class = preg_replace('/~[A-Z0-9_]{10}/', '', $key);
-
-        // Remove pointers banner/image~ -> banner/image
-        $class = str_replace('~', '', $class);
-
-        // Remove pointers banner/template- -> banner/template
-        $class = str_replace('-', '', $class);
-
-        // Rename forbidden class names
         $parts  = explode('/', $class);
         $result = [];
         foreach ($parts as $part) {
+            // Remove pointers banner/image~ -> banner/image_list
+            if (str_ends_with($part, '~')) {
+                $part  = substr($part, 0, -1);
+                $part = str_replace('~', '_list', $part);
+            }
+            // Remove pointers banner/template- -> banner/template
+            if (str_ends_with($part, '-')) {
+                $part  = substr($part, 0, -1);
+                $part = str_replace('-', '_pointer', $part);
+            }
+            // Rename forbidden class names
             if (in_array($part, self::FORBIDDEN_PHP_KEYWORDS)) {
                 $part .= '_';
             }

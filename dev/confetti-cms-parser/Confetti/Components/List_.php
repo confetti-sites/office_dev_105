@@ -57,10 +57,10 @@ class List_
     public function where(string|ComponentStandard $key, string $operator, mixed $value): self
     {
         if ($key instanceof ComponentStandard) {
-            $key = $key->getComponentKey();
+            $key = $key::getComponentKey();
         }
         if ($value instanceof ComponentStandard) {
-            $value = $value->getComponentKey();
+            $value = $value::getComponentKey();
         }
         $this->contentStore->appendWhere($key, $operator, $value);
         return $this;

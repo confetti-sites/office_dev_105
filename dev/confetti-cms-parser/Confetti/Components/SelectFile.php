@@ -13,9 +13,6 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
         // Get saved value
         $filePath = $this->contentStore->findOneData($this->getId());
         if ($filePath !== null) {
-            if (str_ends_with($filePath, '.blade.php')) {
-                return self::getViewByPath($filePath);
-            }
             return $filePath;
         }
         $component = $this->getComponent();
@@ -25,16 +22,17 @@ class SelectFile extends ComponentStandard implements \Confetti\Contracts\Select
         if ($filePath === null) {
             return '';
         }
-        if (str_ends_with($filePath, '.blade.php')) {
-            return self::getViewByPath($filePath);
-        }
         return $filePath;
     }
 
-    private static function getViewByPath(string $path): string
+    public function getView(): ?string
     {
-        $path = str_replace('.blade.php', '', $path);
-        return str_replace('/', '.', $path);
+        $file = $this->get();
+        if (!str_ends_with($file, '.blade.php')) {
+            return null;
+        }
+        $file = str_replace('.blade.php', '', $file);
+        return str_replace('/', '.', $file);
     }
 
     public function getComponentType(): string
