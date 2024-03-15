@@ -5,9 +5,18 @@ declare(strict_types=1);
 namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentStandard;
+use Confetti\Helpers\ContentStore;
 
 class SelectFile extends ComponentStandard implements \Confetti\Contracts\SelectModelInterface
 {
+    public function __construct(?string $parentContentId = null, ?string $relativeContentId = null, ?ContentStore &$contentStore = null)
+    {
+        if (!str_ends_with($relativeContentId, '-')) {
+            $relativeContentId .= '-';
+        }
+        parent::__construct($parentContentId, $relativeContentId, $contentStore);
+    }
+
     public function get(): string
     {
         // Get saved value

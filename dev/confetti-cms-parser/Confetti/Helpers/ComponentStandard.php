@@ -88,6 +88,29 @@ abstract class ComponentStandard
 
     abstract public function getComponentType(): string;
 
+    public static function getComponentKey(): string
+    {
+        throw new \RuntimeException('This method `getComponentKey` should be overridden in the child class.');
+    }
+
+    /**
+     * @internal This method is not part of the public API and should not be used.
+     */
+    protected static function getParamsForNewQuery(): array
+    {
+        // We need to know where this method is called from so that we can store
+        // it as a very specific small part in the advanced caching mechanism.
+        // This allows us to replace a specific component in a large caching content.
+        $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+        $as = $location['file'] . ':' . $location['line'];
+        // Get relative and parent from the key.
+        $key = static::getComponentKey();
+        $found = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key,$matches);
+        $parent = $found === 0 ? $key : $matches['parent'];
+        $relative = $found === 0 ? '' : $matches['relative'];
+        return [$parent, $relative, new ContentStore($key, $as), $as];
+    }
+
     /**
      * When using the abstract component (\Confetti\Components\Text) we use this method.
      * The specific component (\model\homepage\feature\title) will override this method.
@@ -109,13 +132,6 @@ abstract class ComponentStandard
                 0,
             ),
         );
-    }
-
-    public function getComponentKey(): string
-    {
-        // When using the abstract component (\Confetti\Components\Text) we use this method.
-        // The specific component (\model\homepage\feature\title) will override this method.
-        return static::componentKeyFromContentId($this->getId());
     }
 
     public function getId(): string
@@ -148,13 +164,12 @@ abstract class ComponentStandard
             $key = self::mergeIds($key, $relativeId);
         }
         // Remove id banner/image~0123456789 -> banner/image
-        $class = preg_replace('/~[A-Z0-9_]{10}/', '', $key);
+        $class = preg_replace('/~[A-Z0-9_]{10}/', '~', $key);
         $parts  = explode('/', $class);
         $result = [];
         foreach ($parts as $part) {
             // Remove pointers banner/image~ -> banner/image_list
             if (str_ends_with($part, '~')) {
-                $part  = substr($part, 0, -1);
                 $part = str_replace('~', '_list', $part);
             }
             // Remove pointers banner/template- -> banner/template

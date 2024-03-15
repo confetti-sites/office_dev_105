@@ -15,7 +15,7 @@ function newRoot(\Confetti\Components\Root $target): \Confetti\Components\Root
     $as = $location['file'] . ':' . $location['line'];
 
     $model = $target->newRoot(
-        $target::getComponentKeyKey(),
+        $target::getComponentKey(),
         $as,
     );
 
