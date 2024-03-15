@@ -10,8 +10,10 @@ class ContentStore
     private array $content = [];
     public bool $alreadyInit = false;
     // This is a fake store, used for mocking
-    // data for development No database queries are made
+    // data for development. No database queries are made
     private bool $isFake = false;
+    // The data can be real, but the store is allowed to fake.
+    private bool $fakeMaker = false;
 
     /**
      * @var array array with 'type' and 'path'
@@ -58,6 +60,16 @@ class ContentStore
     public function setIsFake(): void
     {
         $this->isFake = true;
+    }
+
+    public function isFakeMaker(): bool
+    {
+        return $this->fakeMaker;
+    }
+
+    public function setFakeMaker(bool $fakeMaker): void
+    {
+        $this->fakeMaker = $fakeMaker;
     }
 
     public function getContent(): array

@@ -11,21 +11,27 @@ use Confetti\Helpers\ContentStore;
 class Map
 {
     public function __construct(
-        protected ?string         $parentContentId = null,
-        protected ?string         $relativeContentId = null,
-        protected ?ContentStore   $contentStore = null,
+        protected ?string       $parentContentId = null,
+        protected ?string       $relativeContentId = null,
+        protected ?ContentStore $contentStore = null,
     )
     {
-    }
-
-    public function getId(): string
-    {
-        return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
     public static function getComponentKey(): string
     {
         throw new \RuntimeException('This method `getComponentKey` should be overridden in the child class.');
+    }
+
+    public function makeFake(bool $makeFake = true): self
+    {
+        $this->contentStore->setFakeMaker($makeFake);
+        return $this;
+    }
+
+    public function getId(): string
+    {
+        return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
     public function getComponent(): ComponentEntity
@@ -45,7 +51,7 @@ class Map
     public function getLabel(): string
     {
         $component = $this->getComponent();
-        $label = $component->getDecoration('label');
+        $label     = $component->getDecoration('label');
         if ($label) {
             return $label;
         }
@@ -74,11 +80,11 @@ class Map
         // it as a very specific small part in the advanced caching mechanism.
         // This allows us to replace a specific component in a large caching content.
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-        $as = $location['file'] . ':' . $location['line'];
+        $as       = $location['file'] . ':' . $location['line'];
         // Get relative and parent from the key.
-        $key = static::getComponentKey();
-        $found = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key,$matches);
-        $parent = $found === 0 ? $key : $matches['parent'];
+        $key      = static::getComponentKey();
+        $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key, $matches);
+        $parent   = $found === 0 ? $key : $matches['parent'];
         $relative = $found === 0 ? '' : $matches['relative'];
         return [$parent, $relative, new ContentStore($key, $as), $as];
     }
@@ -101,10 +107,10 @@ class Map
         // it as a very specific small part in the advanced caching mechanism.
         // This allows us to replace a specific component in a large caching content.
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-        $as = $location['file'] . ':' . $location['line'];
+        $as       = $location['file'] . ':' . $location['line'];
 
         // Parameters for the constructor of the child classes.
-        return [$this->getId(), $key, $this->contentStore, $as];
+        return [$this->getId(), $key . '~', $this->contentStore, $as];
     }
 
     protected function decode(string $json): mixed
@@ -143,8 +149,8 @@ class Map
     public function list(string $key): List_
     {
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-        $as = $location['file'] . ':' . $location['line'];
-        return new List_($this->getId(), $key, $this->contentStore, $as);
+        $as       = $location['file'] . ':' . $location['line'];
+        return new List_($this->getId() . '~', $key, $this->contentStore, $as);
     }
 
     public function number(string $key): Number

@@ -29,9 +29,4 @@ class SourceEntity implements Stringable
     {
         return $this->directory . '/' . $this->file . ':' . $this->line;
     }
-
-    public function getViewPath(): string
-    {
-
-    }
 }
