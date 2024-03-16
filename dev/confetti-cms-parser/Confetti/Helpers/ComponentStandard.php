@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Confetti\Helpers;
 
+
+use Confetti\Components\List_;
+
 abstract class ComponentStandard
 {
     private const FORBIDDEN_PHP_KEYWORDS = [
@@ -88,6 +91,11 @@ abstract class ComponentStandard
 
     abstract public function getComponentType(): string;
 
+    public static function query(): List_
+    {
+        throw new \RuntimeException('This method `query` should be overridden in the child class.');
+    }
+
     public static function getComponentKey(): string
     {
         throw new \RuntimeException('This method `getComponentKey` should be overridden in the child class.');
@@ -102,11 +110,11 @@ abstract class ComponentStandard
         // it as a very specific small part in the advanced caching mechanism.
         // This allows us to replace a specific component in a large caching content.
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-        $as = $location['file'] . ':' . $location['line'];
+        $as       = $location['file'] . ':' . $location['line'];
         // Get relative and parent from the key.
-        $key = static::getComponentKey();
-        $found = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key,$matches);
-        $parent = $found === 0 ? $key : $matches['parent'];
+        $key      = static::getComponentKey();
+        $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key, $matches);
+        $parent   = $found === 0 ? $key : $matches['parent'];
         $relative = $found === 0 ? '' : $matches['relative'];
         return [$parent, $relative, new ContentStore($key, $as), $as];
     }
@@ -158,13 +166,18 @@ abstract class ComponentStandard
         return preg_replace('/~[A-Z0-9_]+/', '~', $contentId);
     }
 
+    /**
+     * @return class-string|\Confetti\Components\Map|ComponentStandard
+     * @noinspection PhpDocSignatureInspection
+     */
     public static function componentClassByContentId(string $key, string $relativeId = null): string
     {
+        $isPointer = false;
         if ($relativeId !== null) {
             $key = self::mergeIds($key, $relativeId);
         }
         // Remove id banner/image~0123456789 -> banner/image
-        $class = preg_replace('/~[A-Z0-9_]{10}/', '~', $key);
+        $class  = preg_replace('/~[A-Z0-9_]{10}/', '~', $key);
         $parts  = explode('/', $class);
         $result = [];
         foreach ($parts as $part) {
@@ -174,7 +187,7 @@ abstract class ComponentStandard
             }
             // Remove pointers banner/template- -> banner/template
             if (str_ends_with($part, '-')) {
-                $part  = substr($part, 0, -1);
+                $isPointer = true;
                 $part = str_replace('-', '_pointer', $part);
             }
             // Rename forbidden class names
@@ -182,11 +195,13 @@ abstract class ComponentStandard
                 $part .= '_';
             }
             $result[] = $part;
+            // If a child is a pointer, we need a totally different class.
+            if ($isPointer) {
+                $result = self::getExtendedModelKey($result);
+                $isPointer = false;
+            }
         }
-        $class = implode('/', $result);
-
-        // Replace Banner/Title with Banner\Title
-        return str_replace('/', '\\', $class);
+        return implode('\\', $result);
     }
 
     abstract public function get(): mixed;
@@ -194,7 +209,7 @@ abstract class ComponentStandard
     public function __toString(): string
     {
         if ($this->contentStore === null) {
-            throw new \RuntimeException("Component '{$this->getComponent()->key}' is only used as a reference. Therefore, you can't convert `new {$this->getComponent()->key}` to a string.");
+            throw new \RuntimeException("Component '{ComponentStandard::getComponent()->key}' is only used as a reference. Therefore, you can't convert `new {ComponentStandard::getComponent()->key}` to a string.");
         }
         return (string) $this->get();
     }
