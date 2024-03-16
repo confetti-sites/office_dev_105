@@ -11,14 +11,7 @@
 @endphp
 <div class="container pt-6 px-6 mx-auto grid">
     @if($parentContentId && $parentContentId !== '/model')
-        <div class="gap-6 mb-4">
-            <a
-                    class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                    href="/admin{{ $parentContentId }}"
-            >
-                &#8592; Back to overview
-            </a>
-        </div>
+        @include('admin.breadcrumbs', ['currentId' => $currentContentId])
     @endif
     @foreach($children as $child)
         @php($component = $child->getComponent())

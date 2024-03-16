@@ -1,6 +1,8 @@
 <?php /** @noinspection ALL */
 
 use Confetti\Components\Map;
+use Confetti\Components\List_;
+use \Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\Request;
 
@@ -112,4 +114,14 @@ function newId(): string
     }
 
     return $out;
+}
+
+function getParentKey(string $key): ?string
+{
+    // before the latest /
+    $position = strrpos($key, '/');
+    if ($position === false) {
+        return null;
+    }
+    return substr($key, 0, $position);
 }
