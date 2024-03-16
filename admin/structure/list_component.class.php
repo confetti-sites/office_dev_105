@@ -44,7 +44,7 @@ return new class
     public function get(): IteratorAggregate
     {
         // Ensure that the content is initialized
-        $this->contentStore->init();
+        $this->contentStore->runInit();
 
         // Most of the time we run the entire query once. But when we are
         // missing some data, we want to run a second query very efficiently

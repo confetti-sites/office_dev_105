@@ -36,9 +36,11 @@ class QueryBuilder
             return [];
         }
         $client   = new Client();
+
         $response = $client->get('confetti-cms-content/contents', [
             'accept' => 'application/json',
         ], $this->getFullQuery());
+
         return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
     }
 

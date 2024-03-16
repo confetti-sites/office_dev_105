@@ -23,7 +23,6 @@ class List_
     protected string $componentKey;
     private ContentStore $contentStore;
 
-    /** @noinspection DuplicatedCode */
     public function __construct(
         protected string         $parentContentId,
         protected string         $relativeContentId,
@@ -113,7 +112,7 @@ class List_
     public function get(): IteratorAggregate
     {
         // Ensure that the content is initialized
-        $runInit = $this->contentStore->init();
+        $runInit = $this->contentStore->runInit();
         if ($runInit) {
             // When the content is init (because of the list is the first component),
             // we want to use the content for the parent. So the parent has all the data.
@@ -143,7 +142,6 @@ class List_
 
             public function getIterator(): Traversable
             {
-                // @todo key can be a pointer !!!!!
                 if ($this->contentStore->isFakeMaker() && $this->contentStore->isFake()) {
                     foreach ($this->getFakeComponents($this->className) as $item) {
                         yield $item;
@@ -155,7 +153,7 @@ class List_
                     $items = $this->contentStore->getContentOfThisLevel();
                 } catch (ConditionDoesNotMatchConditionFromContent) {
                     // When the content is present but received with another query condition
-                    $items = $this->contentStore->fetchCurrentQuery();
+                    $items = $this->contentStore->runCurrentQuery();
                 }
 
                 // If items are present, but without data. Then it looks useless,
@@ -214,6 +212,9 @@ class List_
             {
                 if ($items === null) {
                     return null;
+                }
+                if (array_key_exists('id', $items)) {
+                    throw new \RuntimeException('Error htrj8945h: can\'t get first item of list, array of items expected, but id found in the root');
                 }
                 if (count($items) > 0 && empty($items[0]['data']) && empty($items[0]['join'])) {
                     return $items[0];

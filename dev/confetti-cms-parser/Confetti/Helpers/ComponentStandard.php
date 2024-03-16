@@ -116,7 +116,9 @@ abstract class ComponentStandard
         $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key, $matches);
         $parent   = $found === 0 ? $key : $matches['parent'];
         $relative = $found === 0 ? '' : $matches['relative'];
-        return [$parent, $relative, new ContentStore($key, $as), $as];
+        // We use $parent (not $key) to get the data in the join.
+        // We do this because that is in line with how List_ handles the data.
+        return [$parent, $relative, new ContentStore($parent, $as), $as];
     }
 
     /**
@@ -197,7 +199,7 @@ abstract class ComponentStandard
             $result[] = $part;
             // If a child is a pointer, we need a totally different class.
             if ($isPointer) {
-                $result = self::getExtendedModelKey($result);
+                $result = explode('/', self::getExtendedModelKey($result));
                 $isPointer = false;
             }
         }

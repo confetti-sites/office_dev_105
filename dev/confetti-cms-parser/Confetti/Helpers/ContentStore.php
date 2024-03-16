@@ -26,7 +26,7 @@ class ContentStore
         $this->queryBuilder  = new QueryBuilder($from, $as);
     }
 
-    public function init(): bool
+    public function runInit(): bool
     {
         if ($this->alreadyInit) {
             return false;
@@ -37,17 +37,19 @@ class ContentStore
             'patch_cache_select'      => true,
             'response_with_condition' => true, // We want to know if the data is retrieved with the same conditions.
         ]);
+        // Get the first item. The data we want to use is in the join.
         $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? [];
         $this->alreadyInit = true;
         return true;
     }
 
-    public function fetchCurrentQuery(): array|null
+    public function runCurrentQuery(): array|null
     {
         $this->queryBuilder->setOptions([
             'use_cache'               => true,
             'response_with_condition' => true, // The children need to know if the data is retrieved with the same conditions.
         ]);
+        // Get the first item. The data we want to use is in the join.
         $this->content = $this->queryBuilder->run($this->isFake)[0] ?? [];
         return $this->getContentOfThisLevel();
     }
@@ -100,10 +102,13 @@ class ContentStore
 
     public function join(string $from, string $as): void
     {
+        // Go back 1 to match the fact that the first item is on index 0.
+        $last = $this->breadcrumbs[count($this->breadcrumbs) - 1];
+        // When we run a query from a component: `\model\page\banner_list_title::query()->get()`
+        // we have multiple titles, but the title itself is not a list, and whe don't want to use join.
         $this->breadcrumbs[] = ['type' => 'join', 'path' => $as];
-        // when searching in the child, we want to the parent to be specific
-        // parent~1234567890, want to use ids and not abstract parent~
-        $last = $this->breadcrumbs[count($this->breadcrumbs) - 2];
+        // When searching in the child, we want to the parent to be specific
+        // parent~1234567890, want to use ids and not abstract parent~.
         $this->queryBuilder->wrapJoin($last['path'], $from, $as);
     }
 
@@ -141,7 +146,7 @@ class ContentStore
     {
         // Ensure that the content is initialized
         $this->queryBuilder->setSelect([$id]);
-        $this->init();
+        $this->runInit();
         // Check if content is present
         // If key is not present, then the query is never cached before
         try {
@@ -174,7 +179,7 @@ class ContentStore
     {
         // Ensure that the content is initialized
         if (!$this->alreadyInit) {
-            $this->init();
+            $this->runInit();
         }
         $child = $this->queryBuilder;
         // Get the content and cache the selection
