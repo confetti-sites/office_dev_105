@@ -10,9 +10,7 @@
     $total = 0;
 @endphp
 <div class="container pt-6 px-6 mx-auto grid">
-    @if($parentContentId && $parentContentId !== '/model')
-        @include('admin.breadcrumbs', ['currentId' => $currentContentId])
-    @endif
+    @include('admin.breadcrumbs', ['currentId' => $currentContentId])
     @foreach($children as $child)
         @php($component = $child->getComponent())
         @if($component->type === 'root')

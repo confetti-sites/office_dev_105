@@ -9,9 +9,9 @@
         @foreach($root->getChildren() as $firstChild)
             <li class="relative px-3 py-3">
                 @php($component = $firstChild->getComponent())
-                @php($isCurrent = $firstChild->getId() === $currentContentId)
+                @php($isCurrent = $firstChild->getId() === $currentContentId || str_starts_with($currentContentId, $firstChild->getId() . '/'))
                 @if($isCurrent)
-                    <span class="absolute inset-y-0 left-0 w-1 rounded-tr-lg rounded-br-lg bg-primary-600"
+                    <span class="absolute inset-y-0 left-0 w-1 rounded-tr-lg rounded-br-lg bg-primary-300"
                           aria-hidden="true"></span>
                 @endif
                 <a
