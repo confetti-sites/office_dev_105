@@ -168,7 +168,7 @@ class List_
                         }
                         return;
                     }
-                    $class = ComponentStandard::componentClassById(ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId));
+                    $class = ComponentStandard::componentById(ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId));
                     if ($class instanceof \Exception) {
                         throw $class;
                     }

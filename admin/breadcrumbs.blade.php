@@ -9,7 +9,7 @@
         $ids[] = $id;
     }
     // Get all component classes by ids
-    $crumbs = ComponentStandard::componentsClassByIds($ids);
+    $crumbs = ComponentStandard::componentsByIds($ids);
 @endphp
 
 <nav class="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
