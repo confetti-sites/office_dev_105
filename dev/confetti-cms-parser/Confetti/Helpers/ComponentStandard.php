@@ -209,12 +209,12 @@ abstract class ComponentStandard
             return new DeveloperActionRequiredException('Error gj5o498h5: can\'t decode options: ' . $e->getMessage());
         }
         $result = [];
-        foreach ($values as $key => $value) {
-            $className = ComponentStandard::componentClassById($key, $values);
+        foreach ($values as $id => $value) {
+            $className = ComponentStandard::componentClassById($id, $values);
             if ($className instanceof DeveloperActionRequiredException) {
                 throw $className;
             }
-            $result[] = new $className;
+            $result[$id] = new $className;
         }
         return $result;
     }

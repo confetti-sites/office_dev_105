@@ -6,7 +6,11 @@
     $id = '';
     foreach (array_filter(explode('/', $currentId)) as $part) {
         $id .= '/' . $part;
-        $ids[] = $id;
+        // Pointer child is part of the parent
+        if (str_ends_with($id, '-') || $part === 'model') {
+            continue;
+        }
+        $ids[$id] = $id;
     }
     // Get all component classes by ids
     $crumbs = ComponentStandard::componentsByIds($ids);
