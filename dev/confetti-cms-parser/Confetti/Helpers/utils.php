@@ -14,7 +14,7 @@ use Confetti\Helpers\Request;
 function newRoot(\Confetti\Components\Root $target): \Confetti\Components\Root
 {
     $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-    $as = $location['file'] . ':' . $location['line'];
+    $as       = $location['file'] . ':' . $location['line'];
 
     $model = $target->newRoot(
         $target::getComponentKey(),
@@ -26,9 +26,13 @@ function newRoot(\Confetti\Components\Root $target): \Confetti\Components\Root
 
 function modelById(string $contentId): \Confetti\Components\Map
 {
-    $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-    $as = $location['file'] . ':' . $location['line'];
-    $className = \Confetti\Helpers\ComponentStandard::componentClassByContentId($contentId);
+    $location  = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+    $as        = $location['file'] . ':' . $location['line'];
+    $store = new ContentStore($contentId, $as);
+    $className = \Confetti\Helpers\ComponentStandard::componentClassByContentId($store, $contentId);
+    if ($className instanceof \Confetti\Helpers\DeveloperActionRequiredException) {
+        throw $className;
+    }
 
     return (new $className)->newRoot($contentId, $as);
 }
@@ -91,26 +95,26 @@ function titleByKey(string $key): string
 // Example: '/model/pages/page~' . newId()
 function newId(): string
 {
-    $char = '123456789ABCDEFGHJKMNPQRSTVWXYZ';
-    $encodingLength = strlen($char);
+    $char               = '123456789ABCDEFGHJKMNPQRSTVWXYZ';
+    $encodingLength     = strlen($char);
     $desiredLengthTotal = 10;
-    $desiredLengthTime = 6;
+    $desiredLengthTime  = 6;
 
     // Encode time
     // We use the time since a fixed point in the past.
     // This gives us a more space to use in the feature.
     $time = time() - 1684441872;
-    $out = '';
+    $out  = '';
     while (strlen($out) < $desiredLengthTime) {
-        $mod = $time % $encodingLength;
-        $out = $char[$mod] . $out;
+        $mod  = $time % $encodingLength;
+        $out  = $char[$mod] . $out;
         $time = ($time - $mod) / $encodingLength;
     }
 
     // Encode random
     while (strlen($out) < $desiredLengthTotal) {
         $rand = random_int(0, $encodingLength - 1);
-        $out .= $char[$rand];
+        $out  .= $char[$rand];
     }
 
     return $out;

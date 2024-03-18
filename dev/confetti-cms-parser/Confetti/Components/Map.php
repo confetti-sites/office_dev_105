@@ -7,6 +7,7 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
+use Confetti\Helpers\DeveloperActionRequiredException;
 
 class Map
 {

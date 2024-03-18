@@ -30,16 +30,21 @@ class QueryBuilder
     /**
      * @throws \JsonException
      */
-    public function run(bool $fake): array
+    public function run(): array
     {
-        if ($fake) {
-            return [];
-        }
         $client   = new Client();
+
+        // Use static to exit when second time called
+        static $nr = 0;
+        $nr++;
 
         $response = $client->get('confetti-cms-content/contents', [
             'accept' => 'application/json',
         ], $this->getFullQuery());
+
+        if ($nr === 10000) {
+            throw new \RuntimeException('Too many database requests (10000)');
+        }
 
         return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
     }

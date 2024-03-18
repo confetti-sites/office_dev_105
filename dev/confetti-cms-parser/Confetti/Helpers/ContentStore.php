@@ -31,6 +31,11 @@ class ContentStore
         if ($this->alreadyInit) {
             return false;
         }
+        if ($this->isFake) {
+            $this->content     = [];
+            $this->alreadyInit = true;
+            return true;
+        }
         $this->queryBuilder->setOptions([
             'use_cache'               => true,
             'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
@@ -38,7 +43,7 @@ class ContentStore
             'response_with_condition' => true, // We want to know if the data is retrieved with the same conditions.
         ]);
         // Get the first item. The data we want to use is in the join.
-        $this->content     = $this->queryBuilder->run($this->isFake)[0] ?? [];
+        $this->content     = $this->queryBuilder->run()[0] ?? [];
         $this->alreadyInit = true;
         return true;
     }
@@ -50,7 +55,7 @@ class ContentStore
             'response_with_condition' => true, // The children need to know if the data is retrieved with the same conditions.
         ]);
         // Get the first item. The data we want to use is in the join.
-        $this->content = $this->queryBuilder->run($this->isFake)[0] ?? [];
+        $this->content = $this->isFake ? []: $this->queryBuilder->run()[0] ?? [];
         return $this->getContentOfThisLevel();
     }
 
@@ -98,6 +103,11 @@ class ContentStore
         // That way we can fetch new data when data is missing. This is
         // important because we want to get only new data from this item
         $this->queryBuilder->replaceFrom($relativeId);
+    }
+
+    public function select(mixed ...$select): void
+    {
+        $this->queryBuilder->setSelect($select);
     }
 
     public function join(string $from, string $as): void
@@ -165,7 +175,7 @@ class ContentStore
             'use_cache'          => false,
         ]);
         $query->setSelect([$id]);
-        $result = $query->run($this->isFake);
+        $result = $this->isFake ? []: $query->run();
         if (count($result) === 0) {
             return null;
         }
@@ -190,7 +200,7 @@ class ContentStore
             'response_with_condition' => true,
         ]);
         /// so we can use where and so forth
-        $result = $child->run($this->isFake);
+        $result = $this->isFake ? []: $child->run();
         if (count($result) === 0) {
             return null;
         }
@@ -210,7 +220,7 @@ class ContentStore
             'response_with_condition' => true,
         ]);
         $child->ignoreFirstRow();
-        $result        = $child->run($this->isFake);
+        $result        = $this->isFake ? []: $child->run();
         $this->content = $result;
         return $this->getContentOfThisLevel($result, true);
     }

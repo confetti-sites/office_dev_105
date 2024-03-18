@@ -6,6 +6,9 @@ namespace Confetti\Helpers;
 
 
 use Confetti\Components\List_;
+use Confetti\Components\Map;
+use Confetti\Components\SelectFile;
+use Exception;
 
 abstract class ComponentStandard
 {
@@ -104,7 +107,7 @@ abstract class ComponentStandard
     /**
      * @internal This method is not part of the public API and should not be used.
      */
-    protected static function getParamsForNewQuery(): array
+    protected static function getParamsForNewQuery(string $id): array
     {
         // We need to know where this method is called from so that we can store
         // it as a very specific small part in the advanced caching mechanism.
@@ -112,9 +115,8 @@ abstract class ComponentStandard
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
         $as       = $location['file'] . ':' . $location['line'];
         // Get relative and parent from the key.
-        $key      = static::getComponentKey();
-        $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key, $matches);
-        $parent   = $found === 0 ? $key : $matches['parent'];
+        $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $id, $matches);
+        $parent   = $found === 0 ? $id : $matches['parent'];
         $relative = $found === 0 ? '' : $matches['relative'];
         // We use $parent (not $key) to get the data in the join.
         // We do this because that is in line with how List_ handles the data.
@@ -172,15 +174,12 @@ abstract class ComponentStandard
      * @return class-string|\Confetti\Components\Map|ComponentStandard
      * @noinspection PhpDocSignatureInspection
      */
-    public static function componentClassByContentId(string $key, string $relativeId = null): string
+    public static function componentClassByContentId(ContentStore &$store, string $id): string|DeveloperActionRequiredException
     {
-        $isPointer = false;
-        if ($relativeId !== null) {
-            $key = self::mergeIds($key, $relativeId);
-        }
         // Remove id banner/image~0123456789 -> banner/image
-        $class  = preg_replace('/~[A-Z0-9_]{10}/', '~', $key);
+        $class  = preg_replace('/~[A-Z0-9_]{10}/', '~', $id);
         $parts  = explode('/', $class);
+        $isPointer = false;
         $result = [];
         foreach ($parts as $part) {
             // Remove pointers banner/image~ -> banner/image_list
@@ -199,7 +198,12 @@ abstract class ComponentStandard
             $result[] = $part;
             // If a child is a pointer, we need a totally different class.
             if ($isPointer) {
-                $result = explode('/', self::getExtendedModelKey($result));
+                $className = implode('\\', $result);
+                $extended = self::getExtendedModelKey($className, $store, $id);
+                if ($extended instanceof DeveloperActionRequiredException) {
+                    return $extended;
+                }
+                $result = explode('/', $extended);
                 $isPointer = false;
             }
         }
@@ -252,5 +256,50 @@ abstract class ComponentStandard
         } catch (\JsonException $e) {
             return 'Error 7o8h5edg4n5jk: can\'t decode options: ' . $json . ', Message ' . $e->getMessage();
         }
+    }
+
+    private static function getExtendedModelKey(string $pointerClassName, ContentStore &$store,  string $id): string|Exception
+    {
+        /** @var \Confetti\Components\SelectFile $pointer */
+        $params    = self::getParamsForNewQuery($id);
+        $pointer   = new $pointerClassName(...$params);
+
+        $store->select('.');
+        $store->runInit();
+
+        $content = $store->getContentOfThisLevel();
+        $file = $content ? $content['data']['.'] : null;
+
+        $map = self::getExtendedModelByPointer($pointer, $file);
+        if ($map instanceof DeveloperActionRequiredException) {
+            return $map;
+        }
+        return $map->getComponent()->key;
+    }
+
+    private static function getExtendedModelByPointer(SelectFile $pointer, ?string $value): Map|Exception
+    {
+        $options = $pointer->getOptions();
+
+        if ($value) {
+            if (count($options) === 0) {
+                return new DeveloperActionRequiredException("Selected value found to extend '{$pointer->getId()}'. But no options are set. Defined in '{$pointer->getComponent()->source}'");
+            }
+            if (!array_key_exists($value, $options)) {
+                return new DeveloperActionRequiredException("Selected value found to extend '{$pointer->getId()}'. But file doesn't exist in the options list. Defined in '{$pointer->getComponent()->source}'");
+            }
+            return $options[$value];
+        }
+        // Get default value
+        $file = $pointer->getComponent()->getDecoration('default');
+        if ($file && array_key_exists($file, $options)) {
+            return $options[$file];
+        }
+        // If no default value is set, use the first file in the list
+        $file = $pointer->getComponent()->getDecoration('match', 'files')[0] ?? null;
+        if ($file && array_key_exists($file, $options)) {
+            return $options[$file];
+        }
+        return new DeveloperActionRequiredException("Can't found default value or first file in the list to extend '{$pointer->getId()}'. Make sure that there are options defined in '{$pointer->getComponent()->source}'");
     }
 }

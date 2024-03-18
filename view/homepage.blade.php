@@ -9,3 +9,6 @@
 
 @include('view.newsletter')
 
+
+{{-- Use one instead of first --}}
+{{--@php($homepage = \model\homepage::query()->one())--}}

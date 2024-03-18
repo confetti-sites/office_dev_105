@@ -1,21 +1,26 @@
 @php
     use Confetti\Components\Map;
     use Confetti\Helpers\ComponentStandard;
+    use Confetti\Helpers\ContentStore;
+    use Confetti\Helpers\DeveloperActionRequiredException;
     /**
      * @var string $currentId
-     * @var Map[]|ComponentStandard[] $path
+     * @var Map[]|ComponentStandard[] $crumbs
      */
-    $path = [];
-    while ($currentId != null) {
-        $currentClass = ComponentStandard::componentClassByContentId($currentId);
-        $current = new $currentClass;
-        if ($currentId === '/model') {
-            break;
+    $store = new ContentStore($currentId, 'breadcrumbs');
+    $crumbs = [];
+    $id = '';
+    foreach (array_filter(explode('/', $currentId)) as $part) {
+        $id .= '/' . $part;
+        $className = ComponentStandard::componentClassByContentId($store, $id);
+        if ($className instanceof DeveloperActionRequiredException) {
+            throw $className;
         }
+        // Add the component to a list of paths to display
+        $current = new $className;
         if ($current->getComponent()->type != 'extendModel') {
-            $path[$currentId] = $current;
+            $crumbs[$currentId] = $current;
         }
-        $currentId = getParentKey($currentId);
     }
 @endphp
 
@@ -31,7 +36,7 @@
                 </svg>
             </a>
         </li>
-        @foreach(array_reverse($path) as $currentId => $item)
+        @foreach($crumbs as $currentId => $item)
             <li>
                 <div class="flex items-center">
                     <svg class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400 " aria-hidden="true"

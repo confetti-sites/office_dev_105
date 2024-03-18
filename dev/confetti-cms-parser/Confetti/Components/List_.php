@@ -168,7 +168,11 @@ class List_
                         }
                         return;
                     }
-                    $this->className = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                    $class = ComponentStandard::componentClassByContentId(ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId));
+                    if ($class instanceof \Exception) {
+                        throw $class;
+                    }
+                    $this->className = $class;
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
                         $childContentStore->appendCurrentJoin($item['id']);
