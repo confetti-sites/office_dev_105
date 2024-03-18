@@ -67,7 +67,7 @@ return new class
 
             public function getIterator(): Traversable
             {
-                $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                $class = ComponentStandard::componentClassById($this->parentContentId, $this->relativeContentId);
                 if ($this->contentStore->isFake()) {
                     foreach ($this->getFakeComponents($class) as $item) {
                         yield $item;
@@ -88,7 +88,7 @@ return new class
                         }
                         return;
                     }
-                    $class = ComponentStandard::componentClassByContentId($this->parentContentId, $this->relativeContentId);
+                    $class = ComponentStandard::componentClassById($this->parentContentId, $this->relativeContentId);
                     foreach ($items as $item) {
                         $childContentStore = clone $this->contentStore;
                         $childContentStore->appendCurrentJoin($item['id']);

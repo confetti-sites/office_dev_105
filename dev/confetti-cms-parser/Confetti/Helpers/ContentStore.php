@@ -105,11 +105,6 @@ class ContentStore
         $this->queryBuilder->replaceFrom($relativeId);
     }
 
-    public function select(mixed ...$select): void
-    {
-        $this->queryBuilder->setSelect($select);
-    }
-
     public function join(string $from, string $as): void
     {
         // Go back 1 to match the fact that the first item is on index 0.
@@ -120,6 +115,11 @@ class ContentStore
         // When searching in the child, we want to the parent to be specific
         // parent~1234567890, want to use ids and not abstract parent~.
         $this->queryBuilder->wrapJoin($last['path'], $from, $as);
+    }
+
+    public function select(mixed ...$select): void
+    {
+        $this->queryBuilder->setSelect($select);
     }
 
     public function appendWhere(string $key, string $operator, mixed $value): void

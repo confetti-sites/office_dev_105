@@ -29,7 +29,7 @@ function modelById(string $contentId): \Confetti\Components\Map
     $location  = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
     $as        = $location['file'] . ':' . $location['line'];
     $store = new ContentStore($contentId, $as);
-    $className = \Confetti\Helpers\ComponentStandard::componentClassByContentId($store, $contentId);
+    $className = \Confetti\Helpers\ComponentStandard::componentClassById($store, $contentId);
     if ($className instanceof \Confetti\Helpers\DeveloperActionRequiredException) {
         throw $className;
     }

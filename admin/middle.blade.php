@@ -25,24 +25,24 @@
         @php($total++)
     @endforeach
     @if($total > 0)
-        {{-- Ensure that we have the parent id for every item --}}
-{{--        <input type="hidden" name="{{ $currentContentId }}" value="__is_parent" x-bind="field"--}}
-{{--               x-init="$dispatch('saveThisField')">--}}
+         Ensure that we have the parent id for every item
+        <input type="hidden" name="{{ $currentContentId }}" value="__is_parent" x-bind="field"
+               x-init="$dispatch('saveThisField')">
         <button
                 class="flex items-center justify-between w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                 parent-content-id="{{ $parentContentId }}"
                 has-parent="{{ $hasParent }}"
                 x-bind="submit"
         >
-            {{-- x-show="countFields() > 1" --}}
+             x-show="countFields() > 1"
             Save
         </button>
     @endif
     @if(count($children) === 0)
-        {{--        show welcome first page in dashboard, documentation, handy links, ... --}}
+                show welcome first page in dashboard, documentation, handy links, ...
         <div class="flex items-center justify-center w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             ? link to something ?
-            {{--            <a href="/admin/{{ $model->getId() . '/~' . newId() }}">Create your first page</a>--}}
+                        <a href="/admin/{{ $model->getId() . '/~' . newId() }}">Create your first page</a>
         </div>
     @endif
 </div>

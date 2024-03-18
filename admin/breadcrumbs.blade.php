@@ -1,27 +1,15 @@
 @php
-    use Confetti\Components\Map;
     use Confetti\Helpers\ComponentStandard;
-    use Confetti\Helpers\ContentStore;
-    use Confetti\Helpers\DeveloperActionRequiredException;
-    /**
-     * @var string $currentId
-     * @var Map[]|ComponentStandard[] $crumbs
-     */
-    $store = new ContentStore($currentId, 'breadcrumbs');
-    $crumbs = [];
+    /** @var string $currentId given value from parent view */
+    // Calculate all breadcrumbs
+    $ids = [];
     $id = '';
     foreach (array_filter(explode('/', $currentId)) as $part) {
         $id .= '/' . $part;
-        $className = ComponentStandard::componentClassByContentId($store, $id);
-        if ($className instanceof DeveloperActionRequiredException) {
-            throw $className;
-        }
-        // Add the component to a list of paths to display
-        $current = new $className;
-        if ($current->getComponent()->type != 'extendModel') {
-            $crumbs[$currentId] = $current;
-        }
+        $ids[] = $id;
     }
+    // Get all component classes by ids
+    $crumbs = ComponentStandard::componentsClassByIds($ids);
 @endphp
 
 <nav class="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"

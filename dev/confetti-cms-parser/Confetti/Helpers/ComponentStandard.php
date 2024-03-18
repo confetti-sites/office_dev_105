@@ -171,10 +171,36 @@ abstract class ComponentStandard
     }
 
     /**
+     * @param string[] $ids
+     * @return Map[]|ComponentStandard[]|\Confetti\Helpers\DeveloperActionRequiredException
+     */
+    public static function componentsClassByIds(array $ids): array|DeveloperActionRequiredException {
+        /**
+         * @var string $currentId
+         * @var Map[]|ComponentStandard[] $crumbs
+         */
+        $query = new QueryBuilder();
+        $query->setOptions(['response_with_full_id' => true]);
+        foreach ($ids as $id) {
+            $query->appendSelect($id);
+        }
+        $values = $query->run()[0]['data'];
+        $result = [];
+        foreach ($values as $key => $value) {
+            $className = ComponentStandard::componentClassById($key, $values);
+            if ($className instanceof DeveloperActionRequiredException) {
+                throw $className;
+            }
+            $result[] = new $className;
+        }
+        return $result;
+    }
+
+    /**
      * @return class-string|\Confetti\Components\Map|ComponentStandard
      * @noinspection PhpDocSignatureInspection
      */
-    public static function componentClassByContentId(ContentStore &$store, string $id): string|DeveloperActionRequiredException
+    public static function componentClassById(string $id, array $values): string|DeveloperActionRequiredException
     {
         // Remove id banner/image~0123456789 -> banner/image
         $class  = preg_replace('/~[A-Z0-9_]{10}/', '~', $id);
@@ -199,7 +225,7 @@ abstract class ComponentStandard
             // If a child is a pointer, we need a totally different class.
             if ($isPointer) {
                 $className = implode('\\', $result);
-                $extended = self::getExtendedModelKey($className, $store, $id);
+                $extended = self::getExtendedModelKey($className, $id, $values);
                 if ($extended instanceof DeveloperActionRequiredException) {
                     return $extended;
                 }
@@ -258,19 +284,16 @@ abstract class ComponentStandard
         }
     }
 
-    private static function getExtendedModelKey(string $pointerClassName, ContentStore &$store,  string $id): string|Exception
+    private static function getExtendedModelKey(string $pointerClassName, string $id, array $values): string|Exception
     {
         /** @var \Confetti\Components\SelectFile $pointer */
         $params    = self::getParamsForNewQuery($id);
         $pointer   = new $pointerClassName(...$params);
-
-        $store->select('.');
-        $store->runInit();
-
-        $content = $store->getContentOfThisLevel();
-        $file = $content ? $content['data']['.'] : null;
-
-        $map = self::getExtendedModelByPointer($pointer, $file);
+        if (!array_key_exists($id, $values)) {
+            return new DeveloperActionRequiredException("Can't find selected value with id '{$id}' in the values array. Please make sure that the selected value is set in the values array.");
+        }
+        // Get class and get the pointed file from the class
+        $map = self::getExtendedModelByPointer($pointer, $values[$id]);
         if ($map instanceof DeveloperActionRequiredException) {
             return $map;
         }

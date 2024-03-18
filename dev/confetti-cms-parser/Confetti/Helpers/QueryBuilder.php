@@ -12,7 +12,7 @@ class QueryBuilder
     private array $queryStack = [];
     private array $query;
 
-    public function __construct(string $from, string $as = null)
+    public function __construct(string $from = '', string $as = null)
     {
         $this->newQuery($from, $as, self::DEFAULT_OPTIONS);
     }
@@ -64,6 +64,15 @@ class QueryBuilder
     public function setSelect(array $select): self
     {
         $this->query['select'] = $select;
+        return $this;
+    }
+
+    /**
+     * @param string[] $select
+     */
+    public function appendSelect(...$select): self
+    {
+        $this->query['select'] = array_merge($this->query['select'], $select);
         return $this;
     }
 
@@ -184,7 +193,9 @@ class QueryBuilder
 
     private function newQuery(string $from, ?string $as, array $options = []): void
     {
-        $this->query = [];
+        $this->query = [
+            'select'  => [],
+        ];
         if (!empty($options)) {
             $this->query['options'] = $options;
         }
