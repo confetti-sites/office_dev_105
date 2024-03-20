@@ -33,7 +33,7 @@ class Select extends ComponentStandard {
         }
 
         $key = array_rand($options, 1);
-        return $options[$key];
+        return $options[$key]['id'];
     }
 
     public function getOptions(): array
