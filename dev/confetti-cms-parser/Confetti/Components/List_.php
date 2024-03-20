@@ -142,7 +142,7 @@ class List_
 
             public function getIterator(): Traversable
             {
-                if ($this->contentStore->isFakeMaker() && $this->contentStore->isFake()) {
+                if ($this->contentStore->canFake() && $this->contentStore->isFake()) {
                     foreach ($this->getFakeComponents($this->className) as $item) {
                         yield $item;
                     }
@@ -162,7 +162,7 @@ class List_
 
                 // If data is present and not empty, then we can use it
                 if ($items !== null && $firstEmptyContent === null) {
-                    if ($this->contentStore->isFakeMaker() && count($items) === 0) {
+                    if ($this->contentStore->canFake() && count($items) === 0) {
                         foreach ($this->getFakeComponents($this->className) as $item) {
                             yield $item;
                         }
@@ -186,7 +186,7 @@ class List_
                 // But to prevent n+1 the problem, we need to load the first item.
                 $first = $firstEmptyContent ?? $this->contentStore->findFirstOfJoin()[0] ?? null;
                 // If key not even present, then we need to use the fake components
-                if ($this->contentStore->isFakeMaker() && $first === null) {
+                if ($this->contentStore->canFake() && $first === null) {
                     foreach ($this->getFakeComponents($this->className) as $item) {
                         yield $item;
                     }

@@ -186,9 +186,6 @@ abstract class ComponentStandard
             return new DeveloperActionRequiredException('Error gj5o498w4: can\'t decode options: ' . $e->getMessage());
         }
         $className = ComponentStandard::componentClassById($id, $values);
-        if ($className instanceof DeveloperActionRequiredException) {
-            throw $className;
-        }
         return new $className;
     }
 

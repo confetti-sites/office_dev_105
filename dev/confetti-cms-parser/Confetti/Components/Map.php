@@ -24,9 +24,9 @@ class Map
         throw new \RuntimeException('This method `getComponentKey` should be overridden in the child class.');
     }
 
-    public function makeFake(bool $makeFake = true): self
+    public function canFake(bool $canFake = true): self
     {
-        $this->contentStore->setFakeMaker($makeFake);
+        $this->contentStore->setCanFake($canFake);
         return $this;
     }
 
@@ -123,28 +123,32 @@ class Map
         }
     }
 
+    private function getComponentByRelativeId(string $relativeId): Map|ComponentStandard
+    {
+        $className = ComponentStandard::componentById($this->getId() . '/' . $relativeId);
+        if ($className instanceof DeveloperActionRequiredException) {
+            throw $className;
+        }
+        return new $className(
+            $this->getId(),
+            $relativeId,
+            $this->contentStore,
+        );
+    }
+
     public function label(string $value): self
     {
         return $this;
     }
 
-    public function color(string $key): Color
+    public function color(string $key): Map|Color
     {
-        return new Color(
-            $this->getId(),
-            $key,
-            $this->contentStore,
-        );
+        return $this->getComponentByRelativeId($key);
     }
 
-    public function image(string $key): Image
+    public function image(string $key): Map|Image
     {
-        $result = new Image(
-            $this->getId(),
-            $key,
-            $this->contentStore,
-        );
-        return $result;
+        return $this->getComponentByRelativeId($key);
     }
 
     public function list(string $key): List_
@@ -154,25 +158,17 @@ class Map
         return new List_($this->getId() . '~', $key, $this->contentStore, $as);
     }
 
-    public function number(string $key): Number
+    public function number(string $key): Map|Number
     {
-        return new Number(
-            $this->getId(),
-            $key,
-            $this->contentStore,
-        );
+        return $this->getComponentByRelativeId($key);
     }
 
-    public function select(string $key): Select
+    public function select(string $key): Map|Select
     {
-        return new Select(
-            $this->getId(),
-            $key,
-            $this->contentStore,
-        );
+        return $this->getComponentByRelativeId($key);
     }
 
-    public function selectFile(string $key): SelectFile
+    public function selectFile(string $key): Map|SelectFile
     {
         $className = \Confetti\Helpers\ComponentStandard::componentClassByContentId($this->getId() . '/' . $key);
         return new $className(
@@ -182,13 +178,9 @@ class Map
         );
     }
 
-    public function text(string $key): Text
+    public function text(string $key): Map|Text
     {
-        return new Text(
-            $this->getId(),
-            $key,
-            $this->contentStore,
-        );
+        return $this->getComponentByRelativeId($key);
     }
 
 }

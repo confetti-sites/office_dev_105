@@ -13,7 +13,7 @@ class ContentStore
     // data for development. No database queries are made
     private bool $isFake = false;
     // The data can be real, but the store is allowed to fake.
-    private bool $fakeMaker = false;
+    private bool $canFake = false;
 
     /**
      * @var array array with 'type' and 'path'
@@ -69,14 +69,14 @@ class ContentStore
         $this->isFake = true;
     }
 
-    public function isFakeMaker(): bool
+    public function canFake(): bool
     {
-        return $this->fakeMaker;
+        return $this->canFake;
     }
 
-    public function setFakeMaker(bool $fakeMaker): void
+    public function setCanFake(bool $canFake): void
     {
-        $this->fakeMaker = $fakeMaker;
+        $this->canFake = $canFake;
     }
 
     public function getContent(): array
