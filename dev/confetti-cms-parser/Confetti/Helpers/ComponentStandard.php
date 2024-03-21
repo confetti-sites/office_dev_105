@@ -170,22 +170,9 @@ abstract class ComponentStandard
         return preg_replace('/~[A-Z0-9_]+/', '~', $contentId);
     }
 
-    public static function componentById(string $id): Map|ComponentStandard|DeveloperActionRequiredException
+    public static function componentById(string $id, ContentStore $store = null): Map|ComponentStandard|DeveloperActionRequiredException
     {
-        $query = new QueryBuilder();
-        $query->setOptions(['response_with_full_id' => true]);
-
-        $parentIds = '';
-        foreach (array_filter(explode('/', $id)) as $part) {
-            $parentIds .= '/' . $part;
-            $query->appendSelect($parentIds);
-        }
-        try {
-            $values = $query->run()[0]['data'];
-        } catch (\JsonException $e) {
-            return new DeveloperActionRequiredException('Error gj5o498w4: can\'t decode options: ' . $e->getMessage());
-        }
-        $className = ComponentStandard::componentClassById($id, $values);
+        $className = ComponentStandard::componentClassById($id, $store);
         return new $className;
     }
 
@@ -193,8 +180,11 @@ abstract class ComponentStandard
      * @param string[] $ids
      * @return Map[]|ComponentStandard[]|\Confetti\Helpers\DeveloperActionRequiredException
      */
-    public static function componentsByIds(array $ids): array|DeveloperActionRequiredException
+    public static function componentsByIds(array $ids, ContentStore $store = null): array|DeveloperActionRequiredException
     {
+        if (empty($ids)) {
+            return [];
+        }
         $query = new QueryBuilder();
         $query->setOptions(['response_with_full_id' => true]);
         foreach ($ids as $id) {
@@ -207,7 +197,7 @@ abstract class ComponentStandard
         }
         $result = [];
         foreach ($values as $id => $value) {
-            $className = ComponentStandard::componentClassById($id, $values);
+            $className = ComponentStandard::componentClassById($id, $store);
             if ($className instanceof DeveloperActionRequiredException) {
                 throw $className;
             }
@@ -220,40 +210,40 @@ abstract class ComponentStandard
      * @return class-string|\Confetti\Components\Map|ComponentStandard
      * @noinspection PhpDocSignatureInspection
      */
-    private static function componentClassById(string $id, array $values): string|DeveloperActionRequiredException
+    private static function componentClassById(string $id, ContentStore $store): string|DeveloperActionRequiredException
     {
         // Remove id banner/image~0123456789 -> banner/image
         $class     = preg_replace('/~[A-Z0-9_]{10}/', '~', $id);
-        $parts     = explode('/', $class);
-        $isPointer = false;
+        $parts     = explode('/', ltrim($class, '/'));
+        $pointerId = null;
         $result    = [];
         foreach ($parts as $part) {
-            // Remove pointers banner/image~ -> banner/image_list
-            if (str_ends_with($part, '~')) {
-                $part = str_replace('~', '_list', $part);
-            }
-            // Remove pointers banner/template- -> banner/template
-            if (str_ends_with($part, '-')) {
-                $isPointer = true;
-                $part      = str_replace('-', '_pointer', $part);
-            }
-            // Rename forbidden class names
-            if (in_array($part, self::FORBIDDEN_PHP_KEYWORDS)) {
-                $part .= '_';
-            }
-            $result[] = $part;
-            // If a child is a pointer, we need a totally different class.
-            if ($isPointer) {
-                $className = implode('\\', $result);
-                $extended  = self::getExtendedModelKey($className, $id, $values);
+            // If the parent is a pointer, we need a totally different class.
+            if ($pointerId) {
+                $className = '\\'.implode('\\', $result);
+                $extended  = self::getExtendedModelKey($className, $pointerId, $store);
                 if ($extended instanceof DeveloperActionRequiredException) {
                     return $extended;
                 }
-                $result    = explode('/', $extended);
-                $isPointer = false;
+                return self::componentClassById($extended . '/'. $part, $store);
             }
+            $classPart = $part;
+            // Remove pointers banner/image~ -> banner/image_list
+            if (str_ends_with($classPart, '~')) {
+                $classPart = str_replace('~', '_list', $part);
+            }
+            // Remove pointers banner/template- -> banner/template
+            if (str_ends_with($classPart, '-')) {
+                $pointerId = $part;
+                $classPart      = str_replace('-', '_pointer', $classPart);
+            }
+            // Rename forbidden class names
+            if (in_array($classPart, self::FORBIDDEN_PHP_KEYWORDS)) {
+                $classPart .= '_';
+            }
+            $result[] = $classPart;
         }
-        return implode('\\', $result);
+        return '\\'.implode('\\', $result);
     }
 
     abstract public function get(): mixed;
@@ -304,16 +294,15 @@ abstract class ComponentStandard
         }
     }
 
-    private static function getExtendedModelKey(string $pointerClassName, string $id, array $values): string|Exception
+    private static function getExtendedModelKey(string $pointerClassName, string $id, ContentStore $store): string|Exception
     {
+        $value = $store->findOneData($id);
+
         /** @var \Confetti\Components\SelectFile $pointer */
         $params  = self::getParamsForNewQuery($id);
         $pointer = new $pointerClassName(...$params);
-        if (!array_key_exists($id, $values)) {
-            return new DeveloperActionRequiredException("Can't find selected value with id '{$id}' in the values array. Please make sure that the selected value is set in the values array.");
-        }
         // Get class and get the pointed file from the class
-        $map = self::getExtendedModelByPointer($pointer, $values[$id]);
+        $map = self::getExtendedModelByPointer($pointer, $value);
         if ($map instanceof DeveloperActionRequiredException) {
             return $map;
         }

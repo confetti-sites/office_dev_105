@@ -3,8 +3,7 @@
     echo(new ComponentGenerator(
         name: 'selectFile',
         decorations: [
-            Decoration::MATCH
-            ->comment(
+            Decoration::MATCH->comment(
                 '
                 List all files by directories. You can use the glob pattern. For example: `->match([\'/view/footers\'])`
 

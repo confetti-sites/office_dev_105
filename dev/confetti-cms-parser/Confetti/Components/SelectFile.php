@@ -22,7 +22,7 @@ class SelectFile extends ComponentStandard implements SelectModelInterface, Sele
     public function get(): string
     {
         // Get saved value
-        $filePath = $this->contentStore->findOneData($this->getId());
+        $filePath = $this->contentStore->findOneData($this->relativeContentId);
         if ($filePath !== null) {
             return $filePath;
         }

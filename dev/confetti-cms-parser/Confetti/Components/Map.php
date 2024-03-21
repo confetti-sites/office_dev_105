@@ -123,19 +123,6 @@ class Map
         }
     }
 
-    private function getComponentByRelativeId(string $relativeId): Map|ComponentStandard
-    {
-        $className = ComponentStandard::componentById($this->getId() . '/' . $relativeId);
-        if ($className instanceof DeveloperActionRequiredException) {
-            throw $className;
-        }
-        return new $className(
-            $this->getId(),
-            $relativeId,
-            $this->contentStore,
-        );
-    }
-
     public function label(string $value): self
     {
         return $this;
@@ -170,12 +157,7 @@ class Map
 
     public function selectFile(string $key): Map|SelectFile
     {
-        $className = \Confetti\Helpers\ComponentStandard::componentClassByContentId($this->getId() . '/' . $key);
-        return new $className(
-            $this->getId(),
-            $key,
-            $this->contentStore,
-        );
+        return $this->getComponentByRelativeId($key . '-');
     }
 
     public function text(string $key): Map|Text
@@ -183,4 +165,16 @@ class Map
         return $this->getComponentByRelativeId($key);
     }
 
+    private function getComponentByRelativeId(string $relativeId): Map|ComponentStandard
+    {
+        $className = ComponentStandard::componentById($this->getId() . '/' . $relativeId, $this->contentStore);
+        if ($className instanceof DeveloperActionRequiredException) {
+            throw $className;
+        }
+        return new $className(
+            $this->getId(),
+            $relativeId,
+            $this->contentStore,
+        );
+    }
 }
