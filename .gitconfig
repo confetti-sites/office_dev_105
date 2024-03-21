@@ -1,0 +1,15 @@
+[diff]
+;   Print better submodule diffs with more information
+    submodule = log
+
+[fetch]
+;   Number of processes to fetch submodules in parallel (better performance)
+    parallel = 8
+
+[push]
+;   When pushing to a remote, check if submodules also need to be pushed
+    recurseSubmodules = check
+
+[submodule]
+;   Also fetch submodules when checking out a branch
+    recurse = true
