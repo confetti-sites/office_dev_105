@@ -218,7 +218,7 @@ abstract class ComponentStandard
         $result    = [];
         $idSoFar  = '';
         foreach ($parts as $part) {
-            // If the parent is a pointer, we need a totally different class.
+            // If the parent is a pointer, the child needs a totally different class.
             if ($pointerId) {
                 $className = '\\'.implode('\\', $result);
                 $extended  = self::getExtendedModelKey($className, $idSoFar, $store);
@@ -226,6 +226,7 @@ abstract class ComponentStandard
                     return $extended;
                 }
                 $result = explode('\\', get_class($extended));
+                $pointerId = null;
             }
             $idSoFar = self::mergeIds($idSoFar, $part);
             $classPart = $part;
