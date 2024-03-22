@@ -26,7 +26,7 @@ class ContentStore
         $this->queryBuilder  = new QueryBuilder($from, $as);
     }
 
-    public function runInit(): bool
+    public function runInit($fullId = false): bool
     {
         if ($this->alreadyInit) {
             return false;
@@ -41,6 +41,7 @@ class ContentStore
             'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
             'patch_cache_select'      => true,
             'response_with_condition' => true, // We want to know if the data is retrieved with the same conditions.
+            'response_with_full_id'   => $fullId,
         ]);
         // Get the first item. The data we want to use is in the join.
         $this->content     = $this->queryBuilder->run()[0] ?? [];
@@ -55,7 +56,7 @@ class ContentStore
             'response_with_condition' => true, // The children need to know if the data is retrieved with the same conditions.
         ]);
         // Get the first item. The data we want to use is in the join.
-        $this->content = $this->isFake ? []: $this->queryBuilder->run()[0] ?? [];
+        $this->content = $this->isFake ? [] : $this->queryBuilder->run()[0] ?? [];
         return $this->getContentOfThisLevel();
     }
 
@@ -156,7 +157,7 @@ class ContentStore
     {
         // Ensure that the content is initialized
         $this->queryBuilder->setSelect([$id]);
-        $this->runInit();
+        $this->runInit(str_starts_with($id, '/'));
         // Check if content is present
         // If key is not present, then the query is never cached before
         try {
@@ -170,12 +171,13 @@ class ContentStore
         // Query the content and cache the selection
         $query = $this->queryBuilder;
         $query->setOptions([
-            'patch_cache_select' => true,
-            'only_first'         => true,
-            'use_cache'          => false,
+            'patch_cache_select'    => true,
+            'only_first'            => true,
+            'use_cache'             => false,
+            'response_with_full_id' => str_starts_with($id, '/')
         ]);
         $query->setSelect([$id]);
-        $result = $this->isFake ? []: $query->run();
+        $result = $this->isFake ? [] : $query->run();
         if (count($result) === 0) {
             return null;
         }
@@ -200,7 +202,7 @@ class ContentStore
             'response_with_condition' => true,
         ]);
         /// so we can use where and so forth
-        $result = $this->isFake ? []: $child->run();
+        $result = $this->isFake ? [] : $child->run();
         if (count($result) === 0) {
             return null;
         }
@@ -220,7 +222,7 @@ class ContentStore
             'response_with_condition' => true,
         ]);
         $child->ignoreFirstRow();
-        $result        = $this->isFake ? []: $child->run();
+        $result        = $this->isFake ? [] : $child->run();
         $this->content = $result;
         return $this->getContentOfThisLevel($result, true);
     }

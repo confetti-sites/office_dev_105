@@ -24,14 +24,14 @@ class List_
     private ContentStore $contentStore;
 
     public function __construct(
-        protected string         $parentContentId,
-        protected string         $relativeContentId,
-        protected ContentStore   &$parentContentStore,
-        private readonly string  $as,
+        protected string        $parentContentId,
+        protected string        $relativeContentId,
+        protected ContentStore  &$parentContentStore,
+        private readonly string $as,
     )
     {
-        $this->componentKey      = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
-        $this->contentStore      = clone $this->parentContentStore;
+        $this->componentKey = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
+        $this->contentStore = clone $this->parentContentStore;
         $this->contentStore->join($this->relativeContentId, $as);
     }
 
@@ -131,11 +131,11 @@ class List_
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
         return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate {
             public function __construct(
-                protected string         $parentContentId,
-                protected string         $relativeContentId,
-                protected ContentStore   $contentStore,
-                protected string         $as,
-                protected string         $className,
+                protected string       $parentContentId,
+                protected string       $relativeContentId,
+                protected ContentStore $contentStore,
+                protected string       $as,
+                protected string       $className,
             )
             {
             }
@@ -168,7 +168,10 @@ class List_
                         }
                         return;
                     }
-                    $class = ComponentStandard::componentById(ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId));
+                    $class = ComponentStandard::componentById(
+                        ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId),
+                        $this->contentStore,
+                    );
                     if ($class instanceof \Exception) {
                         throw $class;
                     }
@@ -230,12 +233,12 @@ class List_
             {
                 /** @var ComponentEntity $component */
                 $component = (new $class())->getComponent();
-                $contentId  = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
+                $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
 
                 // Get the number of items. If not present,
                 // then use default values. To prevent rendering too
                 // many items, we don't fake to many items in deeper levels.
-                $deeper     = $this->contentStore->isFake();
+                $deeper = $this->contentStore->isFake();
                 $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 20);
                 $min    = $component->getDecoration('min')['value'] ?? 1;
                 $amount = random_int($min, $max);

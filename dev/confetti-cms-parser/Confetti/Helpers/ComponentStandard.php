@@ -170,17 +170,16 @@ abstract class ComponentStandard
         return preg_replace('/~[A-Z0-9_]+/', '~', $contentId);
     }
 
-    public static function componentById(string $id, ContentStore $store = null): Map|ComponentStandard|DeveloperActionRequiredException
+    public static function componentById(string $id, ContentStore $store): string|DeveloperActionRequiredException
     {
-        $className = ComponentStandard::componentClassById($id, $store);
-        return new $className;
+        return ComponentStandard::componentClassById($id, $store);
     }
 
     /**
      * @param string[] $ids
-     * @return Map[]|ComponentStandard[]|\Confetti\Helpers\DeveloperActionRequiredException
+     * @return string[]|Map[]|ComponentStandard[]|\Confetti\Helpers\DeveloperActionRequiredException
      */
-    public static function componentsByIds(array $ids, ContentStore $store = null): array|DeveloperActionRequiredException
+    public static function componentClassNamesByIds(array $ids, ContentStore $store): array|DeveloperActionRequiredException
     {
         if (empty($ids)) {
             return [];
@@ -201,7 +200,7 @@ abstract class ComponentStandard
             if ($className instanceof DeveloperActionRequiredException) {
                 throw $className;
             }
-            $result[$id] = new $className;
+            $result[$id] = $className;
         }
         return $result;
     }
@@ -217,16 +216,18 @@ abstract class ComponentStandard
         $parts     = explode('/', ltrim($class, '/'));
         $pointerId = null;
         $result    = [];
+        $idSoFar  = '';
         foreach ($parts as $part) {
             // If the parent is a pointer, we need a totally different class.
             if ($pointerId) {
                 $className = '\\'.implode('\\', $result);
-                $extended  = self::getExtendedModelKey($className, $pointerId, $store);
+                $extended  = self::getExtendedModelKey($className, $idSoFar, $store);
                 if ($extended instanceof DeveloperActionRequiredException) {
                     return $extended;
                 }
-                return self::componentClassById($extended . '/'. $part, $store);
+                $result = explode('\\', get_class($extended));
             }
+            $idSoFar = self::mergeIds($idSoFar, $part);
             $classPart = $part;
             // Remove pointers banner/image~ -> banner/image_list
             if (str_ends_with($classPart, '~')) {
@@ -294,7 +295,7 @@ abstract class ComponentStandard
         }
     }
 
-    private static function getExtendedModelKey(string $pointerClassName, string $id, ContentStore $store): string|Exception
+    private static function getExtendedModelKey(string $pointerClassName, string $id, ContentStore $store): Map|Exception
     {
         $value = $store->findOneData($id);
 
@@ -306,7 +307,7 @@ abstract class ComponentStandard
         if ($map instanceof DeveloperActionRequiredException) {
             return $map;
         }
-        return $map->getComponent()->key;
+        return $map;
     }
 
     private static function getExtendedModelByPointer(SelectFile $pointer, ?string $value): Map|Exception

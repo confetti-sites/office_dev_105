@@ -13,7 +13,8 @@
         $ids[$id] = $id;
     }
     // Get all component classes by ids
-    $crumbs = ComponentStandard::componentsByIds($ids);
+    $store = new \Confetti\Helpers\ContentStore('/model', 'breadcrumb');
+    $crumbs = ComponentStandard::componentClassNamesByIds($ids, $store);
 @endphp
 
 <nav class="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
@@ -37,7 +38,7 @@
                               d="m1 9 4-4-4-4"/>
                     </svg>
                     <a href="/admin{{ $currentId }}"
-                       class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ $item->getLabel() }}</a>
+                       class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ (new $item)->getLabel() }}</a>
                 </div>
             </li>
         @endforeach
