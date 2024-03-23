@@ -28,11 +28,9 @@ function modelById(string $contentId): \Confetti\Components\Map
 {
     $location  = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
     $as        = $location['file'] . ':' . $location['line'];
-//    $parent = getParentKey($contentId);
-//    $relative = ltrim(substr($contentId, strlen($parent)), '\/');
 
     $contentStore = new ContentStore($contentId, $as);
-    $className = \Confetti\Helpers\ComponentStandard::componentById($contentId, $contentStore);
+    $className = \Confetti\Helpers\ComponentStandard::componentClassById($contentId, $contentStore);
 
     return (new $className('', $contentId, $contentStore));
 }

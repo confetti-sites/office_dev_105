@@ -171,7 +171,7 @@ class List_
                         }
                         return;
                     }
-                    $class = ComponentStandard::componentById(
+                    $class = ComponentStandard::componentClassById(
                         ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId),
                         $this->contentStore,
                     );

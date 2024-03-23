@@ -144,9 +144,21 @@ class Map
 
     public function list(string $key): List_
     {
+        exit('this is probably not needed and can be abstract');
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
         $as       = $location['file'] . ':' . $location['line'];
         return new List_($this->getId() . '~', $key, $this->contentStore, $as);
+
+//        $className = ComponentStandard::componentById($this->getId() . '~/' . $key);
+//        if ($className instanceof DeveloperActionRequiredException) {
+//            throw $className;
+//        }
+//        return new $className(
+//            $this->getId() . '~',
+//            $key,
+//            $this->contentStore,
+//            $as,
+//        );
     }
 
     public function number(string $key): Map|Number
@@ -171,7 +183,10 @@ class Map
 
     private function getComponentByRelativeId(string $relativeId): Map|ComponentStandard
     {
-        $className = ComponentStandard::componentById($this->getId() . '/' . $relativeId, $this->contentStore);
+        $className = ComponentStandard::componentClassById(
+            $this->getId() . '/' . $relativeId,
+            $this->contentStore
+        );
         if ($className instanceof DeveloperActionRequiredException) {
             throw $className;
         }

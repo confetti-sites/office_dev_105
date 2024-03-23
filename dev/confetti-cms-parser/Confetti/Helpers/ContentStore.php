@@ -77,6 +77,11 @@ class ContentStore
         $this->canFake = $canFake;
     }
 
+    public function resetBreadcrumbs(): void
+    {
+        $this->breadcrumbs = [];
+    }
+
     public function getLatestBreadcrumb(): array
     {
         // We don't use end() because we want
@@ -214,11 +219,8 @@ class ContentStore
 
     public function findPointerData(string $id): mixed
     {
-        $alreadyPointed = false;
+        $this->joinPointer($id);
         if (!$this->alreadyInit) {
-            // Use join to collect pointer data in the join
-            $this->joinPointer($id);
-            $alreadyPointed = true;
             // We can find the data of the pointer in select `.` field
             $this->select(".");
             $this->runInit(responseWithFullId: str_starts_with($id, '/'));
@@ -235,10 +237,6 @@ class ContentStore
             }
         } catch (ConditionDoesNotMatchConditionFromContent) {
             // We need to fetch the content with the correct condition
-        }
-
-        if (!$alreadyPointed) {
-            $this->joinPointer($id);
         }
         $this->select(".");
         $pointedJoin = $this->runCurrentQuery([

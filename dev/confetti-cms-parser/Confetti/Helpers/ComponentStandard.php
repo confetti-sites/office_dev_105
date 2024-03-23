@@ -170,11 +170,6 @@ abstract class ComponentStandard
         return preg_replace('/~[A-Z0-9_]+/', '~', $contentId);
     }
 
-    public static function componentById(string $id, ContentStore $store): string|DeveloperActionRequiredException
-    {
-        return ComponentStandard::componentClassById($id, $store);
-    }
-
     /**
      * @param string[] $ids
      * @return string[]|Map[]|ComponentStandard[]|\Confetti\Helpers\DeveloperActionRequiredException
@@ -209,13 +204,26 @@ abstract class ComponentStandard
      * @return class-string|\Confetti\Components\Map|ComponentStandard
      * @noinspection PhpDocSignatureInspection
      */
-    private static function componentClassById(string $id, ContentStore $store): string|DeveloperActionRequiredException
+    public static function componentClassById(string $id, ContentStore $store): string|DeveloperActionRequiredException
     {
         // Remove id banner/image~0123456789 -> banner/image
         $class     = preg_replace('/~[A-Z0-9_]{10}/', '~', $id);
         $parts     = explode('/', ltrim($class, '/'));
         $pointerId = null;
         $result    = [];
+        $store = clone $store;
+        $store->resetBreadcrumbs();
+
+        // We need to start with the pointer. So we can
+        // fetch the file where the pointer is pointed to.
+        $found = preg_match('/^(?<from>[^-]*)\/[^-]*-/', $id, $matches);
+        if ($found === 1) {
+            $from = $matches['from'];
+        } else {
+            $from = $id;
+        }
+        $store->appendCurrentJoin($from);
+
         foreach ($parts as $part) {
             // If the parent is a pointer, the child needs a totally different class.
             if ($pointerId) {
@@ -231,6 +239,7 @@ abstract class ComponentStandard
             // Remove pointers banner/image~ -> banner/image_list
             if (str_ends_with($classPart, '~')) {
                 $classPart = str_replace('~', '_list', $part);
+                $store->join($part, $part);
             }
             // Remove pointers banner/template- -> banner/template
             if (str_ends_with($classPart, '-')) {
@@ -302,11 +311,7 @@ abstract class ComponentStandard
         $params  = self::getParamsForNewQuery($id);
         $pointer = new $pointerClassName(...$params);
         // Get class and get the pointed file from the class
-        $map = self::getExtendedModelByPointer($pointer, $value);
-        if ($map instanceof DeveloperActionRequiredException) {
-            return $map;
-        }
-        return $map;
+        return self::getExtendedModelByPointer($pointer, $value);
     }
 
     private static function getExtendedModelByPointer(SelectFile $pointer, ?string $value): Map|Exception
