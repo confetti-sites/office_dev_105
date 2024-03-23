@@ -8,7 +8,7 @@ class ContentStore
 {
     private QueryBuilder $queryBuilder;
     private array $content = [];
-    public bool $alreadyInit = false;
+    private bool $alreadyInit = false;
     // This is a fake store, used for mocking
     // data for development. No database queries are made
     private bool $isFake = false;
@@ -26,7 +26,7 @@ class ContentStore
         $this->queryBuilder  = new QueryBuilder($from, $as);
     }
 
-    public function runInit($fullId = false): bool
+    public function runInit($responseWithFullId = false): bool
     {
         if ($this->alreadyInit) {
             return false;
@@ -41,7 +41,7 @@ class ContentStore
             'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
             'patch_cache_select'      => true,
             'response_with_condition' => true, // We want to know if the data is retrieved with the same conditions.
-            'response_with_full_id'   => $fullId,
+            'response_with_full_id'   => $responseWithFullId,
         ]);
         // Get the first item. The data we want to use is in the join.
         $this->content     = $this->queryBuilder->run()[0] ?? [];
@@ -49,12 +49,9 @@ class ContentStore
         return true;
     }
 
-    public function runCurrentQuery(): array|null
+    public function runCurrentQuery($options): array|null
     {
-        $this->queryBuilder->setOptions([
-            'use_cache'               => true,
-            'response_with_condition' => true, // The children need to know if the data is retrieved with the same conditions.
-        ]);
+        $this->queryBuilder->setOptions($options);
         // Get the first item. The data we want to use is in the join.
         $this->content = $this->isFake ? [] : $this->queryBuilder->run()[0] ?? [];
         return $this->getContentOfThisLevel();
@@ -78,6 +75,13 @@ class ContentStore
     public function setCanFake(bool $canFake): void
     {
         $this->canFake = $canFake;
+    }
+
+    public function getLatestBreadcrumb(): array
+    {
+        // We don't use end() because we want
+        // don't want to change the array pointer
+        return $this->breadcrumbs[count($this->breadcrumbs) - 1];
     }
 
     public function getContent(): array
@@ -110,12 +114,24 @@ class ContentStore
     {
         // Go back 1 to match the fact that the first item is on index 0.
         $last = $this->breadcrumbs[count($this->breadcrumbs) - 1];
-        // When we run a query from a component: `\model\page\banner_list_title::query()->get()`
+        // When we run a query from a component: `\model\page\banner_list\title::query()->get()`
         // we have multiple titles, but the title itself is not a list, and whe don't want to use join.
         $this->breadcrumbs[] = ['type' => 'join', 'path' => $as];
         // When searching in the child, we want to the parent to be specific
-        // parent~1234567890, want to use ids and not abstract parent~.
+        // parent~1234567890, we want to use ids and not abstract parent~.
         $this->queryBuilder->wrapJoin($last['path'], $from, $as);
+    }
+
+    public function joinPointer(string $from): void
+    {
+        // Go back 1 to match the fact that the first item is on index 0.
+        $last = $this->breadcrumbs[count($this->breadcrumbs) - 1];
+        // When we run a query from a component: `\model\page\banner_list\title::query()->get()`
+        // we have multiple titles, but the title itself is not a list, and whe don't want to use join.
+        $this->breadcrumbs[] = ['type' => 'join_pointer', 'path' => $from];
+        // When searching in the child, we want to the parent to be specific
+        // parent~1234567890, we want to use ids and not abstract parent~.
+        $this->queryBuilder->wrapJoin($last['path'], $from, $from);
     }
 
     public function select(mixed ...$select): void
@@ -155,15 +171,26 @@ class ContentStore
      */
     public function findOneData(string $id): mixed
     {
-        // Ensure that the content is initialized
+        if ($this->isFake) {
+            return null;
+        }
+        if (str_ends_with($id, '-')) {
+            return $this->findPointerData($id);
+        }
+        return $this->findSelectedData($id);
+    }
+
+    private function findSelectedData(string $id): mixed
+    {
         $this->queryBuilder->setSelect([$id]);
-        $this->runInit(str_starts_with($id, '/'));
+        // Ensure that the content is initialized
+        $this->runInit(responseWithFullId: str_starts_with($id, '/'));
         // Check if content is present
         // If key is not present, then the query is never cached before
         try {
-            $result = $this->getContentOfThisLevel();
-            if ($result && array_key_exists($id, $result["data"])) {
-                return $result["data"][$id];
+            [$result, $found] = $this->getContentOfThisLevelById($id);
+            if ($found) {
+                return $result;
             }
         } catch (ConditionDoesNotMatchConditionFromContent) {
             // We need to fetch the content with the correct condition
@@ -174,14 +201,53 @@ class ContentStore
             'patch_cache_select'    => true,
             'only_first'            => true,
             'use_cache'             => false,
-            'response_with_full_id' => str_starts_with($id, '/')
+            'response_with_full_id' => str_starts_with($id, '/'),
         ]);
         $query->setSelect([$id]);
-        $result = $this->isFake ? [] : $query->run();
+        $result = $query->run();
         if (count($result) === 0) {
             return null;
         }
-        return $this->getContentOfThisLevel($result)['data'][$id] ?? null;
+        [$result, $found] = $this->getContentOfThisLevelById($id, $result);
+        return $result;
+    }
+
+    public function findPointerData(string $id): mixed
+    {
+        $alreadyPointed = false;
+        if (!$this->alreadyInit) {
+            // Use join to collect pointer data in the join
+            $this->joinPointer($id);
+            $alreadyPointed = true;
+            // We can find the data of the pointer in select `.` field
+            $this->select(".");
+            $this->runInit(responseWithFullId: str_starts_with($id, '/'));
+        }
+        // Check if content is present
+        // If key is not present, then the query is never cached before
+        try {
+            $result = $this->getContentOfThisLevel();
+            if ($result !== null && count($result) === 0) {
+                return null;
+            }
+            if (!empty($result)) {
+                return $result['data']['.'];
+            }
+        } catch (ConditionDoesNotMatchConditionFromContent) {
+            // We need to fetch the content with the correct condition
+        }
+
+        if (!$alreadyPointed) {
+            $this->joinPointer($id);
+        }
+        $this->select(".");
+        $pointedJoin = $this->runCurrentQuery([
+            'use_cache'               => true,
+            'patch_cache_join'        => true,
+            'response_with_condition' => false,
+        ]);
+
+        return !empty($pointedJoin) ? $pointedJoin['data']['.'] : null;
     }
 
     // This is to prevent n+1 problems. We need to load the
@@ -224,15 +290,45 @@ class ContentStore
         $child->ignoreFirstRow();
         $result        = $this->isFake ? [] : $child->run();
         $this->content = $result;
-        return $this->getContentOfThisLevel($result, true);
+        return $this->getContentOfThisLevel($result);
     }
 
-    public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false): ?array
+    /**
+     * @return <array, bool> The first value is the content,
+     * the second value is a boolean that indicates if the key
+     * is found. If the key is found, there is no reason to fetch the data again.
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function getContentOfThisLevelById(string $id, array $content = null): array
+    {
+        $result = $this->getContentOfThisLevel($content);
+
+        // The data from a pointer is from a join with an array of data (always one).
+        if ($this->getLatestBreadcrumb()['type'] === 'join_pointer' && str_ends_with($id, '-')) {
+            if (!empty($result) && array_key_exists($id, $result[0]['data'])) {
+                return [$result[0]["data"][$id], true];
+            }
+            return [null, false];
+        }
+        // The data from a normal selected
+        if ($result && array_key_exists($id, $result["data"])) {
+            return [$result["data"][$id], true];
+        }
+        return [null, false];
+    }
+
+    public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false, bool $debug = false): ?array
     {
         $content ??= $this->content;
+        $total   = count($this->breadcrumbs);
         foreach ($this->breadcrumbs as $breadcrumb) {
+            $total--;
             switch ($breadcrumb['type']) {
                 case 'id':
+                    // We have found the searched content
+                    if ($total === 0) {
+                        return $content;
+                    }
                     // We already are on the correct level
                     if (!empty($content['id'])) {
                         break;
@@ -266,9 +362,11 @@ class ContentStore
                     }
                     $content = $content['join'][$breadcrumb['path']];
                     break;
+                case 'join_pointer':
+                    $content = $content['join'][$breadcrumb['path']][0];
+                    break;
             }
         }
-
 
         return $content;
     }

@@ -216,19 +216,17 @@ abstract class ComponentStandard
         $parts     = explode('/', ltrim($class, '/'));
         $pointerId = null;
         $result    = [];
-        $idSoFar  = '';
         foreach ($parts as $part) {
             // If the parent is a pointer, the child needs a totally different class.
             if ($pointerId) {
-                $className = '\\'.implode('\\', $result);
-                $extended  = self::getExtendedModelKey($className, $idSoFar, $store);
+                $className = '\\' . implode('\\', $result);
+                $extended  = self::getExtendedModelKey($className, $pointerId, $store);
                 if ($extended instanceof DeveloperActionRequiredException) {
                     return $extended;
                 }
-                $result = explode('\\', get_class($extended));
+                $result    = explode('\\', get_class($extended));
                 $pointerId = null;
             }
-            $idSoFar = self::mergeIds($idSoFar, $part);
             $classPart = $part;
             // Remove pointers banner/image~ -> banner/image_list
             if (str_ends_with($classPart, '~')) {
@@ -237,7 +235,7 @@ abstract class ComponentStandard
             // Remove pointers banner/template- -> banner/template
             if (str_ends_with($classPart, '-')) {
                 $pointerId = $part;
-                $classPart      = str_replace('-', '_pointer', $classPart);
+                $classPart = str_replace('-', '_pointer', $classPart);
             }
             // Rename forbidden class names
             if (in_array($classPart, self::FORBIDDEN_PHP_KEYWORDS)) {
@@ -245,7 +243,7 @@ abstract class ComponentStandard
             }
             $result[] = $classPart;
         }
-        return '\\'.implode('\\', $result);
+        return '\\' . implode('\\', $result);
     }
 
     abstract public function get(): mixed;
@@ -298,7 +296,7 @@ abstract class ComponentStandard
 
     private static function getExtendedModelKey(string $pointerClassName, string $id, ContentStore $store): Map|Exception
     {
-        $value = $store->findOneData($id);
+        $value = $store->findPointerData($id);
 
         /** @var \Confetti\Components\SelectFile $pointer */
         $params  = self::getParamsForNewQuery($id);

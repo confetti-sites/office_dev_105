@@ -153,7 +153,10 @@ class List_
                     $items = $this->contentStore->getContentOfThisLevel();
                 } catch (ConditionDoesNotMatchConditionFromContent) {
                     // When the content is present but received with another query condition
-                    $items = $this->contentStore->runCurrentQuery();
+                    $items = $this->contentStore->runCurrentQuery([
+                        'use_cache'               => true,
+                        'response_with_condition' => true, // The children need to know if the data is retrieved with the same conditions.
+                    ]);
                 }
 
                 // If items are present, but without data. Then it looks useless,

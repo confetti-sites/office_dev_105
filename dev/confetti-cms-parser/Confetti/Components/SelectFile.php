@@ -51,9 +51,25 @@ class SelectFile extends ComponentStandard implements SelectModelInterface, Sele
         return 'selectFile';
     }
 
+    // @todo can be abstract?
     public function getSelected(): Map
     {
-        throw new \RuntimeException('This method `getSelected` should be overridden in the child class.');
+        // In this stage, we already have queried the data of this model
+        $result = $this->contentStore->getContentOfThisLevel();
+        $file   = !empty($result) ? $result['data']['.'] : null;
+
+        // Get default value
+        if ($file === null) {
+            $component = $this->getComponent();
+            $file = $component->getDecoration('default');
+        }
+
+        // If no default value is set, use the first file in the list
+        if ($file === null) {
+            $file = array_key_first($this->getOptions());
+        }
+
+        return $this->getOptions()[$file] ?? throw new \RuntimeException("Can't select child model in '{$this->getComponent()->key}'. Function 'extendModel(\$model)' not found in '$file'");
     }
 
     /**

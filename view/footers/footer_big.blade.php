@@ -1,4 +1,4 @@
-@php($footer = extendModel($model))
+@php($footer = extendModel($model)->label('Big Footer'))
 
 <footer class="border-t border-gray-100 pt-10 pb-8 dark:border-gray-800 dark:bg-gray-900/80">
     <div>
@@ -17,7 +17,7 @@
                             >
                                 Confetti CMS
                             </a>
-                            <a href="https://tailus.io" class="mt-2 inline-block text-sm">
+                            <a href="/" class="mt-2 inline-block text-sm">
                                 {{ $footer->text('subtitle')->min(1)->max(30) }}
                             </a>
                         </div>
