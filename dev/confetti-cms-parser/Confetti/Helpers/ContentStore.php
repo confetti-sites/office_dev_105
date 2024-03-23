@@ -311,6 +311,12 @@ class ContentStore
             return [null, false];
         }
         // The data from a normal selected
+        if ($result && empty($result['data'])) {
+            echo '<pre>';
+            var_dump($result);
+            echo '</pre>';
+            exit('exit current file: ' . __FILE__ . ':' . __LINE__);
+        }
         if ($result && array_key_exists($id, $result["data"])) {
             return [$result["data"][$id], true];
         }

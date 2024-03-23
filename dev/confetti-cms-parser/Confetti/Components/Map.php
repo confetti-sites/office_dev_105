@@ -95,8 +95,12 @@ class Map
      */
     protected function getParamsForProperty(string $key): array
     {
+        $store = clone $this->contentStore;
+        if (str_ends_with($key, '-')) {
+            $store->joinPointer($key);
+        }
         // Parameters for the constructor of the child classes.
-        return [$this->getId(), $key, $this->contentStore];
+        return [$this->getId(), $key, $store];
     }
 
     /**
