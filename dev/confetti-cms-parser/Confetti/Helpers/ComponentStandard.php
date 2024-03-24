@@ -339,7 +339,7 @@ abstract class ComponentStandard
         $content = $store->getContent();
         foreach ($parts as $part) {
             $idSoFar .= '/' . $part;
-            // We can only add result here if the pointer is already selected
+            // We can only add a result here if the pointer is already selected
             // We only need to get the pointer values
             if (!empty($content['data']) && array_key_exists($idSoFar, $content['data']) && str_ends_with($part, '-')) {
                 $result[$idSoFar] = $content['data'][$idSoFar];
@@ -354,12 +354,14 @@ abstract class ComponentStandard
             return $result;
         }
 
-        $store->runCurrentQuery([
-            'use_cache'               => true,
-            'patch_cache_select'      => true,
-            'response_with_condition' => false,
-            'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
-        ]);
+        $init = $store->runInit();
+        if (!$init) {
+            $store->runCurrentQuery([
+                'use_cache'               => true,
+                'use_cache_from_root'     => true,
+                'patch_cache_select'      => true,
+            ]);
+        }
         $content = $store->getContent();
         $idSoFar = '';
         foreach ($parts as $part) {

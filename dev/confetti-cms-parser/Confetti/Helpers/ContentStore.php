@@ -26,7 +26,7 @@ class ContentStore
         $this->queryBuilder  = new QueryBuilder($from, $as);
     }
 
-    public function runInit($responseWithFullId = false): bool
+    public function runInit(): bool
     {
         if ($this->alreadyInit) {
             return false;
@@ -41,7 +41,6 @@ class ContentStore
             'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
             'patch_cache_select'      => true,
             'response_with_condition' => true, // We want to know if the data is retrieved with the same conditions.
-            'response_with_full_id'   => $responseWithFullId,
         ]);
         // Get the first item. The data we want to use is in the join.
         $this->content     = $this->queryBuilder->run()[0] ?? [];
@@ -193,7 +192,7 @@ class ContentStore
     {
         $this->queryBuilder->setSelect([$id]);
         // Ensure that the content is initialized
-        $this->runInit(responseWithFullId: str_starts_with($id, '/'));
+        $this->runInit($id);
         // Check if content is present
         // If key is not present, then the query is never cached before
         try {
@@ -227,7 +226,7 @@ class ContentStore
         if (!$this->alreadyInit) {
             // We can find the data of the pointer in select `.` field
             $this->select(".");
-            $this->runInit(responseWithFullId: str_starts_with($id, '/'));
+            $this->runInit();
         }
         // Check if content is present
         // If key is not present, then the query is never cached before
@@ -322,9 +321,7 @@ class ContentStore
     public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false): ?array
     {
         $content ??= $this->content;
-        $total   = count($this->breadcrumbs);
         foreach ($this->breadcrumbs as $breadcrumb) {
-            $total--;
             switch ($breadcrumb['type']) {
                 case 'id':
                     // We already are on the correct level
@@ -361,6 +358,9 @@ class ContentStore
                     $content = $content['join'][$breadcrumb['path']];
                     break;
                 case 'join_pointer':
+                    if (empty($content['join'][$breadcrumb['path']])) {
+                        return null;
+                    }
                     $content = $content['join'][$breadcrumb['path']][0];
                     break;
             }
