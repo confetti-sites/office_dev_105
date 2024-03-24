@@ -345,24 +345,13 @@ abstract class ComponentStandard
                 $result[$idSoFar] = $content['data'][$idSoFar];
                 continue;
             }
-            $allAlreadySelected = false;
             if (str_ends_with($part, '-')) {
+                $allAlreadySelected = false;
                 $store->selectInRoot($idSoFar);
             }
         }
         if ($allAlreadySelected) {
-            exit('@todo; when exit here, it is ok. @todo when never exit here, it is not ok.');
             return $result;
-//        } else {
-            // second time exit
-//            static $nr = 0;
-//            $nr++;
-//            if ($nr === 3) {
-//                echo '<pre>';
-//                var_dump($store->getContent());
-//                echo '</pre>';
-//                exit('Cached expected: ' . __FILE__ . ':' . __LINE__);
-//            }
         }
 
         $store->runCurrentQuery([
