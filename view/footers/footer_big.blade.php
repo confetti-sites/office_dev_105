@@ -93,6 +93,13 @@
                     <div class="grid grid-cols-2 gap-6 pb-16 sm:grid-cols-3 md:pl-16">
                         @foreach($footer->list('column')->columns(['header_title'])->min(1)->max(3)->get() as $list)
                             <div>
+                                @php
+
+//                                        echo '<pre>';
+//                                        var_dump($list->getStore());
+//                                        echo '</pre>';
+//                                        exit('exit current file: ' . __FILE__ . ':' . __LINE__);
+ @endphp
                                 <h2 class="text-base font-medium text-gray-800 dark:text-gray-200">
                                     {{ $list->text('header_title')->min(2)->max(30) }}
                                 </h2>

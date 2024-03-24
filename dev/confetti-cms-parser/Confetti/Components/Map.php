@@ -40,6 +40,11 @@ class Map
         throw new \RuntimeException('This method `getComponent` should be overridden in the child class.');
     }
 
+    public function getStore(): ContentStore
+    {
+        return $this->contentStore;
+    }
+
     /**
      * @internal This method is not part of the public API and should not be used.
      */

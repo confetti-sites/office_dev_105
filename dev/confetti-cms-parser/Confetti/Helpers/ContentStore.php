@@ -49,12 +49,16 @@ class ContentStore
         return true;
     }
 
-    public function runCurrentQuery($options): array|null
+    public function selectInRoot(...$select): void
+    {
+        $this->queryBuilder->appendSelectInRoot(...$select);
+    }
+
+    public function runCurrentQuery($options): void
     {
         $this->queryBuilder->setOptions($options);
         // Get the first item. The data we want to use is in the join.
         $this->content = $this->isFake ? [] : $this->queryBuilder->run()[0] ?? [];
-        return $this->getContentOfThisLevel();
     }
 
     public function isFake(): bool
@@ -239,11 +243,12 @@ class ContentStore
             // We need to fetch the content with the correct condition
         }
         $this->select(".");
-        $pointedJoin = $this->runCurrentQuery([
+        $this->runCurrentQuery([
             'use_cache'               => true,
             'patch_cache_join'        => true,
             'response_with_condition' => false,
         ]);
+        $pointedJoin = $this->getContentOfThisLevel();
 
         return !empty($pointedJoin) ? $pointedJoin['data']['.'] : null;
     }
@@ -288,7 +293,7 @@ class ContentStore
         $child->ignoreFirstRow();
         $result        = $this->isFake ? [] : $child->run();
         $this->content = $result;
-        return $this->getContentOfThisLevel($result);
+        return $this->getContentOfThisLevel($result, true);
     }
 
     /**
@@ -308,20 +313,13 @@ class ContentStore
             }
             return [null, false];
         }
-        // The data from a normal selected
-        if ($result && empty($result['data'])) {
-            echo '<pre>';
-            var_dump($result);
-            echo '</pre>';
-            exit('exit current file: ' . __FILE__ . ':' . __LINE__);
-        }
         if ($result && array_key_exists($id, $result["data"])) {
             return [$result["data"][$id], true];
         }
         return [null, false];
     }
 
-    public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false, bool $debug = false): ?array
+    public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false): ?array
     {
         $content ??= $this->content;
         $total   = count($this->breadcrumbs);
@@ -329,10 +327,6 @@ class ContentStore
             $total--;
             switch ($breadcrumb['type']) {
                 case 'id':
-                    // We have found the searched content
-                    if ($total === 0) {
-                        return $content;
-                    }
                     // We already are on the correct level
                     if (!empty($content['id'])) {
                         break;

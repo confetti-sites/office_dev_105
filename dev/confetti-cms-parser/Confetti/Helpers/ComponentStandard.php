@@ -204,31 +204,21 @@ abstract class ComponentStandard
      * @return class-string|\Confetti\Components\Map|ComponentStandard
      * @noinspection PhpDocSignatureInspection
      */
-    public static function componentClassById(string $id, ContentStore $store): string|DeveloperActionRequiredException
+    public static function componentClassById(string $id, ContentStore &$store): string|DeveloperActionRequiredException
     {
+        $pointerValues = self::getPointerValues($id, $store);
+
         // Remove id banner/image~0123456789 -> banner/image
         $class     = preg_replace('/~[A-Z0-9_]{10}/', '~', $id);
         $parts     = explode('/', ltrim($class, '/'));
         $pointerId = null;
         $result    = [];
-        $store = clone $store;
-        $store->resetBreadcrumbs();
-
-        // We need to start with the pointer. So we can
-        // fetch the file where the pointer is pointed to.
-        $found = preg_match('/^(?<from>[^-]*)\/[^-]*-/', $id, $matches);
-        if ($found === 1) {
-            $from = $matches['from'];
-        } else {
-            $from = $id;
-        }
-        $store->appendCurrentJoin($from);
-
+        $idSoFar   = '';
         foreach ($parts as $part) {
             // If the parent is a pointer, the child needs a totally different class.
             if ($pointerId) {
                 $className = '\\' . implode('\\', $result);
-                $extended  = self::getExtendedModelKey($className, $pointerId, $store);
+                $extended  = self::getExtendedModelKey($className, $idSoFar, $pointerValues);
                 if ($extended instanceof DeveloperActionRequiredException) {
                     return $extended;
                 }
@@ -239,7 +229,6 @@ abstract class ComponentStandard
             // Remove pointers banner/image~ -> banner/image_list
             if (str_ends_with($classPart, '~')) {
                 $classPart = str_replace('~', '_list', $part);
-                $store->join($part, $part);
             }
             // Remove pointers banner/template- -> banner/template
             if (str_ends_with($classPart, '-')) {
@@ -251,6 +240,7 @@ abstract class ComponentStandard
                 $classPart .= '_';
             }
             $result[] = $classPart;
+            $idSoFar .= '/' . $part;
         }
         return '\\' . implode('\\', $result);
     }
@@ -303,9 +293,9 @@ abstract class ComponentStandard
         }
     }
 
-    private static function getExtendedModelKey(string $pointerClassName, string $id, ContentStore $store): Map|Exception
+    private static function getExtendedModelKey(string $pointerClassName, string $id, array $pointerValues): Map|Exception
     {
-        $value = $store->findPointerData($id);
+        $value = $pointerValues[$id] ?? null;
 
         /** @var \Confetti\Components\SelectFile $pointer */
         $params  = self::getParamsForNewQuery($id);
@@ -338,5 +328,58 @@ abstract class ComponentStandard
             return $options[$file];
         }
         return new DeveloperActionRequiredException("Can't found default value or first file in the list to extend '{$pointer->getId()}'. Make sure that there are options defined in '{$pointer->getComponent()->source}'");
+    }
+
+    private static function getPointerValues(string $id, ContentStore &$store): array
+    {
+        $allAlreadySelected = true;
+        $result = [];
+        $parts = explode('/', ltrim($id, '/'));
+        $idSoFar = '';
+        $content = $store->getContent();
+        foreach ($parts as $part) {
+            $idSoFar .= '/' . $part;
+            // We can only add result here if the pointer is already selected
+            // We only need to get the pointer values
+            if (!empty($content['data']) && array_key_exists($idSoFar, $content['data']) && str_ends_with($part, '-')) {
+                $result[$idSoFar] = $content['data'][$idSoFar];
+                continue;
+            }
+            $allAlreadySelected = false;
+            if (str_ends_with($part, '-')) {
+                $store->selectInRoot($idSoFar);
+            }
+        }
+        if ($allAlreadySelected) {
+            exit('@todo; when exit here, it is ok. @todo when never exit here, it is not ok.');
+            return $result;
+//        } else {
+            // second time exit
+//            static $nr = 0;
+//            $nr++;
+//            if ($nr === 3) {
+//                echo '<pre>';
+//                var_dump($store->getContent());
+//                echo '</pre>';
+//                exit('Cached expected: ' . __FILE__ . ':' . __LINE__);
+//            }
+        }
+
+        $store->runCurrentQuery([
+            'use_cache'               => true,
+            'patch_cache_select'      => true,
+            'response_with_condition' => false,
+            'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
+        ]);
+        $content = $store->getContent();
+        $idSoFar = '';
+        foreach ($parts as $part) {
+            $idSoFar .= '/' . $part;
+            // We are only interested in the pointer values
+            if (str_ends_with($part, '-')) {
+                $result[$idSoFar] = $content['data'][$idSoFar];
+            }
+        }
+        return $result;
     }
 }

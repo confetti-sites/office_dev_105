@@ -17,11 +17,6 @@ class QueryBuilder
         $this->newQuery($from, $as, self::DEFAULT_OPTIONS);
     }
 
-    public function getQuery(): array
-    {
-        return $this->query;
-    }
-
     public function replaceFrom(string $relativeId): void
     {
         $this->query['from'] = $relativeId;
@@ -74,6 +69,18 @@ class QueryBuilder
     {
         $this->query['select'] = array_merge($this->query['select'], $select);
         return $this;
+    }
+
+    /**
+     * @param string[] $select
+     */
+    public function appendSelectInRoot(...$select): void
+    {
+        if (empty($this->queryStack)) {
+            $this->appendSelect(...$select);
+            return;
+        }
+        $this->queryStack[0]['select'] = array_merge($this->queryStack[0]['select'], $select);
     }
 
     public function wrapJoin(string $parentFrom, string $from, string $as = null): void
