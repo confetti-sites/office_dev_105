@@ -15,7 +15,7 @@ return new class extends ComponentStandard implements \Confetti\Contracts\Select
     public function get(): string
     {
         // Get saved value
-        $content = $this->contentStore->findOneData($this->relativeContentId);
+        $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
             return $content->value;
         }

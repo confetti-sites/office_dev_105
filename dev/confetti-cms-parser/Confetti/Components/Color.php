@@ -10,7 +10,7 @@ class Color extends ComponentStandard {
     public function get(): string
     {
         // Get saved value
-        $value = $this->contentStore->findOneData($this->relativeContentId);
+        $value = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($value !== null) {
             return $value->value;
         }

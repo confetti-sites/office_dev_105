@@ -330,8 +330,11 @@ abstract class ComponentStandard
         return new DeveloperActionRequiredException("Can't found default value or first file in the list to extend '{$pointer->getId()}'. Make sure that there are options defined in '{$pointer->getComponent()->source}'");
     }
 
-    private static function getPointerValues(string $id, ContentStore &$store): array
+    public static function getPointerValues(string $id, ContentStore &$store): array
     {
+        if (!str_contains($id, '-')) {
+            return [];
+        }
         $allAlreadySelected = true;
         $result = [];
         $parts = explode('/', ltrim($id, '/'));

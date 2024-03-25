@@ -11,18 +11,20 @@ use Confetti\Helpers\ContentStore;
 
 class SelectFile extends ComponentStandard implements SelectModelInterface, SelectFileInterface
 {
-    public function __construct(?string $parentContentId = null, ?string $relativeContentId = null, ?ContentStore &$contentStore = null)
+    public function __construct(string $parentContentId , string $relativeContentId, ContentStore &$contentStore)
     {
         if ($relativeContentId != null && !str_ends_with($relativeContentId, '-')) {
             $relativeContentId .= '-';
         }
         parent::__construct($parentContentId, $relativeContentId, $contentStore);
+        $this->contentStore = clone $this->contentStore;
+        $this->contentStore->joinPointer($this->relativeContentId);
     }
 
     public function get(): string
     {
         // Get saved value
-        $filePath = $this->contentStore->findOneData($this->relativeContentId);
+        $filePath = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($filePath !== null) {
             return $filePath;
         }
@@ -54,14 +56,12 @@ class SelectFile extends ComponentStandard implements SelectModelInterface, Sele
     // @todo can be abstract?
     public function getSelected(): Map
     {
-        // In this stage, we already have queried the data of this model
-        $result = $this->contentStore->getContentOfThisLevel();
-        $file   = !empty($result) ? $result['data']['.'] : null;
+        $file = self::getPointerValues($this->getId(), $this->contentStore)[$this->getId()] ?? null;
 
         // Get default value
         if ($file === null) {
             $component = $this->getComponent();
-            $file = $component->getDecoration('default');
+            $file      = $component->getDecoration('default');
         }
 
         // If no default value is set, use the first file in the list

@@ -122,8 +122,8 @@ class ContentStore
     {
         // Go back 1 to match the fact that the first item is on index 0.
         $last = $this->breadcrumbs[count($this->breadcrumbs) - 1];
-        // When we run a query from a component: `\model\page\banner_list\title::query()->get()`
-        // we have multiple titles, but the title itself is not a list, and whe don't want to use join.
+        // Note: when can run a query from a component: `\model\page\banner_list\title::query()->get()`
+        // Than we have multiple titles, but the title itself is not a list.
         $this->breadcrumbs[] = ['type' => 'join', 'path' => $as];
         // When searching in the child, we want to the parent to be specific
         // parent~1234567890, we want to use ids and not abstract parent~.
@@ -177,15 +177,15 @@ class ContentStore
      * is already present because it was fetched before during a cached query.
      * When the data is not present, we want to fetch the data.
      */
-    public function findOneData(string $id): mixed
+    public function findOneData(string $parentId, string $relativeId): mixed
     {
         if ($this->isFake) {
             return null;
         }
-        if (str_ends_with($id, '-')) {
-            return $this->findPointerData($id);
+        if (str_ends_with($relativeId, '-')) {
+            return $this->findPointerData(ComponentStandard::mergeIds($parentId, $relativeId));
         }
-        return $this->findSelectedData($id);
+        return $this->findSelectedData($relativeId);
     }
 
     private function findSelectedData(string $id): mixed
@@ -209,7 +209,6 @@ class ContentStore
             'patch_cache_select'    => true,
             'only_first'            => true,
             'use_cache'             => false,
-            'response_with_full_id' => str_starts_with($id, '/'),
         ]);
         $query->setSelect([$id]);
         $result = $query->run();
@@ -222,34 +221,21 @@ class ContentStore
 
     public function findPointerData(string $id): mixed
     {
-        $this->joinPointer($id);
         if (!$this->alreadyInit) {
-            // We can find the data of the pointer in select `.` field
-            $this->select(".");
+            $this->selectInRoot($id);
             $this->runInit();
+            return $this->content['data'][$id];
         }
-        // Check if content is present
-        // If key is not present, then the query is never cached before
-        try {
-            $result = $this->getContentOfThisLevel();
-            if ($result !== null && count($result) === 0) {
-                return null;
-            }
-            if (!empty($result)) {
-                return $result['data']['.'];
-            }
-        } catch (ConditionDoesNotMatchConditionFromContent) {
-            // We need to fetch the content with the correct condition
+        if (array_key_exists($id, $this->content['data'])) {
+            return $this->content['data'][$id];
         }
-        $this->select(".");
+        $this->selectInRoot($id);
         $this->runCurrentQuery([
             'use_cache'               => true,
-            'patch_cache_join'        => true,
-            'response_with_condition' => false,
+            'use_cache_from_root'     => true,
+            'patch_cache_select'      => true,
         ]);
-        $pointedJoin = $this->getContentOfThisLevel();
-
-        return !empty($pointedJoin) ? $pointedJoin['data']['.'] : null;
+        return $this->content['data'][$id] ?? null;
     }
 
     // This is to prevent n+1 problems. We need to load the
