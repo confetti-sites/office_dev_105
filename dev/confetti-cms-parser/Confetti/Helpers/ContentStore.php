@@ -22,8 +22,16 @@ class ContentStore
 
     public function __construct(string $from, string $as)
     {
-        $this->breadcrumbs[] = ['type' => 'id', 'path' => $from];
-        $this->queryBuilder  = new QueryBuilder($from, $as);
+        // In the root, we want to select general data.
+        // For example, the cached pointer keys.
+        // We use /model as the root, because we want to
+        // the rest of the data from the tree.
+        $this->queryBuilder  = new QueryBuilder('/model', $as);
+        $this->breadcrumbs[] = ['type' => 'id', 'path' => '/model'];
+
+        // One level deeper, we want to select other data from the tree.
+        [, $relative] = ComponentStandard::explodeKey($from);
+        $this->joinPointer($relative);
     }
 
     public function runInit(): bool
@@ -32,7 +40,6 @@ class ContentStore
             return false;
         }
         if ($this->isFake) {
-            $this->content     = [];
             $this->alreadyInit = true;
             return true;
         }
@@ -57,7 +64,11 @@ class ContentStore
     {
         $this->queryBuilder->setOptions($options);
         // Get the first item. The data we want to use is in the join.
-        $this->content = $this->isFake ? [] : $this->queryBuilder->run()[0] ?? [];
+        $result = [];
+        if (!$this->isFake) {
+            $result = $this->queryBuilder->run()[0] ?? [];
+        }
+        $this->content = $this->mergeRecursive($this->content, $result);
     }
 
     public function isFake(): bool
@@ -190,9 +201,11 @@ class ContentStore
 
     private function findSelectedData(string $id): mixed
     {
-        $this->queryBuilder->setSelect([$id]);
-        // Ensure that the content is initialized
-        $this->runInit($id);
+        if (!$this->alreadyInit) {
+            $this->queryBuilder->setSelect([$id]);
+            // Ensure that the content is initialized
+            $this->runInit();
+        }
         // Check if content is present
         // If key is not present, then the query is never cached before
         try {
@@ -358,5 +371,24 @@ class ContentStore
     public function __clone(): void
     {
         $this->queryBuilder = clone $this->queryBuilder;
+    }
+
+    private function mergeRecursive(array $array1, array $array2): array
+    {
+        if (empty($array1)) {
+            return $array2;
+        }
+        if (empty($array2)) {
+            return $array1;
+        }
+        $merged = $array1;
+        foreach ($array2 as $key => $value) {
+            if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
+                $merged[$key] = $this->mergeRecursive($merged[$key], $value);
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+        return $merged;
     }
 }

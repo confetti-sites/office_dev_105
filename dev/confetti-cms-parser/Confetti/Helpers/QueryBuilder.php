@@ -2,19 +2,16 @@
 
 namespace Confetti\Helpers;
 
-use Confetti\Components\Map;
-
 class QueryBuilder
 {
     private const MODEL_PREFIX = '/model/';
 
-    private const DEFAULT_OPTIONS = ['response_with_full_id' => false];
     private array $queryStack = [];
     private array $query;
 
     public function __construct(string $from = '', string $as = null)
     {
-        $this->newQuery($from, $as, self::DEFAULT_OPTIONS);
+        $this->newQuery($from, $as);
     }
 
     public function replaceFrom(string $relativeId): void
@@ -49,7 +46,7 @@ class QueryBuilder
      */
     public function setOptions(array $options): self
     {
-        $this->query['options'] = array_merge(self::DEFAULT_OPTIONS, $options);
+        $this->query['options'] = $options;
         return $this;
     }
 
@@ -83,13 +80,13 @@ class QueryBuilder
         $this->queryStack[0]['select'] = array_merge($this->queryStack[0]['select'], $select);
     }
 
-    public function wrapJoin(string $parentFrom, string $from, string $as = null): void
+    public function wrapJoin(string $parent, string $relativeFrom, string $as = null): void
     {
         // We don't want to select anything from the parent
         $this->query['select'] = [];
-        $this->query['from']   = $parentFrom;
+        $this->query['from']   = $parent;
         $this->queryStack[]    = $this->query;
-        $this->newQuery($from, $as);
+        $this->newQuery($relativeFrom, $as);
     }
 
     public function ignoreFirstRow(): void
@@ -158,7 +155,7 @@ class QueryBuilder
     private function getFullQuery(): array
     {
         $result  = $this->query;
-        $options = $result['options'] ?? throw new \RuntimeException('No options set');
+        $options = $result['options'] ?? [];
         unset($result['options']);
         foreach (array_reverse($this->queryStack) as $parent) {
             $parent['join'] = [$result];
@@ -198,14 +195,11 @@ class QueryBuilder
         return ltrim($result, ' ');
     }
 
-    private function newQuery(string $from, ?string $as, array $options = []): void
+    private function newQuery(string $from, ?string $as): void
     {
         $this->query = [
             'select'  => [],
         ];
-        if (!empty($options)) {
-            $this->query['options'] = $options;
-        }
         $this->query['from'] = $from;
         if ($as) {
             $this->query['as'] = $as;

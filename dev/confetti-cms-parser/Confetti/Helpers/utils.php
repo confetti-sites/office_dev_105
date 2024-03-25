@@ -118,12 +118,3 @@ function newId(): string
     return $out;
 }
 
-function getParentKey(string $key): ?string
-{
-    // before the latest /
-    $position = strrpos($key, '/');
-    if ($position === false) {
-        return null;
-    }
-    return substr($key, 0, $position);
-}

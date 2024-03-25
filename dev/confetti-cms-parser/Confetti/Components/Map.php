@@ -89,9 +89,7 @@ class Map
         $as       = $location['file'] . ':' . $location['line'];
         // Get relative and parent from the key.
         $key      = static::getComponentKey();
-        $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key, $matches);
-        $parent   = $found === 0 ? $key : $matches['parent'];
-        $relative = $found === 0 ? '' : $matches['relative'];
+        [$parent, $relative] = ComponentStandard::explodeKey($key);
         return [$parent, $relative, new ContentStore($key, $as), $as];
     }
 

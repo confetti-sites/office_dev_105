@@ -115,9 +115,7 @@ abstract class ComponentStandard
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
         $as       = $location['file'] . ':' . $location['line'];
         // Get relative and parent from the key.
-        $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $id, $matches);
-        $parent   = $found === 0 ? $id : $matches['parent'];
-        $relative = $found === 0 ? '' : $matches['relative'];
+        [$parent, $relative] = ComponentStandard::explodeKey($id);
         // We use $parent (not $key) to get the data in the join.
         // We do this because that is in line with how List_ handles the data.
         return [$parent, $relative, new ContentStore($parent, $as), $as];
@@ -180,7 +178,6 @@ abstract class ComponentStandard
             return [];
         }
         $query = new QueryBuilder();
-        $query->setOptions(['response_with_full_id' => true]);
         foreach ($ids as $id) {
             $query->appendSelect($id);
         }
@@ -375,5 +372,16 @@ abstract class ComponentStandard
             }
         }
         return $result;
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function explodeKey(string $key): array
+    {
+        $found    = preg_match('/(?<parent>.*)\/(?<relative>[^\/]*)$/', $key, $matches);
+        $parent   = $found === 0 ? $key : $matches['parent'];
+        $relative = $found === 0 ? '' : $matches['relative'];
+        return [$parent, $relative];
     }
 }
