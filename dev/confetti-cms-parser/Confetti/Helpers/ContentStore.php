@@ -30,8 +30,7 @@ class ContentStore
         $this->breadcrumbs[] = ['type' => 'id', 'path' => '/model'];
 
         // One level deeper, we want to select other data from the tree.
-        [, $relative] = ComponentStandard::explodeKey($from);
-        $this->joinPointer($relative);
+        $this->joinPointer($from);
     }
 
     public function runInit(): bool
