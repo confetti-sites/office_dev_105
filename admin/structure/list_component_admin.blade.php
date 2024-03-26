@@ -19,7 +19,6 @@ $component = $model->getComponent();
         </tr>
         </thead>
         <tbody class="table-auto">
-        {{--        @php(@todo !!!!!!!!!!!!!!)--}}
         @forelse($model->get() as $parentId => $row)
             <tr class="border-b border-purple-300">
                 @foreach($row as $content)
