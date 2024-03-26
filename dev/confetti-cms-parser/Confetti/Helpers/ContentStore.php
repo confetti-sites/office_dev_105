@@ -30,7 +30,10 @@ class ContentStore
         $this->breadcrumbs[] = ['type' => 'id', 'path' => '/model'];
 
         // One level deeper, we want to select other data from the tree.
-        $this->joinPointer($from);
+        // So we want to point to another query and data higher in the tree.
+        if ($from !== '/model') {
+            $this->joinPointer($from);
+        }
     }
 
     public function runInit(): bool
