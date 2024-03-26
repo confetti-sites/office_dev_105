@@ -1,25 +1,30 @@
-@php /** @var \Confetti\Components\List_ $model */ @endphp
-@php use Confetti\Components\List_; @endphp
-@php($component = $model->getComponent())
+@php
+/** @var \Confetti\Components\List_ $model */
+/** @var \Confetti\Helpers\ComponentEntity $component */
+use Confetti\Components\List_;
+$component = $model->getComponent();
+@endphp
 
+<div class="block text-bold text-xl mt-8 mb-4">
+    {{ $component->getDecoration('label') }} List
+</div>
 <!-- border rounded -->
-<div class="container px-6 py-4 m-10 mx-auto grid border border-purple-600 rounded-lg">
+<div class="container grid border border-purple-600 rounded-lg">
     <table class="table-auto">
         <thead class="text-left border-b border-purple-300">
         <tr>
             @foreach($component->getDecoration('columns') ?? List_::getDefaultColumns($model) as $column)
-                <th class="p-3">{{ $column['label'] }}</th>
+                <th class="p-4">{{ $column['label'] }}</th>
             @endforeach
         </tr>
         </thead>
         <tbody class="table-auto">
         {{--        @php(@todo !!!!!!!!!!!!!!)--}}
-        @php($rows = [])
-        @forelse($rows as $parentId => $row)
+        @forelse($model->get() as $parentId => $row)
             <tr class="border-b border-purple-300">
                 @foreach($row as $content)
-                    <td class="p-3">
-                        {{ $content->value }}
+                    <td class="p-4">
+                        {{ $content }}
                     </td>
                 @endforeach
                 <td>
@@ -48,7 +53,7 @@
         @endforelse
         </tbody>
     </table>
-    <label class="block mt-4">
+    <label class="m-2">
         <a
                 class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 {{--                getId() on model is needed to get the correct id for the model, when list is in other list (with id) --}}

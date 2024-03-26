@@ -300,22 +300,25 @@ class List_
         }
     }
 
-    // Minimum number of items
+    // Label is used as a field title in the admin panel
+    public function label(string $label): self
+    {
+        return $this;
+    }
 
+    // Minimum number of items
     public function min(int $min): self
     {
         return $this;
     }
 
     // Maximum number of items
-
     public function max(int $max): self
     {
         return $this;
     }
 
     // This becomes the headers of the table in de admin
-
     public function columns(array $columns): self
     {
         return $this;
