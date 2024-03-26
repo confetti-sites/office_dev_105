@@ -287,7 +287,7 @@ class List_
         return array_map(static function (ComponentEntity $column) {
             $key = explode('/', $column->key);
             $key = end($key);
-            return ['id' => $key, 'label' => $key];
+            return ['id' => $key, 'label' => ucwords(str_replace('_', ' ', $key))];
         }, $columns);
     }
 

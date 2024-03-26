@@ -91,7 +91,7 @@
 
                 <div class="col-span-8 md:col-span-6 lg:col-span-5 text-gray-600 dark:text-gray-400">
                     <div class="grid grid-cols-2 gap-6 pb-16 sm:grid-cols-3 md:pl-16">
-                        @foreach($footer->list('column')->columns(['header_title'])->min(1)->max(3)->get() as $list)
+                        @foreach($footer->list('column')->min(1)->max(3)->get() as $list)
                             <div>
                                 <h2 class="text-base font-medium text-gray-800 dark:text-gray-200">
                                     {{ $list->text('header_title')->min(2)->max(30) }}
