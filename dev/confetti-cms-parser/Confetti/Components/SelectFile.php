@@ -9,7 +9,7 @@ use Confetti\Contracts\SelectModelInterface;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
 
-class SelectFile extends ComponentStandard implements SelectModelInterface, SelectFileInterface
+abstract class SelectFile extends ComponentStandard implements SelectModelInterface, SelectFileInterface
 {
     public function __construct(string $parentContentId , string $relativeContentId, ContentStore &$contentStore)
     {

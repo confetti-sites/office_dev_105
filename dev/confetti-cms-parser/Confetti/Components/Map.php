@@ -9,7 +9,7 @@ use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
 use Confetti\Helpers\DeveloperActionRequiredException;
 
-class Map
+abstract class Map
 {
     public function __construct(
         protected ?string       $parentContentId = null,
@@ -19,10 +19,7 @@ class Map
     {
     }
 
-    public static function getComponentKey(): string
-    {
-        throw new \RuntimeException('This method `getComponentKey` should be overridden in the child class.');
-    }
+    abstract public static function getComponentKey(): string;
 
     public function canFake(bool $canFake = true): self
     {
@@ -35,15 +32,7 @@ class Map
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
-    public function getComponent(): ComponentEntity
-    {
-        throw new \RuntimeException('This method `getComponent` should be overridden in the child class.');
-    }
-
-    public function getStore(): ContentStore
-    {
-        return $this->contentStore;
-    }
+    abstract public function getComponent(): ComponentEntity;
 
     /**
      * @internal This method is not part of the public API and should not be used.
@@ -74,7 +63,7 @@ class Map
         // 1. Create a file with ->list('blogs')->get()
         // 2. Use ->blogs()->get() in another file.
         // 3. Remove ->list('blogs')->get()
-        return [];
+        throw new \RuntimeException('No method list() found to get children of ' . $this->getId(). '. Please define list with the method.');
     }
 
     /**
@@ -142,24 +131,7 @@ class Map
         return $this->getComponentByRelativeId($key);
     }
 
-    public function list(string $key): List_
-    {
-        exit('this is probably not needed and can be abstract');
-        $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-        $as       = $location['file'] . ':' . $location['line'];
-        return new List_($this->getId() . '~', $key, $this->contentStore, $as);
-
-//        $className = ComponentStandard::componentById($this->getId() . '~/' . $key);
-//        if ($className instanceof DeveloperActionRequiredException) {
-//            throw $className;
-//        }
-//        return new $className(
-//            $this->getId() . '~',
-//            $key,
-//            $this->contentStore,
-//            $as,
-//        );
-    }
+    abstract public function list(string $key): List_;
 
     public function number(string $key): Map|Number
     {

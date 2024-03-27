@@ -6,7 +6,7 @@ namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
-class Text extends ComponentStandard {
+abstract class Text extends ComponentStandard {
     public function get(): string
     {
         // Get saved value
@@ -20,6 +20,10 @@ class Text extends ComponentStandard {
         $default = $component->getDecoration('default');
         if ($default) {
             return (string) $default;
+        }
+
+        if (!$this->contentStore->canFake()) {
+            return '';
         }
 
         // Guess value

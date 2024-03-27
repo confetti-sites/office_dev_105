@@ -6,7 +6,7 @@ namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
-class Number extends ComponentStandard {
+abstract class Number extends ComponentStandard {
     public function get(): string
     {
         return (string)$this->toInt();

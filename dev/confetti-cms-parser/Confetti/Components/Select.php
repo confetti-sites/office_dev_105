@@ -9,7 +9,7 @@ use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ComponentStore;
 use Confetti\Helpers\ContentStore;
 
-class Select extends ComponentStandard {
+abstract class Select extends ComponentStandard {
     public function get(): string
     {
         // Get saved value

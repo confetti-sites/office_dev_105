@@ -6,7 +6,7 @@ namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
-class Color extends ComponentStandard {
+abstract class Color extends ComponentStandard {
     public function get(): string
     {
         // Get saved value

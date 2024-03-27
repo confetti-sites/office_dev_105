@@ -6,7 +6,7 @@ namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
-class Image extends ComponentStandard {
+abstract class Image extends ComponentStandard {
     public function get(): string
     {
         // Get saved value

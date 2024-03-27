@@ -34,8 +34,7 @@
                 has-parent="{{ $hasParent }}"
                 x-bind="submit"
         >
-             x-show="countFields() > 1"
-            Save
+            <span>Save</span>
         </button>
     @endif
     @if(count($children) === 0)

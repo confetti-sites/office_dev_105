@@ -1,8 +1,8 @@
 @php
-/** @var \Confetti\Components\List_ $model */
-/** @var \Confetti\Helpers\ComponentEntity $component */
-use Confetti\Components\List_;
-$component = $model->getComponent();
+    /** @var \Confetti\Components\List_ $model */
+    /** @var \Confetti\Helpers\ComponentEntity $component */
+    use Confetti\Components\List_;
+    $component = $model->getComponent();
 @endphp
 
 <div class="block text-bold text-xl mt-8 mb-4">
@@ -29,13 +29,13 @@ $component = $model->getComponent();
                 <td>
                     <button
                             @click="deleteRow"
-                            name="{{ $parentId }}"
+                            name="{{ $row->getId() }}"
                             class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                     >
                         Delete
                     </button>
                     <a
-                            href="/admin{{ $parentId }}"
+                            href="/admin{{ $row->getId() }}"
                             class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                     >
                         Edit
@@ -44,7 +44,7 @@ $component = $model->getComponent();
             </tr>
         @empty
             <tr>
-                <td class="p-2">
+                <td class="p-4">
                     {{ $component->getDecoration('label') }} not found. Click on "+
                     Add {{ $component->getDecoration('label') }}" to create one.
                 </td>
@@ -55,8 +55,7 @@ $component = $model->getComponent();
     <label class="m-2">
         <a
                 class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-{{--                getId() on model is needed to get the correct id for the model, when list is in other list (with id) --}}
-                href="/admin{{ $model->getId(). newId() }}"
+                href="/admin{{ $model->getId() . newId() }}"
         >
             + Add {{ $component->getDecoration('label') }}
         </a>

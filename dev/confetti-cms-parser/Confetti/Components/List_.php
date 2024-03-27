@@ -11,7 +11,7 @@ use Confetti\Helpers\ConditionDoesNotMatchConditionFromContent;
 use IteratorAggregate;
 use Traversable;
 
-class List_
+abstract class List_
 {
     /**
      * The items contained in the collection.
