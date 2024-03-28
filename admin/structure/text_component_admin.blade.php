@@ -1,7 +1,6 @@
 @php
 /** @var \Confetti\Helpers\ComponentStandard $model */
-$component = $model->getComponent()
-$showBlockSettings = false;
+$component = $model->getComponent();
 @endphp
 <div class="block text-bold text-xl mt-8 mb-4">
     {{ $model->getLabel() }}
@@ -13,12 +12,12 @@ $showBlockSettings = false;
 
 @push('end_of_body_'.slugId($model->getId()) )
     <style>
-        @if($showBlockSettings)
-            #{{ slugId($model->getId()) }} .ce-toolbar__actions--opened {
-                display: block;
-            }
-        @endif
+        /* Hide the toolbar so the user can't add new blocks */
+        #{{ slugId($model->getId()) }} .ce-toolbar__actions--opened {
+            display: none;
+        }
 
+        /* With a big screen, the text is indeed to the right */
         #{{ slugId($model->getId()) }}
         .ce-block__content,
         .ce-toolbar__content {
@@ -27,7 +26,7 @@ $showBlockSettings = false;
     </style>
     <script type="module">
         import EditorJS from "https://esm.sh/@editorjs/editorjs";
-        import List from 'https://esm.sh/@editorjs/list';
+        import Paragraph from 'https://esm.sh/@editorjs/paragraph';
 
         const editor = new EditorJS({
             constructor({data, api}) {
@@ -35,15 +34,13 @@ $showBlockSettings = false;
                 this.holder = document.getElementById('{{ slugId($model->getId()) }}');
             },
 
-            /**
-             * Id of Element that should contain Editor instance
-             */
+            // Id of Element that should contain Editor instance
             holder: '{{ slugId($model->getId()) }}',
             minHeight : 0,
             defaultBlock: "paragraph",
             tools: {
-                list: {
-                    class: List,
+                paragraph: {
+                    class: Paragraph,
                     inlineToolbar: true,
                 },
             },
@@ -51,7 +48,7 @@ $showBlockSettings = false;
             placeholder: '{{ $component->getDecoration('placeholder') }}',
 
             data: {
-                time: 1552744582955,
+                time: 0,
                 blocks: [
                     {
                         type: "paragraph",
@@ -63,15 +60,24 @@ $showBlockSettings = false;
                 version: "2.11.10"
             },
 
-            onReady: (api, event) => {
-                console.log('onReady');
-            },
-            onFocus: (api, event) => {
-                console.log('onFocus');
-            },
-            onChange: (api, event) => {
-                console.log('onChange');
-            },
+            onChange: (api, events) => {
+                console.log(api, events)
+                // if not array, make an array
+                if (!Array.isArray(events)) {
+                    events = [events];
+                }
+                for (const event of events) {
+                    // In the text component, we allow only one block If a new block
+                    // is added, we remove it and append the text to the first block.
+                    if (event.type === 'block-added') {
+                        let currentText = api.blocks.getBlockByIndex(api.blocks.getCurrentBlockIndex()).holder.innerText;
+                        let first = api.blocks.getBlockByIndex(0);
+                        let firstText = first.holder.getElementsByClassName('cdx-block')[0].innerText;
+                        first.holder.getElementsByClassName('cdx-block')[0].innerText = firstText + " " + currentText;
+                        api.blocks.delete();
+                    }
+                }
+            }
         });
     </script>
 @endpush
