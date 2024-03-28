@@ -41,7 +41,7 @@
 @php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_big.blade.php'))
 @include($target, ['model' => $target])
 {{--    @endguest--}}
-@stack('script_*')
+@stack('end_of_body_*')
 </body>
 </html>
 

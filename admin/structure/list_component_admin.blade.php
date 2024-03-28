@@ -61,7 +61,7 @@
         </a>
     </label>
 </div>
-@pushonce('script_list')
+@pushonce('end_of_body_list')
     <script>
         // function deleteRow(e) {
         //     let idPrefix = e.target.attributes.name.value;

@@ -15,7 +15,7 @@
         @include("admin.structure.{$grandChild->getComponent()->type}_component_admin", ['model' => $grandChild])
     @endforeach
 @endforeach
-@pushonce('script_select')
+@pushonce('end_of_body_select')
     <script>
         console.log('select');
     </script>

@@ -32,7 +32,6 @@
                 class="flex items-center justify-between w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                 parent-content-id="{{ $parentContentId }}"
                 has-parent="{{ $hasParent }}"
-                x-bind="submit"
         >
             <span>Save</span>
         </button>
@@ -44,10 +43,8 @@
         </div>
     @endif
 </div>
-@pushonce('script_middle')
+@pushonce('end_of_body_middle')
     <script>
-        function countFields() {
-            return document.querySelectorAll("[x-bind='field']").length;
-        }
+        console.log('end_of_body_middle');
     </script>
 @endpushonce

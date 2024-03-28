@@ -118,3 +118,7 @@ function newId(): string
     return $out;
 }
 
+function slugId($id) {
+    $id = preg_replace("/([\W]+)/", "-", $id);
+    return trim($id, '-');
+}

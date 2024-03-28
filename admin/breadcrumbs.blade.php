@@ -1,5 +1,6 @@
 @php
     use Confetti\Helpers\ComponentStandard;
+    use Confetti\Helpers\ContentStore;
     /** @var string $currentId given value from parent view */
     // Calculate all breadcrumbs
     $ids = [];
@@ -13,7 +14,7 @@
         $ids[$id] = $id;
     }
     // Get all component classes by ids
-    $store = new \Confetti\Helpers\ContentStore('/model', 'breadcrumb');
+    $store = new ContentStore('/model', 'breadcrumb');
     $crumbs = ComponentStandard::componentClassNamesByIds($ids, $store);
 @endphp
 
