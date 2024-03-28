@@ -1,24 +1,24 @@
 @php
-/** @var \Confetti\Helpers\ComponentStandard $model */
-$component = $model->getComponent();
+    /** @var \Confetti\Helpers\ComponentStandard $model */
+    $component = $model->getComponent();
 @endphp
 <div class="block text-bold text-xl mt-8 mb-4">
     {{ $model->getLabel() }}
 </div>
 
 <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-    <span id="{{ slugId($model->getId()) }}"></span>
+    <span id="-{{ slugId($model->getId()) }}"></span>
 </div>
 
 @push('end_of_body_'.slugId($model->getId()) )
     <style>
         /* Hide the toolbar so the user can't add new blocks */
-        #{{ slugId($model->getId()) }} .ce-toolbar__actions--opened {
+        #-{{ slugId($model->getId()) }} .ce-toolbar__actions--opened {
             display: none;
         }
 
         /* With a big screen, the text is indeed to the right */
-        #{{ slugId($model->getId()) }}
+        #-{{ slugId($model->getId()) }}
         .ce-block__content,
         .ce-toolbar__content {
             max-width: unset;
@@ -28,15 +28,10 @@ $component = $model->getComponent();
         import EditorJS from "https://esm.sh/@editorjs/editorjs";
         import Paragraph from 'https://esm.sh/@editorjs/paragraph';
 
-        const editor = new EditorJS({
-            constructor({data, api}) {
-                this.api = api;
-                this.holder = document.getElementById('{{ slugId($model->getId()) }}');
-            },
-
+        new EditorJS({
             // Id of Element that should contain Editor instance
-            holder: '{{ slugId($model->getId()) }}',
-            minHeight : 0,
+            holder: '-{{ slugId($model->getId()) }}',
+            minHeight: 0,
             defaultBlock: "paragraph",
             tools: {
                 paragraph: {
@@ -53,11 +48,15 @@ $component = $model->getComponent();
                     {
                         type: "paragraph",
                         data: {
-                            text: "{{ $model->get() }}"
+                            text: localStorage.getItem('{{ $model->getId() }}') ?? '{{ $model->get() }}',
                         }
                     }
                 ],
                 version: "2.11.10"
+            },
+
+            onReady: () => {
+                console.log('Editor.js is ready to work!');
             },
 
             onChange: (api, events) => {
@@ -67,17 +66,35 @@ $component = $model->getComponent();
                     events = [events];
                 }
                 for (const event of events) {
-                    // In the text component, we allow only one block If a new block
-                    // is added, we remove it and append the text to the first block.
-                    if (event.type === 'block-added') {
-                        let currentText = api.blocks.getBlockByIndex(api.blocks.getCurrentBlockIndex()).holder.innerText;
-                        let first = api.blocks.getBlockByIndex(0);
-                        let firstText = first.holder.getElementsByClassName('cdx-block')[0].innerText;
-                        first.holder.getElementsByClassName('cdx-block')[0].innerText = firstText + " " + currentText;
-                        api.blocks.delete();
+                    switch (event.type) {
+                        // In the text component, we allow only one block If a new block
+                        // is added, we remove it and append the text to the first block.
+                        case 'block-added':
+                            let currentText = api.blocks.getBlockByIndex(api.blocks.getCurrentBlockIndex()).holder.innerText;
+                            let first = api.blocks.getBlockByIndex(0);
+                            let firstText = first.holder.getElementsByClassName('cdx-block')[0].innerText;
+                            first.holder.getElementsByClassName('cdx-block')[0].innerText = firstText + " " + currentText;
+                            api.blocks.delete();
+                            break;
+                        // Save the value to local storage, so we can save it later when the user clicks on save.
+                        case 'block-changed':
+                            let text = api.blocks.getBlockByIndex(0).holder.innerText;
+                            // Because localStorage can only store strings, we need to store it as json.
+                            text = JSON.stringify(text);
+                            localStorage.setItem('{{ $model->getId() }}', text);
+                            console.log('block-change', text);
+                            break;
                     }
                 }
-            }
+            },
+
+            {{--_hasChanged: () => {--}}
+            {{--    return localStorage.getItem('{{ $model->getId() }}') !== '{{ $model->get() }}';--}}
+            {{--},--}}
+
+            {{--_previousData: () => {--}}
+            {{--    return JSON.parse('{{ $model->get() }}');--}}
+            {{--}--}}
         });
     </script>
 @endpush
