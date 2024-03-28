@@ -14,18 +14,18 @@ When no match with the container, the request will match the {service_name}.
 |                | path   | /                           |
 |                |        |                             |
 | {service_name} | host   | dev.camping-tools.localhost |
-|                | path   | /{service_name}/api         |
+|                | path   | /{service_name}/conf_api    |
 
 ### Production
 
-| container      | config | value               |
-|----------------|--------|---------------------|
-|                |        |                     |
-| web            | host   | camping-tools.com   |
-|                |        | camping-tools.nl    |
-|                |        | camping-tools.fr    |
-|                |        | camping-tools.de    |
-|                | path   | /                   |
-|                |        |                     |
-| {service_name} | host   | camping-tools.com   |
-|                | path   | /{service_name}/api |
+| container      | config | value                    |
+|----------------|--------|--------------------------|
+|                |        |                          |
+| web            | host   | camping-tools.com        |
+|                |        | camping-tools.nl         |
+|                |        | camping-tools.fr         |
+|                |        | camping-tools.de         |
+|                | path   | /                        |
+|                |        |                          |
+| {service_name} | host   | camping-tools.com        |
+|                | path   | /{service_name}/conf_api |

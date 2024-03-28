@@ -122,3 +122,8 @@ function slugId($id) {
     $id = preg_replace("/([\W]+)/", "-", $id);
     return trim($id, '-');
 }
+
+function getServiceApiUrl(): string
+{
+    return 'http://' . request()->host() . '/conf_api';
+}
