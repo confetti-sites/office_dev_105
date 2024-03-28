@@ -3,7 +3,7 @@
 >
     Redirect to login page...
 </div>
-@pushonce('end_of_body_login_redirect')
+@pushonce('script_login_redirect')
     <script>
         document.addEventListener('config:init', () => {
             console.log("login redirect begin");

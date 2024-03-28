@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/resources/tailwind/tailwind.output.css"/>
     <link rel="stylesheet" href="/view/assets/css/fonts.css"/>
     <script defer>
-        @stack('scripts_*')
+        @stack('script_*')
     </script>
     <script src="/view/assets/scripts/init-alpine.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
@@ -41,7 +41,8 @@
 @php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_big.blade.php'))
 @include($target, ['model' => $target])
 {{--    @endguest--}}
-@stack('end_of_body_*')
+{{--Can't move to top (refacotor require blade files from inner to out)--}}
+@stack('script_*')
 </body>
 </html>
 

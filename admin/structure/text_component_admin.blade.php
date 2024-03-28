@@ -45,7 +45,7 @@ $showBlockSettings = false;
                 list: {
                     class: List,
                     inlineToolbar: true,
-                }
+                },
             },
             inlineToolbar: true,
             placeholder: '{{ $component->getDecoration('placeholder') }}',
