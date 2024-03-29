@@ -20,11 +20,15 @@
         #_{{ slugId($model->getId()) }} .ce-toolbar__settings-btn {
             display: none;
         }
-        #_{{ slugId($model->getId()) }} .ce-popover-item {
-            padding: 0;
+        #_{{ slugId($model->getId()) }} .ce-toolbar {
+            display: block;
+            opacity: 1;
+            /* EditorJS constant want to change the position of the toolbar */
+            top: 6px !important;
         }
-        #_{{ slugId($model->getId()) }} .ce-toolbar__revert:hover {
-            background-color: #eff2f5;
+        #_{{ slugId($model->getId()) }} .ce-toolbar__actions {
+            display: block;
+            opacity: 1;
         }
         #_{{ slugId($model->getId()) }} .ce-toolbar__revert {
             color: #1d202b;
@@ -48,6 +52,9 @@
             -ms-flex-negative: 0;
             flex-shrink: 0;
         }
+        #_{{ slugId($model->getId()) }} .ce-toolbar__revert:hover {
+            background-color: #eff2f5;
+        }
 
          /* With a big screen, the text is indeed to the right */
         #_{{ slugId($model->getId()) }}
@@ -61,7 +68,6 @@
         import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
 
         class ParagraphChild extends Paragraph {
-
             /**
              * @returns {Element}
              */
@@ -70,26 +76,29 @@
                 setTimeout(() => {
                     this.removeToolButton('plus');
                     this.removeToolButton('settings-btn');
-                    ParagraphChild.appendRevertButton();
+                    this.appendRevertButton();
                     if (localStorage.getItem('{{ $model->getId() }}') === null) {
                         ParagraphChild.hideRevertButton();
                     }
-                }, 100)
+                }, 1000)
                 return toRender;
             }
 
-            static appendRevertButton() {
+            appendRevertButton() {
                 ParagraphChild.appendToolButton(
                     'revert',
                     () => {
                         localStorage.removeItem('{{ $model->getId() }}');
-                        window.location.reload();
+                        const block = this.api.blocks.getBlockByIndex(0);
+                        block.holder.getElementsByClassName('cdx-block')[0].innerText = '{{ $model->get() }}';
+                        ParagraphChild.hideRevertButton();
                     },
                     new DOMParser().parseFromString('<span class="codex-icon" data-icon-name="IconUndo" title="IconUndo"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.33333 13.6667L6 10.3333L9.33333 7M6 10.3333H15.1667C16.0507 10.3333 16.8986 10.6845 17.5237 11.3096C18.1488 11.9348 18.5 12.7826 18.5 13.6667C18.5 14.5507 18.1488 15.3986 17.5237 16.0237C16.8986 16.6488 16.0507 17 15.1667 17H14.3333" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></svg></span>', 'image/svg+xml').documentElement,
                 );
             }
 
             static showRevertButton() {
+                console.log('show revert button', localStorage.getItem('{{ $model->getId() }}'));
                 document.querySelector(`#_{{ slugId($model->getId()) }} .ce-toolbar__revert`).style.display = 'block';
             }
 
@@ -174,13 +183,12 @@
                         case 'block-changed':
                             let text = api.blocks.getBlockByIndex(0).holder.innerText;
                             // Because localStorage can only store strings, we need to store it as json.
-                            text = JSON.stringify(text);
+                            let textJson = JSON.stringify(text);
                             // if new show revert button
-                            if (localStorage.getItem('{{ $model->getId() }}') === null) {
-                                console.log('show revert button');
+                            if (text !== '{{ $model->get() }}') {
                                 ParagraphChild.showRevertButton();
                             }
-                            localStorage.setItem('{{ $model->getId() }}', text);
+                            localStorage.setItem('{{ $model->getId() }}', textJson);
                             break;
                     }
                 }
