@@ -20,6 +20,34 @@
         #_{{ slugId($model->getId()) }} .ce-toolbar__settings-btn {
             display: none;
         }
+        #_{{ slugId($model->getId()) }} .ce-popover-item {
+            padding: 0;
+        }
+        #_{{ slugId($model->getId()) }} .ce-toolbar__revert:hover {
+            background-color: #eff2f5;
+        }
+        #_{{ slugId($model->getId()) }} .ce-toolbar__revert {
+            color: #1d202b;
+            cursor: pointer;
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+        }
 
          /* With a big screen, the text is indeed to the right */
         #_{{ slugId($model->getId()) }}
@@ -34,48 +62,72 @@
 
         class ParagraphChild extends Paragraph {
 
+            /**
+             * @returns {Element}
+             */
             render() {
                 let toRender = super.render();
                 setTimeout(() => {
-                    ParagraphChild.hideToolButton('.ce-toolbar__plus');
-                    ParagraphChild.hideToolButton('.ce-toolbar__settings-btn');
-                    ParagraphChild.appendToolButton(
-                        'revert',
-                        new DOMParser().parseFromString('<span class="codex-icon" data-icon-name="IconUndo" title="IconUndo"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.33333 13.6667L6 10.3333L9.33333 7M6 10.3333H15.1667C16.0507 10.3333 16.8986 10.6845 17.5237 11.3096C18.1488 11.9348 18.5 12.7826 18.5 13.6667C18.5 14.5507 18.1488 15.3986 17.5237 16.0237C16.8986 16.6488 16.0507 17 15.1667 17H14.3333" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></svg></span>', 'image/svg+xml').documentElement,
-                    );
+                    this.removeToolButton('plus');
+                    this.removeToolButton('settings-btn');
+                    ParagraphChild.appendRevertButton();
+                    if (localStorage.getItem('{{ $model->getId() }}') === null) {
+                        ParagraphChild.hideRevertButton();
+                    }
                 }, 100)
                 return toRender;
+            }
+
+            static appendRevertButton() {
+                ParagraphChild.appendToolButton(
+                    'revert',
+                    () => {
+                        localStorage.removeItem('{{ $model->getId() }}');
+                        window.location.reload();
+                    },
+                    new DOMParser().parseFromString('<span class="codex-icon" data-icon-name="IconUndo" title="IconUndo"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.33333 13.6667L6 10.3333L9.33333 7M6 10.3333H15.1667C16.0507 10.3333 16.8986 10.6845 17.5237 11.3096C18.1488 11.9348 18.5 12.7826 18.5 13.6667C18.5 14.5507 18.1488 15.3986 17.5237 16.0237C16.8986 16.6488 16.0507 17 15.1667 17H14.3333" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></svg></span>', 'image/svg+xml').documentElement,
+                );
+            }
+
+            static showRevertButton() {
+                document.querySelector(`#_{{ slugId($model->getId()) }} .ce-toolbar__revert`).style.display = 'block';
+            }
+
+            static hideRevertButton() {
+                document.querySelector(`#_{{ slugId($model->getId()) }} .ce-toolbar__revert`).style.display = 'none';
             }
 
             /**
              * @param {string} selector
              */
-            static hideToolButton(selector) {
-                document.querySelector(`#_{{ slugId($model->getId()) }} ` + selector).remove();
+            removeToolButton(selector) {
+                document.querySelector(`#_{{ slugId($model->getId()) }} .ce-toolbar__` + selector).remove();
             }
 
             /**
              * @param {string} name
+             * @param {function} onclick
              * @param {Element} icon
              */
-            static appendToolButton(name, icon) {
+            static appendToolButton(name, onclick, icon) {
                 const toolbar = document.querySelector(`#_{{ slugId($model->getId()) }} .ce-toolbar__actions`);
+                console.log(`appendToolButton`);
                 console.log(`#_{{ slugId($model->getId()) }} .ce-toolbar__actions`);
 
-                const popover = document.createElement('div');
-                popover.classList.add('ce-popover-item__title');
+                const button = document.createElement('div');
+                button.classList.add('ce-toolbar__' + name);
+                // with css hand pointer
+                button.style.cursor = 'pointer';
+                // with css hover effect
+                button.style.transition = 'background-color 0.2s';
+                button.append(icon);
+                button.addEventListener('click', onclick);
 
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('ce-popover-item');
-                wrapper.setAttribute('data-item-name', name);
-                wrapper.append(icon);
-                wrapper.append(popover);
-
-                toolbar.appendChild(wrapper);
+                toolbar.prepend(button);
             }
         }
 
-        new EditorJS({
+        let editor = new EditorJS({
             // Id of Element that should contain Editor instance
             holder: '_{{ slugId($model->getId()) }}',
             minHeight: 0,
@@ -103,7 +155,6 @@
             },
 
             onChange: (api, events) => {
-                console.log(api, events)
                 // if not array, make an array
                 if (!Array.isArray(events)) {
                     events = [events];
@@ -124,8 +175,12 @@
                             let text = api.blocks.getBlockByIndex(0).holder.innerText;
                             // Because localStorage can only store strings, we need to store it as json.
                             text = JSON.stringify(text);
+                            // if new show revert button
+                            if (localStorage.getItem('{{ $model->getId() }}') === null) {
+                                console.log('show revert button');
+                                ParagraphChild.showRevertButton();
+                            }
                             localStorage.setItem('{{ $model->getId() }}', text);
-                            console.log('block-change', text);
                             break;
                     }
                 }
