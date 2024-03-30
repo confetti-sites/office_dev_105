@@ -9,9 +9,9 @@
     {{ $component->getDecoration('label') }} List
 </div>
 <!-- border rounded -->
-<div class="container grid border border-purple-600 rounded-lg">
+<div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
     <table class="table-auto">
-        <thead class="text-left border-b border-purple-300">
+        <thead class="text-left border-b border-gray-300">
         <tr>
             @foreach($component->getDecoration('columns') ?? List_::getDefaultColumns($model) as $column)
                 <th class="p-4">{{ $column['label'] }}</th>
@@ -20,7 +20,7 @@
         </thead>
         <tbody class="table-auto">
         @forelse($model->get() as $parentId => $row)
-            <tr class="border-b border-purple-300">
+            <tr class="border-b border-gray-200">
                 @foreach($row as $content)
                     <td class="p-4">
                         {{ $content }}
@@ -30,13 +30,13 @@
                     <button
                             @click="deleteRow"
                             name="{{ $row->getId() }}"
-                            class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                            class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-blue-500 hover:bg-blue-600 border border-transparent rounded-md"
                     >
                         Delete
                     </button>
                     <a
                             href="/admin{{ $row->getId() }}"
-                            class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                            class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-blue-500 hover:bg-blue-600 border border-transparent rounded-md"
                     >
                         Edit
                     </a>
@@ -54,7 +54,7 @@
     </table>
     <label class="m-2">
         <a
-                class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 text-white bg-blue-500 hover:bg-blue-600 border border-transparent rounded-md"
                 href="/admin{{ $model->getId() . newId() }}"
         >
             + Add {{ $component->getDecoration('label') }}
