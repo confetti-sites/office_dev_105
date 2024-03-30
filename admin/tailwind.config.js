@@ -18,7 +18,7 @@ module.exports = {
         }),
         extend: {
             colors: {
-                primary: colors.purple,
+                primary: colors.cyan,
                 teal: colors.teal,
                 orange: colors.orange,
                 gray: colors.gray,

@@ -40,7 +40,7 @@
         #_{{ slugId($model->getId()) }} .cdx-block {
              padding: 0;
         }
-        .codex-editor--narrow .codex-editor__redactor {
+        #_{{ slugId($model->getId()) }} .codex-editor--narrow .codex-editor__redactor {
             margin-right: 0;
         }
     </style>
@@ -83,7 +83,7 @@
                 // Change the value of the editor
                 // Check if the innerText is changed to prevent infinite event loop
                 if (this.element.querySelector('[contenteditable="true"]').innerText !== value) {
-                    this.element.querySelector('[contenteditable="true"]').innerText = value;
+                    this.element.querySelector('[contenteditable="true"]').innerHTML = value;
                 }
             }
 
@@ -98,9 +98,9 @@
                 const inputHolder = Component.element.querySelector('._input_holder');
                 if (Component.value !== null && Component.value !== Component.originalValue) {
                     inputHolder.classList.remove('border-gray-200');
-                    inputHolder.classList.add('border-red-300');
+                    inputHolder.classList.add('border-cyan-300');
                 } else {
-                    inputHolder.classList.remove('border-red-300');
+                    inputHolder.classList.remove('border-cyan-300');
                     inputHolder.classList.add('border-gray-200');
                 }
             }
