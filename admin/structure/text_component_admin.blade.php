@@ -47,6 +47,7 @@
     <script type="module">
         import EditorJS from "https://esm.sh/@editorjs/editorjs@^2";
         import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
+        import { IconEtcVertical, IconUndo } from 'https://esm.sh/@codexteam/icons'
 
         class Component {
             /**
@@ -112,7 +113,7 @@
             renderSettings() {
                 return [
                     {
-                        icon: '<span class="codex-icon" data-icon-name="IconUndo" title="IconUndo"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.33333 13.6667L6 10.3333L9.33333 7M6 10.3333H15.1667C16.0507 10.3333 16.8986 10.6845 17.5237 11.3096C18.1488 11.9348 18.5 12.7826 18.5 13.6667C18.5 14.5507 18.1488 15.3986 17.5237 16.0237C16.8986 16.6488 16.0507 17 15.1667 17H14.3333" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></svg></span>',
+                        icon: IconUndo,
                         label: 'Revert to saved value',
                         closeOnActivate: true,
                         onActivate: () => {
@@ -148,6 +149,14 @@
                     }
                 ],
                 version: "2.11.10"
+            },
+
+            onReady: () => {
+                // Icons are loaded yet, so we need to wait a bit.
+                setTimeout(() => {
+                    /* Replace the default editor.js 6 dots settings icon with an 3 dots icon */
+                    Component.element.querySelector('.ce-toolbar__settings-btn').innerHTML = IconEtcVertical;
+                }, 100);
             },
 
             onChange: (api, events) => {
