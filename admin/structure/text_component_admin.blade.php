@@ -14,20 +14,34 @@
 
 @pushonce('end_of_body_'.slugId($model->getId()) )
     <style>
-        /* Hide the toolbar so the user can't add new blocks */
+        /* Hide the toolbar items so the user can't add new blocks */
         #_{{ slugId($model->getId()) }} .ce-toolbar__plus {
             display: none;
         }
-
-        #_{{ slugId($model->getId()) }} .ce-toolbar__settings-btn {
+        #_{{ slugId($model->getId()) }} .cdx-search-field {
+            display: none;
+        }
+        #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-up"] {
+            display: none;
+        }
+        #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="delete"] {
+            display: none;
+        }
+        #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-down"] {
             display: none;
         }
 
         /* With a big screen, the text is indeed to the right */
-        #_{{ slugId($model->getId()) }}
-        .ce-block__content,
-        .ce-toolbar__content {
+        #_{{ slugId($model->getId()) }} .ce-block__content,
+        #_{{ slugId($model->getId()) }} .ce-toolbar__content {
             max-width: unset;
+        }
+        /* Remove default editor.js padding */
+        #_{{ slugId($model->getId()) }} .cdx-block {
+             padding: 0;
+        }
+        .codex-editor--narrow .codex-editor__redactor {
+            margin-right: 0;
         }
     </style>
     <script type="module">
@@ -55,63 +69,57 @@
                 return JSON.parse(localStorage.getItem(Component.id));
             }
 
+            /**
+             * @param {string} value
+             */
+            static set value(value) {
+                // Save the value to local storage
+                this.setLocalStorageValue(value);
+
+                // Update the style
+                Component.updateValueChangedStyle();
+
+                // Change the value of the editor
+                // Check if the innerText is changed to prevent infinite event loop
+                if (this.element.querySelector('[contenteditable="true"]').innerText !== value) {
+                    this.element.querySelector('[contenteditable="true"]').innerText = value;
+                }
+            }
+
+            /**
+             * @param {string} value
+             */
+            static setLocalStorageValue(value) {
+                localStorage.setItem(Component.id, JSON.stringify(value));
+            }
+
             static updateValueChangedStyle() {
                 const inputHolder = Component.element.querySelector('._input_holder');
-                if (Component.value !== null) {
-                    console.log('changed')
-                    console.log(Component.value, Component.originalValue);
+                if (Component.value !== null && Component.value !== Component.originalValue) {
                     inputHolder.classList.remove('border-gray-200');
                     inputHolder.classList.add('border-red-300');
                 } else {
-                    console.log('not changed')
                     inputHolder.classList.remove('border-red-300');
                     inputHolder.classList.add('border-gray-200');
                 }
             }
         }
 
-        Component.element.addEventListener('value_cached', Component.updateValueChangedStyle);
         // Ensure that the value is updated when the page is loaded
         Component.updateValueChangedStyle();
 
         class ParagraphChild extends Paragraph {
-
-            render() {
-                let toRender = super.render();
-                setTimeout(() => {
-                    ParagraphChild.appendToolButton(
-                        'revert',
-                        new DOMParser().parseFromString('<span class="codex-icon" data-icon-name="IconUndo" title="IconUndo"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.33333 13.6667L6 10.3333L9.33333 7M6 10.3333H15.1667C16.0507 10.3333 16.8986 10.6845 17.5237 11.3096C18.1488 11.9348 18.5 12.7826 18.5 13.6667C18.5 14.5507 18.1488 15.3986 17.5237 16.0237C16.8986 16.6488 16.0507 17 15.1667 17H14.3333" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></svg></span>', 'image/svg+xml').documentElement,
-                    );
-                }, 100)
-                return toRender;
-            }
-
-            /**
-             * @param {string} selector
-             */
-            static hideToolButton(selector) {
-                document.querySelector(`#_{{ slugId($model->getId()) }} ` + selector).remove();
-            }
-
-            /**
-             * @param {string} name
-             * @param {Element} icon
-             */
-            static appendToolButton(name, icon) {
-                const toolbar = document.querySelector(`#_{{ slugId($model->getId()) }} .ce-toolbar__actions`);
-                {{--console.log(`#_{{ slugId($model->getId()) }} .ce-toolbar__actions`);--}}
-
-                const popover = document.createElement('div');
-                popover.classList.add('ce-popover-item__title');
-
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('ce-popover-item');
-                wrapper.setAttribute('data-item-name', name);
-                wrapper.append(icon);
-                wrapper.append(popover);
-
-                toolbar.appendChild(wrapper);
+            renderSettings() {
+                return [
+                    {
+                        icon: '<span class="codex-icon" data-icon-name="IconUndo" title="IconUndo"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.33333 13.6667L6 10.3333L9.33333 7M6 10.3333H15.1667C16.0507 10.3333 16.8986 10.6845 17.5237 11.3096C18.1488 11.9348 18.5 12.7826 18.5 13.6667C18.5 14.5507 18.1488 15.3986 17.5237 16.0237C16.8986 16.6488 16.0507 17 15.1667 17H14.3333" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></svg></span>',
+                        label: 'Revert to saved value',
+                        closeOnActivate: true,
+                        onActivate: () => {
+                            Component.value = Component.originalValue;
+                        }
+                    },
+                ];
             }
         }
 
@@ -162,9 +170,7 @@
                         case 'block-changed':
                             let text = api.blocks.getBlockByIndex(0).holder.innerText;
                             // Because localStorage can only store strings, we need to store it as json.
-                            localStorage.setItem(Component.id, JSON.stringify(text));
-                            // Dispatch the event to the parent
-                            Component.element.dispatchEvent(new CustomEvent('value_cached'));
+                            Component.value = text;
                             break;
                     }
                 }
