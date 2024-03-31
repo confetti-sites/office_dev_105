@@ -54,7 +54,7 @@
             static element = document.getElementById('_{{ slugId($model->getId()) }}_component');
 
             /**
-             * e.g.  static decorations = {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
+             * E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
              * @type {object}
              */
             static decorations = @json($component->getDecorations());
@@ -81,13 +81,13 @@
                 const inputHolder = Component.element.querySelector('._input');
                 const message = this.validateWithMessage(value);
                 if (message != null) {
-                    inputHolder.classList.add('border-red-500');
-                    Component.element.getElementsByClassName('_error')[0].innerText = message;
+                    inputHolder.classList.add('border-red-200');
+                    Component.element.getElementsByClassName('_error')[0].innerHTML = message;
                     return;
                 }
                 // Remove the error message
                 Component.element.getElementsByClassName('_error')[0].innerText = '';
-                inputHolder.classList.remove('border-red-500');
+                inputHolder.classList.remove('border-red-200');
                 // Value can be null, when it's not set in local storage.
                 if (value !== null && value !== Component.originalValue) {
                     inputHolder.classList.remove('border-gray-200');
@@ -100,7 +100,7 @@
 
             /**
              * We don't use the default validation, because we want to interact with the ui.
-             * @param {string|null} value
+             * @param {Element|null} value
              */
             static validateWithMessage(value) {
                 // Validate min length
@@ -109,7 +109,12 @@
                 }
                 // Validate max length
                 if (value.length > Component.decorations.max.max) {
-                    return `The value must be at most ${Component.decorations.max.max} characters long.`;
+                    // Cut the value to the max length, and get the rest
+                    let toMuch = value.substring(Component.decorations.max.max);
+                    if (toMuch.length > 20) {
+                        toMuch = toMuch.substring(0, 20) + '...';
+                    }
+                    return `The value must be at most ${Component.decorations.max.max} characters long.<br>You can't use: <span class="text-red-500 underline">${toMuch}</span>`
                 }
                 return null;
             }

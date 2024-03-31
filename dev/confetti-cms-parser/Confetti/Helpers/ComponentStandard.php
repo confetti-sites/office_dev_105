@@ -9,6 +9,8 @@ use Confetti\Components\List_;
 use Confetti\Components\Map;
 use Confetti\Components\SelectFile;
 use Exception;
+use JsonException;
+use RuntimeException;
 
 abstract class ComponentStandard
 {
@@ -96,12 +98,12 @@ abstract class ComponentStandard
 
     public static function query(): List_
     {
-        throw new \RuntimeException('This method `query` should be overridden in the child class.');
+        throw new RuntimeException('This method `query` should be overridden in the child class.');
     }
 
     public static function getComponentKey(): string
     {
-        throw new \RuntimeException('This method `getComponentKey` should be overridden in the child class.');
+        throw new RuntimeException('This method `getComponentKey` should be overridden in the child class.');
     }
 
     /**
@@ -183,7 +185,7 @@ abstract class ComponentStandard
         }
         try {
             $values = $query->run()[0]['data'];
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             return new DeveloperActionRequiredException('Error gj5o498h5: can\'t decode options: ' . $e->getMessage());
         }
         $result = [];
@@ -247,7 +249,7 @@ abstract class ComponentStandard
     public function __toString(): string
     {
         if ($this->contentStore === null) {
-            throw new \RuntimeException("Component '{ComponentStandard::getComponent()->key}' is only used as a reference. Therefore, you can't convert `new {ComponentStandard::getComponent()->key}` to a string.");
+            throw new RuntimeException("Component '{ComponentStandard::getComponent()->key}' is only used as a reference. Therefore, you can't convert `new {ComponentStandard::getComponent()->key}` to a string.");
         }
         return (string) $this->get();
     }
@@ -285,7 +287,7 @@ abstract class ComponentStandard
     {
         try {
             return json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             return 'Error 7o8h5edg4n5jk: can\'t decode options: ' . $json . ', Message ' . $e->getMessage();
         }
     }

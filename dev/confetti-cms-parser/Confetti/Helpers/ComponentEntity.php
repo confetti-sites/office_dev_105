@@ -21,6 +21,7 @@ class ComponentEntity
         if ($this->getDecoration($key) !== null) {
             return true;
         }
+        return false;
     }
 
     /**
