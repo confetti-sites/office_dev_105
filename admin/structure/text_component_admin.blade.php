@@ -12,22 +12,10 @@
     </div>
 </div>
 
-@pushonce('end_of_body_'.slugId($model->getId()) )
+@push('end_of_body_'.slugId($model->getId()) )
     <style>
         /* Hide the toolbar items so the user can't add new blocks */
-        #_{{ slugId($model->getId()) }} .ce-toolbar__plus {
-            display: none;
-        }
-        #_{{ slugId($model->getId()) }} .cdx-search-field {
-            display: none;
-        }
-        #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-up"] {
-            display: none;
-        }
-        #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="delete"] {
-            display: none;
-        }
-        #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-down"] {
+        #_{{ slugId($model->getId()) }} .ce-toolbar__plus, #_{{ slugId($model->getId()) }} .cdx-search-field, #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-up"], #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="delete"], #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-down"] {
             display: none;
         }
 
@@ -36,10 +24,12 @@
         #_{{ slugId($model->getId()) }} .ce-toolbar__content {
             max-width: unset;
         }
+
         /* Remove default editor.js padding */
         #_{{ slugId($model->getId()) }} .cdx-block {
-             padding: 0;
+            padding: 0;
         }
+
         #_{{ slugId($model->getId()) }} .codex-editor--narrow .codex-editor__redactor {
             margin-right: 0;
         }
@@ -47,7 +37,7 @@
     <script type="module">
         import EditorJS from "https://esm.sh/@editorjs/editorjs@^2";
         import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
-        import { IconEtcVertical, IconUndo } from 'https://esm.sh/@codexteam/icons'
+        import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons'
 
         class Component {
             /**
@@ -185,7 +175,5 @@
                 }
             },
         });
-
-
     </script>
-@endpushonce
+@endpush
