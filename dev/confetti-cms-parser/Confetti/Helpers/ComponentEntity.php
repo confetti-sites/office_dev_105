@@ -24,6 +24,14 @@ class ComponentEntity
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function getDecorations(): array
+    {
+        return $this->decorations;
+    }
+
+    /**
      * @param string|null $parameter to search deep, you can use dot notation: `size.min`
      */
     public function getDecoration(string $method, ?string $parameter = null): mixed
