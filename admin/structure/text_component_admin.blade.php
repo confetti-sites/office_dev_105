@@ -63,30 +63,13 @@
             /**
              * @param {string} value
              */
-            static set value(value) {
-                // Save the value to local storage
-                this.setLocalStorageValue(value);
-
-                // Update the style
-                Component.updateValueChangedStyle();
-
-                // Change the value of the editor
-                // Check if the innerText is changed to prevent infinite event loop
-                if (this.element.querySelector('[contenteditable="true"]').innerText !== value) {
-                    this.element.querySelector('[contenteditable="true"]').innerHTML = value;
-                }
-            }
-
-            /**
-             * @param {string} value
-             */
             static setLocalStorageValue(value) {
                 localStorage.setItem(Component.id, JSON.stringify(value));
             }
 
-            static updateValueChangedStyle() {
+            static updateValueChangedStyle(value) {
                 const inputHolder = Component.element.querySelector('._input_holder');
-                if (Component.value !== null && Component.value !== Component.originalValue) {
+                if (value !== Component.originalValue) {
                     inputHolder.classList.remove('border-gray-200');
                     inputHolder.classList.add('border-cyan-300');
                 } else {
@@ -99,6 +82,9 @@
         // Ensure that the value is updated when the page is loaded
         Component.updateValueChangedStyle();
 
+        /**
+         * In this text component, we only allow the paragraph tool.
+         */
         class ParagraphChild extends Paragraph {
             renderSettings() {
                 return [
@@ -106,14 +92,20 @@
                         icon: IconUndo,
                         label: 'Revert to saved value',
                         closeOnActivate: true,
-                        onActivate: () => {
-                            Component.value = Component.originalValue;
+                        onActivate: async () => {
+                            const contentAdded = await this.api.saver.save()
+                            this.api.blocks.update(contentAdded.blocks[0].id, {
+                                text: Component.originalValue,
+                            })
                         }
                     },
                 ];
             }
         }
 
+        /**
+         * These are the settings for the editor.js
+         */
         new EditorJS({
             // Id of Element that should contain Editor instance
             holder: '_{{ slugId($model->getId()) }}',
@@ -149,7 +141,7 @@
                 }, 100);
             },
 
-            onChange: (api, events) => {
+            onChange: async (api, events) => {
                 // if not array, make an array
                 if (!Array.isArray(events)) {
                     events = [events];
@@ -159,17 +151,24 @@
                         // In the text component, we allow only one block If a new block
                         // is added, we remove it and append the text to the first block.
                         case 'block-added':
-                            let currentText = api.blocks.getBlockByIndex(api.blocks.getCurrentBlockIndex()).holder.innerText;
-                            let first = api.blocks.getBlockByIndex(0);
-                            let firstText = first.holder.getElementsByClassName('cdx-block')[0].innerText;
-                            first.holder.getElementsByClassName('cdx-block')[0].innerText = firstText + " " + currentText;
+                            const contentAdded = await api.saver.save()
+                            const firstBlock = contentAdded.blocks[0]
+                            api.blocks.update(firstBlock.id, {
+                                text: firstBlock.data.text + " " + contentAdded.blocks[1].data.text
+                            })
                             api.blocks.delete();
+                            // Move caret to the end
+                            setTimeout(() => {api.caret.setToBlock(0, 'end')}, 20);
                             break;
                         // Save the value to local storage, so we can save it later when the user clicks on save.
                         case 'block-changed':
-                            let text = api.blocks.getBlockByIndex(0).holder.innerText;
-                            // Because localStorage can only store strings, we need to store it as json.
-                            Component.value = text;
+                            const contentChanged = await api.saver.save()
+                            // Component.value = contentChanged.blocks[0].data.text;
+                            let value = contentChanged.blocks[0].data.text
+                            Component.setLocalStorageValue(value);
+
+                            // Update the style
+                            Component.updateValueChangedStyle(value);
                             break;
                     }
                 }
