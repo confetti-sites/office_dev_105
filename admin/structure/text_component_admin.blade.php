@@ -100,9 +100,13 @@
 
             /**
              * We don't use the default validation, because we want to interact with the ui.
-             * @param {Element|null} value
+             * @param {string} value
              */
             static validateWithMessage(value) {
+                // Convert html entities in one function. Otherwise, the value length is wrong.
+                // For example &nbsp; is one character, but the length is 6.
+                value = new DOMParser().parseFromString(value, 'text/html').body.textContent;
+
                 // Validate min length
                 if (value.length < Component.decorations.min.min) {
                     return `The value must be at least ${Component.decorations.min.min} characters long.`;
