@@ -13,7 +13,7 @@
     <p class="mt-2 text-sm text-red-600 dark:text-red-500 _error"></p>
 </div>
 
-@push('end_of_body_'.slugId($model->getId()) )
+@push('end_of_body_'.slugId($model->getId()))
     <style>
         /* Hide the toolbar items so the user can't add new blocks */
         #_{{ slugId($model->getId()) }} .ce-toolbar__plus, #_{{ slugId($model->getId()) }} .cdx-search-field, #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-up"], #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="delete"], #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-down"] {
@@ -36,6 +36,7 @@
     </style>
     <script type="module">
         import EditorJS from "https://esm.sh/@editorjs/editorjs@^2";
+        /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
         import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
         import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons'
 
@@ -106,24 +107,47 @@
                 // Convert html entities in one function. Otherwise, the value length is wrong.
                 // For example &nbsp; is one character, but the length is 6.
                 value = new DOMParser().parseFromString(value, 'text/html').body.textContent;
-
-                // Validate min length
-                if (value.length < Component.decorations.min.min) {
-                    return `The value must be at least ${Component.decorations.min.min} characters long.`;
-                }
-                // Validate max length
-                if (value.length > Component.decorations.max.max) {
-                    // Cut the value to the max length, and get the rest
-                    let toMuch = value.substring(Component.decorations.max.max);
-                    let suffix = '';
-                    if (toMuch.length > 26) {
-                        toMuch = toMuch.substring(0, 26);
-                        suffix = '(...)';
+                const validators = [
+                    Component.validateMinLength,
+                    Component.validateMaxLength,
+                ];
+                for (const validator of validators) {
+                    const message = validator(value);
+                    if (message != null) {
+                        return message;
                     }
-                    return `The value must be at most ${Component.decorations.max.max} characters long.<br>Therefore you cannot use: <span class="text-red-500 underline">${toMuch}</span> ${suffix}`
                 }
-                return null;
             }
+
+            /**
+             * @param {string} value
+             * @return {string}
+             */
+            static validateMinLength(value) {
+                if (value.length >= Component.decorations.min.min) {
+                    return null;
+                }
+                return `The value must be at least ${Component.decorations.min.min} characters long.`;
+            }
+
+            /**
+             * @param {string} value
+             * @return {string}
+             */
+            static validateMaxLength(value) {
+                if (value.length <= Component.decorations.max.max) {
+                    return null;
+                }
+                // Cut the value to the max length, and get the rest
+                let toMuch = value.substring(Component.decorations.max.max);
+                let suffix = '';
+                if (toMuch.length > 26) {
+                    toMuch = toMuch.substring(0, 26);
+                    suffix = '(...)';
+                }
+                return `The value must be at most ${Component.decorations.max.max} characters long.<br>Therefore you cannot use: <span class="text-red-500 underline">${toMuch}</span> ${suffix}`
+            }
+
         }
 
         /**
@@ -192,34 +216,77 @@
                 if (!Array.isArray(events)) {
                     events = [events];
                 }
-                for (const event of events) {
-                    switch (event.type) {
-                        // In the text component, we allow only one block If a new block
-                        // is added, we remove it and append the text to the first block.
-                        case 'block-added':
-                            const contentAdded = await api.saver.save()
-                            const firstBlock = contentAdded.blocks[0]
-                            api.blocks.update(firstBlock.id, {
-                                text: firstBlock.data.text + " " + contentAdded.blocks[1].data.text
-                            })
-                            api.blocks.delete();
-                            // Move caret to the end
-                            setTimeout(() => {api.caret.setToBlock(0, 'end')}, 20);
-                            break;
-                        // Save the value to local storage, so we can save it later when the user clicks on save.
-                        case 'block-changed':
-                            const contentChanged = await api.saver.save()
-                            let value = '';
-                            if (contentChanged.blocks.length > 0) {
-                                value = contentChanged.blocks[0].data.text
-                            }
-                            Component.storageValue = value;
-                            // Update the style
-                            Component.updateValueChangedStyle(value);
-                            break;
-                    }
-                }
+                const component = await api.saver.save()
+
+                // Ensure that the value is updated when the user types
+                OnChangeHandler.changed(api, events, component);
+
+                // Ensure that there is only one block
+                OnChangeHandler.ensureOneBlock(api, events, component);
             },
         });
+
+        class OnChangeHandler {
+            /**
+             * Every time the user types, this function is called.
+             *
+             * @param {EditorJS} api
+             * @param {Array} events
+             * @param {object} component
+             */
+            static changed(api, events, component) {
+                for (const event of events) {
+                    if (event.type !== 'block-changed') {
+                        continue;
+                    }
+                    // If there are more than one block, first the
+                    // block-added code needs to flatten the blocks.
+                    if (component.blocks.length > 1) {
+                        break;
+                    }
+                    let value = '';
+                    if (component.blocks.length > 0) {
+                        value = component.blocks[0].data.text;
+                    }
+                    Component.storageValue = value;
+                    // Update the style
+                    Component.updateValueChangedStyle(value);
+                }
+            }
+
+            /**
+             * This is a workaround to ensure that there is only one block.
+             * Because Editor.js doesn't allow easy configuration to have only one block.
+             *
+             * @param {EditorJS} api
+             * @param {Array} events
+             * @param {object} component
+             */
+            static ensureOneBlock(api, events, component) {
+                // Compose the text of all blocks
+                let text = '';
+                component.blocks.forEach((block, index) => {
+                    text += ' ' + block.data.text;
+                });
+
+                let blockAdded = false;
+                for (const event of events) {
+                    // We are only interested in the blocks that are added.
+                    // And we only want to remove the block if it's not the first block.
+                    if (event.type !== 'block-added' || event.detail.index === 0) {
+                        continue;
+                    }
+                    api.blocks.delete();
+                    blockAdded = true;
+                }
+                if (blockAdded) {
+                    const firstBlock = component.blocks[0]
+                    api.blocks.update(firstBlock.id, {text: text})
+                    setTimeout(() => {
+                        api.caret.setToBlock(0, 'end')
+                    }, 20);
+                }
+            }
+        }
     </script>
 @endpush
