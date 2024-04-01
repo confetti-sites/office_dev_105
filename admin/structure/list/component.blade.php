@@ -9,7 +9,7 @@
             Decoration::MAX->comment('Maximum number of items'),
             Decoration::COLUMNS->comment('This becomes the headers of the table in de admin'),
         ],
-        phpClass: file_get_contents(repositoryPath() . '/admin/structure/list_component.class.php'),
+        phpClass: file_get_contents(repositoryPath() . '/admin/structure/list/component.class.php'),
 
     ))->toJson();
 @endphp

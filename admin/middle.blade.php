@@ -21,7 +21,7 @@
             </a>
             @continue
         @endif
-        @include("admin.structure.{$component->type}_component_admin", ['model' => $child])
+        @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
         @php($total++)
     @endforeach
     @if($total > 0)
