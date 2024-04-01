@@ -115,10 +115,12 @@
                 if (value.length > Component.decorations.max.max) {
                     // Cut the value to the max length, and get the rest
                     let toMuch = value.substring(Component.decorations.max.max);
-                    if (toMuch.length > 20) {
-                        toMuch = toMuch.substring(0, 20) + '...';
+                    let suffix = '';
+                    if (toMuch.length > 26) {
+                        toMuch = toMuch.substring(0, 26);
+                        suffix = '(...)';
                     }
-                    return `The value must be at most ${Component.decorations.max.max} characters long.<br>You can't use: <span class="text-red-500 underline">${toMuch}</span>`
+                    return `The value must be at most ${Component.decorations.max.max} characters long.<br>Therefore you cannot use: <span class="text-red-500 underline">${toMuch}</span> ${suffix}`
                 }
                 return null;
             }
@@ -127,7 +129,7 @@
         /**
          * In this text component, we only allow the paragraph tool.
          */
-        class ParagraphChild extends Paragraph {
+        class Text extends Paragraph {
             renderSettings() {
                 return [
                     {
@@ -156,7 +158,7 @@
             defaultBlock: "paragraph",
             tools: {
                 paragraph: {
-                    class: ParagraphChild,
+                    class: Text,
                     inlineToolbar: true,
                 },
             },

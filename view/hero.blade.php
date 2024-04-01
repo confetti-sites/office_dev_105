@@ -5,7 +5,7 @@
     >
         <div class="md:w-1/2" x-intersect="$el.classList.add('slide-in-top')">
             <h1 class="text-6xl font-bold leading-tight dark:text-white text-gray-900">
-                <span>{!! $hero->text('title')->min(1)->max(20)->default('Confetti CMS') !!}</span>
+                <span>{!! $hero->text('title')->min(1)->max(9)->default('Confetti CMS') !!}</span>
             </h1>
             <p class="mt-4 text-xl dark:text-white text-gray-900">
                 The fastest way to compose a CMS from your HTML
