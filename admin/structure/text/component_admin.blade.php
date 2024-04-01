@@ -35,10 +35,12 @@
         }
     </style>
     <script type="module">
-        import EditorJS from "https://esm.sh/@editorjs/editorjs@^2";
+        import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
         /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
         import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
         import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons'
+        // import Underline from 'https://esm.sh/@editorjs/underline'
+        import Underline from '/admin/structure/tools/underline.js'
 
         class Component {
             /**
@@ -180,13 +182,23 @@
             // Use minHeight 0, because the default is too big.
             minHeight: 0,
             defaultBlock: "paragraph",
+            inlineToolbar: true,
             tools: {
+                underline: Underline,
                 paragraph: {
                     class: Text,
-                    inlineToolbar: true,
+                    /**
+                     * Official documentation for the inline toolbar:
+                     * @see https://editorjs.io/creating-an-inline-tool/
+                     *
+                     * Example of inline tools:
+                     * @see https://github.com/editor-js/awesome-editorjs?tab=readme-ov-file#inline-tools
+                     */
+                    inlineToolbar: [
+                        'underline',
+                    ]
                 },
             },
-            inlineToolbar: true,
             placeholder: '{{ $component->getDecoration('placeholder') }}',
             data: {
                 time: 0,
