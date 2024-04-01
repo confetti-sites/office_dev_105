@@ -179,9 +179,9 @@
             holder: '_{{ slugId($model->getId()) }}',
             // Use minHeight 0, because the default is too big.
             minHeight: 0,
-            defaultBlock: "paragraph",
+            defaultBlock: "text",
             tools: {
-                paragraph: {
+                text: {
                     class: Text,
                     inlineToolbar: true,
                 },
@@ -192,7 +192,7 @@
                 time: 0,
                 blocks: [
                     {
-                        type: "paragraph",
+                        type: "text",
                         data: {
                             text: localStorage.getItem('{{ $model->getId() }}') ?? '{{ $model->get() }}',
                         }
