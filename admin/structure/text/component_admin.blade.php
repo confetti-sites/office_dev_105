@@ -128,10 +128,10 @@
 
             /**
              * @param {string} value
-             * @return {string}
+             * @return {string|null}
              */
             static validateMinLength(value) {
-                if (value.length >= Component.decorations.min.min) {
+                if (Component.decorations.max === undefined || value.length >= Component.decorations.min.min) {
                     return null;
                 }
                 return `The value must be at least ${Component.decorations.min.min} characters long.`;
@@ -139,10 +139,10 @@
 
             /**
              * @param {string} value
-             * @return {string}
+             * @return {string|null}
              */
             static validateMaxLength(value) {
-                if (value.length <= Component.decorations.max.max) {
+                if (Component.decorations.max === undefined || value.length <= Component.decorations.max.max) {
                     return null;
                 }
                 // Cut the value to the max length, and get the rest
