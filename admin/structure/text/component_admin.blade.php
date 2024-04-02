@@ -33,14 +33,19 @@
         #_{{ slugId($model->getId()) }} .codex-editor--narrow .codex-editor__redactor {
             margin-right: 0;
         }
+        /* Add padding to the inline tools */
+        #_{{ slugId($model->getId()) }} .ce-inline-tool {
+            padding: 12px;
+        }
     </style>
     <script type="module">
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
         /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
         import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
-        import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons'
-        // import Underline from 'https://esm.sh/@editorjs/underline'
-        import Underline from '/admin/structure/tools/underline.js'
+        import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
+        import Underline from '/admin/structure/tools/underline.mjs';
+        import Bold from '/admin/structure/tools/bold.mjs';
+        import Italic from '/admin/structure/tools/italic.mjs';
 
         class Component {
             /**
@@ -184,18 +189,15 @@
             defaultBlock: "paragraph",
             inlineToolbar: true,
             tools: {
+                bold: Bold,
                 underline: Underline,
+                italic: Italic,
                 paragraph: {
-                    class: Text,
-                    /**
-                     * Official documentation for the inline toolbar:
-                     * @see https://editorjs.io/creating-an-inline-tool/
-                     *
-                     * Example of inline tools:
-                     * @see https://github.com/editor-js/awesome-editorjs?tab=readme-ov-file#inline-tools
-                     */
+                    class: Paragraph,
                     inlineToolbar: [
+                        'bold',
                         'underline',
+                        'italic',
                     ]
                 },
             },
