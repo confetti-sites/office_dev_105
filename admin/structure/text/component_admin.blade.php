@@ -193,7 +193,7 @@
                 underline: Underline,
                 italic: Italic,
                 paragraph: {
-                    class: Paragraph,
+                    class: Text,
                     inlineToolbar: [
                         'bold',
                         'underline',
