@@ -38,6 +38,7 @@
             padding: 12px;
         }
     </style>
+    <!--suppress JSFileReferences -->
     <script type="module">
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
         /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */

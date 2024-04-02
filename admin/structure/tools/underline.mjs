@@ -9,7 +9,7 @@ export default class Underline {
     }
 
     static get sanitize() {
-        return {U: {}};
+        return {u: {}};
     }
 
     constructor({api}) {

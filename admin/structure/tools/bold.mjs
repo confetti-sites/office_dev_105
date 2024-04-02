@@ -8,8 +8,11 @@ export default class Bold {
         return "Bold";
     }
 
+
     static get sanitize() {
-        return {strong: {}};
+        return {
+            b: {},
+        }
     }
 
     constructor({api}) {

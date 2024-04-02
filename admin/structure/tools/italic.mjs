@@ -9,7 +9,7 @@ export default class Italic {
     }
 
     static get sanitize() {
-        return {em: {}};
+        return {i: {}};
     }
 
     constructor({api}) {
