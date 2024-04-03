@@ -28,6 +28,8 @@ export default class Italic {
     }
 
     surround(range) {
+        // Unfortunately, there is no alternative
+        // noinspection JSDeprecatedSymbols
         document.execCommand(this.commandName);
     }
 
