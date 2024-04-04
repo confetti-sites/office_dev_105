@@ -1,30 +1,42 @@
-(function () {
-    "use strict";
-    try {
-        if (typeof document < "u") {
-            let e = document.createElement("style");
-            /* Hide the toolbar items so the user can't add new blocks */
-            let css = ``
-            css += `.ce-toolbar__plus, .cdx-search-field, .ce-popover-item[data-item-name="move-up"], .ce-popover-item[data-item-name="delete"], .ce-popover-item[data-item-name="move-down"] {display: none;}`;
-            /* With a big screen, the text is indeed to the right */
-            css += `.ce-block__content, .ce-toolbar__content {max-width: unset;}`;
-            /* Remove default editor.js padding */
-            css += `.cdx-block {padding: 0;}`;
-            /* Add padding to the inline tools */
-            css += `.ce-inline-tool {padding: 12px;}`;
-            e.appendChild(document.createTextNode(css)), document.head.appendChild(e)
-        }
-    } catch (t) {
-        console.error("Load lim_text css error", t)
-    }
-})();
-
-
 // noinspection JSUnusedGlobalSymbols
 /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
 import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
 /** @see https://github.com/codex-team/icons */
 import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
+
+/**
+ * @typedef {object} Config
+ * @property {string} contentId
+ * @property {string} originalValue
+ * @property {HTMLElement} component
+ * @property {object} decorations
+ * @property {function[]} validators
+ */
+
+/**
+ * @typedef {object} Api
+ * @property {object} blocks
+ * @property {function} blocks.getBlockByIndex
+ * @property {function} blocks.delete
+ * @property {function} blocks.update
+ * @property {function} blocks.render
+ * @property {object} caret
+ * @property {function} caret.setToBlock
+ * @property {object} events
+ * @property {object} listeners
+ * @property {object} notifier
+ * @property {object} sanitizer
+ * @property {object} saver
+ * @property {function} saver.save
+ * @property {object} selection
+ * @property {object} styles
+ * @property {object} toolbar
+ * @property {object} inlineToolbar
+ * @property {object} tooltip
+ * @property {object} i18n
+ * @property {object} readOnly
+ * @property {object} ui
+ */
 
 /**
  * We are grateful to the CodeX team for all their hard work.
@@ -42,11 +54,12 @@ export class LimText extends Paragraph {
      * Render plugin`s main Element and fill it with saved data
      *
      * @param {object} params - constructor params
-     * @param {ParagraphData} params.data - previously saved data
-     * @param {ParagraphConfig} params.config - user config for Tool
-     * @param {object} params.api - editor.js api
+     * @param {object} params.data - previously saved data
+     * @param {Config} params.config - user config for Tool
+     * @param {Api} params.api - editor.js api
      * @param {boolean} readOnly - read only mode flag
      */
+
     constructor({data, config, api, readOnly}) {
         super({data, config, api, readOnly});
         this.config = config;
@@ -75,6 +88,22 @@ export class LimText extends Paragraph {
         this.storageValue = value;
     }
 
+    initStyles() {
+        const pr = '#' + this.config.component.id;
+        let e = document.createElement("style");
+        /* Hide the toolbar items so the user can't add new blocks */
+        let css = ``
+        css += `${pr} .ce-toolbar__plus, ${pr} .cdx-search-field,${pr} .ce-popover-item[data-item-name="move-up"],${pr} .ce-popover-item[data-item-name="delete"],${pr} .ce-popover-item[data-item-name="move-down"] {display: none;}`;
+        /* With a big screen, the text is indeed to the right */
+        css += `${pr} .ce-block__content, ${pr} .ce-toolbar__content {max-width: unset;}`;
+        /* Remove default editor.js padding */
+        css += `${pr} .cdx-block {padding: 0;}`;
+        /* Add padding to the inline tools */
+        css += `${pr} .ce-inline-tool {padding: 12px;}`;
+        e.appendChild(document.createTextNode(css));
+        document.head.appendChild(e);
+    }
+
     /**
      * @param {string} value
      */
@@ -100,6 +129,7 @@ export class LimText extends Paragraph {
     }
 
     render() {
+        this.initStyles();
         // Set the correct style corresponding to the value
         this.updateValueChangedStyle(this.storageValue);
 
@@ -172,7 +202,7 @@ export class LimText extends Paragraph {
     /**
      * Every time the user types, this function is called.
      *
-     * @param {object} api
+     * @param {Api} api
      * @param {Array} events
      * @param {object} component
      */
@@ -203,7 +233,7 @@ export class LimText extends Paragraph {
      * This is a workaround to ensure that there is only one block.
      * Because Editor.js doesn't allow easy configuration to have only one block.
      *
-     * @param {object} api
+     * @param {Api} api
      * @param {Array} events
      * @param {object} component
      */
