@@ -17,7 +17,7 @@
 
     <script type="module">
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {LimText, Validators} from '/admin/structure/text/lim_text.mjs'
+        import {LimText, Validators} from '/admin/structure/text/one_field.mjs'
         import Underline from '/admin/structure/tools/underline.mjs';
         import Bold from '/admin/structure/tools/bold.mjs';
         import Italic from '/admin/structure/tools/italic.mjs';
@@ -26,11 +26,6 @@
          * These are the settings for the editor.js
          */
         new EditorJS({
-
-            /**
-             * @type {object}
-             */
-            // data: LimText.getCurrentData(),
 
             /**
              * @type {string}
@@ -72,6 +67,7 @@
                         'underline',
                         'italic',
                     ],
+
                     config: {
                         /**
                          * E.g. /model/homepage/title
@@ -107,17 +103,28 @@
                             Validators.validateMinLength,
                             Validators.validateMaxLength,
                         ],
+
+                        /**
+                         * Custom render settings
+                         * You can add more buttons to
+                         * the settings panel on the right side.
+                         * By default, "Revert to saved value" button is added.
+                         *
+                         * @see admin/structure/text/one_field.mjs:152 for a simple example
+                         * @see https://editorjs.io/making-a-block-settings/ for a more complex example
+                         *
+                         * @type {Array.<{label: string, icon: *, closeOnActivate: boolean, onActivate: function(): Promise<void>}>}
+                         */
+                        renderSettings: [],
+
                     }
                 },
             },
-
-            customRenderSettings: [],
 
             /**
              * LimText need to hook into this events.
              * Feel free to extend/override these functions.
              **/
-            onReady: LimText.onReady,
             onChange: LimText.onChange,
         });
     </script>

@@ -11,6 +11,7 @@ import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
  * @property {HTMLElement} component
  * @property {object} decorations
  * @property {function[]} validators
+ * @property {array} renderSettings
  */
 
 /**
@@ -145,44 +146,33 @@ export class LimText extends Paragraph {
         return super.render();
     }
 
+    /**
+     * @returns {*&{closeOnActivate: boolean, onActivate: function(): Promise<void>, icon: *, label: string}}
+     */
     renderSettings() {
-        // merge the default settings with the custom settings
-        // this.config.renderSettings = [
-        //     {
-        //         icon: IconUndo,
-        //         label: 'Revert to saved value',
-        //         closeOnActivate: true,
-        //         onActivate: async () => {
-        //             const contentAdded = await this.api.saver.save()
-        //             this.api.blocks.update(contentAdded.blocks[0].id, {
-        //                 text: this.config.originalValue,
-        //             })
-        //         }
-        //     },
-        //     ...this.config.renderSettings,
-        // ]
+        // merge the default settings with this.config.renderSettings
+        let defaultSetting = {
+            label: 'Revert to saved value',
+            icon: IconUndo,
+            closeOnActivate: true,
+            onActivate: async () => {
+                // Save the value in local storage
+                let block = this.api.blocks.getBlockByIndex(0);
+                block.call('setStorageValue', this.config.originalValue);
 
-        return [
-            {
-                icon: IconUndo,
-                label: 'Revert to saved value',
-                closeOnActivate: true,
-                onActivate: async () => {
-                    // Save the value in local storage
-                    let block = this.api.blocks.getBlockByIndex(0);
-                    block.call('setStorageValue', this.config.originalValue);
+                // Render the original value
+                this.api.blocks.render({
+                    blocks: [{
+                        type: "paragraph", data: {
+                            text: this.config.originalValue
+                        }
+                    }]
+                });
+            }
+        };
+        console.log(this.config);
 
-                    // Render the original value
-                    this.api.blocks.render({
-                        blocks: [{
-                            type: "paragraph", data: {
-                                text: this.config.originalValue
-                            }
-                        }]
-                    });
-                }
-            },
-        ];
+        return [...this.config.renderSettings, defaultSetting];
     }
 
     static async onChange(api, events) {
