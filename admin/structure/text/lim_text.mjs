@@ -50,7 +50,7 @@ import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
  * - The user can revert to the saved value.
  * - Validate the input and show an error message.
  */
-export class Lim_text extends Paragraph {
+export class LimText extends Paragraph {
     /**
      * Render plugin's main Element and fill it with saved data
      *
@@ -183,10 +183,10 @@ export class Lim_text extends Paragraph {
         const component = await api.saver.save()
 
         // Ensure that the value is updated when the user types
-        Lim_text._changed(api, events, component);
+        LimText._changed(api, events, component);
 
         // Ensure that there is only one block
-        Lim_text._ensureOneBlock(api, events, component);
+        LimText._ensureOneBlock(api, events, component);
     }
 
     /**
