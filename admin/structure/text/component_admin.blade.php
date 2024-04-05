@@ -4,7 +4,7 @@
 @endphp
 <div id="_{{ slugId($model->getId()) }}_component">
     <div class="block text-bold text-xl mt-8 mb-4">
-        {{ $model->getLabel() }}
+        {{ $component->getLabel() }}
     </div>
 
     <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
@@ -17,7 +17,7 @@
 
     <script type="module">
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {LimText, Validators} from '/admin/structure/text/one_field.mjs'
+        import {LimText, Validators} from '/admin/structure/text/lim_text.mjs'
         import Underline from '/admin/structure/tools/underline.mjs';
         import Bold from '/admin/structure/tools/bold.mjs';
         import Italic from '/admin/structure/tools/italic.mjs';
@@ -28,15 +28,15 @@
         new EditorJS({
 
             /**
-             * @type {string}
-             **/
-            placeholder: '{{ $component->getDecoration('placeholder') }}',
-
-            /**
              * Id of Element that should contain Editor instance
              * @type {string}
              */
             holder: '{{ slugId($model->getId()) }}',
+
+            /**
+             * @type {string}
+             **/
+            placeholder: '{{ $component->getDecoration('placeholder') }}',
 
             /** Use minHeight 0, because the default is too big. */
             minHeight: 0,

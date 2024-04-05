@@ -4,7 +4,7 @@
 @endphp
 <div id="_{{ slugId($model->getId()) }}_component">
     <div class="block text-bold text-xl mt-8 mb-4">
-        {{ $model->getLabel() }}
+        {{ $model->getComponent()->getLabel() }}
     </div>
 
     <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
@@ -50,9 +50,10 @@
         }
     </style>
     <script type="module">
+
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
+        import {IconEtcVertical} from 'https://esm.sh/@codexteam/icons';
 
         // Block tools
         /**
@@ -70,6 +71,13 @@
         import Underline from '/admin/structure/tools/underline.mjs';
         import Bold from '/admin/structure/tools/bold.mjs';
         import Italic from '/admin/structure/tools/italic.mjs';
+
+        /**
+         * @typedef {object} Value
+         * @property {number} time
+         * @property {Array} blocks
+         * @property {string} version
+         */
 
         /**
          * @typedef {object} Api
@@ -96,13 +104,14 @@
          * @property {object} ui
          */
 
+
         class Component {
             /**
              * @type {string}
              */
             static id = '{{ $model->getId() }}';
             /**
-             * @type {string}
+             * @type {Value}
              */
             static originalValue = @json($model->get());
             /**
@@ -117,37 +126,51 @@
             static decorations = @json($component->getDecorations());
 
             /**
-             * @return {string}
+             * E.g. {"time":1712349766517,"blocks":[{"id":"1Z7S3FP926","type":"paragraph","data":{"text":"The cool blog title"}}],"version":"2.29.1"}
+             * @returns {Value}
              */
             static get storageValue() {
                 return JSON.parse(localStorage.getItem(Component.id));
             }
 
             /**
-             * @param {string} value
+             * If the value is null, it will be null in local storage
+             * and removed from the database.
+             * @param {Value|null} value
              */
             static set storageValue(value) {
-                // Use JSON.stringify to encode special characters
-                value = JSON.stringify(value);
-                localStorage.setItem(Component.id, value);
+                let toSave = null;
+                // if blocks is empty, we need to set it to null
+                if (value.blocks.length !== 0) {
+                    // Use JSON.stringify to encode special characters
+                    toSave = JSON.stringify(value);
+                }
+                localStorage.setItem(Component.id, toSave);
             }
 
-            /**
-             * @param {string} value
-             */
-            static updateValueChangedStyle(value) {
-                // const inputHolder = Component.element.querySelector('._input');
-                // // Remove the error message
-                // Component.element.getElementsByClassName('_error')[0].innerText = '';
-                // inputHolder.classList.remove('border-red-200');
-                // // Value can be null, when it's not set in local storage.
-                // if (value !== null && value !== Component.originalValue) {
-                //     inputHolder.classList.remove('border-gray-200');
-                //     inputHolder.classList.add('border-cyan-300');
-                // } else {
-                //     inputHolder.classList.remove('border-cyan-300');
-                //     inputHolder.classList.add('border-gray-200');
-                // }
+            static updateValueChangedStyle() {
+                const inputHolder = Component.element.querySelector('._input');
+                // Value can be null, when it's not set in local storage.
+                if (this._isChanged()) {
+                    inputHolder.classList.remove('border-gray-200');
+                    inputHolder.classList.add('border-cyan-300');
+                } else {
+                    inputHolder.classList.remove('border-cyan-300');
+                    inputHolder.classList.add('border-gray-200');
+                }
+            }
+
+            static _isChanged() {
+                let original = '';
+                let changed = '';
+                // foreach over blocks.*.data and add to string, for original and changed
+                for (const block of Component.storageValue.blocks) {
+                    original += JSON.stringify(block.data);
+                }
+                for (const block of Component.originalValue.blocks) {
+                    changed += JSON.stringify(block.data);
+                }
+                return original !== changed;
             }
         }
 
@@ -217,7 +240,7 @@
 
             onReady: () => {
                 // Ensure that the value is updated when the page is loaded
-                Component.updateValueChangedStyle(Component.storageValue);
+                Component.updateValueChangedStyle();
                 // Icons are loaded yet, so we need to wait a bit.
                 setTimeout(() => {
                     /* Replace the default editor.js 6 dots settings icon with a 3-dot icon */
@@ -248,10 +271,9 @@
                     if (event.type !== 'block-changed') {
                         continue;
                     }
-                    const component = await api.saver.save()
-                    Component.storageValue = component;
+                    Component.storageValue = await api.saver.save();
                     // Update the style
-                    Component.updateValueChangedStyle(component);
+                    Component.updateValueChangedStyle();
                 }
             }
         }
