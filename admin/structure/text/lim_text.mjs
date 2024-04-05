@@ -5,41 +5,6 @@ import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
 import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
 
 /**
- * @typedef {object} Config
- * @property {string} contentId
- * @property {string} originalValue
- * @property {HTMLElement} component
- * @property {object} decorations
- * @property {function[]} validators
- * @property {array} renderSettings
- */
-
-/**
- * @typedef {object} Api
- * @property {object} blocks
- * @property {function} blocks.getBlockByIndex
- * @property {function} blocks.delete
- * @property {function} blocks.update
- * @property {function} blocks.render
- * @property {object} caret
- * @property {function} caret.setToBlock
- * @property {object} events
- * @property {object} listeners
- * @property {object} notifier
- * @property {object} sanitizer
- * @property {object} saver
- * @property {function} saver.save
- * @property {object} selection
- * @property {object} styles
- * @property {object} toolbar
- * @property {object} inlineToolbar
- * @property {object} tooltip
- * @property {object} i18n
- * @property {object} readOnly
- * @property {object} ui
- */
-
-/**
  * We are grateful to the CodeX team for all their hard work.
  * For more information, see the links above or go to https://editorjs.io/
  *
@@ -150,7 +115,6 @@ export class LimText extends Paragraph {
      * @returns {*&{closeOnActivate: boolean, onActivate: function(): Promise<void>, icon: *, label: string}}
      */
     renderSettings() {
-        // merge the default settings with this.config.renderSettings
         let defaultSetting = {
             label: 'Revert to saved value',
             icon: IconUndo,
@@ -170,7 +134,6 @@ export class LimText extends Paragraph {
                 });
             }
         };
-        console.log(this.config);
 
         return [...this.config.renderSettings, defaultSetting];
     }

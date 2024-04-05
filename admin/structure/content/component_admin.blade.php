@@ -2,11 +2,10 @@
     /** @var \Confetti\Helpers\ComponentStandard $model */
     $component = $model->getComponent();
 @endphp
-<div id="_{{ slugId($model->getId()) }}_component">
+<div id="_{{ slugId($model->getId()) }}_component" class="relative">
     <div class="block text-bold text-xl mt-8 mb-4">
         {{ $model->getComponent()->getLabel() }}
     </div>
-
     <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
         <span id="_{{ slugId($model->getId()) }}"></span>
     </div>
@@ -54,6 +53,7 @@
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
         import {IconEtcVertical} from 'https://esm.sh/@codexteam/icons';
+        import Toolbar from '/admin/structure/tools/toolbar.mjs';
 
         // Block tools
         /**
@@ -72,46 +72,13 @@
         import Bold from '/admin/structure/tools/bold.mjs';
         import Italic from '/admin/structure/tools/italic.mjs';
 
-        /**
-         * @typedef {object} Value
-         * @property {number} time
-         * @property {Array} blocks
-         * @property {string} version
-         */
-
-        /**
-         * @typedef {object} Api
-         * @property {object} blocks
-         * @property {function} blocks.getBlockByIndex
-         * @property {function} blocks.delete
-         * @property {function} blocks.update
-         * @property {function} blocks.render
-         * @property {object} caret
-         * @property {function} caret.setToBlock
-         * @property {object} events
-         * @property {object} listeners
-         * @property {object} notifier
-         * @property {object} sanitizer
-         * @property {object} saver
-         * @property {function} saver.save
-         * @property {object} selection
-         * @property {object} styles
-         * @property {object} toolbar
-         * @property {object} inlineToolbar
-         * @property {object} tooltip
-         * @property {object} i18n
-         * @property {object} readOnly
-         * @property {object} ui
-         */
-
-
         class Component {
             /**
              * @type {string}
              */
             static id = '{{ $model->getId() }}';
             /**
-             * @type {Value}
+             * @type {ContentValue}
              */
             static originalValue = @json($model->get());
             /**
@@ -127,7 +94,7 @@
 
             /**
              * E.g. {"time":1712349766517,"blocks":[{"id":"1Z7S3FP926","type":"paragraph","data":{"text":"The cool blog title"}}],"version":"2.29.1"}
-             * @returns {Value}
+             * @returns {ContentValue}
              */
             static get storageValue() {
                 return JSON.parse(localStorage.getItem(Component.id));
@@ -136,7 +103,7 @@
             /**
              * If the value is null, it will be null in local storage
              * and removed from the database.
-             * @param {Value|null} value
+             * @param {ContentValue|null} value
              */
             static set storageValue(value) {
                 let toSave = null;
@@ -164,8 +131,10 @@
                 let original = '';
                 let changed = '';
                 // foreach over blocks.*.data and add to string, for original and changed
-                for (const block of Component.storageValue.blocks) {
-                    original += JSON.stringify(block.data);
+                if (Component.storageValue !== null) {
+                    for (const block of Component.storageValue.blocks) {
+                        original += JSON.stringify(block.data);
+                    }
                 }
                 for (const block of Component.originalValue.blocks) {
                     changed += JSON.stringify(block.data);
@@ -203,11 +172,11 @@
             // Id of Element that should contain Editor instance
             holder: '_{{ slugId($model->getId()) }}',
             placeholder: '{{ $component->getDecoration('placeholder') }}',
-            data: JSON.parse(localStorage.getItem('{{ $model->getId() }}')) ?? @json($model->get()),
+            data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem('{{ $model->getId() }}')) : @json($model->get()),
             defaultBlock: "paragraph",
             inlineToolbar: true,
-            // enableLineBreaks: true,
             tools: {
+                general_toolbar: Toolbar,
 
                 // Inline tools
                 bold: Bold,
