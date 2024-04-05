@@ -97,7 +97,8 @@
                          * Feel free to add more validators
                          * The config object is the object on this level.
                          * The value is the value of the input field.
-                         * @type {function(config: object, value: string): string[]}
+                         *
+                         * @type {Array.<function(config: object, value: string): string[]>}
                          **/
                         validators: [
                             Validators.validateMinLength,
@@ -110,7 +111,7 @@
                          * the settings panel on the right side.
                          * By default, "Revert to saved value" button is added.
                          *
-                         * @see admin/structure/text/one_field.mjs:152 for a simple example
+                         * @see admin/structure/text/lim_text.mjs:152 for a simple example
                          * @see https://editorjs.io/making-a-block-settings/ for a more complex example
                          *
                          * @type {Array.<{label: string, icon: *, closeOnActivate: boolean, onActivate: function(): Promise<void>}>}
@@ -122,7 +123,7 @@
             },
 
             /**
-             * LimText need to hook into this events.
+             * Lim_text need to hook into this events.
              * Feel free to extend/override these functions.
              **/
             onChange: LimText.onChange,

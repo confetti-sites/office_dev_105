@@ -50,9 +50,9 @@ import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
  * - The user can revert to the saved value.
  * - Validate the input and show an error message.
  */
-export class LimText extends Paragraph {
+export class Lim_text extends Paragraph {
     /**
-     * Render plugin`s main Element and fill it with saved data
+     * Render plugin's main Element and fill it with saved data
      *
      * @param {object} params - constructor params
      * @param {object} params.data - previously saved data
@@ -135,7 +135,7 @@ export class LimText extends Paragraph {
         this.updateValueChangedStyle(this.storageValue);
 
         setTimeout(() => {
-            /* Replace the default editor.js 6 dots settings icon with an 3 dots icon */
+            /* Replace the default editor.js 6 dots settings icon with a 3-dots icon */
             this.config.component.querySelector('.ce-toolbar__settings-btn').innerHTML = IconEtcVertical;
         }, 100);
 
@@ -183,10 +183,10 @@ export class LimText extends Paragraph {
         const component = await api.saver.save()
 
         // Ensure that the value is updated when the user types
-        LimText._changed(api, events, component);
+        Lim_text._changed(api, events, component);
 
         // Ensure that there is only one block
-        LimText._ensureOneBlock(api, events, component);
+        Lim_text._ensureOneBlock(api, events, component);
     }
 
     /**

@@ -6,9 +6,12 @@ namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
-abstract class Content extends ComponentStandard {
-    public function get(): array
+return new class extends ComponentStandard {
+    public function get(): string
     {
+        if ($this->contentStore === null) {
+            throw new \RuntimeException('This component is only used as a reference. Therefore, you can\'t call __toString() or get().');
+        }
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
@@ -17,40 +20,47 @@ abstract class Content extends ComponentStandard {
 
         // Get default value
         $component = $this->getComponent();
-        $default = $component->getDecoration('default');
-        if ($default) {
-            return $this->getEditorDataByText($default);
+        if ($component->hasDecoration('default')) {
+            return $component->getDecoration('default')['value'];
         }
 
-        if (!$this->contentStore->canFake()) {
-            return [];
+        // Guess value
+        $label = $component->getDecoration('label')['value'] ?? '';
+        $haystack = strtolower($component->key . $label);
+        if (str_contains($haystack, 'address')) {
+            return '123 Main St, Anytown, USA 12345';
+        }
+        if (str_contains($haystack, 'first') && str_contains($haystack, 'name')) {
+            return "Sébastien";
+        }
+        if (str_contains($haystack, 'last') && str_contains($haystack, 'name')) {
+            return 'Müller';
+        }
+        if (str_contains($haystack, 'name')) {
+            return 'Sébastien Müller';
+        }
+        if (str_contains($haystack, 'company') || str_contains($haystack, 'business')) {
+            return 'ABC Corporation';
+        }
+        if (str_contains($haystack, 'mail')) {
+            return 'sebastien@example.com';
+        }
+        if (str_contains($haystack, 'phone')) {
+            return '+1 555 123 4567';
+        }
+        if (str_contains($haystack, 'city')) {
+            return 'Anytown';
         }
 
         // Generate Lorem Ipsum
         // Use different lengths for max to make it more interesting
-        $min     = $component->getDecoration('min') ?? 6;
-        $max     = $component->getDecoration('max') ?? $this->randomOf([10, 100, 1000]);
+        $min     = $component->getDecoration('min')['value'] ?? 6;
+        $max     = $component->getDecoration('max')['value'] ?? $this->randomOf([10, 100, 1000, 10000]);
         if ($min > $max) {
             $min = $max;
         }
 
-        return $this->getEditorDataByText($this->generateLoremIpsum(random_int($min, $max)));
-    }
-
-    private function getEditorDataByText(mixed $value): array
-    {
-        return [
-            'blocks' => [
-                [
-                    'id' => newId(),
-                    'type' => 'paragraph',
-                    'data' => [
-                        'text' => $value,
-                    ],
-                ],
-            ],
-            'version' => '2.29.1'
-        ];
+        return $this->generateLoremIpsum(random_int($min, $max));
     }
 
     private function generateLoremIpsum(int $size): string
@@ -69,54 +79,4 @@ abstract class Content extends ComponentStandard {
     {
         return $possibilities[array_rand($possibilities)];
     }
-
-    public function getComponentType(): string
-    {
-        return 'text';
-    }
-
-    // Default will be used if no value is saved
-    public function default(string $default): self
-    {
-        $this->setDecoration('default', [
-            'default' => $default,
-        ]);
-        return $this;
-    }
-
-    // Label is used as a field title in the admin panel
-    public function label(string $label): self
-    {
-        $this->setDecoration('label', [
-            'label' => $label,
-        ]);
-        return $this;
-    }
-
-    // Minimum number of characters
-    public function min(int $min): self
-    {
-        $this->setDecoration('min', [
-            'min' => $min,
-        ]);
-        return $this;
-    }
-
-    // Maximum number of characters
-    public function max(int $max): self
-    {
-        $this->setDecoration('max', [
-            'max' => $max,
-        ]);
-        return $this;
-    }
-
-    // The placeholder text for the input field
-    public function placeholder(string $placeholder): self
-    {
-        $this->setDecoration('placeholder', [
-            'placeholder' => $placeholder,
-        ]);
-        return $this;
-    }
-}
+};
