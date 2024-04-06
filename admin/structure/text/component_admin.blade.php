@@ -2,24 +2,21 @@
     /** @var \Confetti\Helpers\ComponentStandard $model */
     $component = $model->getComponent();
 @endphp
+{{-- Trigger Tailwind: border-cyan-300, border-red-200 --}}
 <div id="_{{ slugId($model->getId()) }}_component">
     <div class="block text-bold text-xl mt-8 mb-4">
-        {{ $model->getLabel() }}
+        {{ $component->getLabel() }}
     </div>
 
     <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
-        <span id="_{{ slugId($model->getId()) }}"></span>
+        <span id="{{ slugId($model->getId()) }}"></span>
     </div>
     <p class="mt-2 text-sm text-red-600 dark:text-red-500 _error"></p>
 </div>
 
 @push('end_of_body_'.slugId($model->getId()))
-    <style>
-        /* Hide the toolbar items so the user can't add new blocks */
-        #_{{ slugId($model->getId()) }} .ce-toolbar__plus, #_{{ slugId($model->getId()) }} .cdx-search-field, #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-up"], #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="delete"], #_{{ slugId($model->getId()) }} .ce-popover-item[data-item-name="move-down"] {
-            display: none;
-        }
 
+<<<<<<< HEAD
         /* With a big screen, the text is indeed to the right */
         #_{{ slugId($model->getId()) }} .ce-block__content, #_{{ slugId($model->getId()) }} .ce-toolbar__content {
             max-width: unset;
@@ -39,269 +36,120 @@
         }
     </style>
     <!--suppress JSFileReferences -->
+=======
+>>>>>>> 60a5cdf49893a2c2c2f6588f0e1c23fb8be68b5a
     <script type="module">
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
-        import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
-        import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
+        import {LimText, Validators} from '/admin/structure/text/lim_text.mjs'
         import Underline from '/admin/structure/tools/underline.mjs';
         import Bold from '/admin/structure/tools/bold.mjs';
         import Italic from '/admin/structure/tools/italic.mjs';
-
-        class Component {
-            /**
-             * @type {string}
-             */
-            static id = '{{ $model->getId() }}';
-            /**
-             * @type {string}
-             */
-            static originalValue = '{{ $model->get() }}';
-            /**
-             * @type {HTMLElement}
-             */
-            static element = document.getElementById('_{{ slugId($model->getId()) }}_component');
-
-            /**
-             * E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
-             * @type {object}
-             */
-            static decorations = @json($component->getDecorations());
-
-            /**
-             * @return {string}
-             */
-            static get storageValue() {
-                return localStorage.getItem(Component.id);
-            }
-
-            /**
-             * @param {string} value
-             */
-            static set storageValue(value) {
-                // Use JSON.stringify to encode special characters
-                localStorage.setItem(Component.id, value);
-            }
-
-            /**
-             * @param {string} value
-             */
-            static updateValueChangedStyle(value) {
-                const inputHolder = Component.element.querySelector('._input');
-                const message = this.validateWithMessage(value);
-                if (message != null) {
-                    inputHolder.classList.add('border-red-200');
-                    Component.element.getElementsByClassName('_error')[0].innerHTML = message;
-                    return;
-                }
-                // Remove the error message
-                Component.element.getElementsByClassName('_error')[0].innerText = '';
-                inputHolder.classList.remove('border-red-200');
-                // Value can be null, when it's not set in local storage.
-                if (value !== null && value !== Component.originalValue) {
-                    inputHolder.classList.remove('border-gray-200');
-                    inputHolder.classList.add('border-cyan-300');
-                } else {
-                    inputHolder.classList.remove('border-cyan-300');
-                    inputHolder.classList.add('border-gray-200');
-                }
-            }
-
-            /**
-             * We don't use the default validation, because we want to interact with the ui.
-             * @param {string} value
-             */
-            static validateWithMessage(value) {
-                // Convert html entities in one function. Otherwise, the value length is wrong.
-                // For example &nbsp; is one character, but the length is 6.
-                value = new DOMParser().parseFromString(value, 'text/html').body.textContent;
-                const validators = [
-                    Component.validateMinLength,
-                    Component.validateMaxLength,
-                ];
-                for (const validator of validators) {
-                    const message = validator(value);
-                    if (message != null) {
-                        return message;
-                    }
-                }
-            }
-
-            /**
-             * @param {string} value
-             * @return {string}
-             */
-            static validateMinLength(value) {
-                if (value.length >= Component.decorations.min.min) {
-                    return null;
-                }
-                return `The value must be at least ${Component.decorations.min.min} characters long.`;
-            }
-
-            /**
-             * @param {string} value
-             * @return {string}
-             */
-            static validateMaxLength(value) {
-                if (value.length <= Component.decorations.max.max) {
-                    return null;
-                }
-                // Cut the value to the max length, and get the rest
-                let toMuch = value.substring(Component.decorations.max.max);
-                let suffix = '';
-                if (toMuch.length > 26) {
-                    toMuch = toMuch.substring(0, 26);
-                    suffix = '(...)';
-                }
-                return `The value must be at most ${Component.decorations.max.max} characters long.<br>Therefore you cannot use: <span class="text-red-500 underline">${toMuch}</span> ${suffix}`
-            }
-
-        }
-
-        /**
-         * In this text component, we only allow the paragraph tool.
-         */
-        class Text extends Paragraph {
-            renderSettings() {
-                return [
-                    {
-                        icon: IconUndo,
-                        label: 'Revert to saved value',
-                        closeOnActivate: true,
-                        onActivate: async () => {
-                            const contentAdded = await this.api.saver.save()
-                            this.api.blocks.update(contentAdded.blocks[0].id, {
-                                text: Component.originalValue,
-                            })
-                        }
-                    },
-                ];
-            }
-        }
 
         /**
          * These are the settings for the editor.js
          */
         new EditorJS({
-            // Id of Element that should contain Editor instance
-            holder: '_{{ slugId($model->getId()) }}',
-            // Use minHeight 0, because the default is too big.
+
+            /**
+             * Id of Element that should contain Editor instance
+             * @type {string}
+             */
+            holder: '{{ slugId($model->getId()) }}',
+
+            /**
+             * @type {string}
+             **/
+            placeholder: '{{ $component->getDecoration('placeholder') }}',
+
+            /** Use minHeight 0, because the default is too big. */
             minHeight: 0,
+
+            /**
+             * We keep using the therm "paragraph",
+             * so we can override it. Prevent error:
+             * "Paste handler for «text» Tool on «P» tag is
+             * skipped because it is already used by «paragraph» Tool."
+             */
             defaultBlock: "paragraph",
+
+            /** To hide the toolbar, you can set it to false */
             inlineToolbar: true,
+
+            /**
+             * 1. Map tool names to the actual tools
+             * 2. Add the tool to the inlineToolbar
+             */
             tools: {
                 bold: Bold,
                 underline: Underline,
                 italic: Italic,
                 paragraph: {
-                    class: Paragraph,
+                    class: LimText,
                     inlineToolbar: [
                         'bold',
                         'underline',
                         'italic',
-                    ]
+                    ],
+
+                    config: {
+                        /**
+                         * E.g. /model/homepage/title
+                         * @type {string}
+                         **/
+                        contentId: '{{ $model->getId() }}',
+
+                        /**
+                         * This is the value stored in the database.
+                         * Lim is using LocalStorage to store the data before it is saved/published.
+                         * @type {string}
+                         **/
+                        originalValue: '{{ $model->get() }}',
+
+                        /**
+                         * @type {HTMLElement}
+                         * */
+                        component: document.getElementById('_{{ slugId($model->getId()) }}_component'),
+
+                        /**
+                         * E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
+                         * @type {object}
+                         */
+                        decorations: @json($component->getDecorations()),
+
+                        /**
+                         * Feel free to add more validators
+                         * The config object is the object on this level.
+                         * The value is the value of the input field.
+                         *
+                         * @type {Array.<function(config: object, value: string): string[]>}
+                         **/
+                        validators: [
+                            Validators.validateMinLength,
+                            Validators.validateMaxLength,
+                        ],
+
+                        /**
+                         * Custom render settings
+                         * You can add more buttons to
+                         * the settings panel on the right side.
+                         * By default, "Revert to saved value" button is added.
+                         *
+                         * @see admin/structure/text/lim_text.mjs:152 for a simple example
+                         * @see https://editorjs.io/making-a-block-settings/ for a more complex example
+                         *
+                         * @type {Array.<{label: string, icon: *, closeOnActivate: boolean, onActivate: function(): Promise<void>}>}
+                         */
+                        renderSettings: [],
+
+                    }
                 },
             },
-            placeholder: '{{ $component->getDecoration('placeholder') }}',
-            data: {
-                time: 0,
-                blocks: [
-                    {
-                        type: "paragraph",
-                        data: {
-                            text: localStorage.getItem('{{ $model->getId() }}') ?? '{{ $model->get() }}',
-                        }
-                    }
-                ],
-                version: "2.11.10"
-            },
 
-            onReady: () => {
-                // Ensure that the value is updated when the page is loaded
-                Component.updateValueChangedStyle(Component.storageValue);
-                // Icons are loaded yet, so we need to wait a bit.
-                setTimeout(() => {
-                    /* Replace the default editor.js 6 dots settings icon with an 3 dots icon */
-                    Component.element.querySelector('.ce-toolbar__settings-btn').innerHTML = IconEtcVertical;
-                }, 100);
-            },
-
-            onChange: async (api, events) => {
-                // if not array, make an array
-                if (!Array.isArray(events)) {
-                    events = [events];
-                }
-                const component = await api.saver.save()
-
-                // Ensure that the value is updated when the user types
-                OnChangeHandler.changed(api, events, component);
-
-                // Ensure that there is only one block
-                OnChangeHandler.ensureOneBlock(api, events, component);
-            },
+            /**
+             * Lim_text need to hook into this events.
+             * Feel free to extend/override these functions.
+             **/
+            onChange: LimText.onChange,
         });
-
-        class OnChangeHandler {
-            /**
-             * Every time the user types, this function is called.
-             *
-             * @param {EditorJS} api
-             * @param {Array} events
-             * @param {object} component
-             */
-            static changed(api, events, component) {
-                for (const event of events) {
-                    if (event.type !== 'block-changed') {
-                        continue;
-                    }
-                    // If there are more than one block, first the
-                    // block-added code needs to flatten the blocks.
-                    if (component.blocks.length > 1) {
-                        break;
-                    }
-                    let value = '';
-                    if (component.blocks.length > 0) {
-                        value = component.blocks[0].data.text;
-                    }
-                    Component.storageValue = value;
-                    // Update the style
-                    Component.updateValueChangedStyle(value);
-                }
-            }
-
-            /**
-             * This is a workaround to ensure that there is only one block.
-             * Because Editor.js doesn't allow easy configuration to have only one block.
-             *
-             * @param {EditorJS} api
-             * @param {Array} events
-             * @param {object} component
-             */
-            static ensureOneBlock(api, events, component) {
-                // Compose the text of all blocks
-                let text = '';
-                component.blocks.forEach((block, index) => {
-                    text += ' ' + block.data.text;
-                });
-
-                let blockAdded = false;
-                for (const event of events) {
-                    // We are only interested in the blocks that are added.
-                    // And we only want to remove the block if it's not the first block.
-                    if (event.type !== 'block-added' || event.detail.index === 0) {
-                        continue;
-                    }
-                    api.blocks.delete();
-                    blockAdded = true;
-                }
-                if (blockAdded) {
-                    const firstBlock = component.blocks[0]
-                    api.blocks.update(firstBlock.id, {text: text})
-                    setTimeout(() => {
-                        api.caret.setToBlock(0, 'end')
-                    }, 20);
-                }
-            }
-        }
     </script>
 @endpush

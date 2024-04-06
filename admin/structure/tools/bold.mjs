@@ -31,6 +31,8 @@ export default class Bold {
     }
 
     surround(range) {
+        // Unfortunately, there is no alternative
+        // noinspection JSDeprecatedSymbols
         document.execCommand(this.commandName);
     }
 

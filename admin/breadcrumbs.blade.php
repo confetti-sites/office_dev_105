@@ -39,7 +39,7 @@
                               d="m1 9 4-4-4-4"/>
                     </svg>
                     <a href="/admin{{ $currentId }}"
-                       class="ms-1 text-sm font-medium text-gray-700 hover:text-cyan-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ (new $item)->getLabel() }}</a>
+                       class="ms-1 text-sm font-medium text-gray-700 hover:text-cyan-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ (new $item)->getComponent()->getLabel() }}</a>
                 </div>
             </li>
         @endforeach

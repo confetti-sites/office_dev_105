@@ -28,6 +28,8 @@ export default class Underline {
     }
 
     surround(range) {
+        // Unfortunately, there is no alternative
+        // noinspection JSDeprecatedSymbols
         document.execCommand(this.commandName);
     }
 
