@@ -32,7 +32,7 @@ export class Toolbar {
      */
     set storageData(value) {
         let toSave = null;
-        // if blocks is empty, we need to set it to null
+        // If blocks are empty, we need to set it to null
         if (value.blocks.length !== 0) {
             // Use JSON.stringify to encode special characters
             toSave = JSON.stringify(value);
@@ -40,30 +40,45 @@ export class Toolbar {
         localStorage.setItem(this.editor.configuration.id, toSave);
     }
 
-    // renderSettings() {
-    //     console.log('renderSettings');
-    //     let defaultSetting = {
-    //         label: 'Revert all to saved value',
-    //         icon: IconUndo,
-    //         closeOnActivate: true,
-    //         onActivate: async () => {
-    //             // Save the value in local storage
-    //             let block = this.api.blocks.getBlockByIndex(0);
-    //             block.call('setStorageValue', this.config.originalData);
-    //
-    //             // Render the original value
-    //             this.api.blocks.render({
-    //                 blocks: [{
-    //                     type: "paragraph", data: {
-    //                         text: this.config.originalData
-    //                     }
-    //                 }]
-    //             });
-    //         }
-    //     };
-    //
-    //     return [...this.config.renderSettings, defaultSetting];
-    // }
+    /**
+     * @returns {Toolbar}
+     */
+    init() {
+        // Replace the default editor.js 6-dot settings icon with a 3-dot icon
+        // Icons aren't loaded yet, so we need to wait a bit.
+        setTimeout(() => {
+            const holder = this.editor.configuration.holder;
+            const element = this.editor.configuration.element;
+            element.querySelector('#' + holder).querySelector('.ce-toolbar__settings-btn').innerHTML = IconEtcVertical;
+        }, 20);
+
+        // Add the toolbar to the editor
+        let component = this.editor.configuration.element;
+        this.#createToolbar(component);
+
+        // Ensure that the value is updated when the page is loaded
+        this.updateValueChangedStyle();
+
+        return this
+    }
+
+    async onChange(api, events) {
+        // if not array, make an array
+        if (!Array.isArray(events)) {
+            events = [events];
+        }
+
+        for (const event of events) {
+            if (event.type !== 'block-changed') {
+                continue;
+            }
+
+            // Update data
+            this.storageData = await api.saver.save();
+            // Update the style
+            this.updateValueChangedStyle();
+        }
+    }
 
     renderSettings() {
         return [
@@ -91,17 +106,26 @@ export class Toolbar {
         }
     }
 
-    init() {
-        // Replace the default editor.js 6-dot settings icon with a 3-dot icon
-        // Icons aren't loaded yet, so we need to wait a bit.
-        setTimeout(() => {
-            const holder = this.editor.configuration.holder;
-            const element = this.editor.configuration.element;
-            element.querySelector('#' + holder).querySelector('.ce-toolbar__settings-btn').innerHTML = IconEtcVertical;
-        }, 20);
+    #isChanged() {
+        let original = '';
+        let changed = '';
+        // The Value can be null, when it's not set in local storage.
+        if (this.editor.configuration.originalData !== null) {
+            // Foreach over blocks.*.data and add to string, to check original and changed
+            for (const block of this.editor.configuration.originalData.blocks) {
+                original += JSON.stringify(block.data);
+            }
+        }
+        if (this.storageData !== null) {
+            // Foreach over blocks.*.data and add to string, to check original and changed
+            for (const block of this.storageData.blocks) {
+                changed += JSON.stringify(block.data);
+            }
+        }
+        return original !== changed;
+    }
 
-        // Add the toolbar to the editor
-        let component = this.editor.configuration.element;
+    #createToolbar(component) {
 
         // Component needs to be relative
         component.style.position = 'relative';
@@ -132,6 +156,8 @@ export class Toolbar {
         let settings = document.createElement('div');
         settings.className = 'ce-settings';
         settings.style.zIndex = '100';
+
+        // Create the overlay
         let overlay = document.createElement('div');
         overlay.className = 'ce-popover__overlay';
         overlay.style.position = 'fixed';
@@ -193,36 +219,15 @@ export class Toolbar {
         });
 
         settings.appendChild(popover);
-
         toolbar.appendChild(settings);
 
-        // open the settings popover
+        // Open the settings popover
         settingBtn.addEventListener('click', () => {
             popover.classList.toggle('ce-popover--opened');
         });
+
         toolbar.appendChild(settingBtn);
         toolbar.appendChild(settings);
-
-
         component.prepend(toolbar);
-    }
-
-    #isChanged() {
-        let original = '';
-        let changed = '';
-        // The Value can be null, when it's not set in local storage.
-        if (this.editor.configuration.originalData !== null) {
-            // Foreach over blocks.*.data and add to string, to check original and changed
-            for (const block of this.editor.configuration.originalData.blocks) {
-                original += JSON.stringify(block.data);
-            }
-        }
-        if (this.storageData !== null) {
-            // Foreach over blocks.*.data and add to string, to check original and changed
-            for (const block of this.storageData.blocks) {
-                changed += JSON.stringify(block.data);
-            }
-        }
-        return original !== changed;
     }
 }

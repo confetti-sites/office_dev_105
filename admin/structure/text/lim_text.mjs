@@ -5,9 +5,6 @@ import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
 import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
 
 /**
- * We are grateful to the CodeX team for all their hard work.
- * For more information, see the links above or go to https://editorjs.io/
- *
  * This is a custom implementation of the paragraph block.
  * We extend the paragraph block for the following reasons:
  * - It's a workaround to ensure that there is only one block.
@@ -25,7 +22,6 @@ export class LimText extends Paragraph {
      * @param {Api} params.api - editor.js api
      * @param {boolean} readOnly - read only mode flag
      */
-
     constructor({data, config, api, readOnly}) {
         super({data, config, api, readOnly});
         this.config = config;

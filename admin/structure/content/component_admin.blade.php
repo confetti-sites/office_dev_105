@@ -24,9 +24,6 @@
             padding: 0;
         }
 
-        {{--#_{{ slugId($model->getId()) }} .codex-editor--narrow .codex-editor__redactor {--}}
-        /*    margin-right: 0;*/
-        /*}*/
         /* Add padding to the inline tools */
         #_{{ slugId($model->getId()) }} .ce-inline-tool {
             padding: 12px;
@@ -52,10 +49,9 @@
 
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {IconEtcVertical} from 'https://esm.sh/@codexteam/icons';
         import {Toolbar} from '/admin/structure/tools/lim.mjs';
 
-        // Block tools
+        /** Block tools */
         /**
          * @see https://github.com/editor-js/paragraph
          * @see https://github.com/editor-js/paragraph/blob/master/src/index.js
@@ -67,55 +63,12 @@
          **/
         import Header from 'https://esm.sh/@editorjs/header@^2';
 
-        // Inline tools
+        /** Inline tools */
         import Underline from '/admin/structure/tools/underline.mjs';
         import Bold from '/admin/structure/tools/bold.mjs';
         import Italic from '/admin/structure/tools/italic.mjs';
 
-        class Component {
-            /**
-             * @type {string}
-             */
-            {{--static id = '{{ $model->getId() }}';--}}
-            /**
-             * @type {Data}
-             */
-            {{--static originalValue = @json($model->get());--}}
-            /**
-             * @type {HTMLElement}
-             */
-            {{--static element = document.getElementById('_{{ slugId($model->getId()) }}_component');--}}
-
-            /**
-             * E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
-             * @type {object}
-             */
-            static decorations = @json($component->getDecorations());
-
-            /**
-             * E.g. {"time":1712349766517,"blocks":[{"id":"1Z7S3FP926","type":"paragraph","data":{"text":"The cool blog title"}}],"version":"2.29.1"}
-             * @returns {Data}
-             */
-            static get storageValue() {
-                return JSON.parse(localStorage.getItem(Component.id));
-            }
-
-            /**
-             * If the value is null, it will be null in local storage
-             * and removed from the database.
-             * @param {Data|null} value
-             */
-            static set storageValue(value) {
-                let toSave = null;
-                // if blocks is empty, we need to set it to null
-                if (value.blocks.length !== 0) {
-                    // Use JSON.stringify to encode special characters
-                    toSave = JSON.stringify(value);
-                }
-                localStorage.setItem(Component.id, toSave);
-            }
-        }
-
+        // General toolbar is
         let generalToolbar = undefined;
 
         /**
@@ -129,6 +82,8 @@
             placeholder: '{{ $component->getDecoration('placeholder') }}',
             originalData: @json($model->get()),
             data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem('{{ $model->getId() }}')) : @json($model->get()),
+            // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
+            decorations: @json($component->getDecorations()),
             defaultBlock: "paragraph",
             inlineToolbar: true,
             tools: {
@@ -161,30 +116,9 @@
                 },
             },
 
-            onReady: () => {
-                generalToolbar = new Toolbar(editor);
-                generalToolbar.init();
-                // Ensure that the value is updated when the page is loaded
-                generalToolbar.updateValueChangedStyle();
-            },
-
-            onChange: async (api, events) => {
-                // if not array, make an array
-                if (!Array.isArray(events)) {
-                    events = [events];
-                }
-
-                for (const event of events) {
-                    if (event.type !== 'block-changed') {
-                        continue;
-                    }
-
-                    // Update data
-                    generalToolbar.storageData = await api.saver.save();
-                    // Update the style
-                    generalToolbar.updateValueChangedStyle();
-                }
-            },
+            // Set generalToolbar in a variable, so we can use it in the onChange event
+            onReady: () => generalToolbar = (new Toolbar(editor)).init(),
+            onChange: (api, events) => generalToolbar.onChange(api, events),
         });
 
     </script>
