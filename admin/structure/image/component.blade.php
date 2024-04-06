@@ -8,6 +8,6 @@
             Decoration::HEIGHT->comment('Height of the image'),
             Decoration::WIDTH->comment('Width of the image'),
         ],
-        phpClass: file_get_contents(repositoryPath() . '/admin/structure/image_component.class.php'),
+        phpClass: file_get_contents(repositoryPath() . '/admin/structure/image/component.class.php'),
     ))->toJson();
 @endphp

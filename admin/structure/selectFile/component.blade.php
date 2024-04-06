@@ -23,6 +23,6 @@
             Decoration::DEFAULT->comment('Before saving this will be the default file. With match, the file must be in the directory.'),
             Decoration::LABEL->comment('Label is used as a field title in the admin panel'),
         ],
-        phpClass: file_get_contents(repositoryPath() . '/admin/structure/selectFile_component.class.php'),
+        phpClass: file_get_contents(repositoryPath() . '/admin/structure/selectFile/component.class.php'),
     ))->toJson();
 @endphp

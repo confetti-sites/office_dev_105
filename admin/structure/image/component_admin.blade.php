@@ -1,7 +1,7 @@
 @php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
 
 <div class="block text-bold text-xl mt-8 mb-4">
-    {{ $model->getLabel() }}
+    {{ $model->getComponent()->getLabel() }}
 </div>
 
 <img x-show="!!$store.form.previewImage" :src="$store.form.previewImage">

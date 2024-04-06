@@ -16,12 +16,12 @@
         @if($component->type === 'root')
             <a href="/admin{{ $child->getId() }}">
                 <div class="flex items-center justify-between w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-600 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
-                    {{ $component->getDecoration('label') }} type {{ $component->type }}
+                    {{ $component->getLabel() }} type {{ $component->type }}
                 </div>
             </a>
             @continue
         @endif
-        @include("admin.structure.{$component->type}_component_admin", ['model' => $child])
+        @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
         @php($total++)
     @endforeach
     @if($total > 0)

@@ -151,15 +151,6 @@ abstract class ComponentStandard
         return self::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
-    public function getLabel(): string
-    {
-        $label = $this->getComponent()->getDecoration('label');
-        if ($label) {
-            return $label;
-        }
-        return titleByKey($this->getComponentKey());
-    }
-
     public function getChildren(): array
     {
         return [];

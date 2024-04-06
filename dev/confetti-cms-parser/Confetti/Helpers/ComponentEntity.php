@@ -61,6 +61,15 @@ class ComponentEntity
         return $data;
     }
 
+    public function getLabel(): string
+    {
+        $label = $this->getDecoration('label');
+        if ($label) {
+            return $label;
+        }
+        return titleByKey($this->key);
+    }
+
     public function dumpDecorations(): void
     {
         foreach ($this->decorations as $decoration) {
