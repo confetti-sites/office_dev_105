@@ -1,28 +1,43 @@
 // noinspection JSUnusedGlobalSymbols
 
 /** @see https://github.com/codex-team/icons */
-import {IconUndo} from 'https://esm.sh/@codexteam/icons';
+import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
 
-export default class Toolbar {
+export class Toolbar {
     /**
-     * @param {Api} api
-     * @param {object} config
+     * @type {Editor}
      */
-    api;
-    config;
+    editor;
 
-    constructor({data, api, config, readOnly, block}) {
-        console.log('constructor');
-        console.log('data', data);
-        console.log('api', api);
-        console.log('config', config);
-        console.log('readOnly', readOnly);
-        console.log('block', block);
+    /**
+     * @param {Editor} editor
+     */
+    constructor(editor) {
+        console.log(editor);
+        this.editor = editor;
+    }
 
-        this.api = api;
-        this.config = config;
+    /**
+     * E.g. {"time":1712349766517,"blocks":[{"id":"1Z7S3FP926","type":"paragraph","data":{"text":"The cool blog title"}}],"version":"2.29.1"}
+     * @returns {Data}
+     */
+    get storageData() {
+        return JSON.parse(localStorage.getItem(this.editor.configuration.id));
+    }
 
-        this._show();
+    /**
+     * If the value is null, it will be null in local storage
+     * and removed from the database.
+     * @param {Data|null} value
+     */
+    set storageData(value) {
+        let toSave = null;
+        // if blocks is empty, we need to set it to null
+        if (value.blocks.length !== 0) {
+            // Use JSON.stringify to encode special characters
+            toSave = JSON.stringify(value);
+        }
+        localStorage.setItem(this.editor.configuration.id, toSave);
     }
 
     // renderSettings() {
@@ -34,13 +49,13 @@ export default class Toolbar {
     //         onActivate: async () => {
     //             // Save the value in local storage
     //             let block = this.api.blocks.getBlockByIndex(0);
-    //             block.call('setStorageValue', this.config.originalValue);
+    //             block.call('setStorageValue', this.config.originalData);
     //
     //             // Render the original value
     //             this.api.blocks.render({
     //                 blocks: [{
     //                     type: "paragraph", data: {
-    //                         text: this.config.originalValue
+    //                         text: this.config.originalData
     //                     }
     //                 }]
     //             });
@@ -57,26 +72,36 @@ export default class Toolbar {
                 icon: IconUndo,
                 closeOnActivate: true,
                 onActivate: async () => {
-                    console.log('Revert button clicked');
-                    // Save the value in local storage
-                    // let block = this.api.blocks.getBlockByIndex(0);
-                    // block.call('setStorageValue', this.config.originalValue);
-                    //
-                    // // Render the original value
-                    // this.api.blocks.render({
-                    //     blocks: [{
-                    //         type: "paragraph", data: {
-                    //             text: this.config.originalValue
-                    //         }
-                    //     }]
-                    // });
+                    this.editor.blocks.render(this.editor.configuration.originalData);
+                    this.storageData = this.editor.configuration.originalData;
+                    this.updateValueChangedStyle();
                 }
             },
         ];
     }
 
-    _show() {
-        let component = this.api.ui.nodes.wrapper.closest('[id$="_component"]');
+    updateValueChangedStyle() {
+        const inputHolder = this.editor.configuration.element.querySelector('._input');
+        if (this.#isChanged()) {
+            inputHolder.classList.remove('border-gray-200');
+            inputHolder.classList.add('border-cyan-300');
+        } else {
+            inputHolder.classList.remove('border-cyan-300');
+            inputHolder.classList.add('border-gray-200');
+        }
+    }
+
+    init() {
+        // Replace the default editor.js 6-dot settings icon with a 3-dot icon
+        // Icons aren't loaded yet, so we need to wait a bit.
+        setTimeout(() => {
+            const holder = this.editor.configuration.holder;
+            const element = this.editor.configuration.element;
+            element.querySelector('#' + holder).querySelector('.ce-toolbar__settings-btn').innerHTML = IconEtcVertical;
+        }, 20);
+
+        // Add the toolbar to the editor
+        let component = this.editor.configuration.element;
 
         // Component needs to be relative
         component.style.position = 'relative';
@@ -96,11 +121,12 @@ export default class Toolbar {
         toolbar.style.width = '100%';
         toolbar.style.padding = '0 1.2rem';
 
-        // with icon 3 dots
+        // Button with icon 3 dots
         let settingBtn = document.createElement('span');
         settingBtn.className = 'ce-toolbar__settings-btn';
         settingBtn.style.cursor = 'pointer';
         settingBtn.style.zIndex = '103';
+        settingBtn.innerHTML = IconEtcVertical;
 
         // Create the settings popover
         let settings = document.createElement('div');
@@ -179,5 +205,24 @@ export default class Toolbar {
 
 
         component.prepend(toolbar);
+    }
+
+    #isChanged() {
+        let original = '';
+        let changed = '';
+        // The Value can be null, when it's not set in local storage.
+        if (this.editor.configuration.originalData !== null) {
+            // Foreach over blocks.*.data and add to string, to check original and changed
+            for (const block of this.editor.configuration.originalData.blocks) {
+                original += JSON.stringify(block.data);
+            }
+        }
+        if (this.storageData !== null) {
+            // Foreach over blocks.*.data and add to string, to check original and changed
+            for (const block of this.storageData.blocks) {
+                changed += JSON.stringify(block.data);
+            }
+        }
+        return original !== changed;
     }
 }

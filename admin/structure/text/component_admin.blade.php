@@ -2,6 +2,7 @@
     /** @var \Confetti\Helpers\ComponentStandard $model */
     $component = $model->getComponent();
 @endphp
+{{-- Trigger Tailwind: border-cyan-300, border-red-200 --}}
 <div id="_{{ slugId($model->getId()) }}_component">
     <div class="block text-bold text-xl mt-8 mb-4">
         {{ $component->getLabel() }}
