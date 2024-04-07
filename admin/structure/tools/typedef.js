@@ -76,6 +76,14 @@
  */
 
 /**
+ * @typedef {object} ToolbarItem
+ * @property {string} label
+ * @property {string} icon
+ * @property {boolean} closeOnActivate
+ * @property {function} onActivate
+ */
+
+/**
  * @typedef {object} Api
  * @property {object} blocks
  * @property {function} blocks.getBlockByIndex
