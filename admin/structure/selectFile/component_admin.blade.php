@@ -12,7 +12,7 @@
 </select>
 @foreach($model->getOptions() as $pointerChild)
     @foreach($pointerChild->getChildren() as $grandChild)
-        @include("admin.structure.{$grandChild->getComponent()->type}_component_admin", ['model' => $grandChild])
+        @include("admin.structure.{$grandChild->getComponent()->type}.component_admin", ['model' => $grandChild])
     @endforeach
 @endforeach
 @pushonce('end_of_body_select')
