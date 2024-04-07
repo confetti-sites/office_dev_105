@@ -54,7 +54,7 @@
     </table>
     <label class="m-2">
         <a
-                class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                class="float-right justify-between px-4 py-2 m-2 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                 href="/admin{{ $model->getId() . newId() }}"
         >
             + Add {{ $component->getDecoration('label') }}

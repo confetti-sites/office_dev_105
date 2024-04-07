@@ -1,4 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
+import {Toolbar} from "../tools/lim.mjs";
 /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
 import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
 /** @see https://github.com/codex-team/icons */
@@ -55,13 +56,17 @@ export class LimText extends Paragraph {
         let e = document.createElement("style");
         /* Hide the toolbar items so the user can't add new blocks */
         let css = ``
-        css += `${pr} .ce-toolbar__plus, ${pr} .cdx-search-field,${pr} .ce-popover-item[data-item-name="move-up"],${pr} .ce-popover-item[data-item-name="delete"],${pr} .ce-popover-item[data-item-name="move-down"] {display: none;}`;
         /* With a big screen, the text is indeed to the right */
-        css += `${pr} .ce-block__content, ${pr} .ce-toolbar__content {max-width: unset;}`;
-        /* Remove default editor.js padding */
-        css += `${pr} .cdx-block {padding: 0;}`;
+        css += `${pr} .ce-block__content, ${pr} .ce-toolbar__content {max-width: unset}`;
+        /* Remove default editor.js padding (left) */
+        css += `${pr} .cdx-block {padding: 0}`;
+        /* Remove default editor.js margin (right) */
+        css += `@media (min-width: 651px) {${pr} .codex-editor__redactor {margin-right: 0px}}`;
         /* Add padding to the inline tools */
-        css += `${pr} .ce-inline-tool {padding: 12px;}`;
+        css += `${pr} .ce-inline-tool {padding: 12px}`;
+        // We don't use the default toolbar, so we hide it */
+        css += `${pr} .ce-toolbar__content {display: none}`;
+
         e.appendChild(document.createTextNode(css));
         document.head.appendChild(e);
     }
@@ -95,23 +100,8 @@ export class LimText extends Paragraph {
         // Set the correct style corresponding to the value
         this.updateValueChangedStyle(this.storageValue);
 
-        setTimeout(() => {
-            /* Replace the default editor.js 6 dots settings icon with a 3-dots icon */
-            this.config.component.querySelector('.ce-toolbar__settings-btn').innerHTML = IconEtcVertical;
-        }, 100);
-
-        // Set current value
-        this._data.text = localStorage.getItem(this.config.contentId) ?? this.config.originalValue;
-
-        // Call the original render function
-        return super.render();
-    }
-
-    /**
-     * @returns {*&{closeOnActivate: boolean, onActivate: function(): Promise<void>, icon: *, label: string}}
-     */
-    renderSettings() {
-        let defaultSetting = {
+        // Add the toolbar to the editor
+        new Toolbar(this.config.component).init([{
             label: 'Revert to saved value',
             icon: IconUndo,
             closeOnActivate: true,
@@ -128,10 +118,14 @@ export class LimText extends Paragraph {
                         }
                     }]
                 });
-            }
-        };
+            }}],
+        );
 
-        return [...this.config.renderSettings, defaultSetting];
+        // Set current value
+        this._data.text = localStorage.getItem(this.config.contentId) ?? this.config.originalValue;
+
+        // Call the original render function
+        return super.render();
     }
 
     static async onChange(api, events) {

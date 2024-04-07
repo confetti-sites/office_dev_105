@@ -53,8 +53,7 @@ export default class LimContent {
         }, 20);
 
         // Add the toolbar to the editor
-        let component = this.editor.configuration.element;
-        new Toolbar(component).init([            {
+        new Toolbar(this.editor.configuration.element).init([{
             label: 'Revert to saved value',
             icon: IconUndo,
             closeOnActivate: true,

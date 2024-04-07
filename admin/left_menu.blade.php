@@ -4,18 +4,18 @@
 @php /** @var string $currentContentId */ @endphp
 @php($root = newRoot(new \model))
 
-<div class="py-4 text-gray-500 dark:text-gray-400">
-    <ul class="mt-6">
+<div class="text-gray-500 dark:text-gray-400">
+    <ul class="mt-16">
         @foreach($root->getChildren() as $firstChild)
-            <li class="relative px-3 py-3">
+            <li class="relative">
                 @php($component = $firstChild->getComponent())
                 @php($isCurrent = $firstChild->getId() === $currentContentId || str_starts_with($currentContentId, $firstChild->getId() . '/'))
                 @if($isCurrent)
-                    <span class="absolute inset-y-0 left-0 w-1 rounded-tr-lg rounded-br-lg bg-primary-300"
+                    <span class="absolute inset-y-0 left-0 w-2 rounded-tr-lg rounded-br-lg bg-primary-300"
                           aria-hidden="true"></span>
                 @endif
                 <a
-                        class="inline-flex items-center w-full text-sm font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
+                        class="inline-flex items-center w-full pl-3 py-4 font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
                         href="/admin{{ $firstChild->getId() }}"
                 >
                     <span class="ml-4">{{ $component->getLabel()}}</span>
@@ -24,18 +24,20 @@
                 @php($children = method_exists($firstChild, 'getChildren') ? array_filter($firstChild->getChildren(), fn($c) => $c instanceof Map) : [])
                 @if(!empty($children))
                     <ul
-                            class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
+                            class=" mt-2 pl-1 space-y-2 overflow-hidden font-medium text-gray-500"
                             aria-label="submenu"
                     >
                         @foreach($children as $secondChild)
                             @if($secondChild instanceof Map)
-                                <li class="relative pl-5 pr-1 py-1 hover:text-gray-800 dark:hover:text-gray-200">
-                                    @if($secondChild->getId() === $currentContentId)
-                                        <span class="absolute inset-y-0 -left-1 w-1 rounded-tr-lg rounded-br-lg bg-primary-600"
+                                @php($isCurrent = $secondChild->getId() === $currentContentId)
+                                <li class="relative hover:text-gray-800 dark:hover:text-gray-200">
+                                    @if($isCurrent)
+                                        <span class="absolute inset-y-0 -left-0.5 w-3 rounded-tr-lg rounded-br-lg bg-primary-300"
                                               aria-hidden="true">
                                         </span>
                                     @endif
-                                    <a class="w-full"
+                                    <a
+                                            class="inline-flex items-center w-full pl-10 py-4 font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
                                        href="/admin{{ $secondChild->getId() }}">{{ $secondChild->getComponent()->getLabel() }}</a>
                                 </li>
                             @endif

@@ -4,7 +4,7 @@ import {IconEtcVertical} from 'https://esm.sh/@codexteam/icons';
 export class Toolbar {
     /** @type {HTMLElement} */
     constructor(component) {
-        this.component = component;
+        this.ankerElement = component;
     }
 
     /**
@@ -13,7 +13,7 @@ export class Toolbar {
      */
     init(settingItems) {
         // Component needs to be relative
-        this.component.style.position = 'relative';
+        this.ankerElement.style.position = 'relative';
 
         // Create the toolbar
         let toolbar = document.createElement('div');
@@ -112,6 +112,6 @@ export class Toolbar {
 
         toolbar.appendChild(settingBtn);
         toolbar.appendChild(settings);
-        this.component.prepend(toolbar);
+        this.ankerElement.prepend(toolbar);
     }
 }

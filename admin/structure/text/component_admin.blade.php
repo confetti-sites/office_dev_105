@@ -15,29 +15,7 @@
 </div>
 
 @push('end_of_body_'.slugId($model->getId()))
-
-<<<<<<< HEAD
-        /* With a big screen, the text is indeed to the right */
-        #_{{ slugId($model->getId()) }} .ce-block__content, #_{{ slugId($model->getId()) }} .ce-toolbar__content {
-            max-width: unset;
-        }
-
-        /* Remove default editor.js padding */
-        #_{{ slugId($model->getId()) }} .cdx-block {
-            padding: 0;
-        }
-
-        #_{{ slugId($model->getId()) }} .codex-editor--narrow .codex-editor__redactor {
-            margin-right: 0;
-        }
-        /* Add padding to the inline tools */
-        #_{{ slugId($model->getId()) }} .ce-inline-tool {
-            padding: 12px;
-        }
-    </style>
     <!--suppress JSFileReferences -->
-=======
->>>>>>> 60a5cdf49893a2c2c2f6588f0e1c23fb8be68b5a
     <script type="module">
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
         import {LimText, Validators} from '/admin/structure/text/lim_text.mjs'
@@ -127,20 +105,6 @@
                             Validators.validateMinLength,
                             Validators.validateMaxLength,
                         ],
-
-                        /**
-                         * Custom render settings
-                         * You can add more buttons to
-                         * the settings panel on the right side.
-                         * By default, "Revert to saved value" button is added.
-                         *
-                         * @see admin/structure/text/lim_text.mjs:152 for a simple example
-                         * @see https://editorjs.io/making-a-block-settings/ for a more complex example
-                         *
-                         * @type {Array.<{label: string, icon: *, closeOnActivate: boolean, onActivate: function(): Promise<void>}>}
-                         */
-                        renderSettings: [],
-
                     }
                 },
             },
