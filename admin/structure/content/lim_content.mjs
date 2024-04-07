@@ -3,7 +3,7 @@
 /** @see https://github.com/codex-team/icons */
 import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
 
-export class Toolbar {
+export default class LimContent {
     /**
      * @type {Editor}
      */

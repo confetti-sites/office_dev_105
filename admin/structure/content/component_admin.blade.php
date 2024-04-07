@@ -49,7 +49,7 @@
 
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {Toolbar} from '/admin/structure/content/lim_content.mjs';
+        import LimContent from '/admin/structure/content/lim_content.mjs';
 
         /** Block tools */
         /**
@@ -69,7 +69,7 @@
         import Italic from '/admin/structure/tools/italic.mjs';
 
         // General toolbar is
-        let generalToolbar = undefined;
+        let service = undefined;
 
         /**
          * These are the settings for the editor.js
@@ -117,8 +117,8 @@
             },
 
             // Set generalToolbar in a variable, so we can use it in the onChange event
-            onReady: () => generalToolbar = (new Toolbar(editor)).init(),
-            onChange: (api, events) => generalToolbar.onChange(api, events),
+            onReady: () => service = (new LimContent(editor)).init(),
+            onChange: (api, events) => service.onChange(api, events),
         });
 
     </script>
