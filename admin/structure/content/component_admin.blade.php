@@ -49,7 +49,7 @@
 
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {Toolbar} from '/admin/structure/tools/lim.mjs';
+        import {Toolbar} from '/admin/structure/content/lim_content.mjs';
 
         /** Block tools */
         /**

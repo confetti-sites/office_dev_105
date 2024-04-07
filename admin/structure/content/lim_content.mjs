@@ -125,6 +125,8 @@ export class Toolbar {
         return original !== changed;
     }
 
+    // @todo step 1 move cfreateToolbar to mjs file
+
     #createToolbar(component) {
 
         // Component needs to be relative
