@@ -105,6 +105,8 @@
             data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem('{{ $model->getId() }}')) : @json($model->get()),
             // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
             decorations: @json($component->getDecorations()),
+            /** Use minHeight 100, because the default is too big. */
+            minHeight: 100,
             defaultBlock: "paragraph",
             inlineToolbar: true,
             tools: {

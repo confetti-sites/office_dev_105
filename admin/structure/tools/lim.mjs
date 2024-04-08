@@ -35,7 +35,7 @@ export class Toolbar {
                     <div class="${() => (data.popoverOpen ? 'ce-popover ce-popover--opened' : 'ce-popover items ')}"
                          style="right: 15px; left: initial;">
                         ${settingItems.map(itemData => html`
-                            <div class="ce-popover-item" @click="${itemData.onActivate}">
+                            <div class="ce-popover-item" @click="${() => {itemData.onActivate(); data.popoverOpen = false}}">
                                 <div class="ce-popover-item__icon">${itemData.icon}</div>
                                 <div class="ce-popover-item__title">${itemData.label}</div>
                             </div>
