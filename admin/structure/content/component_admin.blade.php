@@ -74,6 +74,12 @@
          */
         import Delimiter from 'https://esm.sh/@editorjs/delimiter';
 
+        /**
+         * @see https://github.com/editor-js/table
+         * @see https://github.com/editor-js/table/blob/master/src/table.js
+         */
+        import Table from 'https://esm.sh/@editorjs/table';
+
         /** Inline tools */
         import Underline from '/admin/structure/tools/underline.mjs';
         import Bold from '/admin/structure/tools/bold.mjs';
@@ -132,6 +138,10 @@
                     config: {
                         defaultStyle: 'unordered'
                     },
+                },
+                table: {
+                    class: Table,
+                    inlineToolbar: true,
                 },
                 delimiter: Delimiter,
             },
