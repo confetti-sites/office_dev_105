@@ -1,4 +1,3 @@
-<div class="pt-[70px]">
   <!-- Start pricing -->
 <section class="relative pt-20">
   <div class="relative container mx-auto">
@@ -95,4 +94,3 @@
 </section>
 <!-- End pricing -->
 @include('view.faq')
-</div>
