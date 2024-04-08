@@ -7,7 +7,7 @@
     <div class="block text-bold text-xl mt-8 mb-4">
         {{ $model->getComponent()->getLabel() }}
     </div>
-    <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
+    <div class="px-5 py-4 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
         <span id="_{{ slugId($model->getId()) }}"></span>
     </div>
 </div>
@@ -112,6 +112,7 @@
                         'bold',
                         'underline',
                         'italic',
+                        'link',
                     ]
                 },
             },

@@ -9,8 +9,8 @@
     $children = $model->getChildren();
     $total = 0;
 @endphp
-{{--shadow left side--}}
-<div class="container pt-6 px-6 mx-auto grid">
+
+<div class="container pt-6 px-6 mx-auto xl:px-24 grid">
     @include('admin.breadcrumbs', ['currentId' => $currentContentId])
     @foreach($children as $child)
         @php($component = $child->getComponent())
