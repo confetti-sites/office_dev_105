@@ -62,6 +62,11 @@
          * @see https://github.com/editor-js/header/blob/master/src/index.js
          **/
         import Header from 'https://esm.sh/@editorjs/header@^2';
+        /**
+         * @see https://github.com/editor-js/nested-list
+         * @see https://github.com/editor-js/nested-list/blob/main/src/index.js
+         */
+        import NestedList from 'https://esm.sh/@editorjs/nested-list';
 
         /** Inline tools */
         import Underline from '/admin/structure/tools/underline.mjs';
@@ -114,6 +119,13 @@
                         'italic',
                         'link',
                     ]
+                },
+                list: {
+                    class: NestedList,
+                    inlineToolbar: true,
+                    config: {
+                        defaultStyle: 'unordered'
+                    },
                 },
             },
 
