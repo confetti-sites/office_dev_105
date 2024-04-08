@@ -67,13 +67,11 @@
          * @see https://github.com/editor-js/nested-list/blob/main/src/index.js
          */
         import NestedList from 'https://esm.sh/@editorjs/nested-list';
-
         /**
          * @see https://github.com/editor-js/delimiter
          * @see https://github.com/editor-js/delimiter/blob/master/src/index.js
          */
         import Delimiter from 'https://esm.sh/@editorjs/delimiter';
-
         /**
          * @see https://github.com/editor-js/table
          * @see https://github.com/editor-js/table/blob/master/src/table.js
@@ -87,6 +85,12 @@
 
         // General toolbar is
         let service = undefined;
+        const defaultInlineToolbar = [
+            'bold',
+            'underline',
+            'italic',
+            'link',
+        ];
 
         /**
          * These are the settings for the editor.js
@@ -125,23 +129,18 @@
                 },
                 paragraph: {
                     class: Paragraph,
-                    inlineToolbar: [
-                        'bold',
-                        'underline',
-                        'italic',
-                        'link',
-                    ]
+                    inlineToolbar: defaultInlineToolbar,
                 },
                 list: {
                     class: NestedList,
-                    inlineToolbar: true,
+                    inlineToolbar: defaultInlineToolbar,
                     config: {
                         defaultStyle: 'unordered'
                     },
                 },
                 table: {
                     class: Table,
-                    inlineToolbar: true,
+                    inlineToolbar: defaultInlineToolbar,
                 },
                 delimiter: Delimiter,
             },
