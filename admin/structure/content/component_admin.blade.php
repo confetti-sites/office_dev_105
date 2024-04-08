@@ -68,6 +68,12 @@
          */
         import NestedList from 'https://esm.sh/@editorjs/nested-list';
 
+        /**
+         * @see https://github.com/editor-js/delimiter
+         * @see https://github.com/editor-js/delimiter/blob/master/src/index.js
+         */
+        import Delimiter from 'https://esm.sh/@editorjs/delimiter';
+
         /** Inline tools */
         import Underline from '/admin/structure/tools/underline.mjs';
         import Bold from '/admin/structure/tools/bold.mjs';
@@ -127,6 +133,7 @@
                         defaultStyle: 'unordered'
                     },
                 },
+                delimiter: Delimiter,
             },
 
             // Set generalToolbar in a variable, so we can use it in the onChange event
