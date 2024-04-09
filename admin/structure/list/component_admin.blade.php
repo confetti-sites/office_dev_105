@@ -76,7 +76,7 @@
         //         e.target.parentNode.parentNode.remove();
         //     });
         //     xhr.open("DELETE", "getServiceApiUrl()/confetti-cms/content/contents?id_prefix=" + idPrefix);
-        //     xhr.setRequestHeader("Content-Type", "application/json");
+        //     xhr.setRequestHeader("Admin_service-Type", "application/json");
         //     xhr.setRequestHeader("Accept", "application/json");
         //     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie.split('access_token=')[1].split(';')[0]);
         //     xhr.send();

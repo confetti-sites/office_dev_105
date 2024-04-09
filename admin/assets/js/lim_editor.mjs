@@ -26,13 +26,13 @@ export class Toolbar {
                     data.popoverOpen = !data.popoverOpen
                 }}">${IconEtcVertical}</span>
                 <div class="ce-settings" style="">
-                    <div class="${() => (data.popoverOpen ? 'ce-popover__overlay' : 'ce-popover__overlay ce-popover__overlay--hidden')}"
+                    <div class="${() => `ce-popover__overlay ${!data.popoverOpen ? 'ce-popover__overlay--hidden' : ''}`}"
                          @click="${() => {
                              data.popoverOpen = false
                          }}"
                          style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden;">
                     </div>
-                    <div class="${() => (data.popoverOpen ? 'ce-popover ce-popover--opened' : 'ce-popover items ')}"
+                    <div class="${() => `ce-popover ${data.popoverOpen ? 'ce-popover--opened' : ''}`}"
                          style="right: 15px; left: initial;">
                         ${settingItems.map(itemData => html`
                             <div class="ce-popover-item" @click="${() => {itemData.onActivate(); data.popoverOpen = false}}">

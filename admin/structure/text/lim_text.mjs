@@ -1,5 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
-import {Toolbar} from "../tools/lim.mjs";
+import {Toolbar} from "../../assets/js/lim_editor.mjs";
 /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
 import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
 /** @see https://github.com/codex-team/icons */
@@ -39,6 +39,11 @@ export class LimText extends Paragraph {
      * @param {string} value
      */
     set storageValue(value) {
+        // if value is same as original value, remove it from local storage
+        if (value === this.config.originalValue) {
+            localStorage.removeItem(this.config.contentId);
+            return;
+        }
         // Use JSON.stringify to encode special characters
         localStorage.setItem(this.config.contentId, value);
     }

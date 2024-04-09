@@ -2,7 +2,7 @@
 
 /** @see https://github.com/codex-team/icons */
 import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
-import {Toolbar} from "../tools/lim.mjs";
+import {Toolbar} from "../../assets/js/lim_editor.mjs";
 
 export default class LimContent {
     /**
@@ -31,6 +31,11 @@ export default class LimContent {
      * @param {Data|null} value
      */
     set storageData(value) {
+        // if value is same as original value, remove it from local storage
+        if (value === this.editor.configuration.originalData) {
+            localStorage.removeItem(this.editor.configuration.id);
+            return;
+        }
         let toSave = null;
         // If blocks are empty, we need to set it to null
         if (value.blocks.length !== 0) {
@@ -100,6 +105,11 @@ export default class LimContent {
     }
 
     #isChanged() {
+        // check if key is present in local storage, without checking on null
+        if (!localStorage.hasOwnProperty(this.editor.configuration.id)) {
+            return false;
+        }
+
         let original = '';
         let changed = '';
         // The Value can be null, when it's not set in local storage.

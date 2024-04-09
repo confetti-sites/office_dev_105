@@ -4,7 +4,7 @@
     @foreach($blogPage->list('blog')->columns(['title', 'description'])->get() as $blog)
         <div class="m-10 mt-0 relative space-y-4">
             <div class="rounded-lg p-4 bg-blue-300 text-xl flex justify-center m-8">
-                <h3>{{ $blog->text('title')->min(1)->max(50) }}</h3>
+                <h3>{{ $blog->text('title')->min(1)->max(50)->default('Blog default title') }}</h3>
             </div>
             <div class="flex-1 flex justify-between items-center font-body">
                 {{ $blog->text('description')->min(1)->max(100) }}
