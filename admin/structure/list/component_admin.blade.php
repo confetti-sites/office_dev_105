@@ -3,6 +3,7 @@
     /** @var \Confetti\Helpers\ComponentEntity $component */
     use Confetti\Components\List_;
     $component = $model->getComponent();
+    $columns = $component->getDecoration('columns') ?? List_::getDefaultColumns($model);
 @endphp
 
 <div class="block text-bold text-xl mt-8 mb-4">
@@ -13,7 +14,7 @@
     <table class="table-auto">
         <thead class="text-left border-b border-gray-300">
         <tr>
-            @foreach($component->getDecoration('columns') ?? List_::getDefaultColumns($model) as $column)
+            @foreach($columns as $column)
                 <th class="p-4">{{ $column['label'] }}</th>
             @endforeach
         </tr>
@@ -21,9 +22,9 @@
         <tbody class="table-auto">
         @forelse($model->get() as $parentId => $row)
             <tr class="border-b border-gray-200">
-                @foreach($row as $content)
+                @foreach($columns as $column)
                     <td class="p-4">
-                        {{ $content }}
+                        {{ $row->getChildren()[$column['id']] }}
                     </td>
                 @endforeach
                 <td>
