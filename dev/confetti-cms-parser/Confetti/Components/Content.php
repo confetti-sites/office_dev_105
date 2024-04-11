@@ -12,7 +12,7 @@ abstract class Content extends ComponentStandard {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
-            return $content;
+            return json_decode($content, true);
         }
 
         // Get default value

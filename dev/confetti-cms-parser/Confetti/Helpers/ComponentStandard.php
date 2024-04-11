@@ -242,6 +242,9 @@ abstract class ComponentStandard
         if ($this->contentStore === null) {
             throw new RuntimeException("Component '{ComponentStandard::getComponent()->key}' is only used as a reference. Therefore, you can't convert `new {ComponentStandard::getComponent()->key}` to a string.");
         }
+        if (is_array($this->get())) {
+            return json_encode($this->get(), JSON_THROW_ON_ERROR);
+        }
         return (string) $this->get();
     }
 
