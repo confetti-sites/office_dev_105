@@ -42,10 +42,12 @@ export class LimText extends Paragraph {
         // if value is same as original value, remove it from local storage
         if (value === this.config.originalValue) {
             localStorage.removeItem(this.config.contentId);
+            window.dispatchEvent(new Event('local_content_changed'));
             return;
         }
         // Use JSON.stringify to encode special characters
         localStorage.setItem(this.config.contentId, value);
+        window.dispatchEvent(new Event('local_content_changed'));
     }
 
     /**

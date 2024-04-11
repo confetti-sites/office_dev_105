@@ -34,6 +34,7 @@ export default class LimContent {
         // if value is same as original value, remove it from local storage
         if (value === this.editor.configuration.originalData) {
             localStorage.removeItem(this.editor.configuration.id);
+            window.dispatchEvent(new Event('local_content_changed'));
             return;
         }
         let toSave = null;
@@ -43,6 +44,7 @@ export default class LimContent {
             toSave = JSON.stringify(value);
         }
         localStorage.setItem(this.editor.configuration.id, toSave);
+        window.dispatchEvent(new Event('local_content_changed'));
     }
 
     /**
