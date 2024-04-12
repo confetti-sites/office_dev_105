@@ -16,24 +16,32 @@ export class content {
             });
 
         // Save all items to the server
-        this.save(serviceApiUrl, items);
+        this.save(serviceApiUrl, items).then(r => {
+            // Remove saved items from local storage
+            items.forEach(item => {
+                localStorage.removeItem(item.id);
+            });
 
-        // Remove saved items from local storage
-        items.forEach(item => {
-            localStorage.removeItem(item.id);
+            // Get parent content id to redirect to
+            // \w|~ remove word characters (with ulid)
+            // /-/ remove target ids
+            const parentContentId = prefix.replace(/\/(\w|~|\/-\/)+$/, '');
+            if (parentContentId === '' || parentContentId === '/model') {
+                window.location.reload();
+            } else {
+                window.location.href = `/admin${parentContentId}`;
+            }
+            return true;
         });
-
-        // Get parent content id
-        // \w|~ remove word characters (with ulid)
-        // /-/ remove target ids
-        const parentContentId = prefix.replace(/\/(\w|~|\/-\/)+$/, '');
-        // Redirect to parent page
-        window.location.href = `/admin${parentContentId}`;
-        return true;
     }
 
+    /**
+     * @param serviceApiUrl
+     * @param data
+     * @returns {Promise<any>}
+     */
     static save(serviceApiUrl, data) {
-        fetch(`${serviceApiUrl}/confetti-cms/content/contents`, {
+        return fetch(`${serviceApiUrl}/confetti-cms/content/contents`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,6 +60,7 @@ export class content {
             .catch(error => {
                 console.error('Error:', error);
             });
+
     }
 
     /**
@@ -78,8 +87,8 @@ export class content {
             return 'Nothing to save';
         }
         if (prefix === '/model') {
-            return 'Save all ' + total + ' items';
+            return 'Publish all ' + total + ' changes';
         }
-        return 'Save ' + total + ' items';
+        return 'Publish ' + total + ' changes';
     }
 }
