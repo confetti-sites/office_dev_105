@@ -55,16 +55,12 @@
         import {content} from '/admin/assets/js/admin_service.mjs';
         function updateBadges() {
             document.querySelectorAll('._left_menu_badge').forEach((el) => {
-                const id = el.id.replace('_left_menu_badge-', '');
-                const length = content.getLocalStorageItems(id).length;
-                console.log('length', length, id)
-                el.classList.toggle('text-cyan-500', length > 0);
-                el.classList.toggle('hidden', length === 0);
+                const exists = content.getLocalStorageItems(el.id.replace('_left_menu_badge-', '')).length > 0;
+                el.classList.toggle('text-cyan-500', exists);
+                el.classList.toggle('hidden', !exists);
             });
         }
         updateBadges();
-        window.addEventListener('local_content_changed', (event) => {
-            updateBadges();
-        });
+        window.addEventListener('local_content_changed', () => updateBadges());
     </script>
 @endpushonce
