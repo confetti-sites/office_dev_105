@@ -41,6 +41,7 @@
                     >
                         Edit
                     </a>
+                    <span class="float-right justify-between text-cyan-500 px-2 py-1 m-3 ml-0 _list_item_badge hidden" id="_list_item_badge-{{ $row->getId() }}">*</span>
                 </td>
             </tr>
         @empty
@@ -63,24 +64,15 @@
     </label>
 </div>
 @pushonce('end_of_body_list')
-    <script>
-        // function deleteRow(e) {
-        //     let idPrefix = e.target.attributes.name.value;
-        //
-        //     let xhr = new XMLHttpRequest();
-        //     xhr.withCredentials = true;
-        //     xhr.addEventListener("readystatechange", function () {
-        //         if (this.status >= 300) {
-        //             console.log("Error: " + this.responseText);
-        //             return;
-        //         }
-        //         e.target.parentNode.parentNode.remove();
-        //     });
-        //     xhr.open("DELETE", "getServiceApiUrl()/confetti-cms/content/contents?id_prefix=" + idPrefix);
-        //     xhr.setRequestHeader("Admin_service-Type", "application/json");
-        //     xhr.setRequestHeader("Accept", "application/json");
-        //     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie.split('access_token=')[1].split(';')[0]);
-        //     xhr.send();
-        // }
+    <script type="module">
+        import {content} from '/admin/assets/js/admin_service.mjs';
+        function updateBadges() {
+            document.querySelectorAll('._list_item_badge').forEach((el) => {
+                const exists = content.getLocalStorageItems(el.id.replace('_list_item_badge-', '')).length > 0;
+                el.classList.toggle('hidden', !exists);
+            });
+        }
+        updateBadges();
+        window.addEventListener('local_content_changed', () => updateBadges());
     </script>
 @endpushonce

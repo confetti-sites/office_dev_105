@@ -19,7 +19,7 @@
                         href="/admin{{ $firstChild->getId() }}"
                 >
                     <span class="w-fit hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif">{{ $component->getLabel() }}</span>
-                    <span class="_left_menu_badge hidden" id="_left_menu_badge-{{ $firstChild->getId() }}">&nbsp;*</span>
+                    <span class="_left_menu_badge text-cyan-500 hidden" id="_left_menu_badge-{{ $firstChild->getId() }}">&nbsp;*</span>
                 </a>
                 {{-- Where are only interested in the children that are maps (not a list or value field). --}}
                 @php($children = method_exists($firstChild, 'getChildren') ? array_filter($firstChild->getChildren(), fn($c) => $c instanceof Map) : [])
@@ -38,7 +38,7 @@
                                     <a class="inline-flex items-center w-full py-4 font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
                                        href="/admin{{ $secondChild->getId() }}">
                                         <span class="w-fit ml-6 hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif">{{ $secondChild->getComponent()->getLabel() }}</span>
-                                        <span class="_left_menu_badge hidden" id="_left_menu_badge-{{ $secondChild->getId() }}">&nbsp;*</span>
+                                        <span class="_left_menu_badge text-cyan-500 hidden" id="_left_menu_badge-{{ $secondChild->getId() }}">&nbsp;*</span>
                                     </a>
                                 </li>
                             @endif
@@ -56,7 +56,6 @@
         function updateBadges() {
             document.querySelectorAll('._left_menu_badge').forEach((el) => {
                 const exists = content.getLocalStorageItems(el.id.replace('_left_menu_badge-', '')).length > 0;
-                el.classList.toggle('text-cyan-500', exists);
                 el.classList.toggle('hidden', !exists);
             });
         }
