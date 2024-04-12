@@ -24,15 +24,16 @@
         <script type="module">
             import {content} from '/admin/assets/js/admin_service.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
-            let data = reactive({label: content.getLabel('{{ $id }}')});
-            window.addEventListener('local_content_changed', (event) => {data.label = content.getLabel('{{ $id }}')});
+
+            const getSubmitText = () => content.getSubmitText('{{ $id }}', '{{ $model->getComponent()->getLabel() }}');
+            const toSave = content.getLocalStorageItems('{{ $id }}').length;
+            let data = reactive({label: getSubmitText()});
+            window.addEventListener('local_content_changed', () => data.label = getSubmitText());
             html`
-            <button class="flex items-center justify-between w-full px-5 py-3 mt-8 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+            <button class="${() => `flex items-center justify-center w-full px-5 py-3 mt-8 text-sm font-medium leading-5 ${toSave > 0 ? 'text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent' : ''} rounded-md`}"
                 @click="${() => {
                 content.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')
-            }}">
-                <span>${() => data.label}</span>
-            </button>`(document.getElementById('save-middle'));
+            }}">${() => data.label}</button>`(document.getElementById('save-middle'));
         </script>
     </div>
     @if(count($children) === 0)

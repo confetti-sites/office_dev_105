@@ -80,15 +80,28 @@ export class content {
 
     /**
      * @param {string} prefix
+     * @param {string} componentLabel
+     * @returns {string}
      */
-    static getLabel(prefix) {
-        const total = content.getLocalStorageItems(prefix).length;
-        if (total === 0) {
-            return 'Nothing to save';
+    static getSubmitText(prefix, componentLabel) {
+        const total = content.getLocalStorageItems('/model').length;
+        const toSave = content.getLocalStorageItems(prefix).length;
+        if (toSave === 0) {
+            let otherChanges = '';
+            if (total > 0) {
+                otherChanges = total === 1 ? ' (but there is one other change to publish)' : ` (but there are ${total - toSave} other changes to publish)`;
+            }
+            return `${componentLabel} has no changes ${otherChanges}`;
         }
-        if (prefix === '/model') {
-            return 'Publish all ' + total + ' changes';
+        if (total === toSave) {
+            if (toSave === 1) {
+                return `${componentLabel} has one change. Click here to publish. (no other changes found)`;
+            }
+            return `${componentLabel} has ${toSave} changes. Click here to publish. (no other changes found)`;
         }
-        return 'Publish ' + total + ' changes';
+        if (toSave === 1) {
+            return `${componentLabel} has one change. Click here to publish.`;
+        }
+        return `${componentLabel} has ${toSave} changes. Click here to publish.`;
     }
 }

@@ -40,8 +40,8 @@
                             class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                     >
                         Edit
+                        <span class="hidden _list_item_badge" id="_list_item_badge-{{ $row->getId() }}">*</span>
                     </a>
-                    <span class="float-right justify-between text-cyan-500 px-2 py-1 m-3 ml-0 _list_item_badge hidden" id="_list_item_badge-{{ $row->getId() }}">*</span>
                 </td>
             </tr>
         @empty
@@ -59,7 +59,7 @@
                 class="float-right justify-between px-4 py-2 m-2 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                 href="/admin{{ $model->getId() . newId() }}"
         >
-            + Add {{ $component->getDecoration('label') }}
+            Add {{ $component->getDecoration('label') }} +
         </a>
     </label>
 </div>
