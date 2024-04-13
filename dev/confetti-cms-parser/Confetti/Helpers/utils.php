@@ -84,7 +84,7 @@ function titleByKey(string $key): string
     // Guess label from the last part of the relative content id
     $parts = explode('/', $key);
     $part  = end($parts);
-    $part  = str_replace('_', ' ', $part);
+    $part  = str_replace(['_', '~'], ' ', $part);
     return ucwords($part);
 }
 
