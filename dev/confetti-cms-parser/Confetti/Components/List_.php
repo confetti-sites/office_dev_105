@@ -280,19 +280,44 @@ abstract class List_
     /**
      * @return array<string, array<string, \Confetti\Helpers\ContentEntity[]>>
      */
-    public static function getDefaultColumns(
+    public static function getColumns(
         \Confetti\Components\List_ $model,
     ): array
     {
-        $columns = $model->getComponentsFromChildren();
+        $children = $model->getComponentsFromChildren();
+        // Get defined columns if possible
+        $definedColumns = $model->getComponent()->getDecoration('columns');
+        if ($definedColumns) {
+            return array_map(static function (array $column) use ($model, $children) {
+                // find default value (from getDecoration) from children
+                $defaultValue = null;
+                foreach ($children as $child) {
+                    if ($child->key === $model->getId() . '/' . $column['id']) {
+                        $defaultValue = $child->getDecoration('default');
+                        break;
+                    }
+                }
+                return [
+                    'id'            => $column['id'],
+                    'label'         => $column['label'],
+                    'default_value' => $defaultValue,
+                ];
+            }, $definedColumns);
+        }
+
+        // If columns are not defined, then get the first 4 text columns
         // Filter out non-text columns
-        $columns = array_filter($columns, static fn(ComponentEntity $column) => $column->type === 'text');
+        $columns = array_filter($children, static fn(ComponentEntity $column) => $column->type === 'text');
         // Get max 4 columns
         $columns = array_slice($columns, 0, 4);
         return array_map(static function (ComponentEntity $column) {
             $key = explode('/', $column->key);
             $key = end($key);
-            return ['id' => $key, 'label' => ucwords(str_replace('_', ' ', $key))];
+            return [
+                'id'            => $key,
+                'label'         => ucwords(str_replace('_', ' ', $key)),
+                'default_value' => $column->getDecoration('default'),
+            ];
         }, $columns);
     }
 
