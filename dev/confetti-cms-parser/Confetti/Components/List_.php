@@ -280,34 +280,46 @@ abstract class List_
     /**
      * @return array<string, array<string, \Confetti\Helpers\ContentEntity[]>>
      */
-    public static function getColumns(
-        \Confetti\Components\List_ $model,
-    ): array
+    public static function getColumns(self $model): array
     {
-        $children = $model->getComponentsFromChildren();
         // Get defined columns if possible
-        $definedColumns = $model->getComponent()->getDecoration('columns');
-        if ($definedColumns) {
-            return array_map(static function (array $column) use ($model, $children) {
-                // find default value (from getDecoration) from children
-                $defaultValue = null;
-                foreach ($children as $child) {
-                    if ($child->key === $model->getId() . '/' . $column['id']) {
-                        $defaultValue = $child->getDecoration('default');
-                        break;
-                    }
-                }
-                return [
-                    'id'            => $column['id'],
-                    'label'         => $column['label'],
-                    'default_value' => $defaultValue,
-                ];
-            }, $definedColumns);
+        $columns = self::getDefinedColumns($model);
+        if ($columns !== null) {
+            return $columns;
         }
 
+        return self::getDefaultColumns($model);
+    }
+
+    private static function getDefinedColumns(self $model): ?array
+    {
+        $definedColumns = $model->getComponent()->getDecoration('columns');
+        if (!$definedColumns) {
+            return null;
+        }
+
+        return array_map(static function (array $column) use ($model) {
+            // find default value (from getDecoration) from children
+            $defaultValue = null;
+            foreach ($model->getComponentsFromChildren() as $child) {
+                if ($child->key === $model->getId() . '/' . $column['id']) {
+                    $defaultValue = $child->getDecoration('default');
+                    break;
+                }
+            }
+            return [
+                'id'            => $column['id'],
+                'label'         => $column['label'],
+                'default_value' => $defaultValue,
+            ];
+        }, $definedColumns);
+    }
+
+    private static function getDefaultColumns(self $model): array
+    {
         // If columns are not defined, then get the first 4 text columns
         // Filter out non-text columns
-        $columns = array_filter($children, static fn(ComponentEntity $column) => $column->type === 'text');
+        $columns = array_filter($model->getComponentsFromChildren(), static fn(ComponentEntity $column) => $column->type === 'text');
         // Get max 4 columns
         $columns = array_slice($columns, 0, 4);
         return array_map(static function (ComponentEntity $column) {
