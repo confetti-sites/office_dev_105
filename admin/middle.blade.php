@@ -2,7 +2,6 @@
     [$id] = variables($variables);
     $model = modelById($id);
     $children = $model->getChildren();
-    $total = 0;
 @endphp
 
 <div class="container pt-6 px-6 mx-auto xl:px-24 grid">
@@ -18,7 +17,6 @@
             @continue
         @endif
         @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
-        @php($total++)
     @endforeach
     <div id="save-middle">
         <script type="module">

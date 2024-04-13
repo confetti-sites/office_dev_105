@@ -69,7 +69,14 @@ export class content {
      */
     static getLocalStorageItems(prefix) {
         return Object.keys(localStorage)
-            .filter(key => key === prefix || key.startsWith(prefix + '/'))
+            .filter(key => {
+                // We want to include /model/overview/blog~1Z4BJ9J5D9
+                // when key is /model/overview/blog~
+                if (prefix.endsWith('~') || prefix.endsWith('/-')) {
+                    return key.startsWith(prefix);
+                }
+                return key === prefix || key.startsWith(prefix + '/');
+            })
             .map(key => {
                 return {
                     "id": key,
@@ -95,13 +102,13 @@ export class content {
         }
         if (total === toSave) {
             if (toSave === 1) {
-                return `${componentLabel} has one change. Click here to publish. (no other changes found)`;
+                return `${componentLabel} has one change. Click here to publish.`;
             }
-            return `${componentLabel} has ${toSave} changes. Click here to publish. (no other changes found)`;
+            return `${componentLabel} has ${toSave} changes. Click here to publish.`;
         }
         if (toSave === 1) {
-            return `${componentLabel} has one change. Click here to publish.`;
+            return `${componentLabel} has one change. Click here to publish. (without ${total - toSave} other changes)`;
         }
-        return `${componentLabel} has ${toSave} changes. Click here to publish.`;
+        return `${componentLabel} has ${toSave} changes. Click here to publish. (without ${total - toSave} other changes)`;
     }
 }

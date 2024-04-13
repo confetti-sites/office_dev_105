@@ -140,6 +140,11 @@ abstract class List_
             {
             }
 
+            public function toArray(): array
+            {
+                return iterator_to_array($this);
+            }
+
             public function getIterator(): Traversable
             {
                 if ($this->contentStore->canFake() && $this->contentStore->isFake()) {
