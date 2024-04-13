@@ -65,7 +65,7 @@
 
             html`
                 ${rows.map((row) => html`
-                    <tr class="border-b border-gray-200 _list_item_badge" id="_list_item_badge-${row.id}">
+                    <tr class="border-b border-gray-200 _list_item_changed_style" id="_list_item_changed_style-${row.id}">
                         ${Object.values(row.data).map((value) => html`
                             <td class="p-4">${value ?? ''}</td>
                         `)}
@@ -106,15 +106,14 @@
     <script type="module">
         import {content} from '/admin/assets/js/admin_service.mjs';
 
-        function updateBadges() {
-            document.querySelectorAll('._list_item_badge').forEach((el) => {
-                const exists = content.getLocalStorageItems(el.id.replace('_list_item_badge-', '')).length > 0;
+        function updateChangeStyle() {
+            document.querySelectorAll('._list_item_changed_style').forEach((el) => {
+                const exists = content.getLocalStorageItems(el.id.replace('_list_item_changed_style-', '')).length > 0;
                 el.classList.toggle('border-x', exists);
                 el.classList.toggle('border-x-cyan-500', exists);
             });
         }
-
-        updateBadges();
-        window.addEventListener('local_content_changed', () => updateBadges());
+        updateChangeStyle();
+        window.addEventListener('local_content_changed', () => updateChangeStyle());
     </script>
 @endpushonce
