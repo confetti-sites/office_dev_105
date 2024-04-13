@@ -52,10 +52,10 @@
 
 @pushonce('end_of_body_left_menu')
     <script type="module">
-        import {content} from '/admin/assets/js/admin_service.mjs';
+        import {storage} from '/admin/assets/js/admin_service.mjs';
         function updateBadges() {
             document.querySelectorAll('._left_menu_badge').forEach((el) => {
-                const exists = content.getLocalStorageItems(el.id.replace('_left_menu_badge-', '')).length > 0;
+                const exists = storage.getLocalStorageItems(el.id.replace('_left_menu_badge-', '')).length > 0;
                 el.classList.toggle('hidden', !exists);
             });
         }

@@ -1,4 +1,4 @@
-export class content {
+export class storage {
     /**
      * @param {string} serviceApiUrl
      * @param {string} prefix
@@ -111,8 +111,8 @@ export class content {
      * @returns {string}
      */
     static getSubmitText(prefix, componentLabel) {
-        const total = content.getLocalStorageItems('/model').length;
-        const toSave = content.getLocalStorageItems(prefix).length;
+        const total = storage.getLocalStorageItems('/model').length;
+        const toSave = storage.getLocalStorageItems(prefix).length;
         if (toSave === 0) {
             let otherChanges = '';
             if (total > 0) {

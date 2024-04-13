@@ -20,11 +20,11 @@
     @endforeach
     <div id="save-middle">
         <script type="module">
-            import {content} from '/admin/assets/js/admin_service.mjs';
+            import {storage} from '/admin/assets/js/admin_service.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-            const getSubmitText = () => content.getSubmitText('{{ $id }}', '{{ $model->getComponent()->getLabel() }}');
-            const toSave = () => content.getLocalStorageItems('{{ $id }}').length;
+            const getSubmitText = () => storage.getSubmitText('{{ $id }}', '{{ $model->getComponent()->getLabel() }}');
+            const toSave = () => storage.getLocalStorageItems('{{ $id }}').length;
             let data = reactive({label: getSubmitText(), count: toSave()});
             window.addEventListener('local_content_changed', () => {
                 data.label = getSubmitText();
@@ -33,7 +33,7 @@
             html`
             <button class="${() => `flex items-center justify-center w-full px-5 py-3 mt-8 text-sm font-medium leading-5 ${data.count > 0 ? 'text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent' : ''} rounded-md`}"
                 @click="${() => {
-                content.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')
+                storage.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')
             }}">${() => data.label}</button>`(document.getElementById('save-middle'));
         </script>
     </div>

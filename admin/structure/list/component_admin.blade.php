@@ -6,7 +6,10 @@
     use Confetti\Helpers\ComponentStandard;
     $component = $model->getComponent();
     $columns = List_::getColumns($model);
-    // @todo: Add default values to column, so we can use it for new empty rows
+    $originalRows = array_map(fn(Map $row) => [
+        'id' => $row->getId(),
+        'data' => array_map(fn(ComponentStandard $child) => $child->get(), $row->getChildren()),
+    ], $model->get()->toArray())
 @endphp
 
 <div class="block text-bold text-xl mt-8 mb-4">
@@ -24,44 +27,9 @@
         </thead>
         <tbody class="table-auto">
         <script type="module">
-            import {content} from '/admin/assets/js/admin_service.mjs';
-            import {html, reactive} from 'https://esm.sh/@arrow-js/core';
-            @php
-                $originalRows = array_map(fn(Map $row) => [
-                    'id' => $row->getId(),
-                    'data' => array_map(fn(ComponentStandard $child) => $child->get(), $row->getChildren()),
-                ], $model->get()->toArray())
-            @endphp
-            const parent = '{{ $model->getId() }}';
-            const columns = @json($columns);
-            const rowsRaw = @json($originalRows);
-            // Load new rows from local storage
-            content.getNewItems(parent).forEach((item) => {
-                const data = {};
-                for (const column of columns) {
-                    if (localStorage.hasOwnProperty(item.id + '/' + column.id)) {
-                        data[column.id] = localStorage.getItem(item.id + '/' + column.id);
-                    } else {
-                        data[column.id] = column.default_value ?? '';
-                    }
-                }
-                rowsRaw.push({id: item.id, data: data});
-            });
-
-            const rows = [];
-            for (const rowRaw of rowsRaw) {
-                const data = {};
-                for (const column of columns) {
-                    // Use localstorage if available
-                    const id = rowRaw.id + '/' + column.id;
-                    if (localStorage.hasOwnProperty(id)) {
-                        data[column.id] = localStorage.getItem(id);
-                    } else {
-                        data[column.id] = rowRaw.data[column.id];
-                    }
-                }
-                rows.push({id: rowRaw.id, data});
-            }
+            import LimList from '/admin/structure/list/lim_list.mjs';
+            import {html} from 'https://esm.sh/@arrow-js/core';
+            const rows = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows)).getRows();
 
             html`
                 ${rows.map((row) => html`
@@ -104,11 +72,10 @@
 </div>
 @pushonce('end_of_body_list')
     <script type="module">
-        import {content} from '/admin/assets/js/admin_service.mjs';
-
+        import {storage} from '/admin/assets/js/admin_service.mjs';
         function updateChangeStyle() {
             document.querySelectorAll('._list_item_changed_style').forEach((el) => {
-                const exists = content.getLocalStorageItems(el.id.replace('_list_item_changed_style-', '')).length > 0;
+                const exists = storage.getLocalStorageItems(el.id.replace('_list_item_changed_style-', '')).length > 0;
                 el.classList.toggle('border-x', exists);
                 el.classList.toggle('border-x-cyan-500', exists);
             });
