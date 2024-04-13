@@ -8,7 +8,11 @@
     $columns = List_::getColumns($model);
     $originalRows = array_map(fn(Map $row) => [
         'id' => $row->getId(),
-        'data' => array_map(fn(ComponentStandard $child) => $child->get(), $row->getChildren()),
+        'data' => array_map(
+            fn(ComponentStandard $child) => $child->get(),
+                // For now, we can't handle columns that are lists
+                array_filter($row->getChildren(), fn($child) => $child instanceof ComponentStandard)
+            ),
     ], $model->get()->toArray())
 @endphp
 
