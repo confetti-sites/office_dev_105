@@ -37,7 +37,6 @@
             const rowsRaw = @json($originalRows);
             // Load new rows from local storage
             content.getNewItems(parent).forEach((item) => {
-                console.log('id:', item.id)
                 const data = {};
                 for (const column of columns) {
                     if (localStorage.hasOwnProperty(item.id + '/' + column.id)) {
@@ -66,7 +65,7 @@
 
             html`
                 ${rows.map((row) => html`
-                    <tr class="border-b border-gray-200">
+                    <tr class="border-b border-gray-200 _list_item_badge" id="_list_item_badge-${row.id}">
                         ${Object.values(row.data).map((value) => html`
                             <td class="p-4">${value ?? ''}</td>
                         `)}
@@ -83,7 +82,6 @@
                                     class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                             >
                                 Edit
-                                <span class="hidden _list_item_badge" id="_list_item_badge-${row.id}">*</span>
                             </a>
                         </td>
                     </tr>
@@ -111,7 +109,8 @@
         function updateBadges() {
             document.querySelectorAll('._list_item_badge').forEach((el) => {
                 const exists = content.getLocalStorageItems(el.id.replace('_list_item_badge-', '')).length > 0;
-                el.classList.toggle('hidden', !exists);
+                el.classList.toggle('border-x', exists);
+                el.classList.toggle('border-x-cyan-500', exists);
             });
         }
 
