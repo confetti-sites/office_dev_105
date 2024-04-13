@@ -86,6 +86,26 @@ export class content {
     }
 
     /**
+     * Get all new created items from local storage
+     * Search for items that end with full ulid `/model/banner~1ZK6J9J5D9`
+     * but the search query only has `/model/banner~`
+     * Note that we don't want to include `/model/banner~1ZK6J9J5D9/title`
+     */
+    static getNewItems(key) {
+        // trim the right side of the localstorage id with 10 characters and compare
+        return Object.keys(localStorage)
+            .filter(id => id.slice(0, -10)  === key)
+            .map(id => {
+                return {
+                    "id": id,
+                    "data": {
+                        ".": localStorage.getItem(id),
+                    }
+                };
+            });
+    }
+
+    /**
      * @param {string} prefix
      * @param {string} componentLabel
      * @returns {string}

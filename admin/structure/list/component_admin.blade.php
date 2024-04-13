@@ -33,6 +33,16 @@
             const parent = '{{ $model->getId() }}';
             const columns = @json($columns);
             const rowsRaw = @json($originalRows);
+            // Load new rows from local storage
+            content.getNewItems(parent).forEach((item) => {
+                console.log('id:', item.id)
+                const data = {};
+                for (const column of columns) {
+                    data[column.id] = localStorage.getItem(item.id + '/' + column.id);
+                }
+                rowsRaw.push({id: item.id, data: data});
+            });
+
             const rows = [];
             for (const rowRaw of rowsRaw) {
                 const data = {};
@@ -48,13 +58,15 @@
                 rows.push({id: rowRaw.id, data});
             }
             // append new rows from local storage
+            console.log('parent:', parent);
+            console.log('rows:', rows);
 
 
             html`
             ${rows.map((row) => html`
             <tr class="border-b border-gray-200">
                 ${Object.values(row.data).map((value) => html`
-                    <td class="p-4">${value}</td>
+                    <td class="p-4">${value ?? ''}</td>
                 `)}
                 <td>
                     <button
@@ -78,59 +90,28 @@
             `(document.getElementById('{{ $model->getId() }}~'));
         </script>
 
-{{--        @forelse($model->get() as $parentId => $row)--}}
-{{--            <tr class="border-b border-gray-200">--}}
-{{--                @foreach($columns as $column)--}}
-{{--                    <td class="p-4">--}}
-{{--                        {{ $row->getChildren()[$column['id']] }}--}}
-{{--                    </td>--}}
-{{--                @endforeach--}}
-{{--                <td>--}}
-{{--                    <button--}}
-{{--                            @click="deleteRow"--}}
-{{--                            name="{{ $row->getId() }}"--}}
-{{--                            class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"--}}
-{{--                    >--}}
-{{--                        Delete--}}
-{{--                    </button>--}}
-{{--                    <a--}}
-{{--                            href="/admin{{ $row->getId() }}"--}}
-{{--                            class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"--}}
-{{--                    >--}}
-{{--                        Edit--}}
-{{--                        <span class="hidden _list_item_badge" id="_list_item_badge-{{ $row->getId() }}">*</span>--}}
-{{--                    </a>--}}
-{{--                </td>--}}
-{{--            </tr>--}}
-{{--        @empty--}}
-{{--            <tr>--}}
-{{--                <td class="p-4">--}}
-{{--                    {{ $component->getDecoration('label') }} not found. Click on "+--}}
-{{--                    Add {{ $component->getDecoration('label') }}" to create one.--}}
-{{--                </td>--}}
-{{--            </tr>--}}
-{{--        @endforelse--}}
         </tbody>
     </table>
     <label class="m-2">
+        @php($newId = $model->getId() . newId())
         <a
                 class="float-right justify-between px-4 py-2 m-2 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-                href="/admin{{ $model->getId() . newId() }}"
+                onclick="localStorage.setItem('{{ $newId }}', '{{ time() }}'); window.location.href = '/admin{{ $newId }}';"
         >
             Add {{ $component->getDecoration('label') }} +
         </a>
     </label>
 </div>
 @pushonce('end_of_body_list')
-    {{--    <script type="module">--}}
-    {{--        import {content} from '/admin/assets/js/admin_service.mjs';--}}
-    {{--        function updateBadges() {--}}
-    {{--            document.querySelectorAll('._list_item_badge').forEach((el) => {--}}
-    {{--                const exists = content.getLocalStorageItems(el.id.replace('_list_item_badge-', '')).length > 0;--}}
-    {{--                el.classList.toggle('hidden', !exists);--}}
-    {{--            });--}}
-    {{--        }--}}
-    {{--        updateBadges();--}}
-    {{--        window.addEventListener('local_content_changed', () => updateBadges());--}}
-    {{--    </script>--}}
+    <script type="module">
+        import {content} from '/admin/assets/js/admin_service.mjs';
+        function updateBadges() {
+            document.querySelectorAll('._list_item_badge').forEach((el) => {
+                const exists = content.getLocalStorageItems(el.id.replace('_list_item_badge-', '')).length > 0;
+                el.classList.toggle('hidden', !exists);
+            });
+        }
+        updateBadges();
+        window.addEventListener('local_content_changed', () => updateBadges());
+    </script>
 @endpushonce
