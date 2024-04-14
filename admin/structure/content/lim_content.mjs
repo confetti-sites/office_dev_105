@@ -61,7 +61,7 @@ export default class LimContent {
 
         // Add the toolbar to the editor
         new Toolbar(this.editor.configuration.element).init([{
-            label: 'Revert to saved value',
+            label: 'Revert',
             icon: IconUndo,
             closeOnActivate: true,
             onActivate: async () => {

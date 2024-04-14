@@ -9,6 +9,7 @@ export default class LimList {
 
     getRows() {
         // Load new rows from local storage
+        let rowsWithNew = this.rows;
         storage.getNewItems(this.id).forEach((item) => {
             const data = {};
             for (const column of this.columns) {
@@ -18,12 +19,12 @@ export default class LimList {
                     data[column.id] = column.default_value ?? '';
                 }
             }
-            this.rows.push({id: item.id, data: data});
+            rowsWithNew.push({id: item.id, data: data});
         });
 
         // Update existing rows from local storage
         const result = [];
-        for (const rowRaw of this.rows) {
+        for (const rowRaw of rowsWithNew) {
             const data = {};
             for (const column of this.columns) {
                 // Use localstorage if available

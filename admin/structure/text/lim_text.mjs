@@ -109,7 +109,7 @@ export class LimText extends Paragraph {
 
         // Add the toolbar to the editor
         new Toolbar(this.config.component).init([{
-            label: 'Revert to saved value',
+            label: 'Revert',
             icon: IconUndo,
             closeOnActivate: true,
             onActivate: async () => {

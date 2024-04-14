@@ -21,7 +21,7 @@
 </div>
 <!-- border rounded -->
 <div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-    <table class="table-auto" id="{{ $model->getId() }}~">
+    <table class="table-auto">
         <thead class="text-left border-b border-gray-300">
         <tr>
             @foreach($columns as $column)
@@ -29,7 +29,7 @@
             @endforeach
         </tr>
         </thead>
-        <tbody>
+        <tbody id="{{ $model->getId() }}">
         <script type="module">
             import {storage} from '/admin/assets/js/admin_service.mjs';
             import LimList from '/admin/structure/list/lim_list.mjs';
@@ -38,40 +38,44 @@
             const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
 
-            html`
-                ${rows.map((row) => {
-                    let state = reactive({conformDelete: false, deleted: false})
-                    return html`
-                        <tr class="${() => state.deleted ? `hidden` : `relative border-b border-gray-200 _list_item_changed_style`}"
-                            id="_list_item_changed_style-${row.id}">${Object.values(row.data).map((value) => html`
-                            <td class="p-4">${value ?? ''}</div></td>`)}
-                            <td>
-                                <div class="${() => `flex flex-nowrap float-right ` + (state.conformDelete ? `opacity-0` : ``)}">
-                                    <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-                                       href="/admin${row.id}">
-                                        Edit
-                                    </a>
-                                    <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-                                            @click="${() => state.conformDelete = true}">
-                                        Delete
+            html`${rows.map((row) => {
+                let state = reactive({
+                    conformDelete: false,
+                    changed: storage.hasLocalStorageItems(row.id),
+                    deleted: false,
+                })
+                window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
+                return html`
+                    <tr class="${() => (state.deleted ? `hidden` : `relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
+                        ${Object.values(row.data).map((value) => html`
+                            <td class="p-4">${value ?? ''}</div></td>`
+                        )}
+                        <td>
+                            <div class="${() => `flex flex-nowrap float-right ` + (state.conformDelete ? `opacity-0` : ``)}">
+                                <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                                   href="/admin${row.id}">
+                                    Edit
+                                </a>
+                                <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                                        @click="${() => state.conformDelete = true}">
+                                    Delete
+                                </button>
+                            </div>
+                            <div class="${() => `absolute inset-0 float-right flex justify-center backdrop-blur-sm ` + (state.conformDelete ? `` : `hidden`)}">
+                                <div>
+                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                                            @click="${() => state.conformDelete = false}">
+                                        Cancel
+                                    </button>
+                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
+                                            @click="${() => storage.delete(row.id) && (state.deleted = true)}">
+                                        Confirm deletion
                                     </button>
                                 </div>
-                                <div class="${() => `absolute inset-0 float-right flex justify-center backdrop-blur-sm ` + (state.conformDelete ? `` : `hidden`)}">
-                                    <div>
-                                        <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-                                                @click="${() => state.conformDelete = false}">
-                                            Cancel
-                                        </button>
-                                        <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                                @click="${() => storage.delete(row.id) && (state.deleted = true)}">
-                                            Confirm deletion
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>`;
-                })}
-            `(document.getElementById('{{ $model->getId() }}~'));
+                            </div>
+                        </td>
+                    </tr>`;
+            })}`(document.getElementById('{{ $model->getId() }}'));
         </script>
 
         </tbody>
@@ -85,20 +89,4 @@
         </a>
     </label>
 </div>
-@pushonce('end_of_body_list')
-    <script type="module">
-        import {storage} from '/admin/assets/js/admin_service.mjs';
 
-        // Update the style of the list items that have been changed
-        function updateChangeStyle() {
-            document.querySelectorAll('._list_item_changed_style').forEach((el) => {
-                const exists = storage.getLocalStorageItems(el.id.replace('_list_item_changed_style-', '')).length > 0;
-                el.classList.toggle('border-x', exists);
-                el.classList.toggle('border-x-cyan-500', exists);
-            });
-        }
-
-        updateChangeStyle();
-        window.addEventListener('local_content_changed', () => updateChangeStyle());
-    </script>
-@endpushonce

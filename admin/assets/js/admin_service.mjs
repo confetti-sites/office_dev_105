@@ -74,6 +74,7 @@ export class storage {
         items.forEach(item => {
             localStorage.removeItem(item);
         });
+        window.dispatchEvent(new Event('local_content_changed'));
         return true;
     }
 
@@ -97,6 +98,10 @@ export class storage {
                     "value": localStorage.getItem(key)
                 };
             });
+    }
+
+    static hasLocalStorageItems(prefix) {
+        return this.getLocalStorageItems(prefix).length > 0;
     }
 
     /**
