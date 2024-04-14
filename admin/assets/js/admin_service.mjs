@@ -131,4 +131,21 @@ export class storage {
         }
         return `${componentLabel} has ${toSave} changes. Click here to publish. (without ${total - toSave} other changes)`;
     }
+
+    static deleteFromDb() {
+        console.log('deleteFromDb');
+        // Get all items from local storage (exact match and prefix + '/')
+        let items = Object.keys(localStorage)
+            .filter(key => key.startsWith('/model/'))
+            .map(key => {
+                return {
+                    "id": key,
+                    "value": localStorage.getItem(key)
+                };
+            });
+        // Remove all items from LocalStorage
+        items.forEach(item => {
+            localStorage.removeItem(item.id);
+        });
+    }
 }
