@@ -40,9 +40,9 @@
 
             html`
                 ${rows.map((row) => {
-                    let state = reactive({conformDelete: false})
+                    let state = reactive({conformDelete: false, deleted: false})
                     return html`
-                        <tr class="relative border-b border-gray-200 _list_item_changed_style"
+                        <tr class="${() => state.deleted ? `hidden` : `relative border-b border-gray-200 _list_item_changed_style`}"
                             id="_list_item_changed_style-${row.id}">${Object.values(row.data).map((value) => html`
                             <td class="p-4">${value ?? ''}</div></td>`)}
                             <td>
@@ -63,7 +63,7 @@
                                             Cancel
                                         </button>
                                         <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                                @click="${() => storage.deleteFromDb(row.id)}">
+                                                @click="${() => storage.delete(row.id) && (state.deleted = true)}">
                                             Confirm deletion
                                         </button>
                                     </div>

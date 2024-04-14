@@ -64,6 +64,20 @@ export class storage {
     }
 
     /**
+     * @param {string} id
+     * @returns {boolean}
+     */
+    static delete(id) {
+        // Get all items from local storage (exact match and prefix + `/`)
+        let items = Object.keys(localStorage).filter(key => key === id || key.startsWith(id + '/'));
+        // Remove items from local storage
+        items.forEach(item => {
+            localStorage.removeItem(item);
+        });
+        return true;
+    }
+
+    /**
      * @param {string} prefix
      * @returns {{id: string, value: string}[]}
      */
@@ -130,22 +144,5 @@ export class storage {
             return `${componentLabel} has one change. Click here to publish. (without ${total - toSave} other changes)`;
         }
         return `${componentLabel} has ${toSave} changes. Click here to publish. (without ${total - toSave} other changes)`;
-    }
-
-    static deleteFromDb() {
-        console.log('deleteFromDb');
-        // Get all items from local storage (exact match and prefix + '/')
-        let items = Object.keys(localStorage)
-            .filter(key => key.startsWith('/model/'))
-            .map(key => {
-                return {
-                    "id": key,
-                    "value": localStorage.getItem(key)
-                };
-            });
-        // Remove all items from LocalStorage
-        items.forEach(item => {
-            localStorage.removeItem(item.id);
-        });
     }
 }
