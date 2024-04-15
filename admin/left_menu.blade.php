@@ -11,7 +11,7 @@
                 @php($component = $firstChild->getComponent())
                 @php($isCurrent = $firstChild->getId() === $currentContentId || str_starts_with($currentContentId, $firstChild->getId() . '/'))
                 @if($isCurrent)
-                    <span class="absolute inset-y-0 left-0 w-1 rounded-tr-lg rounded-br-lg bg-primary-300"
+                    <span class="absolute inset-y-1 left-0 w-1 rounded-tr-lg rounded-br-lg bg-primary-300"
                           aria-hidden="true"></span>
                 @endif
                 <a
@@ -33,7 +33,7 @@
                                 @php($isCurrent = $secondChild->getId() === $currentContentId)
                                 <li class="relative">
                                     @if($isCurrent)
-                                        <span class="absolute inset-y-0 -left-2.5 w-1 rounded-tr-lg rounded-br-lg bg-primary-300" aria-hidden="true"></span>
+                                        <span class="absolute inset-y-1 -left-3 w-1 rounded-tr-lg rounded-br-lg bg-primary-300" aria-hidden="true"></span>
                                     @endif
                                     <a class="inline-flex items-center w-full py-4 font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
                                        href="/admin{{ $secondChild->getId() }}">

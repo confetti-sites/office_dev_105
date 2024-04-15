@@ -4,7 +4,7 @@
     $children = $model->getChildren();
 @endphp
 
-<div class="container pt-6 px-6 mx-auto xl:px-24 grid">
+<div class="container pt-6 px-6 mx-auto max-w-4xl grid">
     @include('admin.breadcrumbs', ['currentId' => $id])
     @foreach($children as $child)
         @php($component = $child->getComponent())

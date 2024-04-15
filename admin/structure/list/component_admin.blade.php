@@ -24,9 +24,11 @@
     <table class="table-auto">
         <thead class="text-left border-b border-gray-300">
         <tr>
+            @php($i = 0)
             @foreach($columns as $column)
-                <th class="p-4 whitespace-nowrap">{{ $column['label'] }}</th>
+                <th class="p-4 whitespace-nowrap {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
             @endforeach
+            <th class="w-[120px]"></th>
         </tr>
         </thead>
         <tbody id="{{ $model->getId() }}">
@@ -39,19 +41,23 @@
             const rows = service.getRows();
 
             html`${rows.map((row) => {
-                let state = reactive({
+                let state = {
                     conformDelete: false,
                     changed: storage.hasLocalStorageItems(row.id),
                     deleted: false,
-                })
+                }
+                state = reactive(state);
                 window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
+                let i = 0;
                 return html`
                     <tr class="${() => (state.deleted ? `hidden` : `relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
                         ${Object.values(row.data).map((value) => html`
-                            <td class="${() => `p-4 truncate max-w-px` + (state.conformDelete ? ` blur-sm` : ``)}">${value ?? ''}</div></td>`
+                            <td class="${() => `p-4 truncate max-w-px` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
+                                ${value ?? ''}
+                            </td>`
                         )}
-                        <td class="max-w-12">
-                            <div class="${() => `flex flex-nowrap float-right ` + (state.conformDelete ? `opacity-0` : ``)}">
+                        <td class="w-[120px]">
+                            <div class="${() => `flex flex-nowrap float-right ` + (state.conformDelete ? `collapse` : ``)}">
                                 <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                                    href="/admin${row.id}">
                                     Edit
@@ -61,7 +67,7 @@
                                     Delete
                                 </button>
                             </div>
-                            <div class="${() => `absolute flex right-0 ` + (state.conformDelete ? `` : `hidden`)}">
+                            <div class="${() => `absolute flex right-0 ` + (state.conformDelete ? `` : `collapse`)}">
                                 <div>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                                             @click="${() => state.conformDelete = false}">
