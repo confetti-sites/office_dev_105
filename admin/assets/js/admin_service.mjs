@@ -139,15 +139,8 @@ export class storage {
             }
             return `${componentLabel} has no changes ${otherChanges}`;
         }
-        if (total === toSave) {
-            if (toSave === 1) {
-                return `${componentLabel} has one change. Click here to publish.`;
-            }
-            return `${componentLabel} has ${toSave} changes. Click here to publish.`;
-        }
-        if (toSave === 1) {
-            return `${componentLabel} has one change. Click here to publish. (without ${total - toSave} other changes)`;
-        }
-        return `${componentLabel} has ${toSave} changes. Click here to publish. (without ${total - toSave} other changes)`;
+        const hasChanges =`${componentLabel} has ${toSave} changes`;
+        const publishHere = toSave === 1 ? 'Click on the publish button to publish it' : 'Click on the publish button to publish them';
+        return `${hasChanges}. ${publishHere}. We found ${total - toSave} other unpublished changes.`;
     }
 }

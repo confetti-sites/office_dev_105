@@ -26,7 +26,7 @@
         <tr>
             @php($i = 0)
             @foreach($columns as $column)
-                <th class="p-4 whitespace-nowrap {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
+                <th class="p-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
             @endforeach
             <th class="w-[120px]"></th>
         </tr>

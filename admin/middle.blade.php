@@ -31,10 +31,15 @@
                 data.count = toSave();
             });
             html`
-            <button class="${() => `flex items-center justify-center w-full px-5 py-3 mt-8 text-sm font-medium leading-5 ${data.count > 0 ? 'text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent' : ''} rounded-md`}"
-                @click="${() => {
-                storage.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')
-            }}">${() => data.label}</button>`(document.getElementById('save-middle'));
+            ${data.count > 0 ? `
+                <button class="flex items-center justify-center w-full px-5 py-3 mt-8 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                        @click="${() => {storage.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')}}">
+                        <span>Publish</span>
+                </button>` : ``}
+                <p class="mt-4 text-center text-gray-500">
+                ${() => data.label}
+                </p>
+            `(document.getElementById('save-middle'));
         </script>
     </div>
     @if(count($children) === 0)
