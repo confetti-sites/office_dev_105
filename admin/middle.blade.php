@@ -18,7 +18,8 @@
         @endif
         @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
     @endforeach
-    <div id="save-middle">
+    <div class="mt-8"
+         id="save-middle">
         <script type="module">
             import {storage} from '/admin/assets/js/admin_service.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
@@ -32,13 +33,11 @@
             });
             html`
             ${data.count > 0 ? `
-                <button class="flex items-center justify-center w-full px-5 py-3 mt-8 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                <button class="flex items-center justify-center w-full px-5 py-3 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                         @click="${() => {storage.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')}}">
                         <span>Publish</span>
                 </button>` : ``}
-                <p class="mt-4 text-center text-gray-500">
-                ${() => data.label}
-                </p>
+                <div class="p-3 text-center text-gray-500 text-pretty">${() => data.label}</div>
             `(document.getElementById('save-middle'));
         </script>
     </div>
