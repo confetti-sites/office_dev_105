@@ -52,8 +52,8 @@
                 return html`
                     <tr class="${() => (state.deleted ? `hidden` : `relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
                         ${Object.values(row.data).map((value) => html`
-                            <td class="${() => `p-4 truncate max-w-px` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
-                                ${value ?? ''}
+                            <td class="${() => `p-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
+                                <span class="line-clamp-2">${value ?? ''}</span>
                             </td>`
                         )}
                         <td class="w-[120px]">
