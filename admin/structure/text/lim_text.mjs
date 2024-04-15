@@ -3,7 +3,7 @@ import {Toolbar} from "../../assets/js/lim_editor.mjs";
 /** @see https://github.com/editor-js/paragraph/blob/master/src/index.js */
 import Paragraph from 'https://esm.sh/@editorjs/paragraph@^2';
 /** @see https://github.com/codex-team/icons */
-import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
+import {IconUndo} from 'https://esm.sh/@codexteam/icons';
 
 /**
  * This is a custom implementation of the paragraph block.
@@ -108,24 +108,27 @@ export class LimText extends Paragraph {
         this.updateValueChangedStyle(this.storageValue);
 
         // Add the toolbar to the editor
-        new Toolbar(this.config.component).init([{
-            label: 'Revert',
-            icon: IconUndo,
-            closeOnActivate: true,
-            onActivate: async () => {
-                // Save the value in local storage
-                let block = this.api.blocks.getBlockByIndex(0);
-                block.call('setStorageValue', this.config.originalValue);
+        new Toolbar(this.config.component).init([
+                {
+                    label: 'Remove unpublished changes',
+                    icon: IconUndo,
+                    closeOnActivate: true,
+                    onActivate: async () => {
+                        // Save the value in local storage
+                        let block = this.api.blocks.getBlockByIndex(0);
+                        block.call('setStorageValue', this.config.originalValue);
 
-                // Render the original value
-                this.api.blocks.render({
-                    blocks: [{
-                        type: "paragraph", data: {
-                            text: this.config.originalValue
-                        }
-                    }]
-                });
-            }}],
+                        // Render the original value
+                        this.api.blocks.render({
+                            blocks: [{
+                                type: "paragraph", data: {
+                                    text: this.config.originalValue
+                                }
+                            }]
+                        });
+                    }
+                },
+            ],
         );
 
         // Set current value

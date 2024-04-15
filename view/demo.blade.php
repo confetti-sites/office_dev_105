@@ -1,7 +1,7 @@
 @php($demo = newRoot(new \model\homepage\demo)->label('Demo')->canFake())
 
 <div class="dark:bg-gray-900 pt-8">
-    @php($blocks = $demo->list('block')->columns(['title'])->min(1)->max(6)->get())
+    @php($blocks = $demo->list('block')->columns(['title', 'description'])->min(1)->max(6)->get())
     @foreach($blocks as $block)
         <div class="container py-4 md:flex gap-6">
             @php($position = $block->select('image_position')->options(['left', 'right'])->get())

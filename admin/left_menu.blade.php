@@ -11,11 +11,11 @@
                 @php($component = $firstChild->getComponent())
                 @php($isCurrent = $firstChild->getId() === $currentContentId || str_starts_with($currentContentId, $firstChild->getId() . '/'))
                 @if($isCurrent)
-                    <span class="absolute inset-y-0 left-0 w-2 rounded-tr-lg rounded-br-lg bg-primary-300"
+                    <span class="absolute inset-y-0 left-0 w-1 rounded-tr-lg rounded-br-lg bg-primary-300"
                           aria-hidden="true"></span>
                 @endif
                 <a
-                        class="inline-flex items-center w-full pl-4 py-4 font-semibold"
+                        class="inline-flex items-center w-full pl-6 py-4 font-semibold"
                         href="/admin{{ $firstChild->getId() }}"
                 >
                     <span class="w-fit hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif">{{ $component->getLabel() }}</span>
@@ -25,7 +25,7 @@
                 @php($children = method_exists($firstChild, 'getChildren') ? array_filter($firstChild->getChildren(), fn($c) => $c instanceof Map) : [])
                 @if(!empty($children))
                     <ul
-                            class=" mt-2 pl-2 space-y-2 overflow-hidden font-medium text-gray-500"
+                            class=" mt-2 pl-4 space-y-2 overflow-hidden font-medium text-gray-500"
                             aria-label="submenu"
                     >
                         @foreach($children as $secondChild)
@@ -33,7 +33,7 @@
                                 @php($isCurrent = $secondChild->getId() === $currentContentId)
                                 <li class="relative">
                                     @if($isCurrent)
-                                        <span class="absolute inset-y-0 -left-0.5 w-3 rounded-tr-lg rounded-br-lg bg-primary-300" aria-hidden="true"></span>
+                                        <span class="absolute inset-y-0 -left-2.5 w-1 rounded-tr-lg rounded-br-lg bg-primary-300" aria-hidden="true"></span>
                                     @endif
                                     <a class="inline-flex items-center w-full py-4 font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
                                        href="/admin{{ $secondChild->getId() }}">

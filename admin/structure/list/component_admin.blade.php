@@ -48,9 +48,9 @@
                 return html`
                     <tr class="${() => (state.deleted ? `hidden` : `relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
                         ${Object.values(row.data).map((value) => html`
-                            <td class="p-4">${value ?? ''}</div></td>`
+                            <td class="${() => `p-4 truncate max-w-px` + (state.conformDelete ? ` blur-sm` : ``)}">${value ?? ''}</div></td>`
                         )}
-                        <td>
+                        <td class="max-w-12">
                             <div class="${() => `flex flex-nowrap float-right ` + (state.conformDelete ? `opacity-0` : ``)}">
                                 <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                                    href="/admin${row.id}">
@@ -61,7 +61,7 @@
                                     Delete
                                 </button>
                             </div>
-                            <div class="${() => `absolute inset-0 float-right flex justify-center backdrop-blur-sm ` + (state.conformDelete ? `` : `hidden`)}">
+                            <div class="${() => `absolute flex right-0 ` + (state.conformDelete ? `` : `hidden`)}">
                                 <div>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                                             @click="${() => state.conformDelete = false}">

@@ -14,9 +14,7 @@ export class Toolbar {
      * @param settingItems
      */
     init(settingItems) {
-        const data = reactive({
-            popoverOpen: false,
-        })
+        const data = reactive({popoverOpen: false})
 
         this.ankerElement.style.position = 'relative';
 
@@ -25,18 +23,18 @@ export class Toolbar {
                 <span class="ce-toolbar__settings-btn" style="cursor: pointer;" @click="${() => {
                     data.popoverOpen = !data.popoverOpen
                 }}">${IconEtcVertical}</span>
-                <div class="ce-settings" style="">
+                <div class="ce-settings">
                     <div class="${() => `ce-popover__overlay ${!data.popoverOpen ? 'ce-popover__overlay--hidden' : ''}`}"
-                         @click="${() => {
-                             data.popoverOpen = false
-                         }}"
+                         @click="${() => {data.popoverOpen = false}}"
                          style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden;">
                     </div>
                     <div class="${() => `ce-popover ${data.popoverOpen ? 'ce-popover--opened' : ''}`}"
-                         style="right: 15px; left: initial; padding:8px">
+                         style="right: 15px; left: initial; padding:8px; --width: 280px;">
                         ${settingItems.map(itemData => html`
-                            <div class="ce-popover-item" @click="${() => {itemData.onActivate(); data.popoverOpen = false}}">
-                                <div class="ce-popover-item__icon">${itemData.icon}</div>
+                            <div class="ce-popover-item"
+                                 style="padding:8px"
+                                 @click="${() => {itemData.onActivate(); data.popoverOpen = false}}">
+                                <div style="padding-right:12px">${itemData.icon}</div>
                                 <div class="ce-popover-item__title">${itemData.label}</div>
                             </div>
                         `)}
