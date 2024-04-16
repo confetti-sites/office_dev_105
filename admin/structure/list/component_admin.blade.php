@@ -40,17 +40,18 @@
             const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
 
-            html`${rows.map((row) => {
+            service.makeDraggable(html`${rows.map((row) => {
                 let state = {
                     conformDelete: false,
                     changed: storage.hasLocalStorageItems(row.id),
                     deleted: false,
                 }
                 state = reactive(state);
+
                 window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
                 let i = 0;
                 return html`
-                    <tr class="${() => (state.deleted ? `hidden` : `relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
+                    <tr class="${() => 'transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
                         ${Object.values(row.data).map((value) => html`
                             <td class="${() => `p-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
                                 <span class="line-clamp-2">${value ?? ''}</span>
@@ -81,7 +82,7 @@
                             </div>
                         </td>
                     </tr>`;
-            })}`(document.getElementById('{{ $model->getId() }}'));
+            })}`(document.getElementById('{{ $model->getId() }}')));
         </script>
 
         </tbody>
