@@ -141,6 +141,10 @@ export class storage {
         }
         const hasChanges =`${componentLabel} has ${toSave} changes`;
         const publishHere = toSave === 1 ? 'Click on the publish button to publish it' : 'Click on the publish button to publish them';
-        return `${hasChanges}. ${publishHere}. We found ${total - toSave} other unpublished changes.`;
+        let weFound = '';
+        if (total !== toSave) {
+            weFound = (total - toSave) === 1 ? ' We found one other unpublished change.' : ` We found ${total - toSave} other unpublished changes.`;
+        }
+        return `${hasChanges}. ${publishHere}.${weFound}`;
     }
 }
