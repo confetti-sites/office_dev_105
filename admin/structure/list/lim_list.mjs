@@ -62,16 +62,36 @@ export default class LimList {
                 e.dataTransfer.effectAllowed = 'move';
                 // Set the drag data to the outer HTML of the current row
                 e.dataTransfer.setData('text/html', this.outerHTML);
-                // Hide the old element, use setTimeout to prevent hiding the moving element
-                setTimeout(() => this.remove(), 0);
+                // Remove all default hover:bg colors because when the first row is
+                // dragged and removed, the second row will be the first row and will have hover:bg-
+                for (let i = 0; i < rows.length; i++) {
+                    rows[i].classList.add('hover:bg-inherit');
+                }
             });
 
             // Add an event listener for when the drag ends
             row.addEventListener('dragend', function (e) {
-                // Remove the border classes from all table rows
-                tbody.querySelectorAll('.border-t-8', '.border-t-blue-300').forEach(function (el) {
-                    el.classList.remove('border-t-8', 'border-t-blue-300');
-                });
+                // Restore the background color of the real target row
+                dragSrcEl.classList.remove('bg-gray-100');
+                // Restore all default hover:bg colors
+                for (let i = 0; i < rows.length; i++) {
+                    rows[i].classList.remove('hover:bg-inherit');
+                }
+                // If the drag source element is not the current row
+                if (dragSrcEl !== this) {
+                    // Get the index of the drag source element
+                    let sourceIndex = dragSrcEl.rowIndex;
+                    // Get the index of the target row
+                    let targetIndex = this.rowIndex;
+                    // If the source index is less than the target index
+                    if (sourceIndex < targetIndex) {
+                        // Insert the drag source element after the target row
+                        tbody.insertBefore(dragSrcEl, this.nextSibling);
+                    } else {
+                        // Insert the drag source element before the target row
+                        tbody.insertBefore(dragSrcEl, this);
+                    }
+                }
             });
 
             // Add an event listener for when the dragged row is over another row
@@ -79,9 +99,10 @@ export default class LimList {
                 // Prevent the default dragover behavior
                 e.preventDefault();
                 // Add border classes to the current row to indicate it is a drop target
-                this.classList.add('border-t-8', 'border-t-blue-300');
                 // If the drag source element is not the current row
                 if (dragSrcEl !== this) {
+                    // Add a background color to the real target row
+                    dragSrcEl.classList.add('bg-gray-100');
                     // Get the index of the drag source element
                     let sourceIndex = dragSrcEl.rowIndex;
                     // Get the index of the target row
@@ -98,44 +119,20 @@ export default class LimList {
             });
 
             // Add an event listener for when the dragged row enters another row
-            row.addEventListener('dragenter', function (e) {
+            // row.addEventListener('dragenter', function (e) {
                 // Prevent the default dragenter behavior
-                e.preventDefault();
-                // Add border classes to the current row to indicate it is a drop target
-                this.classList.add('border-t-8', 'border-t-blue-300');
-            });
+                // e.preventDefault();
+            // });
 
-            // Add an event listener for when the dragged row leaves another row
-            row.addEventListener('dragleave', function (e) {
-                // Remove the border classes from the current row
-                this.classList.remove('border-t-8', 'border-t-blue-300');
-            });
-
+            // // Add an event listener for when the dragged row leaves another row
+            // row.addEventListener('dragleave', function (e) {
+            // });
+            //
             // Add an event listener for when the dragged row is dropped onto another row
-            row.addEventListener('drop', function (e) {
+            // row.addEventListener('drop', function (e) {
                 // Prevent the default drop behavior
-                e.preventDefault();
-                // If the drag source element is not the current row
-                if (dragSrcEl !== this) {
-                    // Get the index of the drag source element
-                    let sourceIndex = dragSrcEl.rowIndex;
-                    // Get the index of the target row
-                    let targetIndex = this.rowIndex;
-                    // If the source index is less than the target index
-                    if (sourceIndex < targetIndex) {
-                        // Insert the drag source element after the target row
-                        tbody.insertBefore(dragSrcEl, this.nextSibling);
-                    } else {
-                        // Insert the drag source element before the target row
-                        tbody.insertBefore(dragSrcEl, this);
-                    }
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    rows[i].classList.remove('border-t-8', 'border-t-blue-300');
-                }
-                // Show the dragged row
-                dragSrcEl.style.display = 'table-row';
-            });
+                // e.preventDefault();
+            // });
         }
     }
 }

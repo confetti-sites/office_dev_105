@@ -24,6 +24,7 @@
     <table class="table-auto">
         <thead class="text-left border-b border-gray-300">
         <tr>
+            <th class="w-[20px]"></th>
             @php($i = 0)
             @foreach($columns as $column)
                 <th class="p-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
@@ -36,6 +37,7 @@
             import {storage} from '/admin/assets/js/admin_service.mjs';
             import LimList from '/admin/structure/list/lim_list.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
+            import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
             const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
@@ -52,6 +54,11 @@
                 let i = 0;
                 return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
+                        <td class="p-4">
+                            <div class="flex flex-nowrap cursor-move">
+                                ${IconDrag}
+                            </div>
+                        </td>
                         ${Object.values(row.data).map((value) => html`
                             <td class="${() => `p-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
                                 <span class="line-clamp-2">${value ?? ''}</span>
@@ -83,8 +90,6 @@
                         </td>
                     </tr>`;
             })}
-<!--offset is nr of collumns -->
-            <tr class="bg bg-red-500 h-16"><td colspan="{{ count($columns) + 1 }}"></td></tr>
             `(document.getElementById('{{ $model->getId() }}'))
             service.makeDraggable(tbodyContent);
         </script>
