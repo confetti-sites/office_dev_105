@@ -24,12 +24,12 @@
     <table class="table-auto">
         <thead class="text-left border-b border-gray-300">
         <tr>
-            <th class="w-[20px]"></th>
+            <th class="collapse md:visible w-[20px]"></th>
             @php($i = 0)
             @foreach($columns as $column)
-                <th class="p-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
+                <th class="p-1 pl-2 md:p-2 md:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
             @endforeach
-            <th class="md:w-[120px]"></th>
+            <th class="md:w-[140px]"></th>
         </tr>
         </thead>
         <tbody id="{{ $model->getId() }}">
@@ -54,17 +54,17 @@
                 let i = 0;
                 return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
-                        <td class="p-1 md:p-4 _drag_grip">
+                        <td class="collapse md:visible md:p-2 md:pl-4 _drag_grip">
                             <div class="flex flex-nowrap cursor-move">
                                 ${IconDrag}
                             </div>
                         </td>
                         ${Object.values(row.data).map((value) => html`
-                            <td class="${() => `p-1 md:p-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
+                            <td class="${() => `p-1 pl-2 md:p-2 md:pl-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
                                 <span class="line-clamp-2">${value ?? ''}</span>
                             </td>`
                         )}
-                        <td class="md:w-[120px]">
+                        <td class="md:w-[140px]">
 <!--onclick hidden this, but show delete and edit-->
                             <div class="flex flex-nowrap float-right px-2 py-1 m-3 ml-0" onclick="this.classList.add('collapse'); this.nextElementSibling.classList.remove('hidden')">
                                 ${IconEtcVertical}
