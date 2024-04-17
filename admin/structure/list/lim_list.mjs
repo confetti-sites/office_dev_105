@@ -51,8 +51,14 @@ export default class LimList {
         // Loop through each row (skipping the first row which contains the table headers)
         for (let i = 0; i < rows.length; i++) {
             let row = rows[i];
-            // Make each row draggable
-            row.draggable = true;
+            // Make each row draggable, but only if the icon is on mouse down
+            row.getElementsByClassName('_drag_grip')[0].addEventListener('mousedown', function (e) {
+                row.draggable = true;
+            });
+            // Unsubscribe the drag event listener when the mouse is up
+            row.addEventListener('mouseup', function (e) {
+                row.draggable = false;
+            });
 
             // Add an event listener for when the drag starts
             row.addEventListener('dragstart', function (e) {

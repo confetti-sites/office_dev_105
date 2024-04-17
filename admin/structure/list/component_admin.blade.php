@@ -55,7 +55,7 @@
                 return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
                         <td class="p-4">
-                            <div class="flex flex-nowrap cursor-move">
+                            <div class="flex flex-nowrap cursor-move _drag_grip">
                                 ${IconDrag}
                             </div>
                         </td>
