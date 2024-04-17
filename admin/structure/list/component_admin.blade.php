@@ -29,7 +29,7 @@
             @foreach($columns as $column)
                 <th class="p-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
             @endforeach
-            <th class="w-[120px]"></th>
+            <th class="md:w-[120px]"></th>
         </tr>
         </thead>
         <tbody id="{{ $model->getId() }}">
@@ -37,7 +37,7 @@
             import {storage} from '/admin/assets/js/admin_service.mjs';
             import LimList from '/admin/structure/list/lim_list.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
-            import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
+            import {IconEtcVertical, IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
             const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
@@ -54,18 +54,22 @@
                 let i = 0;
                 return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
-                        <td class="p-4">
-                            <div class="flex flex-nowrap cursor-move _drag_grip">
+                        <td class="p-1 md:p-4 _drag_grip">
+                            <div class="flex flex-nowrap cursor-move">
                                 ${IconDrag}
                             </div>
                         </td>
                         ${Object.values(row.data).map((value) => html`
-                            <td class="${() => `p-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
+                            <td class="${() => `p-1 md:p-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
                                 <span class="line-clamp-2">${value ?? ''}</span>
                             </td>`
                         )}
-                        <td class="w-[120px]">
-                            <div class="${() => `flex flex-nowrap float-right ` + (state.conformDelete ? `collapse` : ``)}">
+                        <td class="md:w-[120px]">
+<!--onclick hidden this, but show delete and edit-->
+                            <div class="flex flex-nowrap float-right px-2 py-1 m-3 ml-0" onclick="this.classList.add('collapse'); this.nextElementSibling.classList.remove('hidden')">
+                                ${IconEtcVertical}
+                            </div>
+                            <div class="${() => `absolute flex right-0 md:flex md:flex-nowrap md:float-right hidden ` + (state.conformDelete ? `collapse` : ``)}">
                                 <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                                    href="/admin${row.id}">
                                     Edit
