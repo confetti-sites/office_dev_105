@@ -141,30 +141,6 @@ export class storage {
 
     /**
      * @param {string} prefix
-     * @param {string} componentLabel
-     * @returns {string}
-     */
-    static getSubmitText(prefix, componentLabel) {
-        const total = storage.getLocalStorageItems('/model').length;
-        const toSave = storage.getLocalStorageItems(prefix).length;
-        if (toSave === 0) {
-            let otherChanges = '';
-            if (total > 0) {
-                otherChanges = total === 1 ? ' (but there is one other change to publish)' : ` (but there are ${total - toSave} other changes to publish)`;
-            }
-            return `${componentLabel} has no changes ${otherChanges}`;
-        }
-        const hasChanges =`${componentLabel} has ${toSave} changes`;
-        const publishHere = toSave === 1 ? 'Click on the publish button to publish it' : 'Click on the publish button to publish them';
-        let weFound = '';
-        if (total !== toSave) {
-            weFound = (total - toSave) === 1 ? ' We found one other unpublished change.' : ` We found ${total - toSave} other unpublished changes.`;
-        }
-        return `${hasChanges}. ${publishHere}.${weFound}`;
-    }
-
-    /**
-     * @param {string} prefix
      */
     static redirectAway(prefix) {
         // Get parent content id to redirect to

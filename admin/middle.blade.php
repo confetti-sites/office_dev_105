@@ -26,13 +26,11 @@
             import {storage, IconLoader} from '/admin/assets/js/admin_service.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-            const getSubmitText = () => storage.getSubmitText('{{ $id }}', '{{ $model->getComponent()->getLabel() }}');
             const toSave = () => storage.getLocalStorageItems('{{ $id }}').length;
             const id = '{{ $id }}';
-            let state = {label: getSubmitText(), count: toSave(), confirmDelete: false, waiting: false};
+            let state = {count: toSave(), confirmDelete: false, waiting: false};
             state = reactive(state);
             window.addEventListener('local_content_changed', () => {
-                state.label = getSubmitText();
                 state.count = toSave();
             });
 
@@ -51,7 +49,6 @@
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
                 </button>
             </div>
-            <div class="p-3 text-center text-gray-500 text-pretty">${() => state.label}</div>
 
             `(document.getElementById('save-middle'));
         </script>
