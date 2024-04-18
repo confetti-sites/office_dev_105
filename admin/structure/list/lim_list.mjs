@@ -98,6 +98,7 @@ export default class LimList {
                         tbody.insertBefore(dragSrcEl, this);
                     }
                 }
+                row.draggable = false;
             });
 
             // Add an event listener for when the dragged row is over another row
