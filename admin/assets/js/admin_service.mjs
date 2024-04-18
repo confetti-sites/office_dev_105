@@ -22,14 +22,14 @@ export class storage {
                 localStorage.removeItem(item.id);
             });
 
-            this.redirectAway();
+            this.redirectAway(prefix);
             return true;
         });
     }
 
     /**
      * @param {string} serviceApiUrl
-     * @param {string} data
+     * @param {array<{id: string, value: string}>} data
      * @returns {Promise<any>}
      */
     static save(serviceApiUrl, data) {
@@ -58,7 +58,7 @@ export class storage {
     /**
      * @param {string} serviceApiUrl
      * @param {string} id
-     * @param {any} then
+     * @param {function} then
      * @returns {Promise<any>}
      */
     static delete(serviceApiUrl, id, then = null) {
@@ -74,13 +74,7 @@ export class storage {
             if (response.status >= 300) {
                 console.error("Error status: " + response.status);
             } else {
-                // Remove from local storage
-                // Get all items from local storage (exact match and prefix + `/`)
-                let items = Object.keys(localStorage).filter(key => key === id || key.startsWith(id + '/'));
-                // Remove items from local storage
-                items.forEach(item => {
-                    localStorage.removeItem(item);
-                });
+                this.removeLocalStorageItems(id);
                 window.dispatchEvent(new Event('local_content_changed'));
                 if (then) {
                     then();
@@ -113,6 +107,16 @@ export class storage {
 
     static hasLocalStorageItems(prefix) {
         return this.getLocalStorageItems(prefix).length > 0;
+    }
+
+    static removeLocalStorageItems(prefix) {
+        // Remove from local storage
+        // Get all items from local storage (exact match and prefix + `/`)
+        let items = Object.keys(localStorage).filter(key => key === prefix || key.startsWith(prefix + '/'));
+        // Remove items from local storage
+        items.forEach(item => {
+            localStorage.removeItem(item);
+        });
     }
 
     /**
@@ -173,4 +177,8 @@ export class storage {
             window.location.href = `/admin${parentContentId}`;
         }
     }
+}
+
+export const IconLoader = (width) => {
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${width}" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 6.99998C9.1747 6.99987 6.99997 9.24998 7 12C7.00003 14.55 9.02119 17 12 17C14.7712 17 17 14.75 17 12"><animateTransform attributeName="transform" attributeType="XML" dur="560ms" from="0,12,12" repeatCount="indefinite" to="360,12,12" type="rotate"/></path></svg>`;
 }
