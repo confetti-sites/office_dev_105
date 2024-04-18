@@ -24,10 +24,10 @@
     <table class="table-auto">
         <thead class="text-left border-b border-gray-300">
         <tr>
-            <th class="collapse md:visible w-[20px]"></th>
+            <th class="hidden md:table-cell w-[20px]"></th>
             @php($i = 0)
             @foreach($columns as $column)
-                <th class="p-1 pl-2 md:p-2 md:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
+                <th class=" p-2 pl-3 md:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
             @endforeach
             <th class="md:w-[140px]"></th>
         </tr>
@@ -37,14 +37,14 @@
             import {storage} from '/admin/assets/js/admin_service.mjs';
             import LimList from '/admin/structure/list/lim_list.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
-            import {IconEtcVertical, IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
+            import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
             const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
 
             const tbodyContent = html`${rows.map((row) => {
                 let state = {
-                    conformDelete: false,
+                    confirmDelete: false,
                     changed: storage.hasLocalStorageItems(row.id),
                     deleted: false,
                 }
@@ -54,40 +54,36 @@
                 let i = 0;
                 return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
-                        <td class="collapse md:visible md:p-2 md:pl-4 _drag_grip">
-                            <div class="flex flex-nowrap cursor-move">
+                        <td class="hidden md:table-cell md:p-2 md:pl-4">
+                            <div class="flex flex-nowrap cursor-move _drag_grip">
                                 ${IconDrag}
                             </div>
                         </td>
                         ${Object.values(row.data).map((value) => html`
-                            <td class="${() => `p-1 pl-2 md:p-2 md:pl-4` + (state.conformDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
+                            <td class="${() => ` p-2 pl-3 md:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
                                 <span class="line-clamp-2">${value ?? ''}</span>
                             </td>`
                         )}
                         <td class="md:w-[140px]">
-<!--onclick hidden this, but show delete and edit-->
-                            <div class="flex flex-nowrap float-right px-2 py-1 m-3 ml-0" onclick="this.classList.add('collapse'); this.nextElementSibling.classList.remove('hidden')">
-                                ${IconEtcVertical}
-                            </div>
-                            <div class="${() => `absolute flex right-0 md:flex md:flex-nowrap md:float-right hidden ` + (state.conformDelete ? `collapse` : ``)}">
+                            <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
                                 <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                                    href="/admin${row.id}">
                                     Edit
                                 </a>
-                                <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-                                        @click="${() => state.conformDelete = true}">
+                                <button class="hidden md:block float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                                        @click="${() => state.confirmDelete = true}">
                                     Delete
                                 </button>
                             </div>
-                            <div class="${() => `absolute flex right-0 ` + (state.conformDelete ? `` : `collapse`)}">
+                            <div class="${() => `absolute flex right-0 ` + (state.confirmDelete ? `` : `collapse`)}">
                                 <div>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-                                            @click="${() => state.conformDelete = false}">
+                                            @click="${() => state.confirmDelete = false}">
                                         Cancel
                                     </button>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
                                             @click="${() => storage.delete(row.id) && (state.deleted = true)}">
-                                        Confirm deletion
+                                        Confirm
                                     </button>
                                 </div>
                             </div>

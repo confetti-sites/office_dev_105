@@ -59,16 +59,6 @@ export default class LimList {
             row.addEventListener('mouseup', function (e) {
                 row.draggable = false;
             });
-            // For mobile devices, make each row draggable on touch start
-            row.getElementsByClassName('_drag_grip')[0].addEventListener('touchstart', function (e) {
-                console.log('touchstart');
-                e.preventDefault();
-                row.draggable = true;
-            });
-            row.addEventListener('touchend', function (e) {
-                e.preventDefault();
-                row.draggable = false;
-            });
 
             // Add an event listener for when the drag starts
             row.addEventListener('dragstart', function (e) {

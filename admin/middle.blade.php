@@ -2,6 +2,8 @@
     [$id] = variables($variables);
     $model = modelById($id);
     $children = $model->getChildren();
+    // If model is part of a list (has ~ in the id), it can be deleted
+    $canBeDeleted = str_contains($id, '~');
 @endphp
 
 <div class="container pt-6 px-6 mx-auto max-w-4xl grid">
@@ -26,18 +28,28 @@
 
             const getSubmitText = () => storage.getSubmitText('{{ $id }}', '{{ $model->getComponent()->getLabel() }}');
             const toSave = () => storage.getLocalStorageItems('{{ $id }}').length;
-            let data = reactive({label: getSubmitText(), count: toSave()});
+            let state = {label: getSubmitText(), count: toSave(), confirmDelete: false}
+            state = reactive(state);
             window.addEventListener('local_content_changed', () => {
-                data.label = getSubmitText();
-                data.count = toSave();
+                state.label = getSubmitText();
+                state.count = toSave();
             });
+
             html`
-            ${data.count > 0 ? `
-                <button class="flex items-center justify-center w-full px-5 py-3 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+            <div class="flex flex-row w-full space-x-4">
+                @if($canBeDeleted)
+                <button class="${() => `basis-1/4 px-5 py-3 text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-cyan-500 hover:bg-red-600` : `bg-cyan-500 hover:bg-cyan-600`} border border-transparent rounded-md`}"
+                        @click="${() => state.confirmDelete ? storage.delete('{{ $id }}') : state.confirmDelete = true}">
+                    <span>${() => state.confirmDelete ? `Confirm` : `Delete`}</span>
+                </button>
+                @endif
+                <button class="{{ $canBeDeleted ? 'basis-3/4' : 'w-full' }} px-5 py-3 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
                         @click="${() => {storage.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')}}">
-                        <span>Publish</span>
-                </button>` : ``}
-                <div class="p-3 text-center text-gray-500 text-pretty">${() => data.label}</div>
+                    <span>Publish</span>
+                </button>
+            </div>
+            <div class="p-3 text-center text-gray-500 text-pretty">${() => state.label}</div>
+
             `(document.getElementById('save-middle'));
         </script>
     </div>

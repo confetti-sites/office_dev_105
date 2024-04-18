@@ -37,6 +37,7 @@
                     How long will Confetti remain completely free?
                 </h3>
                 <p class="text-gray-500 dark:text-gray-400 font-body">
+{{--                    Confetti are free for customers participating in the beta. Pricing is subject to change when the beta period ends.--}}
                     "Move fast and break things" is a motto for many startups. But since we don't have a deadline, we have plenty of time to first establish a solid foundation. We want to make sure that Confetti is a stable and reliable platform before we start charging for it. If you connect your domain to the server, keep in mind that we may charge money in the future.
                 </p>
             </div>

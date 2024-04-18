@@ -22,15 +22,7 @@ export class storage {
                 localStorage.removeItem(item.id);
             });
 
-            // Get parent content id to redirect to
-            // \w|~ remove word characters (with ulid)
-            // /-/ remove target ids
-            const parentContentId = prefix.replace(/\/(\w|~|\/-\/)+$/, '');
-            if (parentContentId === '' || parentContentId === '/model') {
-                window.location.reload();
-            } else {
-                window.location.href = `/admin${parentContentId}`;
-            }
+            this.redirectAway();
             return true;
         });
     }
@@ -75,6 +67,7 @@ export class storage {
             localStorage.removeItem(item);
         });
         window.dispatchEvent(new Event('local_content_changed'));
+        this.redirectAway(id);
         return true;
     }
 
@@ -146,5 +139,20 @@ export class storage {
             weFound = (total - toSave) === 1 ? ' We found one other unpublished change.' : ` We found ${total - toSave} other unpublished changes.`;
         }
         return `${hasChanges}. ${publishHere}.${weFound}`;
+    }
+
+    /**
+     * @param {string} prefix
+     */
+    static redirectAway(prefix) {
+        // Get parent content id to redirect to
+        // \w|~ remove word characters (with ulid)
+        // /-/ remove target ids
+        const parentContentId = prefix.replace(/\/(\w|~|\/-\/)+$/, '');
+        if (parentContentId === '' || parentContentId === '/model') {
+            window.location.reload();
+        } else {
+            window.location.href = `/admin${parentContentId}`;
+        }
     }
 }
