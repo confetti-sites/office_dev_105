@@ -170,11 +170,11 @@ export class storage {
         // Get parent content id to redirect to
         // \w|~ remove word characters (with ulid)
         // /-/ remove target ids
-        const parentContentId = prefix.replace(/\/(\w|~|\/-\/)+$/, '');
-        if (parentContentId === '' || parentContentId === '/model') {
-            window.location.reload();
-        } else {
+        if (prefix.includes('~')) {
+            const parentContentId = prefix.replace(/\/(\w|~|\/-\/)+$/, '');
             window.location.href = `/admin${parentContentId}`;
+        } else {
+            window.location.reload();
         }
     }
 }
