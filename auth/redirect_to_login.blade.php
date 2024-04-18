@@ -4,7 +4,7 @@
 <script>
     // Get redirect url
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '{{ getServiceApiUrl() }}/confetti-cms/auth/login', true);
+    xhr.open('GET', '{{ getServiceApi() }}/confetti-cms/auth/login', true);
     xhr.responseType = 'json';
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.onload = function () {

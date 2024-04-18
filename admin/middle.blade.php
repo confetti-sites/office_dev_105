@@ -28,6 +28,7 @@
 
             const getSubmitText = () => storage.getSubmitText('{{ $id }}', '{{ $model->getComponent()->getLabel() }}');
             const toSave = () => storage.getLocalStorageItems('{{ $id }}').length;
+            const id = '{{ $id }}';
             let state = {label: getSubmitText(), count: toSave(), confirmDelete: false}
             state = reactive(state);
             window.addEventListener('local_content_changed', () => {
@@ -38,13 +39,13 @@
             html`
             <div class="flex flex-row w-full space-x-4">
                 @if($canBeDeleted)
-                <button class="${() => `basis-1/4 px-5 py-3 text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-cyan-500 hover:bg-red-600` : `bg-cyan-500 hover:bg-cyan-600`} border border-transparent rounded-md`}"
-                        @click="${() => state.confirmDelete ? storage.delete('{{ $id }}') : state.confirmDelete = true}">
+            <button class="${() => `basis-1/4 px-5 py-3 text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-cyan-500 hover:bg-red-600` : `bg-cyan-500 hover:bg-cyan-600`} border border-transparent rounded-md`}"
+                        @click="${() => state.confirmDelete ? storage.delete('{{ getServiceApi() }}', id, ()=> storage.redirectAway(id)) : state.confirmDelete = true}">
                     <span>${() => state.confirmDelete ? `Confirm` : `Delete`}</span>
                 </button>
                 @endif
-                <button class="{{ $canBeDeleted ? 'basis-3/4' : 'w-full' }} px-5 py-3 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-                        @click="${() => {storage.saveFromLocalStorage('{{ getServiceApiUrl() }}', '{{ $id }}')}}">
+            <button class="{{ $canBeDeleted ? 'basis-3/4' : 'w-full' }} px-5 py-3 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                        @click="${() => {storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}}">
                     <span>Publish</span>
                 </button>
             </div>

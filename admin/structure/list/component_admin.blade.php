@@ -82,7 +82,7 @@
                                         Cancel
                                     </button>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                            @click="${() => storage.delete(row.id) && (state.deleted = true)}">
+                                            @click="${() => storage.delete('{{ getServiceApi() }}', row.id) && (state.deleted = true)}">
                                         Confirm
                                     </button>
                                 </div>

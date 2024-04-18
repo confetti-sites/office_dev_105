@@ -123,7 +123,7 @@ function slugId($id) {
     return trim($id, '-');
 }
 
-function getServiceApiUrl(): string
+function getServiceApi(): string
 {
     return 'http://' . request()->host() . '/conf_api';
 }

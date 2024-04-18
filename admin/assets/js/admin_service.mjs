@@ -28,8 +28,8 @@ export class storage {
     }
 
     /**
-     * @param serviceApiUrl
-     * @param data
+     * @param {string} serviceApiUrl
+     * @param {string} data
      * @returns {Promise<any>}
      */
     static save(serviceApiUrl, data) {
@@ -56,19 +56,37 @@ export class storage {
     }
 
     /**
+     * @param {string} serviceApiUrl
      * @param {string} id
-     * @returns {boolean}
+     * @param {any} then
+     * @returns {Promise<any>}
      */
-    static delete(id) {
-        // Get all items from local storage (exact match and prefix + `/`)
-        let items = Object.keys(localStorage).filter(key => key === id || key.startsWith(id + '/'));
-        // Remove items from local storage
-        items.forEach(item => {
-            localStorage.removeItem(item);
+    static delete(serviceApiUrl, id, then = null) {
+        // Remove from database
+        return fetch(`${serviceApiUrl}/confetti-cms/content/contents?id=${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + document.cookie.split('access_token=')[1].split(';')[0],
+            },
+        }).then(response => {
+            if (response.status >= 300) {
+                console.error("Error status: " + response.status);
+            } else {
+                // Remove from local storage
+                // Get all items from local storage (exact match and prefix + `/`)
+                let items = Object.keys(localStorage).filter(key => key === id || key.startsWith(id + '/'));
+                // Remove items from local storage
+                items.forEach(item => {
+                    localStorage.removeItem(item);
+                });
+                window.dispatchEvent(new Event('local_content_changed'));
+                if (then) {
+                    then();
+                }
+            }
         });
-        window.dispatchEvent(new Event('local_content_changed'));
-        this.redirectAway(id);
-        return true;
     }
 
     /**
