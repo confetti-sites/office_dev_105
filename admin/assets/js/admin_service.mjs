@@ -17,6 +17,11 @@ export class storage {
 
         // Save all items to the server
         this.save(serviceApiUrl, items).then(r => {
+            // if not successful, console.error
+            if (!r) {
+                return false;
+            }
+
             // Remove saved items from local storage
             items.forEach(item => {
                 localStorage.removeItem(item.id);
@@ -125,7 +130,7 @@ export class storage {
      * but the search query only has `/model/banner~`
      * Note that we don't want to include `/model/banner~1ZK6J9J5D9/title`
      */
-    static getNewItems(key) {
+    static getMapItems(key) {
         // trim the right side of the localstorage id with 10 characters and compare
         return Object.keys(localStorage)
             .filter(id => id.slice(0, -10) === key)

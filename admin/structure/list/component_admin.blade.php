@@ -12,8 +12,8 @@
             fn(ComponentStandard $child) => $child->get(),
                 // For now, we can't handle columns that are lists
                 array_filter($row->getChildren(), fn($child) => $child instanceof ComponentStandard)
-            ),
-    ], $model->get()->toArray())
+            ) + ['.' => $row->getValue()],
+    ], $model->get()->toArray());
 @endphp
 
 <div class="block text-bold text-xl mt-8 mb-4">
@@ -56,7 +56,8 @@
 
                 let i = 0;
                 return html`
-                    <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
+                    <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}"
+                        content_id="${row.id}">
                         <td class="hidden md:table-cell md:p-2 md:pl-4">
                             <div class="flex flex-nowrap cursor-move _drag_grip">
                                 ${IconDrag}

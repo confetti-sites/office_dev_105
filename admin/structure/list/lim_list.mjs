@@ -8,9 +8,14 @@ export default class LimList {
     }
 
     getRows() {
-        // Load new rows from local storage
+        // Merge new rows from local storage
+        // With row.id as key
         let rowsWithNew = this.rows;
-        storage.getNewItems(this.id).forEach((item) => {
+        storage.getMapItems(this.id).forEach((item) => {
+            // check if not already in rows
+            if (rowsWithNew.find(row => row.id === item.id)) {
+                return;
+            }
             const data = {};
             data['.'] = item.data['.'];
             for (const column of this.columns) {
@@ -23,11 +28,15 @@ export default class LimList {
             rowsWithNew.push({id: item.id, data: data});
         });
 
-        // Update existing rows from local storage
+        // Update existing data from local storage
         let result = [];
         for (const rowRaw of rowsWithNew) {
             const data = {};
-            data['.'] = rowRaw.data['.'];
+            if (localStorage.hasOwnProperty(rowRaw.id)) {
+                data['.'] = JSON.parse(localStorage.getItem(rowRaw.id));
+            } else {
+                data['.'] = rowRaw.data['.'];
+            }
             for (const column of this.columns) {
                 // Use localstorage if available
                 const id = rowRaw.id + '/' + column.id;
@@ -41,7 +50,7 @@ export default class LimList {
         }
 
         result = result.sort((a, b) => {
-            return b.data['.'] - a.data['.'];
+            return a.data['.'] - b.data['.'];
         })
         return result;
     }
@@ -105,6 +114,11 @@ export default class LimList {
                     }
                 }
                 row.draggable = false;
+                // Loop over all rows and update the order in local storage
+                const updatedRows = tbody.querySelectorAll('tr');
+                for (let i = 0; i <updatedRows.length; i++) {
+                    localStorage.setItem(updatedRows[i].getAttribute('content_id'), JSON.stringify(i));
+                }
             });
 
             // Add an event listener for when the dragged row is over another row
@@ -143,7 +157,7 @@ export default class LimList {
             //
             // Add an event listener for when the dragged row is dropped onto another row
             // row.addEventListener('drop', function (e) {
-                // Prevent the default drop behavior
+            //     Prevent the default drop behavior
                 // e.preventDefault();
             // });
         }

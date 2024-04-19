@@ -32,6 +32,16 @@ abstract class Map
         return ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
+    /**
+     * The map itself can have a value. For example, for
+     * a list item, we use this value to store the order of the list.
+     * @return mixed
+     */
+    public function getValue(): mixed
+    {
+        return $this->contentStore->findOneData($this->parentContentId, '.');
+    }
+
     abstract public function getComponent(): ComponentEntity;
 
     /**
