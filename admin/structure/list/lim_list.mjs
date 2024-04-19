@@ -118,7 +118,14 @@ export default class LimList {
                 const updatedRows = tbody.querySelectorAll('tr');
                 let index = updatedRows.length;
                 for (let i = 0; i <updatedRows.length; i++) {
-                    localStorage.setItem(updatedRows[i].getAttribute('content_id'), JSON.stringify(index--));
+                    const id = updatedRows[i].getAttribute('content_id')
+                    const newIndex = JSON.stringify(index--);
+                    const oldIdOnThisIndex = rows[i].getAttribute('content_id');
+                    // Only store the new index if it is different from the old index
+                    if (oldIdOnThisIndex !== id) {
+                        localStorage.setItem(id, newIndex);
+                        window.dispatchEvent(new Event('local_content_changed'));
+                    }
                 }
             });
 
