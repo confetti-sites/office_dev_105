@@ -49,7 +49,6 @@
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
                 </button>
             </div>
-
             `(document.getElementById('save-middle'));
         </script>
     </div>

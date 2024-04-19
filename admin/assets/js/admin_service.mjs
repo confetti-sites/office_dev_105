@@ -153,6 +153,35 @@ export class storage {
             window.location.reload();
         }
     }
+
+    /**
+     * @returns {string}
+     */
+    static newId() {
+        const char = '123456789ABCDEFGHJKMNPQRSTVWXYZ';
+        const encodingLength = char.length;
+        const desiredLengthTotal = 10;
+        const desiredLengthTime = 6;
+
+        // Encode time
+        // We use the time since a fixed point in the past.
+        // This gives us a more space to use in the feature.
+        let time = Math.floor(Date.now() / 1000) - 1684441872;
+        let out = '';
+        while (out.length < desiredLengthTime) {
+            const mod = time % encodingLength;
+            out = char[mod] + out;
+            time = (time - mod) / encodingLength;
+        }
+
+        // Encode random
+        while (out.length < desiredLengthTotal) {
+            const rand = Math.floor(Math.random() * encodingLength);
+            out += char[rand];
+        }
+
+        return out;
+    }
 }
 
 export const IconLoader = (width) => {

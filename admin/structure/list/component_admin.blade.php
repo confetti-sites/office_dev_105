@@ -32,14 +32,14 @@
             <th class="md:w-[140px]"></th>
         </tr>
         </thead>
-        <tbody id="{{ $model->getId() }}">
+        <tbody id="t_body_{{ $model->getId() }}">
         <script type="module">
             import {storage} from '/admin/assets/js/admin_service.mjs';
             import LimList from '/admin/structure/list/lim_list.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
             import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
-            const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
+            const service = new LimList('t_body_{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
 
             const tbodyContent = html`${rows.map((row) => {
@@ -90,19 +90,31 @@
                         </td>
                     </tr>`;
             })}
-            `(document.getElementById('{{ $model->getId() }}'))
+            `(document.getElementById('t_body_{{ $model->getId() }}'))
             service.makeDraggable(tbodyContent);
         </script>
 
         </tbody>
     </table>
 
-    <label class="m-2">
-        @php($newId = $model->getId() . newId())
-        <a class="float-right justify-between px-4 py-2 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
-           onclick="localStorage.setItem('{{ $newId }}', '{{ time() }}'); window.location.href = '/admin{{ $newId }}';">
-            Add {{ $component->getDecoration('label') }} +
+    <label class="m-2" id="add_button_{{ $model->getId() }}">
+        <script type="module">
+            import {storage} from '/admin/assets/js/admin_service.mjs';
+            import {html} from 'https://esm.sh/@arrow-js/core';
+
+            function createNew() {
+                let newId = '{{$model->getId()}}' + storage.newId();
+                localStorage.setItem(newId, JSON.stringify(Date.now()));
+                return '/admin' + newId;
+            }
+
+            html`
+        <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+           @click="${() => window.location.href = createNew()}">
+            Add {{ $component->getLabel() }}
         </a>
+            `(document.getElementById('add_button_{{ $model->getId() }}'))
+        </script>
     </label>
 </div>
 
