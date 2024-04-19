@@ -39,7 +39,7 @@
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
             import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
-            const service = new LimList('t_body_{{ $model->getId() }}', @json($columns), @json($originalRows));
+            const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
 
             const tbodyContent = html`${rows.map((row) => {
@@ -49,8 +49,8 @@
                     deleted: false,
                 }
                 state = reactive(state);
-
                 window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
+
                 let i = 0;
                 return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}">
