@@ -128,15 +128,13 @@ export class storage {
     static getNewItems(key) {
         // trim the right side of the localstorage id with 10 characters and compare
         return Object.keys(localStorage)
-            .filter(id => id.slice(0, -10)  === key)
-            .map(id => {
-                return {
-                    "id": id,
-                    "data": {
-                        ".": localStorage.getItem(id),
-                    }
-                };
-            });
+            .filter(id => id.slice(0, -10) === key)
+            .map(id => ({
+                "id": id,
+                "data": {
+                    ".": localStorage.getItem(id),
+                }
+            })).sort((a, b) => a.data['.'] - b.data['.']);
     }
 
     /**
