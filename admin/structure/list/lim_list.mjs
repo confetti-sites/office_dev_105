@@ -12,9 +12,10 @@ export default class LimList {
         let rowsWithNew = this.rows;
         storage.getNewItems(this.id).forEach((item) => {
             const data = {};
+            data['.'] = item.data['.'];
             for (const column of this.columns) {
                 if (localStorage.hasOwnProperty(item.id + '/' + column.id)) {
-                    data[column.id] = localStorage.getItem(item.id + '/' + column.id);
+                    data[column.id] = JSON.parse(localStorage.getItem(item.id + '/' + column.id));
                 } else {
                     data[column.id] = column.default_value ?? '';
                 }
@@ -23,20 +24,25 @@ export default class LimList {
         });
 
         // Update existing rows from local storage
-        const result = [];
+        let result = [];
         for (const rowRaw of rowsWithNew) {
             const data = {};
+            data['.'] = rowRaw.data['.'];
             for (const column of this.columns) {
                 // Use localstorage if available
                 const id = rowRaw.id + '/' + column.id;
                 if (localStorage.hasOwnProperty(id)) {
-                    data[column.id] = localStorage.getItem(id);
+                    data[column.id] = JSON.parse(localStorage.getItem(id));
                 } else {
                     data[column.id] = rowRaw.data[column.id];
                 }
             }
             result.push({id: rowRaw.id, data});
         }
+
+        result = result.sort((a, b) => {
+            return b.data['.'] - a.data['.'];
+        })
         return result;
     }
 

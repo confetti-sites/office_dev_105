@@ -32,7 +32,7 @@ export class LimText extends Paragraph {
      * @return {string}
      */
     get storageValue() {
-        return localStorage.getItem(this.config.contentId);
+        return JSON.parse(localStorage.getItem(this.config.contentId));
     }
 
     /**
@@ -46,7 +46,7 @@ export class LimText extends Paragraph {
             return;
         }
         // Use JSON.stringify to encode special characters
-        localStorage.setItem(this.config.contentId, value);
+        localStorage.setItem(this.config.contentId, JSON.stringify(value));
         window.dispatchEvent(new Event('local_content_changed'));
     }
 
@@ -132,7 +132,7 @@ export class LimText extends Paragraph {
         );
 
         // Set current value
-        this._data.text = localStorage.getItem(this.config.contentId) ?? this.config.originalValue;
+        this._data.text = this.storageValue ?? this.config.originalValue;
 
         // Call the original render function
         return super.render();

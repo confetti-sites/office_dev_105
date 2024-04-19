@@ -27,7 +27,7 @@
             <th class="hidden md:table-cell w-[20px]"></th>
             @php($i = 0)
             @foreach($columns as $column)
-                <th class=" p-2 pl-3 md:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
+                <th class="pr-2 pb-4 pt-4 pl-4 md:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
             @endforeach
             <th class="md:w-[140px]"></th>
         </tr>
@@ -50,6 +50,9 @@
                 }
                 state = reactive(state);
                 window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
+                let columns = row.data;
+                delete columns['.'];
+                columns = Object.values(columns);
 
                 let i = 0;
                 return html`
@@ -59,7 +62,7 @@
                                 ${IconDrag}
                             </div>
                         </td>
-                        ${Object.values(row.data).map((value) => html`
+                        ${columns.map((value) => html`
                             <td class="${() => ` p-2 pl-3 md:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
                                 <span class="line-clamp-2">${value ?? ''}</span>
                             </td>`

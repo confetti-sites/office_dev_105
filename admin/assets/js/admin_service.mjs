@@ -132,9 +132,9 @@ export class storage {
             .map(id => ({
                 "id": id,
                 "data": {
-                    ".": localStorage.getItem(id),
+                    ".": JSON.parse(localStorage.getItem(id)),
                 }
-            })).sort((a, b) => a.data['.'] - b.data['.']);
+            }));
     }
 
     /**
