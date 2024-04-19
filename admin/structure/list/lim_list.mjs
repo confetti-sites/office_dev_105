@@ -50,7 +50,7 @@ export default class LimList {
         }
 
         result = result.sort((a, b) => {
-            return a.data['.'] - b.data['.'];
+            return b.data['.'] - a.data['.'];
         })
         return result;
     }
@@ -116,8 +116,9 @@ export default class LimList {
                 row.draggable = false;
                 // Loop over all rows and update the order in local storage
                 const updatedRows = tbody.querySelectorAll('tr');
+                let index = updatedRows.length;
                 for (let i = 0; i <updatedRows.length; i++) {
-                    localStorage.setItem(updatedRows[i].getAttribute('content_id'), JSON.stringify(i));
+                    localStorage.setItem(updatedRows[i].getAttribute('content_id'), JSON.stringify(index--));
                 }
             });
 
