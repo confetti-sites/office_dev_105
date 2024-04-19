@@ -11,7 +11,7 @@ export class storage {
             .map(key => {
                 return {
                     "id": key,
-                    "value": localStorage.getItem(key)
+                    "value": JSON.parse(localStorage.getItem(key))
                 };
             });
 
