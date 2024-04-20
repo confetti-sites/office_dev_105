@@ -56,7 +56,7 @@
 
                 let i = 0;
                 return html`
-                    <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-cyan-500` : ``)}"
+                    <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
                         content_id="${row.id}">
                         <td class="hidden sm:table-cell md:p-2 md:pl-4">
                             <div class="flex flex-nowrap cursor-move _drag_grip">
@@ -70,18 +70,18 @@
                         )}
                         <td class="md:w-[140px]">
                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
-                                <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                                <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                    href="/admin${row.id}">
                                     Edit
                                 </a>
-                                <button class="hidden sm:block float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                                <button class="hidden sm:block float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                         @click="${() => state.confirmDelete = true}">
                                     Delete
                                 </button>
                             </div>
                             <div class="${() => `absolute flex right-0 ` + (state.confirmDelete ? `` : `collapse`)}">
                                 <div>
-                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                             @click="${() => state.confirmDelete = false}">
                                         Cancel
                                     </button>
@@ -113,7 +113,7 @@
             }
 
             html`
-        <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-cyan-500 hover:bg-cyan-600 border border-transparent rounded-md"
+        <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
            @click="${() => window.location.href = createNew()}">
             Add {{ $component->getLabel() }}
         </a>

@@ -38,7 +38,7 @@
 
             <!-- Profile menu -->
             <li class="relative">
-                <button class="align-middle rounded-full focus:ring focus:outline-none pr-1"
+                <button class="align-middle rounded-full focus:ring focus:outline-none pr-3"
                         @click="toggleProfileMenu" @keydown.escape="closeProfileMenu" aria-label="Account"
                         aria-haspopup="true">
                     <img class="object-cover w-8 h-8 rounded-full"

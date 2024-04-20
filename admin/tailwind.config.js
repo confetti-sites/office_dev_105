@@ -19,10 +19,7 @@ module.exports = {
         }),
         extend: {
             colors: {
-                primary: colors.cyan,
-                teal: colors.teal,
-                orange: colors.orange,
-                gray: colors.gray,
+                // primary: colors.emerald,
             },
             maxHeight: {
                 xl: '36rem',
