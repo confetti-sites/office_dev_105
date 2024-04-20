@@ -21,7 +21,7 @@
         @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
     @endforeach
     <div class="mt-8"
-         id="save-middle">
+         id="actions_bottom">
         <script type="module">
             import {storage, IconLoader} from '/admin/assets/js/admin_service.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
@@ -43,13 +43,16 @@
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
                 </button>
                 @endif
-            <button class="{{ $canBeDeleted ? 'basis-3/4' : 'w-full' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                <a href="/admin{{ $model->getParentId() }}" class="basis-1/4 px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md">
+                    Back
+                </a>
+            <button class="{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                         @click="${() => (state.waiting = true) && storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}">
                     <span class="${() => state.waiting ? `hidden` : ``}">Publish</span>
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
                 </button>
             </div>
-            `(document.getElementById('save-middle'));
+            `(document.getElementById('actions_bottom'));
         </script>
     </div>
     @if(count($children) === 0)

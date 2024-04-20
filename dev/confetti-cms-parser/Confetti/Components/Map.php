@@ -76,6 +76,12 @@ abstract class Map
         throw new \RuntimeException('No method list() found to get children of ' . $this->getId(). '. Please define list with the method.');
     }
 
+    public function getParentId(): string
+    {
+        [$parent] = ComponentStandard::explodeKey($this->getId());
+        return $parent;
+    }
+
     /**
      * @internal This method is not part of the public API and should not be used.
      */

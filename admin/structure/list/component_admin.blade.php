@@ -10,8 +10,12 @@
         'id' => $row->getId(),
         'data' => array_map(
             fn(ComponentStandard $child) => $child->get(),
-                // For now, we can't handle columns that are lists
-                array_filter($row->getChildren(), fn($child) => $child instanceof ComponentStandard)
+                // For now, we can't handle columns that are normal components (not lists)
+                // And filter out none column components
+                array_filter($row->getChildren(), fn($child) =>
+                    $child instanceof ComponentStandard &&
+                    in_array($child->getRelativeId(), array_column($columns, 'id'))
+                )
             ) + ['.' => $row->getValue()],
     ], $model->get()->toArray());
 @endphp
@@ -46,18 +50,15 @@
                 let state = {
                     confirmDelete: false,
                     changed: storage.hasLocalStorageItems(row.id),
-                    deleted: false,
                 }
                 state = reactive(state);
+                let columns = service.getColumns(row);
                 window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
-                let columns = row.data;
-                delete columns['.'];
-                columns = Object.values(columns);
 
                 let i = 0;
                 return html`
-                    <tr class="${() => 'border-t transition-all hover:bg-gray-100' + (state.deleted ? ` hidden` : ` relative border-b border-gray-200`) + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
-                        content_id="${row.id}">
+                    <tr class="${() => 'border-t transition-all hover:bg-gray-100 relative border-b border-gray-200' + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
+                        content_id="${row.id}" index="${row.data['.']}">
                         <td class="hidden sm:table-cell md:p-2 md:pl-4">
                             <div class="flex flex-nowrap cursor-move _drag_grip">
                                 ${IconDrag}
@@ -86,7 +87,7 @@
                                         Cancel
                                     </button>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                            @click="${() => storage.delete('{{ getServiceApi() }}', row.id) && (state.deleted = true)}">
+                                            @click="${(element) =>storage.delete('{{ getServiceApi() }}', row.id) && element.target.closest('tr').remove() && delete rows[row.id]}">
                                         Confirm
                                     </button>
                                 </div>

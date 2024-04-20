@@ -4,7 +4,19 @@ export default class LimList {
     constructor(id, columns, originalRows) {
         this.id = id;
         this.columns = columns;
+        this.originalRows = originalRows;
         this.rows = originalRows;
+    }
+
+    /**
+     * @param {object} row
+     * @returns {Array}
+     */
+    getColumns(row) {
+        // Do not update the original row by reference
+        let withoutReference = this.columns.map(column => row.data[column.id]);
+        delete withoutReference['.'];
+        return withoutReference;
     }
 
     getRows() {
@@ -32,11 +44,6 @@ export default class LimList {
         let result = [];
         for (const rowRaw of rowsWithNew) {
             const data = {};
-            if (localStorage.hasOwnProperty(rowRaw.id)) {
-                data['.'] = JSON.parse(localStorage.getItem(rowRaw.id));
-            } else {
-                data['.'] = rowRaw.data['.'];
-            }
             for (const column of this.columns) {
                 // Use localstorage if available
                 const id = rowRaw.id + '/' + column.id;
@@ -46,7 +53,12 @@ export default class LimList {
                     data[column.id] = rowRaw.data[column.id];
                 }
             }
-            result.push({id: rowRaw.id, data});
+            if (localStorage.hasOwnProperty(rowRaw.id)) {
+                data['.'] = JSON.parse(localStorage.getItem(rowRaw.id));
+            } else {
+                data['.'] = rowRaw.data['.'];
+            }
+            result.push({id: rowRaw.id, data: data});
         }
 
         result = result.sort((a, b) => {
@@ -60,9 +72,22 @@ export default class LimList {
      * @param {HTMLElement} tbody
      */
     makeDraggable(tbody) {
+        const originalRows = this.originalRows;
         let rows = tbody.querySelectorAll('tr');
         // Initialize the drag source element to null
         let dragSrcEl = null;
+        // Get all current indexes
+        const getIndexes = function (tbody) {
+            // Get all current indexes
+            let indexes = [];
+            tbody.querySelectorAll('tr').forEach((row) => {
+                indexes.push(row.getAttribute('index'));
+            });
+            // order indexes
+            indexes = indexes.map((index) => parseInt(index));
+            indexes.sort((a, b) => b - a);
+            return indexes;
+        };
         // Loop through each row (skipping the first row which contains the table headers)
         for (let i = 0; i < rows.length; i++) {
             let row = rows[i];
@@ -113,20 +138,29 @@ export default class LimList {
                         tbody.insertBefore(dragSrcEl, this);
                     }
                 }
-                row.draggable = false;
+
                 // Loop over all rows and update the order in local storage
                 const updatedRows = tbody.querySelectorAll('tr');
-                let index = updatedRows.length;
-                for (let i = 0; i <updatedRows.length; i++) {
-                    const id = updatedRows[i].getAttribute('content_id')
-                    const newIndex = JSON.stringify(index--);
-                    const oldIdOnThisIndex = rows[i].getAttribute('content_id');
+                const indexes = getIndexes(tbody);
+                for (let i = 0; i < updatedRows.length; i++) {
+                    const id = updatedRows[i].getAttribute('content_id');
+                    localStorage.setItem(id, JSON.stringify(indexes[i]));
+                }
+
+                // Loop over old rows and remove items in local storage that are changed
+                // originalRows is not iterable
+                for (const [key, row] of Object.entries(originalRows)) {
+                    const id = row.id;
+                    const oldIdOnThisIndex = row.data['.'];
+                    const inStorage = JSON.parse(localStorage.getItem(id));
                     // Only store the new index if it is different from the old index
-                    if (oldIdOnThisIndex !== id) {
-                        localStorage.setItem(id, newIndex);
-                        window.dispatchEvent(new Event('local_content_changed'));
+                    if (oldIdOnThisIndex === inStorage) {
+                        localStorage.removeItem(id);
                     }
                 }
+
+                row.draggable = false;
+                window.dispatchEvent(new Event('local_content_changed'));
             });
 
             // Add an event listener for when the dragged row is over another row
@@ -155,8 +189,8 @@ export default class LimList {
 
             // Add an event listener for when the dragged row enters another row
             // row.addEventListener('dragenter', function (e) {
-                // Prevent the default dragenter behavior
-                // e.preventDefault();
+            // Prevent the default dragenter behavior
+            // e.preventDefault();
             // });
 
             // // Add an event listener for when the dragged row leaves another row
@@ -166,7 +200,7 @@ export default class LimList {
             // Add an event listener for when the dragged row is dropped onto another row
             // row.addEventListener('drop', function (e) {
             //     Prevent the default drop behavior
-                // e.preventDefault();
+            // e.preventDefault();
             // });
         }
     }

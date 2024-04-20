@@ -151,6 +151,11 @@ abstract class ComponentStandard
         return self::mergeIds($this->parentContentId, $this->relativeContentId);
     }
 
+    public function getRelativeId(): string
+    {
+        return $this->relativeContentId;
+    }
+
     public function getChildren(): array
     {
         return [];
