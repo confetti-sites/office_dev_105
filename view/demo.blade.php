@@ -11,9 +11,7 @@
                     {!! $block->text('description')->min(1)->max(600) !!}
                 </p>
             </div>
-            <div
-                    class="md:w-1/2 mt-8 md:mt-0 opacity-1 py-2 @if($position == 'left') -order-1 @endif"
-            >
+            <div class="md:w-1/2 mt-8 md:mt-0 opacity-1 py-2 @if($position == 'left') -order-1 @endif">
                 <img src="{{ $block->image('image')->width(800)->height(500) }}" alt="">
             </div>
         </div>

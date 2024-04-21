@@ -24,7 +24,7 @@ function newRoot(\Confetti\Components\Root $target): \Confetti\Components\Root
     return $model;
 }
 
-function modelById(string $contentId): \Confetti\Components\Map
+function modelById(string $contentId): Map|ComponentStandard
 {
     $location  = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
     $as        = $location['file'] . ':' . $location['line'];
