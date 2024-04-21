@@ -26,14 +26,14 @@
 <!-- border rounded -->
 <div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
     <table class="table-auto">
-        <thead class="text-left border-b border-gray-300">
+        <thead class="hidden sm:table-header-group text-left border-b border-gray-300">
             <tr>
-                <th class="hidden sm:table-cell w-[20px]"></th>
+                <th class="w-[20px]"></th>
                 @php($i = 0)
                 @foreach($columns as $column)
-                    <th class="pr-2 pb-4 pt-4 pl-4 sm:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
+                    <th class="pt-4 pr-2 pb-4 pl-4">{{ $column['label'] }}</th>
                 @endforeach
-                <th class="hidden sm:table-cell sm:w-[140px]"></th>
+                <th class="w-[140px]"></th>
             </tr>
         </thead>
         <tbody id="t_body_{{ $model->getId() }}">
