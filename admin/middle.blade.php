@@ -36,6 +36,9 @@
 
             html`
             <div class="flex flex-row w-full space-x-4">
+                <a href="/admin{{ $model->getParentId() }}" class="basis-1/4 px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md">
+                    Back
+                </a>
                 @if($canBeDeleted)
                 <button class="${() => `basis-1/4 px-5 ` + (state.waiting ? `` : `py-3 `) + `flex items-center justify-center text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-emerald-700 hover:bg-red-600` : `bg-emerald-700 hover:bg-emerald-800`} border border-transparent rounded-md`}"
                         @click="${() => state.confirmDelete ? (state.waiting = true) && storage.delete('{{ getServiceApi() }}', id, ()=> storage.redirectAway(id)) : state.confirmDelete = true}">
@@ -43,9 +46,6 @@
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
                 </button>
                 @endif
-                <a href="/admin{{ $model->getParentId() }}" class="basis-1/4 px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md">
-                    Back
-                </a>
             <button class="{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                         @click="${() => (state.waiting = true) && storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}">
                     <span class="${() => state.waiting ? `hidden` : ``}">Publish</span>

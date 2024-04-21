@@ -21,20 +21,20 @@
 @endphp
 
 <div class="block text-bold text-xl mt-8 mb-4">
-    {{ $component->getDecoration('label') }} List
+    {{ $component->getLabel() }} List
 </div>
 <!-- border rounded -->
 <div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
     <table class="table-auto">
         <thead class="text-left border-b border-gray-300">
-        <tr>
-            <th class="hidden sm:table-cell w-[20px]"></th>
-            @php($i = 0)
-            @foreach($columns as $column)
-                <th class="pr-2 pb-4 pt-4 pl-4 md:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
-            @endforeach
-            <th class="md:w-[140px]"></th>
-        </tr>
+            <tr>
+                <th class="hidden sm:table-cell w-[20px]"></th>
+                @php($i = 0)
+                @foreach($columns as $column)
+                    <th class="pr-2 pb-4 pt-4 pl-4 sm:pl-4 {{ $i++ >= 1 ? 'hidden sm:table-cell' : '' }}">{{ $column['label'] }}</th>
+                @endforeach
+                <th class="hidden sm:table-cell sm:w-[140px]"></th>
+            </tr>
         </thead>
         <tbody id="t_body_{{ $model->getId() }}">
         <script type="module">
@@ -47,6 +47,7 @@
             const rows = service.getRows();
 
             const tbodyContent = html`${rows.map((row) => {
+                const sm = 640;
                 let state = {
                     confirmDelete: false,
                     changed: storage.hasLocalStorageItems(row.id),
@@ -59,23 +60,24 @@
                 return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100 relative border-b border-gray-200' + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
                         content_id="${row.id}" index="${row.data['.']}">
-                        <td class="hidden sm:table-cell md:p-2 md:pl-4">
+                        <td class="hidden sm:table-cell sm:p-2 sm:pl-4">
                             <div class="flex flex-nowrap cursor-move _drag_grip">
                                 ${IconDrag}
                             </div>
                         </td>
                         ${columns.map((value) => html`
-                            <td class="${() => ` p-2 pl-3 md:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}">
+                            <td class="${() => ` p-3 ms:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
+                                @click="${() => (window.innerWidth < sm) ? window.location.href = '/admin' + row.id : ''}">
                                 <span class="line-clamp-2">${value ?? ''}</span>
                             </td>`
                         )}
-                        <td class="md:w-[140px]">
+                        <td class="hidden sm:table-cell sm:w-[140px]">
                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
                                 <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                    href="/admin${row.id}">
                                     Edit
                                 </a>
-                                <button class="hidden sm:block float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                         @click="${() => state.confirmDelete = true}">
                                     Delete
                                 </button>
