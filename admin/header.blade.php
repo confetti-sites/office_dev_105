@@ -13,7 +13,6 @@
             {{-- placeholder for items in the middle --}}
         </div>
 
-
         {{--            <li class="flex">--}}
         {{--                <button class="rounded-md focus:outline-none focus:ring dark:text-gray-300"--}}
         {{--                        aria-label="Toggle color mode">--}}
@@ -35,7 +34,7 @@
         <!-- Profile menu -->
         <div class="relative">
             <button class="align-middle rounded-full focus:ring focus:outline-none pr-3">
-                <a href="/" class="truncate">confetti.com</a>
+                <a href="/">confetti.com</a>
                 {{--                <a href="/" class="truncate">{{ $_SERVER['HTTP_HOST'] }}</a>--}}
             </button>
             <button class="align-middle rounded-full focus:ring focus:outline-none pr-3"

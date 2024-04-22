@@ -1,4 +1,4 @@
-@php($demo = newRoot(new \model\homepage\demo)->label('Demo')->canFake())
+@php($demo = newRoot(new \model\homepage\demo)->label('Demo'))
 
 <div class="dark:bg-gray-900 pt-8">
     @php($blocks = $demo->list('block')->columns(['title', 'description'])->min(1)->max(6)->get())
