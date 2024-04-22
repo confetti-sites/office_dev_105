@@ -36,7 +36,7 @@
         @break
 @endswitch
 
-@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_big.blade.php'))
+@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_small.blade.php'))
 @include($target, ['model' => $target])
 {{--    @endguest--}}
 {{--Can't move to top (refacotor require blade files from inner to out)--}}

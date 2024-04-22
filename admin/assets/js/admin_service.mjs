@@ -1,4 +1,62 @@
 export class storage {
+    static saveToLocalStorage(id, data) {
+        const value = JSON.stringify(data);
+        // Don't save if the value is the same
+        if (localStorage.hasOwnProperty(id) && localStorage.getItem(id) === value) {
+            return;
+        }
+        localStorage.setItem(id, value);
+        window.dispatchEvent(new Event('local_content_changed'));
+    }
+
+    /**
+     * Get one item from local storage
+     * @param {string} id
+     * @returns {string|null}
+     */
+    static getFromLocalStorage(id) {
+        if (localStorage.hasOwnProperty(id)) {
+            return JSON.parse(localStorage.getItem(id));
+        }
+        return null;
+    }
+
+    /**
+     * @param {string} prefix
+     * @returns {{id: string, value: string}[]}
+     */
+    static getLocalStorageItems(prefix) {
+        return Object.keys(localStorage)
+            .filter(key => {
+                // We want to include /model/overview/blog~1Z4BJ9J5D9
+                // when key is /model/overview/blog~
+                if (prefix.endsWith('~') || prefix.endsWith('/-')) {
+                    return key.startsWith(prefix);
+                }
+                return key === prefix || key.startsWith(prefix + '/');
+            })
+            .map(key => {
+                return {
+                    "id": key,
+                    "value": localStorage.getItem(key)
+                };
+            });
+    }
+
+    static hasLocalStorageItems(prefix) {
+        return this.getLocalStorageItems(prefix).length > 0;
+    }
+
+    static removeLocalStorageItems(prefix) {
+        // Remove from local storage
+        // Get all items from local storage (exact match and prefix + `/`)
+        let items = Object.keys(localStorage).filter(key => key === prefix || key.startsWith(prefix + '/'));
+        // Remove items from local storage
+        items.forEach(item => {
+            localStorage.removeItem(item);
+        });
+    }
+
     /**
      * @param {string} serviceApiUrl
      * @param {string} prefix
@@ -85,42 +143,6 @@ export class storage {
                     then();
                 }
             }
-        });
-    }
-
-    /**
-     * @param {string} prefix
-     * @returns {{id: string, value: string}[]}
-     */
-    static getLocalStorageItems(prefix) {
-        return Object.keys(localStorage)
-            .filter(key => {
-                // We want to include /model/overview/blog~1Z4BJ9J5D9
-                // when key is /model/overview/blog~
-                if (prefix.endsWith('~') || prefix.endsWith('/-')) {
-                    return key.startsWith(prefix);
-                }
-                return key === prefix || key.startsWith(prefix + '/');
-            })
-            .map(key => {
-                return {
-                    "id": key,
-                    "value": localStorage.getItem(key)
-                };
-            });
-    }
-
-    static hasLocalStorageItems(prefix) {
-        return this.getLocalStorageItems(prefix).length > 0;
-    }
-
-    static removeLocalStorageItems(prefix) {
-        // Remove from local storage
-        // Get all items from local storage (exact match and prefix + `/`)
-        let items = Object.keys(localStorage).filter(key => key === prefix || key.startsWith(prefix + '/'));
-        // Remove items from local storage
-        items.forEach(item => {
-            localStorage.removeItem(item);
         });
     }
 

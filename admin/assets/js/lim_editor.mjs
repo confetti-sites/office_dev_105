@@ -19,7 +19,7 @@ export class Toolbar {
         this.ankerElement.style.position = 'relative';
 
         const toolbar = html`
-            <div style="position: absolute; right: 0; top: 0; margin-top: 2rem; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 100%; padding: 0 1.2rem;">
+            <div style="position: absolute; right: 0; top: 0; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 100%; padding: 0 1.2rem;">
                 <span class="ce-toolbar__settings-btn" style="cursor: pointer;" @click="${() => {
                     data.popoverOpen = !data.popoverOpen
                 }}">${IconEtcVertical}</span>
