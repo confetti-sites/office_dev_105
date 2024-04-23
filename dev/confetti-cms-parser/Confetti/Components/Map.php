@@ -73,7 +73,7 @@ abstract class Map
         // 1. Create a file with ->list('blogs')->get()
         // 2. Use ->blogs()->get() in another file.
         // 3. Remove ->list('blogs')->get()
-        throw new \RuntimeException('No method list() found to get children of ' . $this->getId(). '. Please define list with the method.');
+        throw new \RuntimeException("No method list() found to get children of {$this->getId()}. Please define list with the method `list('{$this->parentContentId}')`.");
     }
 
     public function getParentId(): string
