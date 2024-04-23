@@ -47,11 +47,14 @@
             const rows = service.getRows();
 
             if (rows.length === 0) {
-                document.getElementById('t_body_{{ $model->getId() }}').innerHTML = `
+                const tbody = document.getElementById('t_body_{{ $model->getId() }}');
+                tbody.innerHTML = `
                     <tr>
                         <td colspan="{{ count($columns) + 2 }}" class="p-4 pt-12 text-center">No items found, click 'Add {{ $component->getLabel() }}' to add a new item.</td>
                     </tr>
                 `;
+                // Hide header if no items are found
+                tbody.previousElementSibling.style.display = 'none';
             } else {
                 const tbodyContent = html`${rows.map((row) => {
                     const sm = 640;
