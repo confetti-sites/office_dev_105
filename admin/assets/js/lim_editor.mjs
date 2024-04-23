@@ -2,7 +2,6 @@
 import {IconEtcVertical} from 'https://esm.sh/@codexteam/icons';
 import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-
 export class Toolbar {
     /** @type {HTMLElement} */
     constructor(component) {

@@ -46,18 +46,25 @@
             const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
             const rows = service.getRows();
 
-            const tbodyContent = html`${rows.map((row) => {
-                const sm = 640;
-                let state = {
-                    confirmDelete: false,
-                    changed: storage.hasLocalStorageItems(row.id),
-                }
-                state = reactive(state);
-                let columns = service.getColumns(row);
-                window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
+            if (rows.length === 0) {
+                document.getElementById('t_body_{{ $model->getId() }}').innerHTML = `
+                    <tr>
+                        <td colspan="{{ count($columns) + 2 }}" class="p-4 pt-12 text-center">No items found, click 'Add {{ $component->getLabel() }}' to add a new item.</td>
+                    </tr>
+                `;
+            } else {
+                const tbodyContent = html`${rows.map((row) => {
+                    const sm = 640;
+                    let state = {
+                        confirmDelete: false,
+                        changed: storage.hasLocalStorageItems(row.id),
+                    }
+                    state = reactive(state);
+                    let columns = service.getColumns(row);
+                    window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
 
-                let i = 0;
-                return html`
+                    let i = 0;
+                    return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100 relative border-b border-gray-200' + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
                         content_id="${row.id}" index="${row.data['.']}">
                         <td class="hidden sm:table-cell sm:p-2 sm:pl-4">
@@ -66,11 +73,11 @@
                             </div>
                         </td>
                         ${columns.map((value) => html`
-                            <td class="${() => ` p-3 ms:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
-                                @click="${() => (window.innerWidth < sm) ? window.location.href = '/admin' + row.id : ''}">
-                                <span class="line-clamp-2">${value ?? ''}</span>
-                            </td>`
-                        )}
+                        <td class="${() => ` p-3 ms:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
+                            @click="${() => (window.innerWidth < sm) ? window.location.href = '/admin' + row.id : ''}">
+                            <span class="line-clamp-2">${value ?? ''}</span>
+                        </td>`
+                    )}
                         <td class="hidden sm:table-cell sm:w-[140px]">
                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
                                 <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
@@ -89,16 +96,17 @@
                                         Cancel
                                     </button>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                            @click="${(element) =>storage.delete('{{ getServiceApi() }}', row.id) && element.target.closest('tr').remove() && delete rows[row.id]}">
+                                            @click="${(element) => storage.delete('{{ getServiceApi() }}', row.id) && element.target.closest('tr').remove() && delete rows[row.id]}">
                                         Confirm
                                     </button>
                                 </div>
                             </div>
                         </td>
                     </tr>`;
-            })}
-            `(document.getElementById('t_body_{{ $model->getId() }}'))
-            service.makeDraggable(tbodyContent);
+                })}
+                `(document.getElementById('t_body_{{ $model->getId() }}'))
+                service.makeDraggable(tbodyContent);
+            }
         </script>
 
         </tbody>

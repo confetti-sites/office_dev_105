@@ -18,7 +18,9 @@
             </a>
             @continue
         @endif
-        @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
+        <div>
+            @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
+        </div>
     @endforeach
     <div class="mt-8"
          id="actions_bottom">

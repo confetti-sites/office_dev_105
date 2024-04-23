@@ -22,7 +22,7 @@ class SourceEntity implements Stringable
 
     public function getPath(): string
     {
-        return $this->directory . '/' . $this->file;
+        return '/' . $this->directory . '/' . $this->file;
     }
 
     public function __toString(): string

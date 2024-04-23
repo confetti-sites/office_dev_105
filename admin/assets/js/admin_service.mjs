@@ -6,7 +6,6 @@ export class storage {
             return;
         }
         localStorage.setItem(id, value);
-        window.dispatchEvent(new Event('local_content_changed'));
     }
 
     /**
@@ -19,6 +18,15 @@ export class storage {
             return JSON.parse(localStorage.getItem(id));
         }
         return null;
+    }
+
+    /**
+     * Check if an item exists in local storage
+     * @param {string} id
+     * @returns {boolean}
+     */
+    static hasLocalStorageItem(id) {
+        return localStorage.hasOwnProperty(id);
     }
 
     /**

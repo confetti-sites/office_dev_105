@@ -2,26 +2,31 @@
 @php
     /** @var \Confetti\Components\SelectFile $model */
     $default = $model->getComponent()->getDecoration('default');
+    $original = $model->get();
+    $required = false;
 @endphp
-<div class="block text-bold text-xl mt-8 mb-4">
-    {{ $model->getComponent()->getLabel() }}
+<div>
+    <div class="block text-bold text-xl mt-8 mb-4">
+        {{ $model->getComponent()->getLabel() }}
+    </div>
+    <select class="_select_file appearance-none bg-gray-50 border border-gray-300 outline-none text-gray-900 text-sm rounded-lg block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-emerald-700 dark:focus:border-emerald-700"
+            name="{{ $model->getId() }}"
+            original_value="{{ $original }}">
+        @if(!$required)
+            <option selected>Nothing selected</option>
+        @endif
+        @foreach($model->getOptions() as $child)
+            <option value="{{ $child->getComponent()->source->getPath() }}"
+                    @if($original === $child->getComponent()->source->getPath()) selected @endif
+            >{{ $child->getComponent()->getLabel() }}</option>
+        @endforeach
+    </select>
 </div>
-<select class="_select_file appearance-none bg-gray-50 border border-gray-300 outline-none text-gray-900 text-sm rounded-lg block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-emerald-700 dark:focus:border-emerald-700"
-        name="{{ $model->getId() }}">
-    @if(!$default)
-        <option selected disabled>Choose an option</option>
-    @endif
-    @foreach($model->getOptions() as $child)
-        <option value="{{ '/' . $child->getComponent()->source->getPath() }}"
-                @if($default === '/' . $child->getComponent()->source->getPath()) selected @endif
-        >{{ $child->getComponent()->getLabel() }}</option>
-    @endforeach
-</select>
 @foreach($model->getOptions() as $pointerChild)
     @foreach($pointerChild->getChildren() as $grandChild)
         <div class="hidden"
              show_if="{{ $model->getId() }}"
-             has_value="{{ '/' . $grandChild->getComponent()->source->getPath() }}">
+             has_value="{{ $grandChild->getComponent()->source->getPath() }}">
             @include("admin.structure.{$grandChild->getComponent()->type}.component_admin", ['model' => $grandChild])
         </div>
     @endforeach
@@ -29,17 +34,49 @@
 @pushonce('end_of_body_select')
     <script type="module">
         import {storage} from '/admin/assets/js/admin_service.mjs';
+        import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
+        /** @see https://github.com/codex-team/icons */
+        import {IconUndo} from 'https://esm.sh/@codexteam/icons';
+
         // If value exists in local storage, set the value of the select element
         document.querySelectorAll('._select_file').forEach(select => {
             const value = storage.getFromLocalStorage(select.name);
             if (value) {
                 select.value = value;
             }
-        });
-        document.querySelectorAll('._select_file').forEach(select => {
+
             select.addEventListener('change', () => {
-                storage.saveToLocalStorage(select.name, select.value);
+                console.log('event change');
+                // If the value is the same as the original value,
+                // remove the item from local storage
+                if (select.value === select.getAttribute('original_value')) {
+                    storage.removeLocalStorageItems(select.name);
+                } else {
+                    storage.saveToLocalStorage(select.name, select.value);
+                }
+                window.dispatchEvent(new Event('local_content_changed'));
             });
+
+            // Attach toolbar to the holder of the select element
+            const component = select.closest('div');
+            new Toolbar(component).init([
+                    {
+                        label: 'Remove unpublished changes',
+                        icon: IconUndo,
+                        closeOnActivate: true,
+                        onActivate: async () => {
+                            storage.removeLocalStorageItems(select.name);
+                            let value = storage.hasLocalStorageItem(select.name);
+                            if (!value) {
+                                value = select.getAttribute('original_value');
+                            }
+                            select.value = value;
+                            // fire event change for the select element
+                            select.dispatchEvent(new Event('change'));
+                        }
+                    },
+                ],
+            );
         });
         // Loop over every dit with show_if attribute
         document.querySelectorAll('[show_if]').forEach(element => {
