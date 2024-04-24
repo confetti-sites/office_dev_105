@@ -61,7 +61,7 @@ export default class LimContent {
 
         // Add the toolbar to the editor
         new Toolbar(this.editor.configuration.element).init([{
-            label: 'Revert',
+            label: 'Remove unpublished changes',
             icon: IconUndo,
             closeOnActivate: true,
             onActivate: async () => {

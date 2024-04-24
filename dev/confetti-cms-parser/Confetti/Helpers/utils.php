@@ -72,7 +72,7 @@ function request(): Request
 }
 
 /**
- * @param array $variables exmpale: ['currentContentId', 'The value']
+ * @param array $variables example: ['currentContentId', 'The value']
  */
 function variables(&$variables)
 {

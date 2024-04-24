@@ -17,24 +17,26 @@ export class Toolbar {
 
         this.ankerElement.style.position = 'relative';
 
+
         const toolbar = html`
-            <div style="position: absolute; right: 0; top: 0; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 100%; padding: 0 1.2rem;">
-                <span class="ce-toolbar__settings-btn" style="cursor: pointer;" @click="${() => {
+            <div class="absolute right-0 top-0 flex flex-row items-center p-2">
+                <!-- Icon -->
+                <span class="cursor-pointer" @click="${() => {
                     data.popoverOpen = !data.popoverOpen
                 }}">${IconEtcVertical}</span>
-                <div class="ce-settings">
-                    <div class="${() => `ce-popover__overlay ${!data.popoverOpen ? 'ce-popover__overlay--hidden' : ''}`}"
-                         @click="${() => {data.popoverOpen = false}}"
-                         style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden;">
+                <div class="">
+                    <!-- Overlay -->
+                    <div class="${() => `fixed top-0 left-0 right-0 bottom-0 overflow-hidden ${data.popoverOpen ? '' : 'hidden'}`}"
+                         @click="${() => {data.popoverOpen = false}}">
                     </div>
-                    <div class="${() => `ce-popover ${data.popoverOpen ? 'ce-popover--opened' : ''}`}"
-                         style="right: 15px; left: initial; padding:8px; --width: 280px;">
+                    <!-- Popover -->
+                    <div class="${() => `fixed sm:absolute top-auto sm:top-0 left-0 z-10 sm:left-auto right-0 bottom-0 sm:bottom-auto m-5 sm:mt-8 p-2 sm:p-0 line-clamp-2 border rounded-md sm:w-[270px] bg-white shadow-lg ${data.popoverOpen ? '' : 'hidden'}`}">
+                        <!-- Items -->
                         ${settingItems.map(itemData => html`
-                            <div class="ce-popover-item"
-                                 style="padding:8px"
+                            <div class="flex p-2 cursor-pointer select-none inline-flex items-center" 
                                  @click="${() => {itemData.onActivate(); data.popoverOpen = false}}">
                                 <div style="padding-right:12px">${itemData.icon}</div>
-                                <div class="ce-popover-item__title">${itemData.label}</div>
+                                <div class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-emerald-800">${itemData.label}</div>
                             </div>
                         `)}
                     </div>
