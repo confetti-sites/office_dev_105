@@ -6,7 +6,7 @@
     $canBeDeleted = str_contains($id, '~');
 @endphp
 
-<div class="container pt-6 px-6 mx-auto max-w-4xl grid">
+<div class="container py-6 px-6 mx-auto max-w-4xl grid">
     @include('admin.breadcrumbs', ['currentId' => $id])
     @foreach($children as $child)
         @php($component = $child->getComponent())
@@ -22,7 +22,7 @@
             @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
         </div>
     @endforeach
-    <div class="mt-8"
+    <div class="mt-16 mb-16"
          id="actions_bottom">
         <script type="module">
             import {storage, IconLoader} from '/admin/assets/js/admin_service.mjs';
@@ -48,7 +48,7 @@
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
                 </button>
                 @endif
-            <button class="{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
                         @click="${() => (state.waiting = true) && storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}">
                     <span class="${() => state.waiting ? `hidden` : ``}">Publish</span>
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>

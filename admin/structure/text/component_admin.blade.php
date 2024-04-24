@@ -8,7 +8,7 @@
         {{ $component->getLabel() }}
     </div>
 
-    <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
+    <div class="_input px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
         <span id="{{ slugId($model->getId()) }}"></span>
     </div>
     <p class="mt-2 text-sm text-red-600 dark:text-red-500 _error"></p>

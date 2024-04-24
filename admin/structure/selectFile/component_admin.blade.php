@@ -9,7 +9,9 @@
     <div class="block text-bold text-xl mt-8 mb-4">
         {{ $model->getComponent()->getLabel() }}
     </div>
-    <select class="_select_file appearance-none bg-gray-50 border border-gray-300 outline-none text-gray-900 text-sm rounded-lg block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-emerald-700 dark:focus:border-emerald-700"
+    <select class="_select_file w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 bg-emerald-700"
+            {{-- Remove default icon --}}
+            style="-webkit-appearance: none !important;-moz-appearance: none !important;"
             name="{{ $model->getId() }}"
             original_value="{{ $original }}">
         @if(!$required)
@@ -46,7 +48,6 @@
             }
 
             select.addEventListener('change', () => {
-                console.log('event change');
                 // If the value is the same as the original value,
                 // remove the item from local storage
                 if (select.value === select.getAttribute('original_value')) {
