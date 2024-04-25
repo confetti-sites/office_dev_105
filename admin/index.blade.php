@@ -18,7 +18,7 @@ if ($currentContentId === '') {
     <script src="/admin/assets/js/thema.js" defer></script>
 </head>
 
-<body class="text-gray-700 dark:text-gray-400 overflow-hidden">
+<body class="text-gray-700 overflow-hidden">
     @guest()
         @include('auth.redirect_to_login')
     @else

@@ -22,7 +22,7 @@
                             </a>
                         </div>
 
-                        <div class="flex gap-6 text-gray-600 dark:text-gray-400">
+                        <div class="flex gap-6 text-gray-600">
                             <a
                                     href="#"
                                     target="blank"
@@ -89,7 +89,7 @@
                 </div>
 
 
-                <div class="col-span-8 md:col-span-6 lg:col-span-5 text-gray-600 dark:text-gray-400">
+                <div class="col-span-8 md:col-span-6 lg:col-span-5 text-gray-600">
                     <div class="grid grid-cols-2 gap-6 pb-16 sm:grid-cols-3 md:pl-16">
                         @foreach($footer->list('column')->min(1)->max(3)->get() as $list)
                             <div>

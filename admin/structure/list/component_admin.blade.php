@@ -23,10 +23,12 @@
 <div class="block text-bold text-xl mt-8 mb-4">
     {{ $component->getLabel() }} List
 </div>
+
 <!-- border rounded -->
-<div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+<div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
     <table class="table-auto">
-        <thead class="hidden sm:table-header-group text-left border-b border-gray-300">
+        @if(count($columns) > 1)
+            <thead class="hidden sm:table-header-group text-left border-b border-gray-300">
             <tr>
                 <th class="w-[20px]"></th>
                 @php($i = 0)
@@ -35,10 +37,11 @@
                 @endforeach
                 <th class="w-[140px]"></th>
             </tr>
-        </thead>
+            </thead>
+        @endif
         <tbody id="t_body_{{ $model->getId() }}">
         <script type="module">
-            import {storage} from '/admin/assets/js/admin_service.mjs';
+            import {Storage} from '/admin/assets/js/admin_service.mjs';
             import LimList from '/admin/structure/list/lim_list.mjs';
             import {html, reactive} from 'https://esm.sh/@arrow-js/core';
             import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
@@ -60,17 +63,17 @@
                     const sm = 640;
                     let state = {
                         confirmDelete: false,
-                        changed: storage.hasLocalStorageItems(row.id),
+                        changed: Storage.hasLocalStorageItems(row.id),
                     }
                     state = reactive(state);
                     let columns = service.getColumns(row);
-                    window.addEventListener('local_content_changed', () => state.changed = storage.hasLocalStorageItems(row.id));
+                    window.addEventListener('local_content_changed', () => state.changed = Storage.hasLocalStorageItems(row.id));
 
                     let i = 0;
                     return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100 relative border-b border-gray-200' + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
                         content_id="${row.id}" index="${row.data['.']}">
-                        <td class="hidden sm:table-cell sm:p-2 sm:pl-4">
+                        <td class="hidden sm:table-cell sm:p-2 sm:pl-4 w-[20px]">
                             <div class="flex flex-nowrap cursor-move _drag_grip">
                                 ${IconDrag}
                             </div>
@@ -99,7 +102,7 @@
                                         Cancel
                                     </button>
                                     <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                            @click="${(element) => storage.delete('{{ getServiceApi() }}', row.id) && element.target.closest('tr').remove() && delete rows[row.id]}">
+                                            @click="${(element) => Storage.delete('{{ getServiceApi() }}', row.id) && element.target.closest('tr').remove() && delete rows[row.id]}">
                                         Confirm
                                     </button>
                                 </div>
@@ -117,11 +120,11 @@
 
     <label class="m-2" id="add_button_{{ $model->getId() }}">
         <script type="module">
-            import {storage} from '/admin/assets/js/admin_service.mjs';
+            import {Storage} from '/admin/assets/js/admin_service.mjs';
             import {html} from 'https://esm.sh/@arrow-js/core';
 
             function createNew() {
-                let newId = '{{$model->getId()}}' + storage.newId();
+                let newId = '{{$model->getId()}}' + Storage.newId();
                 localStorage.setItem(newId, JSON.stringify(Date.now()));
                 return '/admin' + newId;
             }
@@ -130,8 +133,8 @@
         <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
            @click="${() => window.location.href = createNew()}">
             Add {{ $component->getLabel() }}
-        </a>
-            `(document.getElementById('add_button_{{ $model->getId() }}'))
+            </a>
+`(document.getElementById('add_button_{{ $model->getId() }}'))
         </script>
     </label>
 </div>

@@ -1,7 +1,7 @@
 @php($page = newRoot(new \model\page)->label('Page'))
 
-@foreach($page->list('content')->get() as $row)
-    @php($data = $row->selectFile('data')->match(['/view/content/*.blade.php']))
-    @include($data->getView(), ['model' => $data])
+@foreach($page->list('content')->columns(['list_title'])->get() as $contentRow)
+    @php($contentRow->text('list_title')->label('Internal Title')->help('A title for internal use only.'))
+    @php($row = $contentRow->selectFile('row')->match(['/view/content/*.blade.php']))
+    @include($row->getView(), ['model' => $row])
 @endforeach
-

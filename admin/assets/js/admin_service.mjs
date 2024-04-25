@@ -1,4 +1,4 @@
-export class storage {
+export class Storage {
     static saveToLocalStorage(id, data) {
         const value = JSON.stringify(data);
         // Don't save if the value is the same

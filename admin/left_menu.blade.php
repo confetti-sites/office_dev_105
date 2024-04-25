@@ -4,7 +4,7 @@
 @php /** @var string $currentContentId */ @endphp
 @php($root = newRoot(new \model))
 
-<div class="text-gray-500 dark:text-gray-400">
+<div class="text-gray-500">
     <ul class="mt-16">
         @foreach($root->getChildren() as $firstChild)
             <li class="relative">
@@ -51,11 +51,11 @@
 
 @pushonce('end_of_body_left_menu')
     <script type="module">
-        import {storage} from '/admin/assets/js/admin_service.mjs';
+        import {Storage} from '/admin/assets/js/admin_service.mjs';
 
         function updateBadges() {
             document.querySelectorAll('._left_menu_badge').forEach((el) => {
-                const exists = storage.getLocalStorageItems(el.id.replace('_left_menu_badge-', '')).length > 0;
+                const exists = Storage.getLocalStorageItems(el.id.replace('_left_menu_badge-', '')).length > 0;
                 el.classList.toggle('hidden', !exists);
             });
         }

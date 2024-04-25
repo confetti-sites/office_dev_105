@@ -74,7 +74,7 @@
             Do you have a high traffic website?
           </h2>
           <p class="text-body-color text-base font-body font-bold">Let us handle the stress for you. So you can scale your business.</p>
-          <ul class="mt-3 list-disc list-inside text-gray-500 dark:text-gray-400 font-body">
+          <ul class="mt-3 list-disc list-inside text-gray-500 font-body">
             <li class="text-body-color mb-1 ">Backups</li>
             <li class="text-body-color mb-1 ">SSL-certificate</li>
             <li class="text-body-color mb-1 ">Multiple domains</li>

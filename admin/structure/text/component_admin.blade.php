@@ -12,6 +12,9 @@
         <span id="{{ slugId($model->getId()) }}"></span>
     </div>
     <p class="mt-2 text-sm text-red-600 dark:text-red-500 _error"></p>
+    @if ($component->getDecoration('help'))
+        <p class="mt-2 text-sm text-gray-500">{{ $component->getDecoration('help') }}</p>
+    @endif
 </div>
 
 @push('end_of_body_'.slugId($model->getId()))

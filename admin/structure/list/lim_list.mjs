@@ -1,4 +1,4 @@
-import {storage} from '/admin/assets/js/admin_service.mjs';
+import {Storage} from '/admin/assets/js/admin_service.mjs';
 
 export default class LimList {
     constructor(id, columns, originalRows) {
@@ -23,7 +23,7 @@ export default class LimList {
         // Merge new rows from local storage
         // With row.id as key
         let rowsWithNew = this.rows;
-        storage.getMapItems(this.id).forEach((item) => {
+        Storage.getMapItems(this.id).forEach((item) => {
             // check if not already in rows
             if (rowsWithNew.find(row => row.id === item.id)) {
                 return;

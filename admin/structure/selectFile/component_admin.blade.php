@@ -33,16 +33,16 @@
         </div>
     @endforeach
 @endforeach
-@pushonce('end_of_body_select')
+@pushonce('end_of_body_select_file')
     <script type="module">
-        import {storage} from '/admin/assets/js/admin_service.mjs';
+        import {Storage} from '/admin/assets/js/admin_service.mjs';
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
         /** @see https://github.com/codex-team/icons */
         import {IconUndo} from 'https://esm.sh/@codexteam/icons';
 
         // If value exists in local storage, set the value of the select element
         document.querySelectorAll('._select_file').forEach(select => {
-            const value = storage.getFromLocalStorage(select.name);
+            const value = Storage.getFromLocalStorage(select.name);
             if (value) {
                 select.value = value;
             }
@@ -51,9 +51,9 @@
                 // If the value is the same as the original value,
                 // remove the item from local storage
                 if (select.value === select.getAttribute('original_value')) {
-                    storage.removeLocalStorageItems(select.name);
+                    Storage.removeLocalStorageItems(select.name);
                 } else {
-                    storage.saveToLocalStorage(select.name, select.value);
+                    Storage.saveToLocalStorage(select.name, select.value);
                 }
                 window.dispatchEvent(new Event('local_content_changed'));
             });
@@ -66,8 +66,8 @@
                         icon: IconUndo,
                         closeOnActivate: true,
                         onActivate: async () => {
-                            storage.removeLocalStorageItems(select.name);
-                            let value = storage.hasLocalStorageItem(select.name);
+                            Storage.removeLocalStorageItems(select.name);
+                            let value = Storage.hasLocalStorageItem(select.name);
                             if (!value) {
                                 value = select.getAttribute('original_value');
                             }

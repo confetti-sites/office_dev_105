@@ -47,3 +47,15 @@ export class Toolbar {
         return toolbar(this.ankerElement);
     }
 }
+
+export class Component {
+    /** @type {HTMLElement} */
+    #parent
+    constructor(parent) {
+        this.#parent = parent;
+    }
+
+    render(toRender) {
+        toRender(html, reactive)(this.#parent);
+    }
+}

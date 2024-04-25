@@ -36,16 +36,6 @@ abstract class Select extends ComponentStandard {
         return $options[$key]['id'];
     }
 
-    public function getOptions(): array
-    {
-        $options = [];
-        $decorations = $this->getComponent()->getDecoration('options') ?? [];
-        foreach ($decorations as $option) {
-            $options[$option['id']] = $option['label'];
-        }
-        return $options;
-    }
-
     public function getComponentType(): string
     {
         return 'select';
