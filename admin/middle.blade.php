@@ -49,7 +49,9 @@
                 </button>
                 @endif
                 <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
-                        @click="${() => (state.waiting = true) && storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}">
+                        @click="${() => (state.waiting = true) && storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}"
+                        disabled="${() => state.count > 0 ? false : `disabled`}"
+                    >
                     <span class="${() => state.waiting ? `hidden` : ``}">Publish</span>
                     <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
                 </button>

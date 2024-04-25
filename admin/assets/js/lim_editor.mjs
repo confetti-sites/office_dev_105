@@ -24,13 +24,13 @@ export class Toolbar {
                 <span class="cursor-pointer" @click="${() => {
                     data.popoverOpen = !data.popoverOpen
                 }}">${IconEtcVertical}</span>
-                <div class="">
+                <div>
                     <!-- Overlay -->
-                    <div class="${() => `fixed top-0 left-0 right-0 bottom-0 overflow-hidden ${data.popoverOpen ? '' : 'hidden'}`}"
+                    <div class="${() => `fixed top-0 left-0 right-0 bottom-0 overflow-hidden z-40 ${data.popoverOpen ? '' : 'hidden'}`}"
                          @click="${() => {data.popoverOpen = false}}">
                     </div>
                     <!-- Popover -->
-                    <div class="${() => `fixed sm:absolute top-auto sm:top-0 left-0 z-10 sm:left-auto right-0 bottom-0 sm:bottom-auto m-5 sm:mt-8 p-2 sm:p-0 line-clamp-2 border rounded-md sm:w-[270px] bg-white shadow-lg ${data.popoverOpen ? '' : 'hidden'}`}">
+                    <div class="${() => `fixed sm:absolute top-auto sm:top-0 left-0 z-10 sm:left-auto right-0 bottom-0 sm:bottom-auto m-5 sm:mt-8 p-2 sm:p-0 line-clamp-2 border rounded-md sm:w-[270px] bg-white shadow-lg z-50 ${data.popoverOpen ? '' : 'hidden'}`}">
                         <!-- Items -->
                         ${settingItems.map(itemData => html`
                             <div class="flex p-2 cursor-pointer select-none inline-flex items-center" 
