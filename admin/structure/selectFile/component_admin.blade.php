@@ -13,7 +13,7 @@
             {{-- Remove default icon --}}
             style="-webkit-appearance: none !important;-moz-appearance: none !important;"
             name="{{ $model->getId() }}"
-            original_value="{{ $original }}">
+            original="{{ $original }}">
         @if(!$required)
             <option selected>Nothing selected</option>
         @endif
@@ -50,7 +50,7 @@
             select.addEventListener('change', () => {
                 // If the value is the same as the original value,
                 // remove the item from local storage
-                if (select.value === select.getAttribute('original_value')) {
+                if (select.value === select.getAttribute('original')) {
                     Storage.removeLocalStorageItems(select.name);
                 } else {
                     Storage.saveToLocalStorage(select.name, select.value);
@@ -69,7 +69,7 @@
                             Storage.removeLocalStorageItems(select.name);
                             let value = Storage.hasLocalStorageItem(select.name);
                             if (!value) {
-                                value = select.getAttribute('original_value');
+                                value = select.getAttribute('original');
                             }
                             select.value = value;
                             // fire event change for the select element

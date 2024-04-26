@@ -15,7 +15,7 @@ abstract class Select extends ComponentStandard {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
-            return $content->value;
+            return $content;
         }
 
         $component = $this->getComponent();
