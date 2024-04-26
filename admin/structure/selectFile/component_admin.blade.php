@@ -9,11 +9,10 @@
     <div class="block text-bold text-xl mt-8 mb-4">
         {{ $model->getComponent()->getLabel() }}
     </div>
-    <select class="_select_file w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 bg-emerald-700"
-            {{-- Remove default icon --}}
-            style="-webkit-appearance: none !important;-moz-appearance: none !important;"
+    <select class="_select_file w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50"
+            style="-webkit-appearance: none !important;-moz-appearance: none !important;" {{-- Remove default icon --}}
             name="{{ $model->getId() }}"
-            original="{{ $original }}">
+            data-original="{{ $original }}">
         @if(!$required)
             <option selected>Nothing selected</option>
         @endif
@@ -47,16 +46,31 @@
                 select.value = value;
             }
 
-            select.addEventListener('change', () => {
+            checkStyle();
+            function checkStyle() {
+                if (select.value === select.dataset.original) {
+                    select.classList.remove('border-emerald-300');
+                    select.classList.add('border-gray-200');
+                } else {
+                    // Mark the select element as dirty
+                    select.classList.remove('border-gray-200');
+                    select.classList.add('border-emerald-300');
+                }
+            }
+
+            function updateLocalStorage() {
                 // If the value is the same as the original value,
                 // remove the item from local storage
-                if (select.value === select.getAttribute('original')) {
+                if (select.value === select.dataset.original) {
                     Storage.removeLocalStorageItems(select.name);
                 } else {
                     Storage.saveToLocalStorage(select.name, select.value);
                 }
                 window.dispatchEvent(new Event('local_content_changed'));
-            });
+            }
+
+            select.addEventListener('change', checkStyle);
+            select.addEventListener('change', updateLocalStorage);
 
             // Attach toolbar to the holder of the select element
             const component = select.closest('div');
@@ -69,7 +83,7 @@
                             Storage.removeLocalStorageItems(select.name);
                             let value = Storage.hasLocalStorageItem(select.name);
                             if (!value) {
-                                value = select.getAttribute('original');
+                                value = select.dataset.original;
                             }
                             select.value = value;
                             // fire event change for the select element
