@@ -99,9 +99,9 @@ export default class LimContent {
         const inputHolder = this.editor.configuration.element.querySelector('._input');
         if (this.#isChanged()) {
             inputHolder.classList.remove('border-gray-200');
-            inputHolder.classList.add('border-emerald-700');
+            inputHolder.classList.add('border-emerald-300');
         } else {
-            inputHolder.classList.remove('border-emerald-700');
+            inputHolder.classList.remove('border-emerald-300');
             inputHolder.classList.add('border-gray-200');
         }
     }
