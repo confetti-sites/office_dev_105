@@ -41,9 +41,8 @@
 
         // If value exists in local storage, set the value of the select element
         document.querySelectorAll('._select_file').forEach(select => {
-            const value = Storage.getFromLocalStorage(select.name);
-            if (value) {
-                select.value = value;
+            if (Storage.hasLocalStorageItem(select.name)) {
+                select.value = Storage.getFromLocalStorage(select.name);
             }
 
             checkStyle();
