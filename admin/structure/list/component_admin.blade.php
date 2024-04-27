@@ -30,7 +30,9 @@
         @if(count($columns) > 1)
             <thead class="hidden sm:table-header-group text-left border-b border-gray-300">
             <tr>
-                <th class="w-[20px]"></th>
+                @if($component->getDecoration('sortable'))
+                    <th class="w-[20px]"></th>
+                @endif
                 @php($i = 0)
                 @foreach($columns as $column)
                     <th class="pt-4 pr-2 pb-4 pl-4">{{ $column['label'] }}</th>
@@ -47,6 +49,7 @@
             import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
             const service = new LimList('{{ $model->getId() }}', @json($columns), @json($originalRows));
+            const sortable = {{ $component->getDecoration('sortable') ? 'true' : 'false' }};
             const rows = service.getRows();
 
             if (rows.length === 0) {
@@ -73,7 +76,7 @@
                     return html`
                     <tr class="${() => 'border-t transition-all hover:bg-gray-100 relative border-b border-gray-200' + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
                         content_id="${row.id}" index="${row.data['.']}">
-                        <td class="hidden sm:table-cell sm:p-2 sm:pl-4 w-[20px]">
+                        <td class="${sortable ? `hidden sm:table-cell sm:p-2 sm:pl-4 w-[20px]` : `hidden`}">
                             <div class="flex flex-nowrap cursor-move _drag_grip">
                                 ${IconDrag}
                             </div>
@@ -111,7 +114,9 @@
                     </tr>`;
                 })}
                 `(document.getElementById('t_body_{{ $model->getId() }}'))
-                service.makeDraggable(tbodyContent);
+                if (sortable) {
+                    service.makeDraggable(tbodyContent);
+                }
             }
         </script>
 

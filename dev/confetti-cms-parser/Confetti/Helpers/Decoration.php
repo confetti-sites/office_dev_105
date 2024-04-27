@@ -22,6 +22,7 @@ enum Decoration: string
     case PLACEHOLDER = 'placeholder';
     case RATIO = 'ratio';
     case REQUIRED = 'required';
+    case SORTABLE = 'sortable';
     case WIDTH = 'width';
     case WIDTH_MAX = 'widthMax';
     case WIDTH_MIN = 'widthMin';

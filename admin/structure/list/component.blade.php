@@ -8,8 +8,8 @@
             Decoration::MIN->comment('Minimum number of items'),
             Decoration::MAX->comment('Maximum number of items'),
             Decoration::COLUMNS->comment('This becomes the headers of the table in de admin'),
+            Decoration::SORTABLE->comment('When using this method, the list will be sortable'),
         ],
         phpClass: file_get_contents(repositoryPath() . '/admin/structure/list/component.class.php'),
-
     ))->toJson();
 @endphp
