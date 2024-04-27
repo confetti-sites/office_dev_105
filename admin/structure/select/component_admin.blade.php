@@ -1,23 +1,22 @@
 @php /** @var \Confetti\Components\Select $model */ @endphp
 
-<select-options
-        data-type="select"
-        data-name="{{ $model->getId() }}"
-        data-original="{{ $model->get() }}"
-        data-label="{{ $model->getComponent()->getLabel() }}"
-        data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
-        data-help="{{ $model->getComponent()->getDecoration('help') }}"
-        data-options=@json($model->getComponent()->getDecoration('options'))
-></select-options>
+<select-component
+    data-name="{{ $model->getId() }}"
+    data-original="{{ $model->get() }}"
+    data-label="{{ $model->getComponent()->getLabel() }}"
+    data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
+    data-help="{{ $model->getComponent()->getDecoration('help') }}"
+    data-options=@json($model->getComponent()->getDecoration('options'))
+></select-component>
 
-@pushonce('end_of_body_select')
+@pushonce('end_of_body_select_component')
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
         import {Storage} from '/admin/assets/js/admin_service.mjs';
         import {IconUndo} from 'https://esm.sh/@codexteam/icons';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-        class SelectOptions extends HTMLElement {
+        class SelectComponent extends HTMLElement {
             connectedCallback() {
                 const options = JSON.parse(this.dataset.options)
                 let data = reactive({
@@ -59,6 +58,6 @@
             }
         }
 
-        customElements.define('select-options', SelectOptions);
+        customElements.define('select-component', SelectComponent);
     </script>
 @endpushonce

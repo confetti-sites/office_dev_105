@@ -82,7 +82,7 @@
                             </div>
                         </td>
                         ${columns.map((value) => html`
-                        <td class="${() => ` p-3 ms:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
+                        <td class="${() => ` p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
                             @click="${() => (window.innerWidth < sm) ? window.location.href = '/admin' + row.id : ''}">
                             <span class="line-clamp-2">${value ?? ''}</span>
                         </td>`

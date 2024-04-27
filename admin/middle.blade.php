@@ -45,7 +45,7 @@
                 <button class="${() => `basis-1/4 px-5 ` + (state.waiting ? `` : `py-3 `) + `flex items-center justify-center text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-emerald-700 hover:bg-red-600` : `bg-emerald-700 hover:bg-emerald-800`} border border-transparent rounded-md`}"
                         @click="${() => state.confirmDelete ? (state.waiting = true) && Storage.delete('{{ getServiceApi() }}', id, ()=> Storage.redirectAway(id)) : state.confirmDelete = true}">
                     <span class="${() => state.waiting ? `hidden` : ``}">${() => state.confirmDelete ? `Confirm` : `Delete`}</span>
-                    <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
+                    <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(`w-8 h-8 mb-4 text-gray-500`)}</span>
                 </button>
                 @endif
                 <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
@@ -53,7 +53,7 @@
                         disabled="${() => state.count > 0 ? false : `disabled`}"
                     >
                     <span class="${() => state.waiting ? `hidden` : ``}">Publish</span>
-                    <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(20)}</span>
+                    <span class="${() => state.waiting ? `` : `hidden`}">${IconLoader(`w-8 h-8 mb-4 text-gray-500`)}</span>
                 </button>
             </div>
             `(document.getElementById('actions_bottom'));

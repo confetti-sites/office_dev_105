@@ -32,7 +32,7 @@
         </div>
     @endforeach
 @endforeach
-@pushonce('end_of_body_select_file')
+@pushonce('end_of_body_select_file_component')
     <script type="module">
         import {Storage} from '/admin/assets/js/admin_service.mjs';
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
