@@ -327,7 +327,7 @@ abstract class List_
             $key = end($key);
             return [
                 'id'            => $key,
-                'label'         => ucwords(str_replace('_', ' ', $key)),
+                'label'         => titleByKey($key),
                 'default_value' => $column->getDecoration('default'),
             ];
         }, $columns);

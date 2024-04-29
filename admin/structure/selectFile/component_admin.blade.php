@@ -50,11 +50,7 @@
             }
 
             checkStyle();
-            document.addEventListener('DOMContentLoaded', () => {
-                if (select.value !== select.dataset.original) {
-                    useLabelFor();
-                }
-            });
+            document.addEventListener('DOMContentLoaded', () => useLabelFor());
 
             function checkStyle() {
                 if (select.value === select.dataset.original) {
