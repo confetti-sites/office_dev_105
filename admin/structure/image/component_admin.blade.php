@@ -40,13 +40,14 @@
 
                         ${() => this.data.toCrop ? html`
                             <!-- Canvas to Crop the image -->
-                            <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg">
-                                <div class="relative h-64 overflow-hidden rounded-lg">
-<img class="absolute w-full h-64 object-cover blur-md" src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
-                                         alt="">
+                            <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg overflow-hidden">
+                                <div class="relative h-64">
+                                    <img class="absolute w-full h-64 object-cover blur-sm opacity-70" src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
+                                         alt="cropper-background">
                                     <img id="image" style="display: block;max-width: 100%;"
                                          src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
                                          onload="${() => setTimeout(() => this.#loadCropper(this.querySelector('#image')), 1)}"
+                                         alt="cropper-canvas"
                                          >
                                 </div>
                             </div>
