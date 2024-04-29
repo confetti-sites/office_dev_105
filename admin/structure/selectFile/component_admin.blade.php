@@ -1,9 +1,11 @@
 <!--suppress HtmlUnknownAttribute -->
 @php
     /** @var \Confetti\Components\SelectFile $model */
+    use Confetti\Helpers\ComponentStandard;
     $default = $model->getComponent()->getDecoration('default');
     $original = $model->get();
     $required = false;
+    $useLabelFor = ComponentStandard::mergeIds($model->getId(), $model->getComponent()->getDecoration('useLabelFor'));
 @endphp
 <div>
     <div class="block text-bold text-xl mt-8 mb-4">
@@ -12,7 +14,9 @@
     <select class="_select_file w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50"
             style="-webkit-appearance: none !important;-moz-appearance: none !important;" {{-- Remove default icon --}}
             name="{{ $model->getId() }}"
-            data-original="{{ $original }}">
+            data-original="{{ $original }}"
+            @if($useLabelFor) data-use_label_for="{{ $useLabelFor }}" @endif
+    >
         @if(!$required)
             <option selected>Nothing selected</option>
         @endif
@@ -46,6 +50,12 @@
             }
 
             checkStyle();
+            document.addEventListener('DOMContentLoaded', () => {
+                if (select.value !== select.dataset.original) {
+                    useLabelFor();
+                }
+            });
+
             function checkStyle() {
                 if (select.value === select.dataset.original) {
                     select.classList.remove('border-emerald-300');
@@ -68,8 +78,19 @@
                 window.dispatchEvent(new Event('local_content_changed'));
             }
 
+            function useLabelFor() {
+                if (!select.dataset.use_label_for) {
+                    return;
+                }
+                window.dispatchEvent(new CustomEvent('value_pushed', {detail: {
+                    toId: select.dataset.use_label_for,
+                    value: select.options[select.selectedIndex].innerHTML,
+                }}));
+            }
+
             select.addEventListener('change', checkStyle);
             select.addEventListener('change', updateLocalStorage);
+            select.addEventListener('change', useLabelFor);
 
             // Attach toolbar to the holder of the select element
             const component = select.closest('div');
@@ -92,7 +113,7 @@
                 ],
             );
         });
-        // Loop over every dit with show_if attribute
+        // Loop over every show_if attribute
         document.querySelectorAll('[show_if]').forEach(element => {
             // Get the value of the show_if attribute
             const showIf = element.getAttribute('show_if');

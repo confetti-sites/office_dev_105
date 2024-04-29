@@ -261,9 +261,21 @@ abstract class ComponentStandard
 
     public static function mergeIds(string $parent, string $relative): string
     {
+        // If relative is already full, us it.
         if (str_starts_with($relative, '/')) {
             return $relative;
         }
+
+        // If relative needs to look back, cut the parent.
+        // `/model/page/block~22FCX8Q5VV/row-` with `../title`
+        // should return `/model/page/block~22FCX8Q5VV/title`
+        if (str_starts_with($relative, '../')) {
+            $parts = explode('/', $parent);
+            $parts = array_slice($parts, 0, count($parts) - substr_count($relative, '../'));
+            $parent = implode('/', $parts);
+            $relative = substr($relative, 3);
+        }
+
         return $parent . '/' . $relative;
     }
 
