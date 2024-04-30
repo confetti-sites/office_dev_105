@@ -34,7 +34,7 @@
                     data.value = event.detail['value'];
                 });
 
-                html`<input type="" name="${this.dataset.name}" value="${() => data.value}"/>`(this)
+                html`<input type="hidden" name="${this.dataset.name}" value="${() => data.value}"/>`(this)
 
             }
         }

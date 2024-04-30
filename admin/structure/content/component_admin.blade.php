@@ -1,51 +1,18 @@
-@php
-    /** @var \Confetti\Helpers\ComponentStandard $model */
-    $component = $model->getComponent();
-@endphp
-{{-- Trigger Tailwind: border-emerald-300 --}}
-<div id="_{{ slugId($model->getId()) }}_component">
-    <div class="block text-bold text-xl mt-8 mb-4">
-        {{ $model->getComponent()->getLabel() }}
-    </div>
-    <div class="px-5 py-4 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 _input">
-        <span id="_{{ slugId($model->getId()) }}"></span>
-    </div>
-</div>
+@php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
 
-@push('end_of_body_'.slugId($model->getId()))
-    <style>
-        /* With a big screen, the text is indeed to the right */
-        #_{{ slugId($model->getId()) }} .ce-block__content, #_{{ slugId($model->getId()) }} .ce-toolbar__content {
-            max-width: unset;
-        }
+<content-component
+        data-name="{{ $model->getId() }}"
+        data-name_slug="{{ slugId($model->getId()) }}"
+        data-label="{{ $model->getComponent()->getLabel() }}"
+        data-placeholder="{{ $model->getComponent()->getDecoration('placeholder') }}"
+        data-decorations=@json($model->getComponent()->getDecorations())
+        data-original=@json($model->get())
+></content-component>
 
-        /* Remove default editor.js padding */
-        #_{{ slugId($model->getId()) }} .cdx-block {
-            padding: 0;
-        }
-
-        /* Add padding to the inline tools */
-        #_{{ slugId($model->getId()) }} .ce-inline-tool {
-            padding: 12px;
-        }
-
-        /* Add padding to ce-paragraph */
-        #_{{ slugId($model->getId()) }} .ce-block {
-            padding-bottom: 12px;
-        }
-
-        /* Add font size to h2, h3 */
-        #_{{ slugId($model->getId()) }} h2 {
-            font-size: 1.875rem;
-        }
-        #_{{ slugId($model->getId()) }} h3 {
-            font-size: 1.5rem;
-        }
-        #_{{ slugId($model->getId()) }} h4 {
-            font-size: 1.25rem;
-        }
-    </style>
+@pushonce('end_of_body_content_component')
     <script type="module">
+        import {Storage} from '/admin/assets/js/admin_service.mjs';
+        import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
@@ -92,65 +59,115 @@
             'link',
         ];
 
-        /**
-         * These are the settings for the editor.js
-         */
-        const editor = new EditorJS({
-            id: '{{ $model->getId() }}',
-            element: document.getElementById('_{{ slugId($model->getId()) }}_component'),
-            // Id of Element that should contain Editor instance
-            holder: '_{{ slugId($model->getId()) }}',
-            placeholder: '{{ $component->getDecoration('placeholder') }}',
-            originalData: @json($model->get()),
-            data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem('{{ $model->getId() }}')) : @json($model->get()),
-            // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
-            decorations: @json($component->getDecorations()),
-            /** Use minHeight 100, because the default is too big. */
-            minHeight: 100,
-            defaultBlock: "paragraph",
-            inlineToolbar: true,
-            tools: {
-                // Inline tools
-                bold: Bold,
-                underline: Underline,
-                italic: Italic,
+        {{--<style>--}}
+        {{--    /* With a big screen, the text is indeed to the right */--}}
+        {{--    #_{{ slugId($model->getId()) }} .ce-block__content, #_{{ slugId($model->getId()) }} .ce-toolbar__content {--}}
+        {{--    max-width: unset;--}}
+        {{--}--}}
 
-                // Block tools
-                header: {
-                    class: Header,
-                    inlineToolbar: [
-                        'bold',
-                        'underline',
-                        'italic',
-                    ],
-                    config: {
-                        placeholder: 'Enter a header',
-                        levels: [2, 3, 4],
-                        defaultLevel: 2
-                    }
-                },
-                paragraph: {
-                    class: Paragraph,
-                    inlineToolbar: defaultInlineToolbar,
-                },
-                list: {
-                    class: NestedList,
-                    inlineToolbar: defaultInlineToolbar,
-                    config: {
-                        defaultStyle: 'unordered'
+        {{--    /* Remove default editor.js padding */--}}
+        {{--    #_{{ slugId($model->getId()) }} .cdx-block {--}}
+        {{--    padding: 0;--}}
+        {{--}--}}
+
+        {{--    /* Add padding to the inline tools */--}}
+        {{--    #_{{ slugId($model->getId()) }} .ce-inline-tool {--}}
+        {{--    padding: 12px;--}}
+        {{--}--}}
+
+        {{--    /* Add padding to ce-paragraph */--}}
+        {{--    #_{{ slugId($model->getId()) }} .ce-block {--}}
+        {{--    padding-bottom: 12px;--}}
+        {{--}--}}
+
+        {{--    /* Add font size to h2, h3 */--}}
+        {{--    #_{{ slugId($model->getId()) }} h2 {--}}
+        {{--    font-size: 1.875rem;--}}
+        {{--}--}}
+        {{--    #_{{ slugId($model->getId()) }} h3 {--}}
+        {{--    font-size: 1.5rem;--}}
+        {{--}--}}
+        {{--    #_{{ slugId($model->getId()) }} h4 {--}}
+        {{--    font-size: 1.25rem;--}}
+        {{--}--}}
+        {{--</style>--}}
+
+        class ContentComponent extends HTMLElement {
+            connectedCallback() {
+                html`
+                    <div class="block text-bold text-xl mt-8 mb-4">
+                        ${this.dataset.label}
+                    </div>
+                    <div class="px-5 py-4 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 _input">
+                        <span id="_${this.dataset.name_slug}"></span>
+                    </div>
+                `(this)
+
+            }
+
+            renderedCallback() {
+                /**
+                 * These are the settings for the editor.js
+                 */
+                const editor = new EditorJS({
+                    id: this.dataset.name,
+                    element: this,
+                    // Id of Element that should contain Editor instance
+                    holder: this.dataset.name_slug,
+                    placeholder: this.dataset.placeholder,
+                    originalData: this.dataset.original,
+                    data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem(this.dataset.name)) : this.dataset.original,
+                    // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
+                    decorations: this.dataset.decorations,
+                    /** Use minHeight 100, because the default is too big. */
+                    minHeight: 100,
+                    defaultBlock: "paragraph",
+                    inlineToolbar: true,
+                    tools: {
+                        // Inline tools
+                        bold: Bold,
+                        underline: Underline,
+                        italic: Italic,
+
+                        // Block tools
+                        header: {
+                            class: Header,
+                            inlineToolbar: [
+                                'bold',
+                                'underline',
+                                'italic',
+                            ],
+                            config: {
+                                placeholder: 'Enter a header',
+                                levels: [2, 3, 4],
+                                defaultLevel: 2
+                            }
+                        },
+                        paragraph: {
+                            class: Paragraph,
+                            inlineToolbar: defaultInlineToolbar,
+                        },
+                        list: {
+                            class: NestedList,
+                            inlineToolbar: defaultInlineToolbar,
+                            config: {
+                                defaultStyle: 'unordered'
+                            },
+                        },
+                        table: {
+                            class: Table,
+                            inlineToolbar: defaultInlineToolbar,
+                        },
+                        delimiter: Delimiter,
                     },
-                },
-                table: {
-                    class: Table,
-                    inlineToolbar: defaultInlineToolbar,
-                },
-                delimiter: Delimiter,
-            },
 
-            // Set generalToolbar in a variable, so we can use it in the onChange event
-            onReady: () => service = (new LimContent(editor)).init(),
-            onChange: (api, events) => service.onChange(api, events),
-        });
+                    // Set generalToolbar in a variable, so we can use it in the onChange event
+                    onReady: () => service = (new LimContent(editor)).init(),
+                    onChange: (api, events) => service.onChange(api, events),
+                });
+            }
+        }
 
+        customElements.define('content-component', ContentComponent);
     </script>
-@endpush
+@endpushonce

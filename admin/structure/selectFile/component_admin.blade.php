@@ -6,6 +6,8 @@
     $original = $model->get();
     $required = false;
     $useLabelFor = ComponentStandard::mergeIds($model->getId(), $model->getComponent()->getDecoration('useLabelFor'));
+
+    // @todo when files in blocks is changes, the structure should be updated
 @endphp
 <div>
     <div class="block text-bold text-xl mt-8 mb-4">
@@ -29,11 +31,10 @@
 </div>
 @foreach($model->getOptions() as $pointerChild)
     @foreach($pointerChild->getChildren() as $grandChild)
-        <div class="hidden"
-             show_if="{{ $model->getId() }}"
+        <template show_if="{{ $model->getId() }}"
              has_value="{{ $grandChild->getComponent()->source->getPath() }}">
             @include("admin.structure.{$grandChild->getComponent()->type}.component_admin", ['model' => $grandChild])
-        </div>
+        </template>
     @endforeach
 @endforeach
 @pushonce('end_of_body_select_file_component')
