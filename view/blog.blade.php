@@ -7,4 +7,3 @@
 {{ $blog->title }}
 
 {{ $blog->content('content')->default('The cool blog title') }}
-
