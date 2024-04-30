@@ -38,7 +38,7 @@ if ($currentContentId === '') {
 
                 <div class="flex flex-col flex-1">
                     @include('admin.header', [$currentContentId])
-                    <main class="h-full pb-16 overflow-y-auto">
+                    <main class="h-full pb-96 overflow-y-auto">
                         @include('admin.middle', [$currentContentId])
                     </main>
                 </div>

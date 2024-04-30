@@ -11,6 +11,9 @@
 ></content-component>
 
 @pushonce('end_of_body_content_component')
+    <style>
+        @import url('/admin/structure/content/lim_content.css');
+    </style>
     <script type="module">
         import {html} from 'https://esm.sh/@arrow-js/core';
 
@@ -59,9 +62,8 @@
             'link',
         ];
 
-        class ContentComponent extends HTMLElement {
+        customElements.define('content-component', class extends HTMLElement {
             connectedCallback() {
-                console.log('connectedCallback');
                 html`
                     <div class="block text-bold text-xl mt-8 mb-4">
                         ${this.dataset.label}
@@ -74,8 +76,6 @@
             }
 
             renderedCallback() {
-                console.log('renderedCallback');
-                console.log(this.dataset.original);
                 /**
                  * These are the settings for the editor.js
                  */
@@ -136,8 +136,6 @@
                     onChange: (api, events) => service.onChange(api, events),
                 });
             }
-        }
-
-        customElements.define('content-component', ContentComponent);
+        });
     </script>
 @endpushonce

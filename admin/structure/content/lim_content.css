@@ -1,0 +1,41 @@
+content-component {
+    /* With a big screen, the text is indeed to the right */
+    & .ce-block__content {
+        max-width: unset;
+    }
+    & .ce-toolbar__content {
+        max-width: unset;
+    }
+
+    /* Remove default editor.js padding */
+
+    & .cdx-block {
+        padding: 0;
+    }
+
+    /* Add padding to the inline tools */
+
+    & .ce-inline-tool {
+        padding: 12px;
+    }
+
+    /* Add padding to ce-paragraph */
+
+    & .ce-block {
+        padding-bottom: 12px;
+    }
+
+    /* Add font size to h2, h3 */
+
+    & h2 {
+        font-size: 1.875rem;
+    }
+
+    & h3 {
+        font-size: 1.5rem;
+    }
+
+    & h4 {
+        font-size: 1.25rem;
+    }
+}
