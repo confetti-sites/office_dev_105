@@ -1,0 +1,29 @@
+text-component {
+    /* Hide the toolbar items so the user can't add new blocks */
+    & .ce-toolbar__content {
+        display: none;
+        max-width: unset;
+    }
+
+    /* With a big screen, the text is indeed to the right */
+    & .ce-block__content {
+        max-width: unset;
+    }
+
+    /* Remove default editor.js padding (left) */
+    & .cdx-block {
+        padding: 0;
+    }
+
+    /* Remove default editor.js margin (right) */
+    @media (min-width: 651px) {
+        & .codex-editor__redactor {
+            margin-right: 0px;
+        }
+    }
+
+    /* Add padding to the inline tools */
+    & .ce-inline-tool {
+        padding: 12px;
+    }
+}

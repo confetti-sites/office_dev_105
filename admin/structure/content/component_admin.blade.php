@@ -1,6 +1,5 @@
 @php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
 
-
 <content-component
         data-name="{{ $model->getId() }}"
         data-name_slug="{{ slugId($model->getId()) }}"

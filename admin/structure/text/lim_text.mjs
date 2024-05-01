@@ -58,26 +58,6 @@ export class LimText extends Paragraph {
         this.storageValue = value;
     }
 
-    initStyles() {
-        const pr = '#' + this.config.component.id;
-        let e = document.createElement("style");
-        /* Hide the toolbar items so the user can't add new blocks */
-        let css = ``
-        /* With a big screen, the text is indeed to the right */
-        css += `${pr} .ce-block__content, ${pr} .ce-toolbar__content {max-width: unset}`;
-        /* Remove default editor.js padding (left) */
-        css += `${pr} .cdx-block {padding: 0}`;
-        /* Remove default editor.js margin (right) */
-        css += `@media (min-width: 651px) {${pr} .codex-editor__redactor {margin-right: 0px}}`;
-        /* Add padding to the inline tools */
-        css += `${pr} .ce-inline-tool {padding: 12px}`;
-        // We don't use the default toolbar, so we hide it */
-        css += `${pr} .ce-toolbar__content {display: none}`;
-
-        e.appendChild(document.createTextNode(css));
-        document.head.appendChild(e);
-    }
-
     /**
      * @param {string} value
      */
@@ -103,7 +83,6 @@ export class LimText extends Paragraph {
     }
 
     render() {
-        this.initStyles();
         // Set the correct style corresponding to the value
         this.updateValueChangedStyle(this.storageValue);
 
