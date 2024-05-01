@@ -16,7 +16,7 @@ export class Toolbar {
         const data = reactive({popoverOpen: false})
 
         this.ankerElement.style.position = 'relative';
-
+        this.ankerElement.style.display = 'block';
 
         const toolbar = html`
             <div class="absolute right-0 top-0 flex flex-row items-center p-2">

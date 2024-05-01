@@ -10,7 +10,7 @@
         import {Storage} from '/admin/assets/js/admin_service.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-        class HiddenComponent extends HTMLElement {
+        customElements.define('hidden-component', class extends HTMLElement {
             connectedCallback() {
                 let data = reactive({
                     value: Storage.getFromLocalStorage(this.dataset.name) || this.dataset.original || '',
@@ -35,10 +35,7 @@
                 });
 
                 html`<input type="hidden" name="${this.dataset.name}" value="${() => data.value}"/>`(this)
-
             }
-        }
-
-        customElements.define('hidden-component', HiddenComponent);
+        });
     </script>
 @endpushonce
