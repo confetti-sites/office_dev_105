@@ -137,6 +137,7 @@
                            @click="${() => this.#redirectToNew()}">
                             Add ${this.label}
                         </a>
+                    </label>
                 `(this)
                 this.#renderedCallback();
             }
