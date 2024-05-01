@@ -26,7 +26,7 @@
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-sortable="{{ $model->getComponent()->getDecoration('sortable') ? 'true' : '' }}"
         data-columns='@json($columns)'
-        data-originalRows='@json($originalRows)'
+        data-original_rows='@json($originalRows)'
         data-serviceApi="{{ getServiceApi() }}"
 ></list-component>
 
@@ -52,7 +52,7 @@
                 this.label = this.dataset.label;
                 this.sortable = this.dataset.sortable;
                 this.columns = JSON.parse(this.dataset.columns);
-                this.originalRows = JSON.parse(this.dataset.originalrows);
+                this.originalRows = JSON.parse(this.dataset.original_rows);
                 this.service = new LimList(this.dataset.name, this.columns, this.originalRows);
                 this.serviceApi = this.dataset.serviceapi;
             }
