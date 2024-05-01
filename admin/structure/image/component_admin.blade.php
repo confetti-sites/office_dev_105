@@ -4,7 +4,7 @@
         data-name="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-help="{{ $model->getComponent()->getDecoration('help') }}"
-        data-value=@json($model->get())
+        data-value='@json($model->get())'
 ></image-component>
 
 @pushonce('styles_cropper')
@@ -42,13 +42,14 @@
                             <!-- Canvas to Crop the image -->
                             <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg overflow-hidden">
                                 <div class="relative h-64">
-                                    <img class="absolute w-full h-64 object-cover blur-sm opacity-70" src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
+                                    <img class="absolute w-full h-64 object-cover blur-sm opacity-70"
+                                         src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
                                          alt="cropper-background">
                                     <img id="image" style="display: block;max-width: 100%;"
                                          src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
                                          onload="${() => setTimeout(() => this.#loadCropper(this.querySelector('#image')), 1)}"
                                          alt="cropper-canvas"
-                                         >
+                                    >
                                 </div>
                             </div>
                         ` : ``}
@@ -144,7 +145,6 @@
                     });
                 });
             }
-
-        }
+        });
     </script>
 @endpushonce

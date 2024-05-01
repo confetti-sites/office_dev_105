@@ -11,7 +11,7 @@ use Confetti\Helpers\ContentStore;
 
 abstract class SelectFile extends ComponentStandard implements SelectModelInterface, SelectFileInterface
 {
-    public function __construct(string $parentContentId , string $relativeContentId, ContentStore &$contentStore)
+    public function __construct(string $parentContentId, string $relativeContentId, ContentStore &$contentStore)
     {
         if ($relativeContentId != null && !str_ends_with($relativeContentId, '-')) {
             $relativeContentId .= '-';

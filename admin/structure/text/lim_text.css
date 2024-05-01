@@ -18,7 +18,7 @@ text-component {
     /* Remove default editor.js margin (right) */
     @media (min-width: 651px) {
         & .codex-editor__redactor {
-            margin-right: 0px;
+            margin-right: 0;
         }
     }
 

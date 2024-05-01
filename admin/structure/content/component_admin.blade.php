@@ -2,7 +2,7 @@
 
 <content-component
         data-name="{{ $model->getId() }}"
-        data-name_slug="{{ slugId($model->getId()) }}"
+        data-nameSlug="{{ slugId($model->getId()) }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-placeholder="{{ $model->getComponent()->getDecoration('placeholder') }}"
         data-decorations='@json($model->getComponent()->getDecorations())'
@@ -68,7 +68,7 @@
                         ${this.dataset.label}
                     </div>
                     <div class="px-5 py-4 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 _input">
-                        <span id="_${this.dataset.name_slug}"></span>
+                        <span id="_${this.dataset.nameSlug}"></span>
                     </div>
                 `(this)
                 this.renderedCallback();
@@ -82,7 +82,7 @@
                     id: this.dataset.name,
                     element: this,
                     // Id of Element that should contain Editor instance
-                    holder: '_' + this.dataset.name_slug,
+                    holder: '_' + this.dataset.nameSlug,
                     placeholder: this.dataset.placeholder,
                     originalData: JSON.parse(this.dataset.original),
                     data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem(this.dataset.name)) : JSON.parse(this.dataset.original),

@@ -2,7 +2,7 @@
 
 <text-component
         data-name="{{ $model->getId() }}"
-        data-name_slug="{{ slugId($model->getId()) }}"
+        data-nameSlug="{{ slugId($model->getId()) }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-placeholder="{{ $model->getComponent()->getDecoration('placeholder') }}"
         data-help="{{ $model->getComponent()->getDecoration('help') }}"
@@ -34,7 +34,7 @@
                         ${this.dataset.label}
                     </div>
                     <div class="_input px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
-                        <span id="_${this.dataset.name_slug}"></span>
+                        <span id="_${this.dataset.nameSlug}"></span>
                     </div>
                     <p class="mt-2 text-sm text-red-600 dark:text-red-500 _error"></p>
                     <p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>
@@ -48,7 +48,7 @@
                  */
                 new EditorJS({
                     // Id of Element that should contain Editor instance
-                    holder: '_' + this.dataset.name_slug,
+                    holder: '_' + this.dataset.nameSlug,
                     placeholder: this.dataset.placeholder,
                     // Use minHeight 0, because the default is too big
                     minHeight: 0,

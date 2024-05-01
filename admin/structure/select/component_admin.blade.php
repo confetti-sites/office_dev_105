@@ -6,10 +6,11 @@
     data-label="{{ $model->getComponent()->getLabel() }}"
     data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
     data-help="{{ $model->getComponent()->getDecoration('help') }}"
-    data-options=@json($model->getComponent()->getDecoration('options'))
+    data-options='@json($model->getComponent()->getDecoration('options'))'
 ></select-component>
 
 @pushonce('end_of_body_select_component')
+    <!--suppress JSUnresolvedReference -->
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
         import {Storage} from '/admin/assets/js/admin_service.mjs';
@@ -35,11 +36,11 @@
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
                     <select class="${() => `appearance-none pr-5 pl-3 py-3 bg-gray-50 border-2 ${data.value === this.dataset.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg block w-full`}"
                             name="${this.dataset.name}"
-                    @input="${e => data.value = e.target.value}">
-                    ${this.dataset.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
-                    ${options.map(option =>
-                            `<option value="${option.id}" ${option.id === data.value ? 'selected' : ''}>${option.label}</option>`
-                    ).join('')}
+                            @input="${e => data.value = e.target.value}">
+                        ${this.dataset.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
+                        ${options.map(option =>
+                                `<option value="${option.id}" ${option.id === data.value ? 'selected' : ''}>${option.label}</option>`
+                        ).join('')}
                     </select>
                     ${this.dataset.help ? `<p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>` : ''}
                 `(this)
@@ -56,6 +57,6 @@
                     }],
                 );
             }
-        }
+        });
     </script>
 @endpushonce
