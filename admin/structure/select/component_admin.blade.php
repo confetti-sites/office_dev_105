@@ -16,7 +16,7 @@
         import {IconUndo} from 'https://esm.sh/@codexteam/icons';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-        class SelectComponent extends HTMLElement {
+        customElements.define('select-component', class extends HTMLElement {
             connectedCallback() {
                 const options = JSON.parse(this.dataset.options)
                 let data = reactive({
@@ -57,7 +57,5 @@
                 );
             }
         }
-
-        customElements.define('select-component', SelectComponent);
     </script>
 @endpushonce

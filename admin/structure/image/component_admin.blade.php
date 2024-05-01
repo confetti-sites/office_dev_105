@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://esm.sh/cropperjs@^1/dist/cropper.css">
 @endpushonce
 @pushonce('end_of_body_image_component')
-    <style>.cropper-modal {opacity: 0.1}</style>
+    <style>image-component .cropper-modal {opacity: 0.1}</style>
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
         import {Storage, IconUpload} from '/admin/assets/js/admin_service.mjs';
@@ -21,7 +21,7 @@
         // https://fengyuanchen.github.io/cropperjs
         import Cropper from 'https://esm.sh/cropperjs';
 
-        class ImageComponent extends HTMLElement {
+        customElements.define('image-component', class extends HTMLElement {
             data = {
                 currentFile: null,
                 toCrop: null,
@@ -146,7 +146,5 @@
             }
 
         }
-
-        customElements.define('image-component', ImageComponent);
     </script>
 @endpushonce
