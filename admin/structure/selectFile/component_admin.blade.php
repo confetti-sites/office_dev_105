@@ -6,8 +6,6 @@
     $original = $model->get();
     $required = false;
     $useLabelFor = ComponentStandard::mergeIds($model->getId(), $model->getComponent()->getDecoration('useLabelFor'));
-
-    // @todo when files in blocks is changes, the structure should be updated
 @endphp
 <div>
     <div class="block text-bold text-xl mt-8 mb-4">
@@ -35,9 +33,16 @@
              has_value="{{ $grandChild->getComponent()->source->getPath() }}">
             @include("admin.structure.{$grandChild->getComponent()->type}.component_admin", ['model' => $grandChild])
         </template>
+        <template-result></template-result>
     @endforeach
 @endforeach
 @pushonce('end_of_body_select_file_component')
+    <style>
+        /* Remove the default focus-visible border */
+        ._select_file:focus {
+            outline: none;
+        }
+    </style>
     <script type="module">
         import {Storage} from '/admin/assets/js/admin_service.mjs';
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
@@ -126,11 +131,11 @@
             function check() {
                 // If the value of the select element is equal to the has_value attribute
                 if (select.value === hasValue) {
-                    // Show the element
-                    element.classList.remove('hidden');
+                    // Show the element in the next neighbour <template-result>
+                    element.nextElementSibling.innerHTML = element.innerHTML;
                 } else {
-                    // Hide the element
-                    element.classList.add('hidden');
+                    // Hide the element in the next neighbour <template-result>
+                    element.nextElementSibling.innerHTML = '';
                 }
             }
         });

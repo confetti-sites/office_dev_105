@@ -115,7 +115,7 @@ export default class LimContent {
         let original = '';
         let changed = '';
         // The Value can be null, when it's not set in local storage.
-        if (this.editor.configuration.originalData !== null) {
+        if (this.editor.configuration.originalData !== null && this.editor.configuration.originalData.blocks !== undefined) {
             // Foreach over blocks.*.data and add to string, to check original and changed
             for (const block of this.editor.configuration.originalData.blocks) {
                 original += JSON.stringify(block.data);

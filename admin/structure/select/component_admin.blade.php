@@ -11,6 +11,12 @@
 
 @pushonce('end_of_body_select_component')
     <!--suppress JSUnresolvedReference -->
+    <style>
+        /* Remove the default focus-visible border */
+        select-component:focus {
+            outline: none;
+        }
+    </style>
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
         import {Storage} from '/admin/assets/js/admin_service.mjs';
