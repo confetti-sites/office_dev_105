@@ -5,19 +5,7 @@
     use Confetti\Components\Map;
     use Confetti\Helpers\ComponentStandard;
     $component = $model->getComponent();
-    $columns = List_::getColumns($model);
-    $originalRows = array_map(fn(Map $row) => [
-        'id' => $row->getId(),
-        'data' => array_map(
-            fn(ComponentStandard $child) => $child->get(),
-                // For now, we can't handle columns that are normal components (not lists)
-                // And filter out none column components
-                array_filter($row->getChildren(), fn($child) =>
-                    $child instanceof ComponentStandard &&
-                    in_array($child->getRelativeId(), array_column($columns, 'id'))
-                )
-            ) + ['.' => $row->getValue()],
-    ], $model->get()->toArray());
+    [$columns, $originalRows] = List_::getColumnsAndRows($model);
 @endphp
 
         <!--suppress HtmlUnknownAttribute -->

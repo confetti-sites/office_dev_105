@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Confetti\Components;
 
+use Confetti\Contracts\SelectModelInterface;
 use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
@@ -277,18 +278,69 @@ abstract class List_
         return $this->get()->getIterator()->current();
     }
 
-    /**
-     * @return array<string, array<string, \Confetti\Helpers\ContentEntity[]>>
-     */
-    public static function getColumns(self $model): array
+    public static function getColumnsAndRows(self $model): array
     {
         // Get defined columns if possible
+        // E.g. [['id' => 'selected_block', 'label' => 'Selected Block', 'default_value' => null], ...]
         $columns = self::getDefinedColumns($model);
-        if ($columns !== null) {
-            return $columns;
+        if ($columns === null) {
+            $columns = self::getDefaultColumns($model);
         }
 
-        return self::getDefaultColumns($model);
+        // Get rows
+        $rows = [];
+        foreach ($model->get() as $row) {
+            $data = [];
+            foreach ($columns as $column) {
+                $keys = explode('/', $column['id']);
+                $key = array_shift($keys);
+                foreach ($row->getChildren() as $cKey => $child) {
+                    if ($cKey === self::keyToArgumentKey($key)) {
+                        $data[$column['id']] = self::getDataFromChild($child, $keys);
+                    }
+                }
+            }
+            $rows[] = [
+                'id'   => $row->getId(),
+                '.'    => $row->getValue(),
+                'data' => $data,
+            ];
+        }
+
+        return [$columns, $rows];
+    }
+
+    private static function getDataFromChild(ComponentStandard|Map $child, array $keys): mixed
+    {
+        if (empty($keys)) {
+            return $child->get();
+        }
+        $key = self::keyToArgumentKey(array_shift($keys));
+        if ($child instanceof SelectModelInterface) {
+            $children = $child->getSelected()->getChildren();
+            if (!array_key_exists($key, $children)) {
+                return null;
+            }
+
+            return self::getDataFromChild($children[$key], $keys);
+        }
+
+        if (!$child instanceof Map && !$child instanceof ComponentStandard) {
+            throw new \RuntimeException('Error gheingre: can\'t get data from child, SelectFile, Map or ComponentStandard supported, but ' . get_class($child) . ' found');
+        }
+
+        foreach ($child->getChildren() as $cKey => $child) {
+            if ($cKey === self::keyToArgumentKey($key)) {
+                return self::getDataFromChild($child, $keys);
+            }
+        }
+
+        return null;
+    }
+
+    private static function keyToArgumentKey(string $key): string
+    {
+        return str_replace(['-', '~'], '', $key);
     }
 
     private static function getDefinedColumns(self $model): ?array
