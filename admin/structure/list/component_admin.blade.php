@@ -79,7 +79,7 @@
                             <tbody>
                             ${rows.length === 0 ? `
                                 <tr>
-                                    <td colspan="${this.columns.length + 2}" class="p-4 pt-12 text-center">No items found, click 'Add ${this.label}' to add a new item.
+                                    <td colspan="${this.columns.length + 2}" class="p-4 p-12 text-center">No items found, click 'Add ${this.label}' to add a new item.
                                     </td>
                                 </tr>
                             ` : html`${rows.map(row => {

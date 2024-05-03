@@ -5,7 +5,8 @@
     $default = $model->getComponent()->getDecoration('default');
     $original = $model->get();
     $required = false;
-    $useLabelFor = ComponentStandard::mergeIds($model->getId(), $model->getComponent()->getDecoration('useLabelFor'));
+    $useLabelForRelative = $model->getComponent()->getDecoration('useLabelFor');
+    $useLabelFor = $useLabelForRelative ? ComponentStandard::mergeIds($model->getId(), $useLabelForRelative) : null;
 @endphp
 <div>
     <div class="block text-bold text-xl mt-8 mb-4">
