@@ -23,6 +23,7 @@ enum Decoration: string
     case RATIO = 'ratio';
     case REQUIRED = 'required';
     case SORTABLE = 'sortable';
+    case USE_LABEL_FOR = 'useLabelFor';
     case WIDTH = 'width';
     case WIDTH_MAX = 'widthMax';
     case WIDTH_MIN = 'widthMin';
