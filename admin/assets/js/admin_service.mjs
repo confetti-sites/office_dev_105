@@ -71,6 +71,7 @@ export class Storage {
      * @returns {boolean}
      */
     static saveFromLocalStorage(serviceApiUrl, prefix) {
+        document.querySelector('.loader').classList.add('loading');
         // Get all items from local storage (exact match and prefix + '/')
         let items = Object.keys(localStorage)
             .filter(key => key === prefix || key.startsWith(prefix + '/'))
@@ -139,6 +140,7 @@ export class Storage {
      * @returns {Promise<any>}
      */
     static delete(serviceApiUrl, id, then = null) {
+        document.querySelector('.loader').classList.add('loading');
         // Remove from database
         return fetch(`${serviceApiUrl}/confetti-cms/content/contents?id=${id}`, {
             method: 'DELETE',
@@ -221,10 +223,6 @@ export class Storage {
 
         return out;
     }
-}
-
-export const IconLoader = (classes) => {
-    return `<svg class="${classes}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 6.99998C9.1747 6.99987 6.99997 9.24998 7 12C7.00003 14.55 9.02119 17 12 17C14.7712 17 17 14.75 17 12"><animateTransform attributeName="transform" attributeType="XML" dur="560ms" from="0,12,12" repeatCount="indefinite" to="360,12,12" type="rotate"/></path></svg>`;
 }
 
 export const IconUpload = (classes) => {

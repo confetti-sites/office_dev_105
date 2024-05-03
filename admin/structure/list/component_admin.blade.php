@@ -96,7 +96,8 @@
                                     <td class="hidden sm:table-cell sm:w-[140px]">
                                         <div class="${()=>`flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
                                             <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                  href="/admin${row.id}">
+                                                  href="/admin${row.id}"
+                                                  @click="${() => this.#addLoadingState()}">
                                                 Edit
                                             </a>
                                             <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
@@ -109,7 +110,7 @@
                                                 <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                                         @click="${() => state.confirmDelete = false}">Cancel</button>
                                                 <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                                        @click="${element => Storage.delete(this.serviceApi, row.id) && element.target.closest('tr').remove() && delete rows[row.id]}">
+                                                        @click="${element => this.#removeItem(element, rows, row)}">
                                                     Confirm
                                                 </button>
                                             </div>
@@ -120,7 +121,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <label class="m-2">
+                    <label class="m-2 block">
                         <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                            @click="${() => this.#redirectToNew()}">
                             Add ${this.label}
@@ -137,10 +138,28 @@
             }
 
             #redirectToNew() {
-                console.log('Redirecting to new');
+                this.#addLoadingState();
                 let newId = this.name + Storage.newId();
                 localStorage.setItem(newId, JSON.stringify(Date.now()));
                 window.location.href = '/admin' + newId;
+            }
+
+            #removeItem(element, rows, row) {
+                this.#addLoadingState();
+                Storage.delete(this.serviceApi, row.id);
+                element.target.closest('tr').remove();
+                delete rows[row.id];
+                this.#removeLoadingState();
+            }
+
+            #addLoadingState() {
+                document.querySelector('.loader').classList.add('loading');
+                return true;
+            }
+
+            #removeLoadingState() {
+                document.querySelector('.loader').classList.remove('loading');
+                return true;
             }
         });
     </script>
