@@ -15,8 +15,7 @@
                           aria-hidden="true"></span>
                 @endif
                 <a class="inline-flex items-center w-full pl-6 py-4 font-semibold"
-                   href="/admin{{ $firstChild->getId() }}"
-                   onclick="document.querySelector('.loader').classList.add('loading')">
+                   href="/admin{{ $firstChild->getId() }}">
                     <span class="w-fit hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif">{{ $component->getLabel() }}</span>
                     <span class="_left_menu_badge text-emerald-300 hidden"
                           id="_left_menu_badge-{{ $firstChild->getId() }}">&nbsp;*</span>
@@ -35,8 +34,7 @@
                                               aria-hidden="true"></span>
                                     @endif
                                     <a class="inline-flex items-center w-full py-4 font-semibold hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif"
-                                       href="/admin{{ $secondChild->getId() }}"
-                                       onclick="document.querySelector('.loader').classList.add('loading')">
+                                       href="/admin{{ $secondChild->getId() }}">
                                         <span class="w-fit ml-6 hover:text-gray-800 dark:hover:text-gray-200 @if($isCurrent)text-gray-800 dark:text-gray-100 @endif">{{ $secondChild->getComponent()->getLabel() }}</span>
                                         <span class="_left_menu_badge text-emerald-300 hidden"
                                               id="_left_menu_badge-{{ $secondChild->getId() }}">&nbsp;*</span>

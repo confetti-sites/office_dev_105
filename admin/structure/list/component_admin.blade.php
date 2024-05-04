@@ -96,8 +96,7 @@
                                     <td class="hidden sm:table-cell sm:w-[140px]">
                                         <div class="${()=>`flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
                                             <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                  href="/admin${row.id}"
-                                                  @click="${() => this.#addLoadingState()}">
+                                                  href="/admin${row.id}">
                                                 Edit
                                             </a>
                                             <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
@@ -138,28 +137,15 @@
             }
 
             #redirectToNew() {
-                this.#addLoadingState();
                 let newId = this.name + Storage.newId();
                 localStorage.setItem(newId, JSON.stringify(Date.now()));
                 window.location.href = '/admin' + newId;
             }
 
             #removeItem(element, rows, row) {
-                this.#addLoadingState();
                 Storage.delete(this.serviceApi, row.id);
                 element.target.closest('tr').remove();
                 delete rows[row.id];
-                this.#removeLoadingState();
-            }
-
-            #addLoadingState() {
-                document.querySelector('.loader').classList.add('loading');
-                return true;
-            }
-
-            #removeLoadingState() {
-                document.querySelector('.loader').classList.remove('loading');
-                return true;
             }
         });
     </script>

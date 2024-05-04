@@ -8,7 +8,7 @@
 
 <div class="container py-6 px-6 mx-auto max-w-4xl grid">
     @include('admin.breadcrumbs', ['currentId' => $id])
-    <div class="loader loading">
+    <div>
         @foreach($children as $child)
             @php($component = $child->getComponent())
             @if($component->type === 'root')
@@ -23,7 +23,7 @@
                 @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
             </div>
         @endforeach
-        <div class="mt-16 mb-16 loader hidden"
+        <div class="mt-16 mb-16 loader _loading-hide"
              id="actions_bottom">
             <script type="module">
                 import {Storage} from '/admin/assets/js/admin_service.mjs';
@@ -37,6 +37,11 @@
                     state.count = toSave();
                 });
 
+                function addLoaderBtn(element) {
+                    element.classList.add('_loading-blur');
+                    return true
+                }
+
                 html`
                 <div class="flex flex-row w-full space-x-4">
                     <a href="/admin{{ $model->getParentId() }}" class="basis-1/4 px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md">
@@ -44,12 +49,12 @@
                     </a>
                     @if($canBeDeleted)
                     <button class="${() => `basis-1/4 px-5 flex items-center justify-center text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-emerald-700 hover:bg-red-600` : `bg-emerald-700 hover:bg-emerald-800`} border border-transparent rounded-md`}"
-                            @click="${() => state.confirmDelete ? Storage.delete('{{ getServiceApi() }}', id, ()=> Storage.redirectAway(id)) : state.confirmDelete = true}">
+                            @click="${(e) => state.confirmDelete ? addLoaderBtn(e.target) && Storage.delete('{{ getServiceApi() }}', id, ()=> Storage.redirectAway(id)) : state.confirmDelete = true}">
                         <span>${() => state.confirmDelete ? `Confirm` : `Delete`}</span>
                     </button>
                     @endif
-                    <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
-                            @click="${() => Storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}"
+                    <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} _loader_btn px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
+                            @click="${(e) => addLoaderBtn(e.target) && Storage.saveFromLocalStorage('{{ getServiceApi() }}', id)}"
                             disabled="${() => state.count > 0 ? false : `disabled`}"
                         >
                         <span>Publish</span>
@@ -57,10 +62,7 @@
                 </div>
                 `(document.getElementById('actions_bottom'));
                 // When document is ready, remove the loading state
-                document.addEventListener('DOMContentLoaded', () => document.querySelector('.loader').classList.remove('loading'));
-                document.addEventListener('DOMContentLoaded', () => document.querySelector('#actions_bottom').classList.remove('hidden'));
-
-
+                document.addEventListener('DOMContentLoaded', () => document.querySelector('.loader').classList.remove('_loading-hide'));
             </script>
         </div>
     </div>

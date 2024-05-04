@@ -71,7 +71,6 @@ export class Storage {
      * @returns {boolean}
      */
     static saveFromLocalStorage(serviceApiUrl, prefix) {
-        document.querySelector('.loader').classList.add('loading');
         // Get all items from local storage (exact match and prefix + '/')
         let items = Object.keys(localStorage)
             .filter(key => key === prefix || key.startsWith(prefix + '/'))
@@ -103,6 +102,8 @@ export class Storage {
             this.redirectAway(prefix);
             return true;
         });
+
+        return true;
     }
 
     /**
@@ -140,7 +141,6 @@ export class Storage {
      * @returns {Promise<any>}
      */
     static delete(serviceApiUrl, id, then = null) {
-        document.querySelector('.loader').classList.add('loading');
         // Remove from database
         return fetch(`${serviceApiUrl}/confetti-cms/content/contents?id=${id}`, {
             method: 'DELETE',
