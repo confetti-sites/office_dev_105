@@ -73,7 +73,8 @@ export class Storage {
     static saveFromLocalStorage(serviceApiUrl, prefix) {
         // Get all items from local storage (exact match and prefix + '/')
         let items = Object.keys(localStorage)
-            .filter(key => key === prefix || key.startsWith(prefix + '/'))
+            // We want to update the children, and we need to update the parents as well
+            .filter(key => prefix.startsWith(key) || key.startsWith(prefix + '/'))
             .map(key => {
                 // We want to decode, so we can save numbers and booleans
                 let value = JSON.parse(localStorage.getItem(key));
@@ -99,7 +100,20 @@ export class Storage {
                 localStorage.removeItem(item.id);
             });
 
-            this.redirectAway(prefix);
+            let needsRedirectBack = true;
+            items.forEach(item => {
+                // item ends with - we don't want to redirect back,
+                // the user may want to continue editing the children
+                if (item.id.endsWith('-')) {
+                    needsRedirectBack = false;
+                }
+            });
+            if (needsRedirectBack) {
+                this.redirectAway(prefix);
+            } else {
+                window.location.reload();
+            }
+
             return true;
         });
 

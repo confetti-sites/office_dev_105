@@ -110,13 +110,13 @@ class ContentStore
         return $this->content;
     }
 
-    public function setContent(array $content): void
+    public function setContent(array $content, bool $isInit = true): void
     {
         $this->content = $content;
         // When the content is set, during the init of a child,
         // we want to set the alreadyInit to true. This is because
         // we don't want to fetch the content again.
-        $this->alreadyInit = true;
+        $this->alreadyInit = $isInit;
     }
 
     public function appendCurrentJoin(string $relativeId): void

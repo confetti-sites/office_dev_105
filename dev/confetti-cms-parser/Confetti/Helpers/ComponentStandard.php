@@ -209,8 +209,7 @@ abstract class ComponentStandard
         $pointerValues = self::getPointerValues($id, $store);
 
         // Remove id banner/image~0123456789 -> banner/image
-        $class     = preg_replace('/~[A-Z0-9_]{10}/', '~', $id);
-        $parts     = explode('/', ltrim($class, '/'));
+        $parts     = explode('/', ltrim($id, '/'));
         $pointerId = null;
         $result    = [];
         $idSoFar   = '';
@@ -225,14 +224,15 @@ abstract class ComponentStandard
                 $result    = explode('\\', get_class($extended));
                 $pointerId = null;
             }
-            $classPart = $part;
+
+            $classPart     = preg_replace('/~[A-Z0-9_]{10}/', '~', $part);
             // Remove model pointers banner/image~ -> banner/image_list
             if (str_ends_with($classPart, '~')) {
-                $classPart = str_replace('~', '_list', $part);
+                $classPart = str_replace('~', '_list', $classPart);
             }
             // Remove file pointers banner/template- -> banner/template
             if (str_ends_with($classPart, '-')) {
-                $pointerId = $part;
+                $pointerId = $classPart;
                 $classPart = str_replace('-', '_pointer', $classPart);
             }
             // Rename forbidden class names

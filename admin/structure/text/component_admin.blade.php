@@ -36,7 +36,7 @@
                     <div class="_input px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
                         <span id="_${this.dataset.name_slug}"></span>
                     </div>
-                    <p class="mt-2 text-sm text-red-600 dark:text-red-500 _error"></p>
+                    <p class="mt-2 text-sm text-red-600 _error"></p>
                     <p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>
                 `(this)
                 this.renderedCallback();

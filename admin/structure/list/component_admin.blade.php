@@ -8,13 +8,14 @@
     [$columns, $originalRows] = List_::getColumnsAndRows($model);
 @endphp
 
-        <!--suppress HtmlUnknownAttribute -->
+<!--suppress HtmlUnknownAttribute -->
 <list-component
         data-name="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-sortable="{{ $model->getComponent()->getDecoration('sortable') ? 'true' : '' }}"
         data-columns='@json($columns)'
         data-original_rows='@json($originalRows)'
+        data-can_edit_children="{{ $canEditChildren ?? true }}"
         data-serviceApi="{{ getServiceApi() }}"
 ></list-component>
 
@@ -31,6 +32,7 @@
             sortable;
             columns;
             originalRows;
+            canEditChildren;
             service;
             serviceApi;
 
@@ -41,6 +43,7 @@
                 this.sortable = this.dataset.sortable;
                 this.columns = JSON.parse(this.dataset.columns);
                 this.originalRows = JSON.parse(this.dataset.original_rows);
+                this.canEditChildren = this.dataset.can_edit_children;
                 this.service = new LimList(this.dataset.name, this.columns, this.originalRows);
                 this.serviceApi = this.dataset.serviceapi;
             }
@@ -67,7 +70,8 @@
                             <tbody>
                             ${rows.length === 0 ? `
                                 <tr>
-                                    <td colspan="${this.columns.length + 2}" class="p-4 p-12 text-center">No items found, click 'Add ${this.label}' to add a new item.
+                                    <td colspan="${this.columns.length + 2}" class="p-4 p-12 text-center">
+                                        <span>${this.canEditChildren ? `No items found, click 'Add ${this.label}' to add a new item.` : `No items found. Publish this first so you can add "${this.label}" items.`}</span>
                                     </td>
                                 </tr>
                             ` : html`${rows.map(row => {
@@ -95,6 +99,7 @@
                                     </td>`)}
                                     <td class="hidden sm:table-cell sm:w-[140px]">
                                         <div class="${()=>`flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
+                                            ${this.canEditChildren ? html`
                                             <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                                   href="/admin${row.id}">
                                                 Edit
@@ -103,6 +108,11 @@
                                                     @click="${() => state.confirmDelete = true}">
                                                 Delete
                                             </button>
+                                            ` : `
+                                            <div class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white cursor-not-allowed bg-gray-700 border border-transparent rounded-md">Edit</div>
+                                            <div class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white cursor-not-allowed bg-gray-700 border border-transparent rounded-md">Delete</div>
+                                            `}
+
                                         </div>
                                         <div class="${()=>`absolute flex right-0 ` + (state.confirmDelete ? `` : `collapse`)}">
                                             <div>
@@ -120,12 +130,19 @@
                             </tbody>
                         </table>
                     </div>
-                    <label class="m-2 block">
-                        <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                           @click="${() => this.#redirectToNew()}">
-                            Add ${this.label}
-                        </a>
-                    </label>
+                    ${this.canEditChildren ? html`
+                        <label class="m-2 block">
+                            <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                               @click="${() => this.#redirectToNew()}">
+                                Add ${this.label}
+                            </a>
+                        </label>
+                    ` : `
+                        <label class="m-2 block">
+                            <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-not-allowed text-white bg-gray-700 border border-transparent rounded-md">Add ${this.label}</a>
+                            <div class="m-2 text-red-600">For now, you can only view the list. Publish this to make changes to the list.</div>
+                        </label>
+                    `}
                 `(this)
                 this.#renderedCallback();
             }

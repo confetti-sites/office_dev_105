@@ -242,6 +242,6 @@ export class Validators {
             toMuch = toMuch.substring(0, 26);
             suffix = '(...)';
         }
-        return `The value must be at most ${config.decorations.max.max} characters long.<br>Therefore you cannot use: <span class="text-red-500 underline">${toMuch}</span> ${suffix}`
+        return `The value must be at most ${config.decorations.max.max} characters long.<br>Therefore you cannot use: <span class="text-red-600 underline">${toMuch}</span> ${suffix}`
     }
 }

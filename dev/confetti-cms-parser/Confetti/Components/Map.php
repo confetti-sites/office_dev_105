@@ -17,6 +17,14 @@ abstract class Map
         protected ?ContentStore $contentStore = null,
     )
     {
+        // In the admin, we can select another pointer value than the saved one.
+        // In that case, we need data from the other pointer value.
+        if ($relativeContentId && str_ends_with($relativeContentId, '-')) {
+            $this->contentStore = clone $this->contentStore;
+            $content = $this->contentStore->getContent();
+            $content['data'][$this->getId()] = $this->getComponent()->source->getPath();
+            $this->contentStore->setContent($content);
+        }
     }
 
     abstract public static function getComponentKey(): string;
@@ -93,7 +101,7 @@ abstract class Map
         $location = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
         $as       = $location['file'] . ':' . $location['line'];
         // Get relative and parent from the key.
-        $key      = static::getComponentKey();
+        $key = static::getComponentKey();
         [$parent, $relative] = ComponentStandard::explodeKey($key);
         return [$parent, $relative, new ContentStore($key, $as), $as];
     }
