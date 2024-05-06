@@ -226,11 +226,11 @@ abstract class ComponentStandard
                 $pointerId = null;
             }
             $classPart = $part;
-            // Remove pointers banner/image~ -> banner/image_list
+            // Remove model pointers banner/image~ -> banner/image_list
             if (str_ends_with($classPart, '~')) {
                 $classPart = str_replace('~', '_list', $part);
             }
-            // Remove pointers banner/template- -> banner/template
+            // Remove file pointers banner/template- -> banner/template
             if (str_ends_with($classPart, '-')) {
                 $pointerId = $part;
                 $classPart = str_replace('-', '_pointer', $classPart);

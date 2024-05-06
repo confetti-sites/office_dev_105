@@ -32,6 +32,10 @@ function modelById(string $contentId): Map|ComponentStandard
     $contentStore = new ContentStore($contentId, $as);
     $className = \Confetti\Helpers\ComponentStandard::componentClassById($contentId, $contentStore);
 
+    if (class_exists($className) === false) {
+        throw new \RuntimeException('Error: o87huigr3. Model not found: ' . $className . ' for id: ' . $contentId);
+    }
+
     return (new $className('', $contentId, $contentStore));
 }
 
