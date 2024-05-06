@@ -71,10 +71,11 @@ export class Storage {
      * @returns {boolean}
      */
     static saveFromLocalStorage(serviceApiUrl, prefix) {
+        const specificPrefix = prefix + '/'
         // Get all items from local storage (exact match and prefix + '/')
         let items = Object.keys(localStorage)
             // We want to update the children, and we need to update the parents as well
-            .filter(key => prefix.startsWith(key) || key.startsWith(prefix + '/'))
+            .filter(key => (specificPrefix.startsWith(key) || key.startsWith(specificPrefix)))
             .map(key => {
                 // We want to decode, so we can save numbers and booleans
                 let value = JSON.parse(localStorage.getItem(key));

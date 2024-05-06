@@ -56,7 +56,7 @@ export default class LimList {
             if (localStorage.hasOwnProperty(rowRaw.id)) {
                 data['.'] = JSON.parse(localStorage.getItem(rowRaw.id));
             } else {
-                data['.'] = rowRaw.data['.'];
+                data['.'] = rowRaw['.'];
             }
             result.push({id: rowRaw.id, data: data});
         }
