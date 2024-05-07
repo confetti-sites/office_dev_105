@@ -71,7 +71,7 @@
                             ${rows.length === 0 ? `
                                 <tr>
                                     <td colspan="${this.columns.length + 2}" class="p-4 p-12 text-center">
-                                        <span>${this.canEditChildren ? `No items found, click 'Add ${this.label}' to add a new item.` : `No items found. Publish this first so you can add "${this.label}" items.`}</span>
+                                        <span>${this.canEditChildren ? `No items found, click 'Add ${this.label}' to add a new item.` : `Publish this first so you can add "${this.label}" items.`}</span>
                                     </td>
                                 </tr>
                             ` : html`${rows.map(row => {
@@ -130,20 +130,21 @@
                             </tbody>
                         </table>
                     </div>
+                    <div>
                     ${this.canEditChildren ? html`
-                        <label class="m-2 block">
+                        <label class="m-2 h-10 block">
                             <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                @click="${() => this.#redirectToNew()}">
                                 Add ${this.label}
                             </a>
                         </label>
                     ` : `
-                        <label class="m-2 block">
+                        <label class="m-2 h-10 block">
                             <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-not-allowed text-white bg-gray-700 border border-transparent rounded-md">Add ${this.label}</a>
-                            <div class="m-2 text-red-600">For now, you can only view the list. Publish this to make changes to the list.</div>
+                            ${rows.length > 0 ? `<div class="m-2 text-red-600">For now, you can only view the list. Publish this to make changes to the list.</div>` : ''}
                         </label>
                     `}
-                `(this)
+                    <div>`(this)
                 this.#renderedCallback();
             }
 

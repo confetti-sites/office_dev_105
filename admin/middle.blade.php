@@ -4,6 +4,15 @@
     $children = $model->getChildren();
     // If model is part of a list (has ~ in the id), it can be deleted
     $canBeDeleted = str_contains($id, '~');
+    // This in php
+
+    // If id ends with -, redirect to the parent without the last pointer
+    $parent = $model->getParentId();
+    if (str_ends_with($parent, '-')) {
+        $parentParts = explode('/', $parent);
+        array_pop($parentParts);
+        $parent = implode('/', $parentParts);
+    }
 @endphp
 
 <div class="container py-6 px-6 mx-auto max-w-4xl grid">
@@ -44,7 +53,7 @@
 
                 html`
                 <div class="flex flex-row w-full space-x-4">
-                    <a href="/admin{{ $model->getParentId() }}" class="basis-1/4 px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md">
+                    <a href="/admin{{ $parent }}" class="basis-1/4 px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md">
                         Back
                     </a>
                     @if($canBeDeleted)
