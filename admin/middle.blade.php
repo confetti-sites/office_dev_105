@@ -4,8 +4,6 @@
     $children = $model->getChildren();
     // If model is part of a list (has ~ in the id), it can be deleted
     $canBeDeleted = str_contains($id, '~');
-    // This in php
-
     // If id ends with -, redirect to the parent without the last pointer
     $parent = $model->getParentId();
     if (str_ends_with($parent, '-')) {

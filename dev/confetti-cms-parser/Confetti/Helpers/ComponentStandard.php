@@ -208,7 +208,6 @@ abstract class ComponentStandard
     {
         $pointerValues = self::getPointerValues($id, $store);
 
-        // Remove id banner/image~0123456789 -> banner/image
         $parts     = explode('/', ltrim($id, '/'));
         $pointerId = null;
         $result    = [];
@@ -225,6 +224,7 @@ abstract class ComponentStandard
                 $pointerId = null;
             }
 
+            // Remove id banner/image~0123456789 -> banner/image~
             $classPart     = preg_replace('/~[A-Z0-9_]{10}/', '~', $part);
             // Remove model pointers banner/image~ -> banner/image_list
             if (str_ends_with($classPart, '~')) {

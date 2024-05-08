@@ -32,10 +32,7 @@
     @foreach($pointerChild->getChildren() as $grandChild)
         <template show_if="{{ $model->getId() }}"
              has_value="{{ $grandChild->getComponent()->source->getPath() }}">
-            @include("admin.structure.{$grandChild->getComponent()->type}.component_admin", [
-                'model' => $grandChild,
-                'canEditChildren' => $original === $pointerChild->getComponent()->source->getPath(),
-            ])
+            @include("admin.structure.{$grandChild->getComponent()->type}.component_admin", ['model' => $grandChild])
         </template>
         <template-result></template-result>
     @endforeach
