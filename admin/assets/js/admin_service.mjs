@@ -67,15 +67,16 @@ export class Storage {
 
     /**
      * @param {string} serviceApiUrl
-     * @param {string} prefix
-     * @returns {boolean}
+     * @param {string} id
+     * @param {boolean} specific
+     * @returns {Promise<boolean>}
      */
-    static saveFromLocalStorage(serviceApiUrl, prefix) {
-        const specificPrefix = prefix + '/'
+    static saveFromLocalStorage(serviceApiUrl, id, specific = false) {
+        const prefixQ = id + '/'
         // Get all items from local storage (exact match and prefix + '/')
         let items = Object.keys(localStorage)
             // We want to update the children, and we need to update the parents as well
-            .filter(key => (specificPrefix.startsWith(key) || key.startsWith(specificPrefix)))
+            .filter(key => specific ? key === id : (prefixQ.startsWith(key) || key.startsWith(prefixQ)))
             .map(key => {
                 // We want to decode, so we can save numbers and booleans
                 let value = JSON.parse(localStorage.getItem(key));
@@ -89,8 +90,12 @@ export class Storage {
                 };
             });
 
+        if (items.length === 0) {
+            return Promise.resolve(true);
+        }
+
         // Save all items to the server
-        this.save(serviceApiUrl, items).then(r => {
+        return this.save(serviceApiUrl, items).then(r => {
             // if not successful, console.error
             if (!r) {
                 return false;
@@ -101,25 +106,25 @@ export class Storage {
                 localStorage.removeItem(item.id);
             });
 
-            let needsRedirectBack = true;
-            items.forEach(item => {
-                // item ends with - we don't want to redirect back,
-                // the user may want to continue editing the children
-                if (item.id.endsWith('-')) {
-                    needsRedirectBack = false;
-                }
-            });
-            if (needsRedirectBack) {
-                this.redirectAway(prefix);
-            } else {
-                window.location.reload();
-            }
-
             return true;
         });
-
-        return true;
     }
+
+    // static redirectAway(items) {
+    //     let needsRedirectBack = true;
+    //     items.forEach(item => {
+    //         // item ends with - we don't want to redirect back,
+    //         // the user may want to continue editing the children
+    //         if (item.id.endsWith('-')) {
+    //             needsRedirectBack = false;
+    //         }
+    //     });
+    //     if (needsRedirectBack) {
+    //         this.redirectAway(id);
+    //     } else {
+    //         window.location.reload();
+    //     }
+    // }
 
     /**
      * @param {string} serviceApiUrl

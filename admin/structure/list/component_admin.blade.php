@@ -10,7 +10,7 @@
 
 <!--suppress HtmlUnknownAttribute -->
 <list-component
-        data-name="{{ $model->getId() }}"
+        data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-sortable="{{ $model->getComponent()->getDecoration('sortable') ? 'true' : '' }}"
         data-columns='@json($columns)'
@@ -26,7 +26,7 @@
         import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
         customElements.define('list-component', class extends HTMLElement {
-            name;
+            id;
             label;
             sortable;
             columns;
@@ -36,12 +36,12 @@
 
             constructor() {
                 super();
-                this.name = this.dataset.name;
+                this.id = this.dataset.id;
                 this.label = this.dataset.label;
                 this.sortable = this.dataset.sortable;
                 this.columns = JSON.parse(this.dataset.columns);
                 this.originalRows = JSON.parse(this.dataset.original_rows);
-                this.service = new LimList(this.dataset.name, this.columns, this.originalRows);
+                this.service = new LimList(this.dataset.id, this.columns, this.originalRows);
                 this.serviceApi = this.dataset.serviceapi;
             }
 
@@ -95,8 +95,8 @@
                                     </td>`)}
                                     <td class="hidden sm:table-cell sm:w-[140px]">
                                         <div class="${()=>`flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
-                                            <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                  href="/admin${row.id}">
+                                            <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                               @click="${() => this.#editItem(row.id)}">
                                                 Edit
                                             </a>
                                             <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
@@ -137,15 +137,49 @@
             }
 
             #redirectToNew() {
-                let newId = this.name + Storage.newId();
+                this.#savePointers(this.id);
+                let newId = this.id + Storage.newId();
                 localStorage.setItem(newId, JSON.stringify(Date.now()));
-                window.location.href = '/admin' + newId;
+                // window.location.href = '/admin' + newId; if cmd key is also pushed it will open in a new tab, but not with event.ctrlKey
+                if (event.ctrlKey || event.metaKey) {
+                    window.open('/admin' + newId, '_blank');
+                } else {
+                    window.location.href = '/admin' + newId;
+                }
+            }
+
+            #editItem(id) {
+                this.#savePointers(id);
+                if (event.ctrlKey || event.metaKey) {
+                    window.open('/admin' + id, '_blank');
+                } else {
+                    window.location.href = '/admin' + id;
+                }
             }
 
             #removeItem(element, rows, row) {
                 Storage.delete(this.serviceApi, row.id);
                 element.target.closest('tr').remove();
                 delete rows[row.id];
+            }
+
+            // Before we can edit the child of a pointer, we need
+            // to save the pointers if present in the local storage
+            async #savePointers(childId) {
+                // If child id is `/model/template-/page` then the pointer key is `/model/template-`
+                // explode id to ids
+                const ids = childId.split('/');
+                // Remove the last element
+                ids.pop();
+                // Join the ids
+                const key = ids.join('/');
+                // If key has suffix `-` save it
+                if (key.endsWith('-')) {
+                    await Storage.saveFromLocalStorage(this.serviceApi, key, true);
+                }
+                if (ids.length > 2) {
+                    this.#savePointers(key);
+                }
             }
         });
     </script>
