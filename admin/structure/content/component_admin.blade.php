@@ -1,8 +1,8 @@
 @php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
 
 <content-component
-        data-name="{{ $model->getId() }}"
-        data-name_slug="{{ slugId($model->getId()) }}"
+        data-id="{{ $model->getId() }}"
+        data-id_slug="{{ slugId($model->getId()) }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-placeholder="{{ $model->getComponent()->getDecoration('placeholder') }}"
         data-decorations='@json($model->getComponent()->getDecorations())'
@@ -68,7 +68,7 @@
                         ${this.dataset.label}
                     </div>
                     <div class="px-5 py-4 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50 _input">
-                        <span id="_${this.dataset.name_slug}"></span>
+                        <span id="_${this.dataset.id_slug}"></span>
                     </div>
                 `(this)
                 this.renderedCallback();
@@ -79,13 +79,13 @@
                  * These are the settings for the editor.js
                  */
                 const editor = new EditorJS({
-                    id: this.dataset.name,
+                    id: this.dataset.id,
                     element: this,
                     // Id of Element that should contain Editor instance
-                    holder: '_' + this.dataset.name_slug,
+                    holder: '_' + this.dataset.id_slug,
                     placeholder: this.dataset.placeholder,
                     originalData: JSON.parse(this.dataset.original),
-                    data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem(this.dataset.name)) : JSON.parse(this.dataset.original),
+                    data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem(this.dataset.id)) : JSON.parse(this.dataset.original),
                     // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
                     decorations: JSON.parse(this.dataset.decorations),
                     /** Use minHeight 100, because the default is too big. */

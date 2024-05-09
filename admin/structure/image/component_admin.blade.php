@@ -1,7 +1,7 @@
 @php /** @var \Confetti\Components\Image $model */ @endphp
 
 <image-component
-        data-name="{{ $model->getId() }}"
+        data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-help="{{ $model->getComponent()->getDecoration('help') }}"
         data-value='@json($model->get())'
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                         ` : ``}
-                        <label for="${this.dataset.name}"
+                        <label for="${this.dataset.id}"
                                class="${() => `_dropzone ${this.data.toCrop ? `hidden` : ``} flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 ${this.data.dragover ? `border-solid` : `border-dashed`} rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100`}">
                             ${() => this.data.currentFile ? html`
                                 <!-- current image -->
@@ -77,7 +77,7 @@
                                 </div>
                             ` : ``}
                             <input @change="${() => (this.data.toCrop = this.querySelector('input').files[0])}"
-                                   id="${this.dataset.name}"
+                                   id="${this.dataset.id}"
                                    type="file"
                                    accept="image/*"
                                    class="hidden"

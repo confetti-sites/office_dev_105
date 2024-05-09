@@ -1,7 +1,7 @@
 @php /** @var \Confetti\Components\Select $model */ @endphp
 
 <select-component
-    data-name="{{ $model->getId() }}"
+    data-id="{{ $model->getId() }}"
     data-original="{{ $model->get() }}"
     data-label="{{ $model->getComponent()->getLabel() }}"
     data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
@@ -27,13 +27,13 @@
             connectedCallback() {
                 const options = JSON.parse(this.dataset.options)
                 let data = reactive({
-                    value: Storage.getFromLocalStorage(this.dataset.name) || this.dataset.original || '',
+                    value: Storage.getFromLocalStorage(this.dataset.id) || this.dataset.original || '',
                 });
 
                 data.$on('value', value => {
-                    Storage.removeLocalStorageItems(this.dataset.name);
+                    Storage.removeLocalStorageItems(this.dataset.id);
                     if (value !== this.dataset.original) {
-                        Storage.saveToLocalStorage(this.dataset.name, value);
+                        Storage.saveToLocalStorage(this.dataset.id, value);
                     }
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
@@ -41,7 +41,7 @@
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
                     <select class="${() => `appearance-none pr-5 pl-3 py-3 bg-gray-50 border-2 ${data.value === this.dataset.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg block w-full`}"
-                            name="${this.dataset.name}"
+                            name="${this.dataset.id}"
                             @input="${e => data.value = e.target.value}">
                         ${this.dataset.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
                         ${options.map(option =>
