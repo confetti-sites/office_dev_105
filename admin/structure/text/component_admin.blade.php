@@ -78,10 +78,10 @@
                                  * E.g. /model/homepage/title
                                  * @type {string}
                                  **/
-                                contentId: '{{ $model->getId() }}',
+                                contentId: this.dataset.id,
                                 // This is the value stored in the database.
                                 // Lim is using LocalStorage to store the data before it is saved/published.
-                                originalValue: '{{ $model->get() }}',
+                                originalValue: JSON.parse(this.dataset.original),
                                 /** @type {HTMLElement} */
                                 component: this,
                                 // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};

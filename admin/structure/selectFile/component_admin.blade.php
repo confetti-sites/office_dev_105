@@ -1,4 +1,4 @@
-<!--suppress HtmlUnknownAttribute, HtmlUnknownTag -->
+<!--suppress HtmlUnknownAttribute, HtmlUnknownTag, PhpParamsInspection -->
 @php
     /** @var \Confetti\Components\SelectFile $model */
     use Confetti\Helpers\ComponentStandard;
@@ -79,11 +79,10 @@
                         </div>
                         <select class="w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50"
                                 style="-webkit-appearance: none !important;-moz-appearance: none !important;" {{-- Remove default icon --}}
-                name="${this.dataset.id}"
+                                name="${this.dataset.id}"
                                 @change="${(e) => this.data.value = e.target.value}"
                         >
-                            ${this.dataset.required === 'true' ? '' : html`
-                    <option selected>Nothing selected</option>`}
+                            ${this.dataset.required === 'true' ? '' : html`<option selected>Nothing selected</option>`}
                             ${options.map(option => html`
                                 <option value="${option.source_path}"
                                         ${this.data.value === option.source_path ? 'selected' : ''}

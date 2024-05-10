@@ -294,6 +294,7 @@ abstract class List_
             foreach ($columns as $column) {
                 $keys = explode('/', $column['id']);
                 $key = array_shift($keys);
+
                 foreach ($row->getChildren() as $cKey => $child) {
                     if ($cKey === self::keyToArgumentKey($key)) {
                         $data[$column['id']] = self::getDataFromChild($child, $keys);
