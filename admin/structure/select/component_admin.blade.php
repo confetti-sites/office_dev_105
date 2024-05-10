@@ -1,5 +1,5 @@
 @php /** @var \Confetti\Components\Select $model */ @endphp
-
+<!--suppress HtmlUnknownTag, HtmlUnknownAttribute -->
 <select-component
     data-id="{{ $model->getId() }}"
     data-original="{{ $model->get() }}"
@@ -10,7 +10,6 @@
 ></select-component>
 
 @pushonce('end_of_body_select_component')
-    <!--suppress JSUnresolvedReference -->
     <style>
         /* Remove the default focus-visible border */
         select-component:focus {

@@ -8,7 +8,7 @@
     [$columns, $originalRows] = List_::getColumnsAndRows($model);
 @endphp
 
-<!--suppress HtmlUnknownAttribute -->
+<!--suppress HtmlUnknownAttribute, HtmlUnknownTag -->
 <list-component
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"

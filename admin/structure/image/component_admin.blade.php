@@ -1,5 +1,5 @@
 @php /** @var \Confetti\Components\Image $model */ @endphp
-
+<!--suppress HtmlUnknownTag -->
 <image-component
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"

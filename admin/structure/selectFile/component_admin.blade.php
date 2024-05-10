@@ -10,6 +10,7 @@
         ];
     }, $model->getOptions());
 @endphp
+<!--suppress HtmlUnknownTag -->
 <select-file-component
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"

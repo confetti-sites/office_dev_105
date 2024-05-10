@@ -1,5 +1,5 @@
 @php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
-
+<!--suppress HtmlUnknownTag -->
 <text-component
         data-id="{{ $model->getId() }}"
         data-id_slug="{{ slugId($model->getId()) }}"
@@ -9,7 +9,6 @@
         data-decorations='@json($model->getComponent()->getDecorations())'
         data-original='@json($model->get())'
 ></text-component>
-
 
 @pushonce('end_of_body_text_component')
     <style>

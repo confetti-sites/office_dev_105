@@ -1,5 +1,5 @@
 @php /** @var \Confetti\Components\Hidden $model */ @endphp
-
+<!--suppress HtmlUnknownTag -->
 <hidden-component
         data-id="{{ $model->getId() }}"
         data-original="{{ $model->get() }}"
