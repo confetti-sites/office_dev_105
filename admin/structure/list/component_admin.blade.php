@@ -140,7 +140,7 @@
                 this.#savePointers(this.id);
                 let newId = this.id + Storage.newId();
                 localStorage.setItem(newId, JSON.stringify(Date.now()));
-                // window.location.href = '/admin' + newId; if cmd key is also pushed it will open in a new tab, but not with event.ctrlKey
+                // Open in new tab if ctrl or cmd key is pressed
                 if (event.ctrlKey || event.metaKey) {
                     window.open('/admin' + newId, '_blank');
                 } else {
@@ -178,7 +178,7 @@
                     await Storage.saveFromLocalStorage(this.serviceApi, key, true);
                 }
                 if (ids.length > 2) {
-                    this.#savePointers(key);
+                    await this.#savePointers(key);
                 }
             }
         });
