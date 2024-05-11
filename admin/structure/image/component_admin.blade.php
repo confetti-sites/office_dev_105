@@ -4,11 +4,13 @@
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-help="{{ $model->getComponent()->getDecoration('help') }}"
+        data-ratio-width="{{ $model->getComponent()->getDecoration('ratio', 'ratioWidth') }}"
+        data-ratio-height="{{ $model->getComponent()->getDecoration('ratio', 'ratioHeight') }}"
         data-value='@json($model->get())'
 ></image-component>
 
 @pushonce('styles_cropper')
-    <link rel="stylesheet" href="https://esm.sh/cropperjs@^1/dist/cropper.css">
+    <link rel="stylesheet" href="/admin/structure/image/cropper.css">
 @endpushonce
 @pushonce('end_of_body_image_component')
     <style>image-component .cropper-modal {opacity: 0.1}</style>
@@ -92,9 +94,13 @@
             }
 
             #loadCropper(element) {
+                let ratio = undefined;
+                if (this.dataset.ratioWidth > 0 && this.dataset.ratioHeight > 0) {
+                    ratio = this.dataset.ratioWidth / this.dataset.ratioHeight;
+                }
+
                 new Cropper(element, {
-                    // aspectRatio: 16 / 9,
-                    aspectRatio: 1 / 1,
+                    aspectRatio: ratio,
                     background: false,
                     modal: true,
                     guides: false,
@@ -103,6 +109,7 @@
                     center: false,
                     viewMode: 2,
                     autoCropArea: 1,
+                    zoomable: false,
                     crop(event) {
                         console.log(event.detail.x);
                         console.log(event.detail.y);
