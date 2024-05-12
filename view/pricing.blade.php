@@ -23,7 +23,7 @@
     </div>
     <div class="text-center pt-8">
       <div class="py-2 px-4 bg-primary items-center leading-none rounded-full flex inline-flex text-white">
-        <span class="flex rounded-full border border-opacity-20 border-white uppercase px-2 py-1 text-xs font-bold mr-3">Beta</span>
+        <span class="flex rounded-full border border-opacity-20 border-white uppercase px-2 py-1 text-sm font-bold mr-3">Beta</span>
         <div class="font-semibold mr-2 text-left flex-col md:hidden"><div>Since Confetti is in beta</div><div>all plans are currently free</div></div>
         <div class="font-semibold mr-2 text-left flex-col hidden md:block">Since Confetti is in beta, all plans are currently free</div>
       </div>

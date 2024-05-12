@@ -1,5 +1,5 @@
 @php($m = extendModel($model)->label('Image')))
-@php($image1 = $m->image('image_no_ratio')->label('Image no ratio')->widthPx(2000)->ratio(1, 1))
+@php($image1 = $m->image('image_no_ratio')->label('Image')->widthPx(1200)->ratio(1, 1))
 
 <picture>{{ $image1->getSource('The alt text') }}</picture>
 <picture>
