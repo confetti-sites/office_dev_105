@@ -7,3 +7,19 @@
 
 @php($image3 = $m->image('image_4')->label('Image 4:3')->ratio(4, 3))
 <img src="{{ $image3->get() }}" alt="{{ $image3->alt() }}" srcset="{{ $image3->srcset() }}" sizes="{{ $image3->sizes() }}">
+
+<picture>
+    <source
+            media="(min-width: 900px)"
+            srcset="large-image_1x.jpeg 1x, large-image_retina.jpeg 2x"
+            type="image/jpeg />
+    <source media="(min-width: 601px)"
+            srcset="medium-image_1x.webp 1x, medium-image_retina.jpeg 2x"
+            type="image/jpeg" />
+    <source media="(max-width: 600px)"
+            srcset="small-image_1x.webp 1x, small-image_1x.jpeg 1x"
+            type="image/jpeg" />
+    <img    src="large-image_1x.jpg"
+            type="image/jpeg"
+            alt="my image description"/>
+</picture>

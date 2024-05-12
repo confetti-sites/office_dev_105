@@ -17,8 +17,9 @@ abstract class Image extends ComponentStandard {
 
         $component = $this->getComponent();
 
-        $width = $component->getDecoration('width') ?? 300;
-        $height = $component->getDecoration('height') ?? 200;
+        $width = $component->getDecoration('widthPx') ?? 300;
+        // @todo get ratio from decoration and calculate the height
+        $height = 100;
 
         return "https://picsum.photos/$width/$height?random=" . rand(0, 10000);
     }
@@ -37,20 +38,11 @@ abstract class Image extends ComponentStandard {
         return $this;
     }
 
-    // Height of the image
-    public function height(int $height): self
-    {
-        $this->setDecoration('height', [
-            'height' => $height,
-        ]);
-        return $this;
-    }
-
     // Width of the image
-    public function width(int $width): self
+    public function widthPx(int $widthPx): self
     {
-        $this->setDecoration('width', [
-            'width' => $width,
+        $this->setDecoration('widthPx', [
+            'widthPx' => $widthPx,
         ]);
         return $this;
     }

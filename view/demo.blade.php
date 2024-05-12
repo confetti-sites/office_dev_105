@@ -12,7 +12,7 @@
                 </p>
             </div>
             <div class="md:w-1/2 mt-8 md:mt-0 opacity-1 py-2 @if($position == 'left') -order-1 @endif">
-                <img src="{{ $block->image('image')->width(800)->height(500) }}" alt="">
+                <img src="{{ $block->image('image')->widthPx(300) }}" alt="">
             </div>
         </div>
     @endforeach

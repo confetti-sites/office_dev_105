@@ -1,5 +1,5 @@
 @php /** @var \Confetti\Components\Image $model */ @endphp
-<!--suppress HtmlUnknownTag -->
+<!--suppress HtmlUnknownTag, HtmlUnknownAttribute -->
 <image-component
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
@@ -49,7 +49,7 @@
                                          alt="cropper-background">
                                     <img id="image" style="display: block;max-width: 100%;"
                                          src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
-                                         onload="${() => setTimeout(() => this.#loadCropper(this.querySelector('#image')), 1)}"
+                                         @load="${() => this.#loadCropper(this.querySelector('#image'))}"
                                          alt="cropper-canvas"
                                     >
                                 </div>
@@ -74,8 +74,6 @@
                                     <p class="mb-2 text-sm text-gray-500"><span
                                             class="font-semibold">Click to upload</span>
                                         or drag and drop</p>
-                                    <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                    <p class="text-xs text-gray-500">${this.dataset.help}</p>
                                 </div>
                             ` : ``}
                             <input @change="${() => (this.data.toCrop = this.querySelector('input').files[0])}"

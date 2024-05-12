@@ -11,9 +11,6 @@ enum Decoration: string
     case COLUMNS = 'columns';
     case CROP_AUTOMATICALLY = 'cropAutomatically';
     case DEFAULT = 'default';
-    case HEIGHT = 'height';
-    case HEIGHT_MAX = 'heightMax';
-    case HEIGHT_MIN = 'heightMin';
     case HELP = 'help';
     case LABEL = 'label';
     case MAX = 'max';
@@ -24,9 +21,7 @@ enum Decoration: string
     case REQUIRED = 'required';
     case SORTABLE = 'sortable';
     case USE_LABEL_FOR = 'useLabelFor';
-    case WIDTH = 'width';
-    case WIDTH_MAX = 'widthMax';
-    case WIDTH_MIN = 'widthMin';
+    case WIDTH_PX = 'widthPx';
 
     public function comment(string $comment): string
     {
