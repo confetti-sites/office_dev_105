@@ -1,25 +1,9 @@
 @php($m = extendModel($model)->label('Image')))
-@php($image1 = $m->image('image_no_ratio')->label('Image no ratio'))
-<img src="{{ $image1->get() }}" alt="{{ $image1->alt() }}" srcset="{{ $image1->srcset() }}" sizes="{{ $image1->sizes() }}">
+@php($image1 = $m->image('image_no_ratio')->label('Image no ratio')->widthPx(2000)->ratio(1, 1))
 
-@php($image2 = $m->image('image_16')->label('Image 16:9')->ratio(16, 9))
-<img src="{{ $image2->get() }}" alt="{{ $image2->alt() }}" srcset="{{ $image2->srcset() }}" sizes="{{ $image2->sizes() }}">
-
-@php($image3 = $m->image('image_4')->label('Image 4:3')->ratio(4, 3))
-<img src="{{ $image3->get() }}" alt="{{ $image3->alt() }}" srcset="{{ $image3->srcset() }}" sizes="{{ $image3->sizes() }}">
-
+<picture>{{ $image1->getSource('The alt text') }}</picture>
 <picture>
-    <source
-            media="(min-width: 900px)"
-            srcset="large-image_1x.jpeg 1x, large-image_retina.jpeg 2x"
-            type="image/jpeg />
-    <source media="(min-width: 601px)"
-            srcset="medium-image_1x.webp 1x, medium-image_retina.jpeg 2x"
-            type="image/jpeg" />
-    <source media="(max-width: 600px)"
-            srcset="small-image_1x.webp 1x, small-image_1x.jpeg 1x"
-            type="image/jpeg" />
-    <img    src="large-image_1x.jpg"
-            type="image/jpeg"
-            alt="my image description"/>
+    <source media="(min-width: 641px)" srcset="image-standard.jpeg 1x, image-standard_2x.jpeg 2x" />
+    <source srcset="small-image.jpeg 1x, small-image_2x.jpeg 2x" />
+    <img src="image-standard.jpeg" alt="" />
 </picture>
