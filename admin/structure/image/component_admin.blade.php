@@ -45,12 +45,12 @@
                     <div class="flex items-center justify-center w-full">
                         ${() => this.data.toCrop ? html`
                             <!-- Canvas to Crop the image -->
-                            <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg overflow-hidden">
-                                <div class="relative h-64">
-                                    <img class="absolute w-full h-64 object-cover blur-sm opacity-70"
+                            <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg">
+                                <div class="relative h-64" style="margin-left: -2px; margin-top: -2px;">
+                                    <img class="absolute w-full h-64 object-cover blur-sm opacity-70 rounded-lg"
                                          src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
                                          alt="cropper-background">
-                                    <img id="image" style="display: block;max-width: 100%;"
+                                    <img id="image" class="block rounded-lg w-full"
                                          src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
                                          @load="${() => this.#imageLoaded(this.querySelector('#image'))}"
                                          alt="cropper-canvas"
@@ -123,6 +123,9 @@
                         // console.log(event.detail.scaleY);
                     },
                 });
+
+                // @todo validate if cropping is disabled
+                // this.#validate();
             }
 
             #addListeners() {
