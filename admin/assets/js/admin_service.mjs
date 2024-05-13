@@ -248,3 +248,7 @@ export class Storage {
 export const IconUpload = (classes) => {
     return `<svg class="${classes}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>`;
 }
+
+export const IconUndo = (classes) => {
+    return `<svg class="${classes}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M9.33333 13.6667L6 10.3333L9.33333 7M6 10.3333H15.1667C16.0507 10.3333 16.8986 10.6845 17.5237 11.3096C18.1488 11.9348 18.5 12.7826 18.5 13.6667C18.5 14.5507 18.1488 15.3986 17.5237 16.0237C16.8986 16.6488 16.0507 17 15.1667 17H14.3333" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}

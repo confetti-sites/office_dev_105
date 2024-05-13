@@ -19,9 +19,7 @@
         }</style>
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
-        import {Storage, IconUpload} from '/admin/assets/js/admin_service.mjs';
-        /** @see https://github.com/codex-team/icons */
-        import {IconUndo} from 'https://esm.sh/@codexteam/icons';
+        import {Storage, IconUpload, IconUndo} from '/admin/assets/js/admin_service.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         // https://fengyuanchen.github.io/cropperjs
         import Cropper from 'https://esm.sh/cropperjs';
@@ -53,8 +51,7 @@
                                     <img id="image" class="block rounded-lg w-full"
                                          src="${() => this.data.toCrop ? URL.createObjectURL(this.data.toCrop) : ''}"
                                          @load="${() => this.#imageLoaded(this.querySelector('#image'))}"
-                                         alt="cropper-canvas"
-                                    >
+                                         alt="cropper-canvas">
                                 </div>
                             </div>
                         ` : ``}
@@ -74,9 +71,10 @@
                                 <!-- Information for new image -->
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     ${IconUpload(`w-8 h-8 mb-4 text-gray-500`)}
-                                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop.</p>
+                                    <p class="mb-2 text-sm text-gray-500"><span
+                                            class="font-semibold">Click to upload</span> or drag and drop.</p>
                                     <p class="text-sm text-gray-500">Good width: ${this.dataset.width_px}px</p>
-                                    <p class="text-sm text-gray-500">Perfect width: ${this.dataset.width_px*2}px</p>
+                                    <p class="text-sm text-gray-500">Perfect width: ${this.dataset.width_px * 2}px</p>
                                 </div>
                             ` : ``}
                             <input @change="${() => (this.data.toCrop = this.querySelector('input').files[0])}"
@@ -92,6 +90,30 @@
                 `(this)
 
                 this.#addListeners();
+
+                new Toolbar(this).init([{
+                        label: 'Remove image',
+                        icon: IconUndo(`w-8 h-8 p-1`),
+                        closeOnActivate: true,
+                        onActivate: async () => {
+                            this.#removeImage();
+                        }
+                    },
+                    {
+                        label: 'Upload new image',
+                        icon: IconUpload(`w-8 h-8 p-1`),
+                        closeOnActivate: true,
+                        onActivate: async () => {
+                            this.#removeImage();
+                            this.querySelector('input').click();
+                        }
+                    }],
+                );
+            }
+
+            #removeImage() {
+                this.data.currentFile = null;
+                this.data.warningMessage = '';
             }
 
             #imageLoaded(element) {
