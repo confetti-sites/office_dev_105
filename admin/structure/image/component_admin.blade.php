@@ -19,7 +19,7 @@
         }</style>
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
-        import {Storage, IconUpload, IconUndo} from '/admin/assets/js/admin_service.mjs';
+        import {Storage, IconUpload, IconTrash, IconUndo} from '/admin/assets/js/admin_service.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         // https://fengyuanchen.github.io/cropperjs
         import Cropper from 'https://esm.sh/cropperjs';
@@ -91,9 +91,19 @@
 
                 this.#addListeners();
 
-                new Toolbar(this).init([{
-                        label: 'Remove image',
+                new Toolbar(this).init([
+                    {
+                        label: 'Remove unpublished changes',
                         icon: IconUndo(`w-8 h-8 p-1`),
+                        closeOnActivate: true,
+                        onActivate: async () => {
+                            /** @todo remove unpublished changes */
+                            console.log('@todo Remove unpublished changes');
+                        }
+                    },
+                    {
+                        label: 'Remove image',
+                        icon: IconTrash(`w-8 h-8 p-1`),
                         closeOnActivate: true,
                         onActivate: async () => {
                             this.#removeImage();
@@ -112,6 +122,7 @@
             }
 
             #removeImage() {
+                this.data.toCrop = null;
                 this.data.currentFile = null;
                 this.data.warningMessage = '';
             }

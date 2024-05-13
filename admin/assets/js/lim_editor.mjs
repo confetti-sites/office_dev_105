@@ -30,10 +30,10 @@ export class Toolbar {
                          @click="${() => {data.popoverOpen = false}}">
                     </div>
                     <!-- Popover -->
-                    <div class="${() => `fixed sm:absolute top-auto sm:top-0 left-0 z-10 sm:left-auto right-0 bottom-0 sm:bottom-auto m-5 sm:mt-8 p-2 sm:p-0 line-clamp-2 border rounded-md sm:w-[270px] bg-white shadow-lg z-50 ${data.popoverOpen ? '' : 'hidden'}`}">
+                    <div class="${() => `fixed sm:absolute top-auto sm:top-0 left-0 z-10 sm:left-auto right-0 bottom-0 sm:bottom-auto m-5 sm:mt-8 p-2 sm:p-1 border rounded-md sm:w-[270px] bg-white shadow-lg z-50 ${data.popoverOpen ? '' : 'hidden'}`}">
                         <!-- Items -->
                         ${settingItems.map(itemData => html`
-                            <div class="flex p-2 cursor-pointer select-none inline-flex items-center" 
+                            <div class="flex p-2 cursor-pointer select-none inline-flex items-center line-clamp-2" 
                                  @click="${() => {itemData.onActivate(); data.popoverOpen = false}}">
                                 <div style="padding-right:12px">${itemData.icon}</div>
                                 <div class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-emerald-800">${itemData.label}</div>
