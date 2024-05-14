@@ -126,6 +126,7 @@
                 this.data.toCrop = null;
                 this.data.currentFile = null;
                 this.data.warningMessage = '';
+                this.querySelector('input').value = '';
             }
 
             #imageLoaded(element) {
@@ -164,21 +165,18 @@
                     data = this.data;
                     input.addEventListener('dragover', function (e) {
                         data.dragover = true;
-                        console.log('dragover');
                         e.preventDefault();
                         e.stopPropagation();
                     });
 
                     input.addEventListener('dragleave', function (e) {
                         data.dragover = false;
-                        console.log('dragleave');
                         e.preventDefault();
                         e.stopPropagation();
                     });
 
                     input.addEventListener('drop', function (e) {
                         data.dragover = false;
-                        console.log('drop');
                         e.preventDefault();
                         e.stopPropagation();
                         if (e.dataTransfer) {
