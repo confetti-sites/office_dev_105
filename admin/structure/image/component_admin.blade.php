@@ -14,9 +14,6 @@
     <link rel="stylesheet" href="/admin/structure/image/cropper.css">
 @endpushonce
 @pushonce('end_of_body_image_component')
-    <style>image-component .cropper-modal {
-            opacity: 0.1
-        }</style>
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
         import {Storage, IconUpload, IconTrash, IconUndo} from '/admin/assets/js/admin_service.mjs';
