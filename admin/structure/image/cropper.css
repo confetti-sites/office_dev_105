@@ -176,11 +176,12 @@
 }
 
 .cropper-point {
-    background-color: rgb(3, 96, 70);
+    background-color: rgb(3, 96, 70, .6);
     height: 20px;
     width: 20px;
-    opacity: 1;
     border-radius: 50%;
+    opacity: 1;
+    border: 2px solid rgb(3, 96, 70, 1);
 }
 
 .cropper-point.point-e {
@@ -213,26 +214,26 @@
 
 .cropper-point.point-ne {
     cursor: nesw-resize;
-    right: -7px;
-    top: -7px;
+    right: -10px;
+    top: -10px;
 }
 
 .cropper-point.point-nw {
     cursor: nwse-resize;
-    left: -7px;
-    top: -7px;
+    left: -10px;
+    top: -10px;
 }
 
 .cropper-point.point-sw {
-    bottom: -7px;
+    bottom: -10px;
     cursor: nesw-resize;
-    left: -7px;
+    left: -10px;
 }
 
 .cropper-point.point-se {
-    bottom: -7px;
+    bottom: -10px;
     cursor: nwse-resize;
-    right: -7px;
+    right: -10px;
 }
 
 .cropper-point.point-se::before {

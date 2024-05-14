@@ -72,9 +72,11 @@
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     ${IconUpload(`w-8 h-8 mb-4 text-gray-500`)}
                                     <p class="mb-2 text-sm text-gray-500"><span
-                                            class="font-semibold">Click to upload</span> or drag and drop.</p>
-                                    <p class="text-sm text-gray-500">Good width: ${this.dataset.width_px}px</p>
-                                    <p class="text-sm text-gray-500">Perfect width: ${this.dataset.width_px * 2}px</p>
+                                    class="font-semibold">Click to upload</span> or drag and drop.</p>
+                                    ${() => this.dataset.width_px ? html`
+                                        <p class="text-sm text-gray-500">Good width: ${this.dataset.width_px} pixels or more</p>
+                                        <p class="text-sm text-gray-500">Perfect width: ${this.dataset.width_px * 2} pixels or more</p>
+                                    ` : ``}
                                 </div>
                             ` : ``}
                             <input @change="${() => (this.data.toCrop = this.querySelector('input').files[0])}"
@@ -82,7 +84,6 @@
                                    type="file"
                                    accept="image/*"
                                    class="hidden"
-                                   multiple="false"
                             />
                         </label>
                     </div>
@@ -156,9 +157,6 @@
                         // console.log(event.detail.scaleY);
                     },
                 });
-
-                // @todo validate if cropping is disabled
-                // this.#validate();
             }
 
             #addListeners() {
