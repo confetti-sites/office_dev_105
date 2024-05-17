@@ -395,13 +395,8 @@ abstract class List_
         }
     }
 
-    // Label is used as a field title in the admin panel
-    public function label(string $label): self
-    {
-        return $this;
-    }
-
     // Minimum number of items
+
     public function min(int $min): self
     {
         return $this;
@@ -415,6 +410,23 @@ abstract class List_
 
     // This becomes the headers of the table in de admin
     public function columns(array $columns): self
+    {
+        return $this;
+    }
+
+    public function getComponentType(): string
+    {
+        return 'list';
+    }
+
+    // The label of the list
+    public function label(string $label): self
+    {
+        return $this;
+    }
+
+    // When using this method, the list will be sortable
+    public function sortable(): self
     {
         return $this;
     }

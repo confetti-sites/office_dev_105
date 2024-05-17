@@ -50,7 +50,7 @@ abstract class Select extends ComponentStandard {
         return $this;
     }
 
-    // Label is used as a field title in the admin panel
+    // Label is used as a field title in the admin panel.
     public function label(string $label): self
     {
         $this->setDecoration('label', [
@@ -65,6 +65,13 @@ abstract class Select extends ComponentStandard {
         $this->setDecoration('options', [
             'options' => $options,
         ]);
+        return $this;
+    }
+
+    // The user can't select the `Nothing selected` option.
+    public function required(): self
+    {
+        $this->setDecoration('required', true);
         return $this;
     }
 }
