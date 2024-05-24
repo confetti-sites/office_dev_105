@@ -74,6 +74,7 @@
                                    id="${this.dataset.id}"
                                    type="file"
                                    accept="image/*"
+                                   class="hidden"
                             />
                             <!--                                   class="hidden"-->
                         </label>
@@ -169,7 +170,6 @@
                     let parentThis = this;
                     input.addEventListener('dragover', function (e) {
                         data.dragover = true;
-                        console.log('dragover');
                         e.preventDefault();
                         e.stopPropagation();
                     });
