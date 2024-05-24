@@ -7,12 +7,16 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentStandard;
 
 abstract class Image extends ComponentStandard {
-    public function get(): string
+    public function get(): array
     {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
             return $content->value;
+        }
+
+        if (!$this->contentStore->canFake()) {
+            return [];
         }
 
         $component = $this->getComponent();
@@ -21,7 +25,10 @@ abstract class Image extends ComponentStandard {
         // @todo get ratio from decoration and calculate the height
         $height = 100;
 
-        return "https://picsum.photos/$width/$height?random=" . rand(0, 10000);
+        return [
+            'standard' => "https://picsum.photos/$width/$height?random=" . rand(0, 10000),
+            'original' => "https://picsum.photos/$width/$height?random=" . rand(0, 10000),
+        ];
     }
 
     public function getComponentType(): string
@@ -45,5 +52,10 @@ abstract class Image extends ComponentStandard {
             'widthPx' => $widthPx,
         ]);
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->get()['standard'];
     }
 }

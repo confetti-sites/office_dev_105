@@ -245,6 +245,38 @@ export class Storage {
     }
 }
 
+export class Media {
+    static upload(serviceApiUrl, id, file, then) {
+        const formData = new FormData();
+        formData.append(id, file);
+
+        fetch(`${serviceApiUrl}/confetti-cms/media/images`, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + document.cookie.split('access_token=')[1].split(';')[0],
+            },
+            body: formData
+        }).then(response => {
+            if (response.status >= 300) {
+                console.error("Error status: " + response.status);
+                return null;
+            }
+            if (!response.headers.get('Content-Type').includes('application/json')) {
+                // response cut by 400 characters
+                response = response.clone();
+                response.text().then(text => {
+                    console.error("No json returned: " + text.slice(0, 400));
+                });
+                return null;
+            }
+
+            response.json().then(json => {
+                then(json);
+            });
+        });
+    }
+}
+
 export const IconUpload = (classes) => {
     return `<svg class="${classes}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>`;
 }
