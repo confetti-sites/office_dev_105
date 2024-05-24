@@ -40,7 +40,7 @@
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
                     <div class="flex items-center justify-center w-full">
-                        ${() => this.data.value.original ? html`
+                        ${() => this.data.value.original !== undefined ? html`
                             <!-- Canvas to Crop the image -->
                             <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg">
                                 <div class="relative h-64" style="margin-left: -2px; margin-top: -2px;">
@@ -216,6 +216,9 @@
             }
 
             #getFullUrl(path) {
+                if (path === undefined) {
+                    return '';
+                }
                 // If `path` starts with blob, then it is a local file and we need to return it as is
                 if (path.startsWith('blob:')) {
                     return path;

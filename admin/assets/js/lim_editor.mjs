@@ -18,6 +18,13 @@ export class Toolbar {
         this.ankerElement.style.position = 'relative';
         this.ankerElement.style.display = 'block';
 
+        // If the user presses the escape key, the popover will close.
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                data.popoverOpen = false;
+            }
+        });
+
         const toolbar = html`
             <div class="absolute right-0 top-0 flex flex-row items-center p-2">
                 <!-- Icon -->
