@@ -45,10 +45,10 @@
                             <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg">
                                 <div class="relative h-64" style="margin-left: -2px; margin-top: -2px;">
                                     <img class="absolute w-full h-64 object-cover blur-sm opacity-70 rounded-lg"
-                                         src="${() => this.data.value.original}"
+                                         src="${() => this.#getFullUrl(this.data.value.original)}"
                                          alt="cropper-background">
                                     <img id="image" class="block rounded-lg w-full"
-                                         src="${() => this.data.value.original}"
+                                         src="${() => this.#getFullUrl(this.data.value.original)}"
                                          @load="${() => this.#imageLoaded(this.querySelector('#image'))}"
                                          alt="cropper-canvas">
                                 </div>
@@ -112,13 +112,9 @@
             }
 
             #uploading(e) {
-                console.log('Uploading');
-                console.log(e);
                 this.data.value.original = URL.createObjectURL(e.target.files[0]);
 
                 Media.upload(this.dataset.service_api, this.dataset.id, e.target.files[0], (response) => {
-                    console.log(response);
-                    console.log(`${this.dataset.service_api}/confetti-cms/media/images${response[0]['original']}`);
                     this.data.value.original = response[0]['original'];
                 });
             }
@@ -217,6 +213,14 @@
                 }
 
                 this.data.warningMessage = '';
+            }
+
+            #getFullUrl(path) {
+                // If `path` starts with blob, then it is a local file and we need to return it as is
+                if (path.startsWith('blob:')) {
+                    return path;
+                }
+                return `${this.dataset.service_api}/confetti-cms/media/images${path}`;
             }
         });
     </script>
