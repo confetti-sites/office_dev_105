@@ -39,7 +39,7 @@
             connectedCallback() {
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
-                    <div class="flex items-center justify-center w-full">
+                    <div class="_dropzone flex items-center justify-center w-full">
                         ${() => this.data.value.original !== undefined ? html`
                             <!-- Canvas to Crop the image -->
                             <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg">
@@ -55,25 +55,27 @@
                             </div>
                         ` : ``}
                         <label for="${this.dataset.id}"
-                               class="${() => `_dropzone ${this.data.value.original !== undefined ? `hidden` : ``} flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 ${this.data.dragover ? `border-solid` : `border-dashed`} rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100`}">
+                               class="${() => `${this.data.value.original !== undefined ? `hidden` : ``} flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 ${this.data.dragover ? `border-solid ` : `border-dashed`} rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100`}">
                             ${() => this.data.value.original === undefined ? html`
                                 <!-- Information for new image -->
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     ${IconUpload(`w-8 h-8 mb-4 text-gray-500`)}
                                     <p class="mb-2 text-sm text-gray-500"><span
-                                    class="font-semibold">Click to upload</span> or drag and drop.</p>
+                                            class="font-semibold">Click to upload</span> or drag and drop.</p>
                                     ${() => this.dataset.width_px ? html`
-                                        <p class="text-sm text-gray-500">Good width: ${this.dataset.width_px} pixels or more</p>
-                                        <p class="text-sm text-gray-500">Perfect width: ${this.dataset.width_px * 2} pixels or more</p>
+                                        <p class="text-sm text-gray-500">Good width: ${this.dataset.width_px} pixels or
+                                            more</p>
+                                        <p class="text-sm text-gray-500">Perfect width: ${this.dataset.width_px * 2}
+                                            pixels or more</p>
                                     ` : ``}
                                 </div>
                             ` : ``}
-                            <input @change="${e => this.#uploading(e)}"
+                            <input @change="${e => this.uploading(e.target.files[0])}"
                                    id="${this.dataset.id}"
                                    type="file"
                                    accept="image/*"
                             />
-<!--                                   class="hidden"-->
+                            <!--                                   class="hidden"-->
                         </label>
                     </div>
                     <p class="mt-2 text-sm text-gray-600">${() => this.data.warningMessage}</p>
@@ -96,7 +98,7 @@
                         icon: IconTrash(`w-8 h-8 p-1`),
                         closeOnActivate: true,
                         onActivate: async () => {
-                            this.#removeImage();
+                            this.removeImage();
                         }
                     },
                     {
@@ -104,22 +106,22 @@
                         icon: IconUpload(`w-8 h-8 p-1`),
                         closeOnActivate: true,
                         onActivate: async () => {
-                            this.#removeImage();
+                            this.removeImage();
                             this.querySelector('input').click();
                         }
                     }],
                 );
             }
 
-            #uploading(e) {
-                this.data.value.original = URL.createObjectURL(e.target.files[0]);
-
-                Media.upload(this.dataset.service_api, this.dataset.id, e.target.files[0], (response) => {
+            uploading(target) {
+                // Set local image as the original image before we can use the uploaded image
+                this.data.value.original = URL.createObjectURL(target);
+                Media.upload(this.dataset.service_api, this.dataset.id, target, (response) => {
                     this.data.value.original = response[0]['original'];
                 });
             }
 
-            #removeImage() {
+            removeImage() {
                 this.data.value = {};
                 this.data.warningMessage = '';
                 this.querySelector('input').value = '';
@@ -149,7 +151,7 @@
 
                         parentThis.#validate(event.detail.width);
 
-                        
+
                         // console.log(event.detail.x);
                         // console.log(event.detail.y);
                         // console.log(event.detail.width);
@@ -164,8 +166,10 @@
             #addListeners() {
                 this.querySelectorAll('._dropzone').forEach(input => {
                     data = this.data;
+                    let parentThis = this;
                     input.addEventListener('dragover', function (e) {
                         data.dragover = true;
+                        console.log('dragover');
                         e.preventDefault();
                         e.stopPropagation();
                     });
@@ -177,14 +181,17 @@
                     });
 
                     input.addEventListener('drop', function (e) {
+                        parentThis.removeImage();
                         data.dragover = false;
                         e.preventDefault();
                         e.stopPropagation();
+                        let file = undefined;
                         if (e.dataTransfer) {
-                            data.value.original = e.dataTransfer.files[0];
+                            file = e.dataTransfer.files[0];
                         } else if (e.target) {
-                            data.value.original = e.target.files[0];
+                            file = e.target.files[0];
                         }
+                        setTimeout(() => parentThis.uploading(file), 1);
                     });
                 });
             }
