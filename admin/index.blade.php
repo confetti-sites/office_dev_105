@@ -51,6 +51,7 @@ if ($currentContentId === '') {
                     </main>
                 </div>
             </div>
+            @include('admin.status_bar')
         @else
             <div class="flex items-center justify-center w-full h-screen bg-gray-50 dark:bg-gray-900">
                 You are not allowed to access this page. Go back to&nbsp;<a href="/" class="underline">the home page</a>

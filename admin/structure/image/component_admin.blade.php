@@ -27,7 +27,7 @@
             data = {
                 value: null,
                 dragover: false,
-                warningMessage: '',
+                message: '',
             };
 
             constructor() {
@@ -79,7 +79,7 @@
                             <!--                                   class="hidden"-->
                         </label>
                     </div>
-                    <p class="mt-2 text-sm text-gray-600">${() => this.data.warningMessage}</p>
+                    <p class="mt-2 text-sm text-gray-600">${() => this.data.message}</p>
                 `(this)
 
                 this.#addListeners();
@@ -117,14 +117,28 @@
             uploading(target) {
                 // Set local image as the original image before we can use the uploaded image
                 this.data.value.original = URL.createObjectURL(target);
+                document.dispatchEvent(new CustomEvent('status-created', {
+                    detail: {
+                        id: this.dataset.id + '.upload',
+                        state: 'loading',
+                        title: 'Upload image',
+                    }
+                }));
                 Media.upload(this.dataset.service_api, this.dataset.id, target, (response) => {
+                    document.dispatchEvent(new CustomEvent('status-created', {
+                        detail: {
+                            id: this.dataset.id + '.upload',
+                            state: 'success',
+                            title: 'Image uploaded',
+                        }
+                    }));
                     this.data.value.original = response[0]['original'];
                 });
             }
 
             removeImage() {
                 this.data.value = {};
-                this.data.warningMessage = '';
+                this.data.message = '';
                 this.querySelector('input').value = '';
             }
 
@@ -205,21 +219,21 @@
 
                 // To blurry for any device
                 if (imageWidth < Math.min(640, minWidth)) {
-                    this.data.warningMessage = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended.';
+                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended.';
                     return;
                 }
                 // To blurry for desktop devices
                 if (imageWidth < minWidth) {
-                    this.data.warningMessage = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended for desktop devices (~40% of all users).';
+                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended for desktop devices (~40% of all users).';
                     return;
                 }
                 // To blurry for macbook devices
                 if (imageWidth < (minWidth * 2)) {
-                    this.data.warningMessage = 'The current image is ' + imageWidth + ' pixels wide. ' + (minWidth * 2) + ' pixels is recommended for macbook devices (~6% of all users).';
+                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + (minWidth * 2) + ' pixels is recommended for macbook devices (~6% of all users).';
                     return;
                 }
 
-                this.data.warningMessage = '';
+                this.data.message = '';
             }
 
             #getFullUrl(path) {
