@@ -121,7 +121,7 @@
                     detail: {
                         id: this.dataset.id + '.upload',
                         state: 'loading',
-                        title: 'Upload image',
+                        title: 'Upload ' + this.dataset.label,
                     }
                 }));
                 Media.upload(this.dataset.service_api, this.dataset.id, target, (response) => {
@@ -129,7 +129,7 @@
                         detail: {
                             id: this.dataset.id + '.upload',
                             state: 'success',
-                            title: 'Image uploaded',
+                            title: 'Upload ' + this.dataset.label,
                         }
                     }));
                     this.data.value.original = response[0]['original'];
