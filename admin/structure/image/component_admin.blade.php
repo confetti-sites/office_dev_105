@@ -63,7 +63,7 @@
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     ${IconUpload(`w-8 h-8 mb-4 text-gray-500`)}
                                     <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    ${this.#getGrid()}
+                                    ${this.#getRequirements()}
                                 </div>
                             ` : ``}
                             <input @change="${e => this.uploading(e.target.files[0])}"
@@ -72,7 +72,6 @@
                                    accept="image/*"
                                    class="hidden"
                             />
-                            <!--                                   class="hidden"-->
                         </label>
                     </div>
                     <p class="mt-2 text-sm text-gray-600">${() => this.data.message}</p>
@@ -241,7 +240,7 @@
                 return `${this.dataset.service_api}/confetti-cms/media/images${path}`;
             }
 
-            #getGrid() {
+            #getRequirements() {
                 let requirements = [{left: 'Supported formats:', right: 'jpg, jpeg, png, webp'}];
                 if (this.dataset.width_px) {
                     requirements.push({left: 'Good width:', right: this.dataset.width_px + ' pixels or more'});
