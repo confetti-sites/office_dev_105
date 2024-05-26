@@ -37,6 +37,8 @@
             }
 
             connectedCallback() {
+                this.#addListeners();
+
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
                     <div class="_dropzone flex items-center justify-center w-full">
@@ -61,13 +63,7 @@
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     ${IconUpload(`w-8 h-8 mb-4 text-gray-500`)}
                                     <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p class="mb-2 text-sm text-gray-500">Supported formats: jpg, jpeg, png, webp</p>
-                                    ${() => this.dataset.width_px ? html`
-                                        <p class="text-sm text-gray-500">Good width: ${this.dataset.width_px} pixels or
-                                            more</p>
-                                        <p class="text-sm text-gray-500">Perfect width: ${this.dataset.width_px * 2}
-                                            pixels or more</p>
-                                    ` : ``}
+                                    ${this.#getGrid()}
                                 </div>
                             ` : ``}
                             <input @change="${e => this.uploading(e.target.files[0])}"
@@ -81,8 +77,6 @@
                     </div>
                     <p class="mt-2 text-sm text-gray-600">${() => this.data.message}</p>
                 `(this)
-
-                this.#addListeners();
 
                 new Toolbar(this).init([
                     {
@@ -245,6 +239,22 @@
                     return path;
                 }
                 return `${this.dataset.service_api}/confetti-cms/media/images${path}`;
+            }
+
+            #getGrid() {
+                let requirements = [{left: 'Supported formats:', right: 'jpg, jpeg, png, webp'}];
+                if (this.dataset.width_px) {
+                    requirements.push({left: 'Good width:', right: this.dataset.width_px + ' pixels or more'});
+                    requirements.push({left: 'Perfect width:', right: this.dataset.width_px * 2 + ' pixels or more'});
+                }
+                return html`
+                    <div class="grid grid-cols-2 gap-x-1 text-sm text-gray-500">
+                        ${requirements.map(requirement => html`
+                            <div class="text-right">${requirement.left}</div>
+                            <div class="text-left">${requirement.right}</div>
+                        `)}
+                    </div>
+                `;
             }
         });
     </script>
