@@ -61,7 +61,7 @@
                     </button>
                     @endif
                     <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} _loader_btn px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
-                            @click="${(e) => addLoaderBtn(e.target) && Storage.saveFromLocalStorage('{{ getServiceApi() }}', id).then(() => window.location.reload())}"
+                            @click="${(e) => addLoaderBtn(e.target) && Storage.saveFromLocalStorage('{{ getServiceApi() }}', id).then((err) => (err instanceof Error) && window.location.reload())}"
                             disabled="${() => state.count > 0 ? false : `disabled`}"
                         >
                         <span>Publish</span>

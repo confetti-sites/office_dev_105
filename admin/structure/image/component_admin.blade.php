@@ -47,7 +47,7 @@
                                     <img class="absolute w-full h-64 object-cover blur-sm opacity-70 rounded-lg"
                                          src="${() => this.#getFullUrl(this.data.value.original)}"
                                          alt="cropper-background">
-                                    <img id="image" class="block rounded-lg w-full"
+                                    <img id="image" class="block rounded-lg w-full max-h-64 hidden"
                                          src="${() => this.#getFullUrl(this.data.value.original)}"
                                          @load="${() => this.#imageLoaded(this.querySelector('#image'))}"
                                          alt="cropper-canvas">
@@ -114,7 +114,7 @@
                     detail: {
                         id: this.dataset.id + '.upload',
                         state: 'loading',
-                        title: 'Upload ' + this.dataset.label,
+                        title: 'Uploading ' + this.dataset.label,
                     }
                 }));
                 Media.upload(this.dataset.service_api, this.dataset.id, target, (response) => {

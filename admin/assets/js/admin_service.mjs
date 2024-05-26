@@ -93,11 +93,26 @@ export class Storage {
         if (items.length === 0) {
             return Promise.resolve(true);
         }
+        document.dispatchEvent(new CustomEvent('status-created', {
+            detail: {
+                id: id + '-save-from-local-storage',
+                state: 'loading',
+                title: 'Saving content',
+            }
+        }));
 
         // Save all items to the server
         return this.save(serviceApiUrl, items).then(r => {
             // if not successful, console.error
-            if (!r) {
+            if (r instanceof Error) {
+                console.error('Error saving to server');
+                document.dispatchEvent(new CustomEvent('status-created', {
+                    detail: {
+                        id: id + '-save-from-local-storage',
+                        state: 'error',
+                        title: r.message,
+                    }
+                }));
                 return false;
             }
 
@@ -105,6 +120,13 @@ export class Storage {
             items.forEach(item => {
                 localStorage.removeItem(item.id);
             });
+            document.dispatchEvent(new CustomEvent('status-created', {
+                detail: {
+                    id: id + '-save-from-local-storage',
+                    state: 'success',
+                    title: 'Saved'
+                }
+            }));
 
             return true;
         });
@@ -142,9 +164,14 @@ export class Storage {
             body: JSON.stringify({"data": data})
         })
             .then(response => {
-                if (response.status >= 300) {
-                    console.log("Error: " + response.responseText);
-                    return;
+                if (response.status >= 500) {
+                    return new Error('Cannot save content. Error status: ' + response.status);
+                }
+                if (response.status >= 401) {
+                    return new Error('Cannot save content. You may need to login again.');
+                }
+                if (response.status >= 400) {
+                    return new Error('Cannot save content. You may change the content and try again.');
                 }
                 return response.json();
             })
