@@ -122,7 +122,6 @@
                         detail: {
                             id: this.dataset.id + '.upload',
                             state: 'success',
-                            title: 'Upload ' + this.dataset.label,
                         }
                     }));
                     this.data.value.original = response[0]['original'];

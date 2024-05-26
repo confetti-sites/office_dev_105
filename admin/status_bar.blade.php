@@ -32,7 +32,7 @@
                 // Otherwise, add it
                 const statusIndex = this.statuses.findIndex(status => status.id === id);
                 if (statusIndex !== -1) {
-                    this.statuses[statusIndex] = {id, state, title};
+                    this.statuses[statusIndex] = {id, state, title: title || this.statuses[statusIndex].title};
                 } else {
                     this.statuses = [...this.statuses, {id, state, title}];
                 }
@@ -42,17 +42,18 @@
                     setTimeout(() => {
                         this.statuses = this.statuses.filter(status => status.id !== id || status.state === this.state.loading);
                         this.#showStatus();
-                    }, 3000);
+                    }, 2000);
                 }
             }
 
             #showStatus() {
-                // remove old status
-                this.innerHTML = '';
                 length = this.statuses.length;
                 if (length === 0) {
-                    return;
+                    return this.#fadeOut();
                 }
+                // remove old status
+                this.innerHTML = ''
+                this.style.opacity = '1';
                 html`
                     <div class="fixed bottom-0 right-0 z-50 p-4 m-4 bg-white rounded-lg shadow-lg min-w-60 max-w-full">
                         <ul class="max-w-md space-y-2 text-gray-500 list-inside">
@@ -93,6 +94,12 @@
                         console.error('Unknown status state:', status.state);
                 }
                 return `<div class="w-4 h-4">${icon}</div>`;
+            }
+
+            #fadeOut() {
+                this.style.transition = 'opacity 0.5s';
+                this.style.opacity = '0';
+                setTimeout(() => this.innerHTML = '', 500);
             }
         });
     </script>
