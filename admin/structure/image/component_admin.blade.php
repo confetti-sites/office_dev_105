@@ -37,8 +37,6 @@
             }
 
             connectedCallback() {
-                this.#addListeners();
-
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
                     <div class="_dropzone flex items-center justify-center w-full">
@@ -76,6 +74,8 @@
                     </div>
                     <p class="mt-2 text-sm text-gray-600">${() => this.data.message}</p>
                 `(this)
+
+                this.#addListeners();
 
                 new Toolbar(this).init([
                     {
