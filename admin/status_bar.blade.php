@@ -37,17 +37,22 @@
                 } else {
                     this.statuses = [...this.statuses, {id, state, title}];
                 }
-                this.#showStatus();
+                this.#renderStatus();
                 // If the state is success, remove it after 2 seconds
                 if (state === this.state.success) {
                     setTimeout(() => {
                         this.statuses = this.statuses.filter(status => status.id !== id || status.state !== this.state.success);
-                        this.#showStatus();
+                        this.#renderStatus();
                     }, 2000);
                 }
             }
 
-            #showStatus() {
+            #remove(status) {
+                this.statuses = this.statuses.filter(s => s.id !== status.id);
+                this.#renderStatus();
+            }
+
+            #renderStatus() {
                 length = this.statuses.length;
                 if (length === 0) {
                     return this.#fadeOut();
@@ -61,9 +66,17 @@
                             ${() => this.statuses.map(status => html`
                                 <li class="flex items-center">
                                     ${this.#getIcon(status)}
-                                    <div class="${status.state === this.state.loading && length === 1 ? 'animate-pulse ml-2' : 'ml-2'}">
+                                    <div class="${status.state === this.state.loading && length === 1 ? 'animate-pulse ml-2 text-pretty' : 'ml-2 text-pretty'}">
                                         ${status.title}
                                     </div>
+                                    ${status.state === this.state.error ? html`
+                                        <a class="ml-2 px-1 py-1 flex items-center justify-center text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md cursor-pointer"
+                                           @mousedown="${() => this.#remove(status)}">
+                                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                            </svg>
+                                        </a>
+                                    ` : ''}
                                 </li>
                             `)}
                         </ul>

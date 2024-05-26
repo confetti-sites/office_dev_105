@@ -48,6 +48,8 @@ export class LimText extends Paragraph {
         // Use JSON.stringify to encode special characters
         localStorage.setItem(this.config.contentId, JSON.stringify(value));
         window.dispatchEvent(new Event('local_content_changed'));
+        // Update the style if the value is changed (by saving)
+        window.addEventListener('local_content_changed', () => this.updateValueChangedStyle(this.storageValue));
     }
 
     /**

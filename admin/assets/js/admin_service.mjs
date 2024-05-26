@@ -120,6 +120,7 @@ export class Storage {
             items.forEach(item => {
                 localStorage.removeItem(item.id);
             });
+            window.dispatchEvent(new Event('local_content_changed'));
             document.dispatchEvent(new CustomEvent('status-created', {
                 detail: {
                     id: id + '-save-from-local-storage',
@@ -168,7 +169,7 @@ export class Storage {
                     return new Error('Cannot save content. Error status: ' + response.status);
                 }
                 if (response.status >= 401) {
-                    return new Error('Cannot save content. You may need to login again.');
+                    return new Error('Cannot save content. You may need to login again to save this changes.');
                 }
                 if (response.status >= 400) {
                     return new Error('Cannot save content. You may change the content and try again.');
