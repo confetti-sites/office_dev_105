@@ -58,7 +58,7 @@
                     addLoaderBtn(e.target);
                     Storage.saveFromLocalStorage('{{ getServiceApi() }}', id).then((result) => {
                         if (result) {
-                            window.location.reload();
+                            document.location.reload();
                         } else {
                             removeLoaderBtn(e.target)
                         }
@@ -67,16 +67,16 @@
 
                 html`
                 <div class="flex flex-row w-full space-x-4">
+                    @if($canBeDeleted)
+                    <button class="${() => `basis-1/4 px-5 flex items-center justify-center text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-emerald-700 hover:bg-red-600` : `bg-emerald-700 hover:bg-emerald-800`} border border-transparent rounded-md`}"
+                            @mousedown="${(e) => state.confirmDelete ? addLoaderBtn(e.target) && Storage.delete('{{ getServiceApi() }}', id, ()=> Storage.redirectAway('{{ $parent }}')) && removeLoaderBtn(e.target) : state.confirmDelete = true}">
+                        <span>${() => state.confirmDelete ? `Confirm` : `Delete`}</span>
+                    </button>
+                    @endif
                     <a href="/admin{{ $parent }}"
                        class="basis-1/4 px-5 py-3 flex items-center justify-center text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md">
                         Back
                     </a>
-                    @if($canBeDeleted)
-                    <button class="${() => `basis-1/4 px-5 flex items-center justify-center text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-emerald-700 hover:bg-red-600` : `bg-emerald-700 hover:bg-emerald-800`} border border-transparent rounded-md`}"
-                            @mousedown="${(e) => state.confirmDelete ? addLoaderBtn(e.target) && Storage.delete('{{ getServiceApi() }}', id, ()=> Storage.redirectAway(id)) && removeLoaderBtn(e.target) : state.confirmDelete = true}">
-                        <span>${() => state.confirmDelete ? `Confirm` : `Delete`}</span>
-                    </button>
-                    @endif
                     <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} _loader_btn px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
                             @mousedown="${(e) => publish(e)}"
                             disabled="${() => state.count > 0 ? false : `disabled`}"

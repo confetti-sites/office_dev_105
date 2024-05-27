@@ -229,18 +229,10 @@ export class Storage {
     }
 
     /**
-     * @param {string} prefix
+     * @param {string} parentId
      */
-    static redirectAway(prefix) {
-        // Get parent content id to redirect to
-        // \w|~ remove word characters (with ulid)
-        // /-/ remove target ids
-        if (prefix.includes('~')) {
-            const parentContentId = prefix.replace(/\/(\w|~|\/-\/)+$/, '');
-            window.location.href = `/admin${parentContentId}`;
-        } else {
-            window.location.reload();
-        }
+    static redirectAway(parentId) {
+        window.location.href = `/admin${parentId}`;
     }
 
     /**
