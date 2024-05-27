@@ -125,6 +125,15 @@
                         }
                     }));
                     this.data.value.original = response[0]['original'];
+                    Storage.saveToLocalStorage(this.dataset.id, {
+                        original: response[0]['original'],
+                        crop: {
+                            x: 0,
+                            y: 0,
+                            width: 0,
+                            height: 0,
+                        }
+                    });
                 });
             }
 
@@ -141,6 +150,8 @@
                 }
                 const parentThis = this;
 
+                let cropDetails = {}
+
                 new Cropper(element, {
                     aspectRatio: ratio,
                     background: false,
@@ -153,19 +164,24 @@
                     autoCropArea: 1,
                     zoomable: false,
                     crop(event) {
-                        // console.log(event);
-                        // console.log(event.detail);
-
+                        console.log('crop', event.detail);
                         parentThis.#validate(event.detail.width);
-
-
-                        // console.log(event.detail.x);
-                        // console.log(event.detail.y);
-                        // console.log(event.detail.width);
-                        // console.log(event.detail.height);
-                        // console.log(event.detail.rotate);
-                        // console.log(event.detail.scaleX);
-                        // console.log(event.detail.scaleY);
+                        cropDetails = event.detail
+                    },
+                    cropend(event) {
+                        console.log('cropend', event.detail.originalEvent);
+                        let value = Storage.getFromLocalStorage(parentThis.dataset.id) || {};
+                        value.crop = {
+                            x: Math.round(cropDetails.x),
+                            y: Math.round(cropDetails.y),
+                            width: Math.round(cropDetails.width),
+                            height: Math.round(cropDetails.height),
+                        }
+                        Storage.removeLocalStorageItems(parentThis.dataset.id);
+                        if (value !== this.dataset.original) {
+                            Storage.saveToLocalStorage(parentThis.dataset.id, value);
+                        }
+                        window.dispatchEvent(new CustomEvent('local_content_changed'));
                     },
                 });
             }
