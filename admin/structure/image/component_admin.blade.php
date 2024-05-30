@@ -18,7 +18,7 @@
 @pushonce('end_of_body_image_component')
     <script type="module">
         import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
-        import {Storage, Media, IconUpload, IconTrash, IconUndo} from '/admin/assets/js/admin_service.mjs';
+        import {IconTrash, IconUndo, IconUpload, Media, Storage} from '/admin/assets/js/admin_service.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         // https://fengyuanchen.github.io/cropperjs
         import Cropper from 'https://esm.sh/cropperjs';
@@ -28,32 +28,35 @@
                 value: null,
                 dragover: false,
                 message: '',
+                cropper: undefined,
             };
 
             constructor() {
                 super();
-                this.data.value = JSON.parse(this.dataset.value);
                 this.data = reactive(this.data);
+                this.data.value = this.#getCurrentValue();
+                // when local_content_changed is fired, update the value
+                window.addEventListener('local_content_changed', () => {
+                    this.data.value = this.#getCurrentValue();
+                });
             }
 
             connectedCallback() {
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
                     <div class="_dropzone flex items-center justify-center w-full">
-                        ${() => this.data.value.original !== undefined ? html`
-                            <!-- Canvas to Crop the image -->
-                            <div class="w-full h-64 border-2 border-gray-300 border-solid rounded-lg">
-                                <div class="relative h-64" style="margin-left: -2px; margin-top: -2px;">
-                                    <img class="absolute w-full h-64 object-cover blur-sm opacity-70 rounded-lg"
-                                         src="${() => this.#getFullUrl(this.data.value.original)}"
-                                         alt="cropper-background">
-                                    <img id="image" class="block rounded-lg w-full max-h-64 hidden"
-                                         src="${() => this.#getFullUrl(this.data.value.original)}"
-                                         @load="${() => this.#imageLoaded(this.querySelector('#image'))}"
-                                         alt="cropper-canvas">
-                                </div>
+                        <!-- Canvas to Crop the image -->
+                        <div class="${() => `${this.data.value.original === undefined ? `hidden` : ``} w-full h-64 border-2 border-gray-300 border-solid rounded-lg`}">
+                            <div class="relative h-64" style="margin-left: -2px; margin-top: -2px;">
+                                <img class="absolute w-full h-64 object-cover blur-sm opacity-70 rounded-lg"
+                                     src="${() => this.#getFullUrl(this.data.value.original)}"
+                                     alt="cropper-background">
+                                <img id="image" class="block rounded-lg w-full max-h-64 hidden"
+                                     src="${() => this.#getFullUrl(this.data.value.original)}"
+                                     @load="${() => this.#imageLoaded(this.querySelector('#image'))}"
+                                     alt="cropper-canvas">
                             </div>
-                        ` : ``}
+                        </div>
                         <label for="${this.dataset.id}"
                                class="${() => `${this.data.value.original !== undefined ? `hidden` : ``} flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 ${this.data.dragover ? `border-solid ` : `border-dashed`} rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100`}">
                             ${() => this.data.value.original === undefined ? html`
@@ -75,7 +78,7 @@
                     <p class="mt-2 text-sm text-gray-600">${() => this.data.message}</p>
                 `(this)
 
-                this.#addListeners();
+                this.#addDropZoneListeners();
 
                 new Toolbar(this).init([
                     {
@@ -109,7 +112,15 @@
 
             uploading(target) {
                 // Set local image as the original image before we can use the uploaded image
-                this.data.value.original = URL.createObjectURL(target);
+                let value = this.data.value;
+                value.original = URL.createObjectURL(target);
+                this.data.value = value;
+
+
+
+
+
+
                 document.dispatchEvent(new CustomEvent('status-created', {
                     detail: {
                         id: this.dataset.id + '.upload',
@@ -124,7 +135,8 @@
                             state: 'success',
                         }
                     }));
-                    this.data.value.original = response[0]['original'];
+
+                    // Set image as loaded to render the cropper. Set src
                     Storage.saveToLocalStorage(this.dataset.id, {
                         original: response[0]['original'],
                         crop: {
@@ -134,16 +146,46 @@
                             height: 0,
                         }
                     });
+                    window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
             }
 
             removeImage() {
+                console.log('removeImage');
                 this.data.value = {};
                 this.data.message = '';
+                if (this.cropper !== undefined) {
+                    this.cropper.destroy();
+                    this.cropper = undefined;
+                }
                 this.querySelector('input').value = '';
             }
 
             #imageLoaded(element) {
+                console.log('imageLoaded');
+                console.log(this.data.value);
+                // Every time the crop has been changed, the image loaded event is fired,
+                // but we only want to render the cropper once
+                if (this.cropper !== undefined) {
+                    console.error('imageLoaded: cropper already exists');
+                    return;
+                }
+                console.log('imageLoaded: render cropper');
+                this.cropper = this.#renderCropper(element);
+                // Fix: When resizing the window, the cropper is not triggered
+                // to update the crop area, so it gets out the viewport
+                let doIt
+                window.addEventListener('resize', () => {
+                    console.log('resize')
+                    clearTimeout(doIt);
+                    doIt = setTimeout(() => {
+                        this.cropper.destroy();
+                        this.cropper = this.#renderCropper(element);
+                    }, 100);
+                })
+            }
+
+            #renderCropper(element) {
                 let ratio = undefined;
                 if (this.dataset.ratio_width > 0 && this.dataset.ratio_height > 0) {
                     ratio = this.dataset.ratio_width / this.dataset.ratio_height;
@@ -152,7 +194,7 @@
 
                 let cropDetails = {}
 
-                new Cropper(element, {
+                return new Cropper(element, {
                     aspectRatio: ratio,
                     background: false,
                     modal: true,
@@ -163,13 +205,17 @@
                     viewMode: 2,
                     autoCropArea: 1,
                     zoomable: false,
+                    data: {
+                        x: this.data.value.crop?.x || null,
+                        y: this.data.value.crop?.y || null,
+                        width: this.data.value.crop?.width || null,
+                        height: this.data.value.crop?.height || null,
+                    },
                     crop(event) {
-                        console.log('crop', event.detail);
                         parentThis.#validate(event.detail.width);
                         cropDetails = event.detail
                     },
                     cropend(event) {
-                        console.log('cropend', event.detail.originalEvent);
                         let value = Storage.getFromLocalStorage(parentThis.dataset.id) || {};
                         value.crop = {
                             x: Math.round(cropDetails.x),
@@ -186,7 +232,7 @@
                 });
             }
 
-            #addListeners() {
+            #addDropZoneListeners() {
                 this.querySelectorAll('._dropzone').forEach(input => {
                     data = this.data;
                     let parentThis = this;
@@ -269,6 +315,10 @@
                         `)}
                     </div>
                 `;
+            }
+
+            #getCurrentValue() {
+                return Storage.getFromLocalStorage(this.dataset.id) || JSON.parse(this.dataset.value) || {}
             }
         });
     </script>
