@@ -106,7 +106,8 @@
                         icon: IconUndo(`w-8 h-8 p-1`),
                         closeOnActivate: true,
                         onActivate: async () => {
-                            this.data.value = this.dataset.value;
+                            this.removeImage();
+                            this.data.value = this.#getCurrentValue();
                             Storage.removeLocalStorageItems(this.dataset.id);
                             window.dispatchEvent(new CustomEvent('local_content_changed'));
                         }
@@ -182,7 +183,6 @@
             }
 
             removeImage() {
-                console.log('removeImage');
                 this.data.value = {};
                 this.data.message = '';
                 this.cropper?.destroy();

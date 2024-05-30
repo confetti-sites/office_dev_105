@@ -12,7 +12,7 @@ abstract class Image extends ComponentStandard {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
-            return $content->value;
+            return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         }
 
         if (!$this->contentStore->canFake()) {
