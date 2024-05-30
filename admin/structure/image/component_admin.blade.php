@@ -63,7 +63,8 @@
                                 <!-- Information for new image -->
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     ${IconUpload(`w-8 h-8 mb-4 text-gray-500`)}
-                                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="mb-2 text-sm text-gray-500"><span
+                                            class="font-semibold">Click to upload</span> or drag and drop</p>
                                     ${this.#getRequirements()}
                                 </div>
                             ` : ``}
@@ -79,15 +80,35 @@
                 `(this)
 
                 this.#addDropZoneListeners();
+                this.#registerToolbar();
+            }
 
+            #getRequirements() {
+                let requirements = [{left: 'Supported formats:', right: 'jpg, jpeg, png, webp'}];
+                if (this.dataset.width_px) {
+                    requirements.push({left: 'Good width:', right: this.dataset.width_px + ' pixels or more'});
+                    requirements.push({left: 'Perfect width:', right: this.dataset.width_px * 2 + ' pixels or more'});
+                }
+                return html`
+                    <div class="grid grid-cols-2 gap-x-1 text-sm text-gray-500">
+                        ${requirements.map(requirement => html`
+                            <div class="text-right">${requirement.left}</div>
+                            <div class="text-left">${requirement.right}</div>
+                        `)}
+                    </div>
+                `;
+            }
+
+            #registerToolbar() {
                 new Toolbar(this).init([
                     {
                         label: 'Remove unpublished changes',
                         icon: IconUndo(`w-8 h-8 p-1`),
                         closeOnActivate: true,
                         onActivate: async () => {
-                            /** @todo remove unpublished changes */
-                            console.log('@todo Remove unpublished changes');
+                            this.data.value = this.dataset.value;
+                            Storage.removeLocalStorageItems(this.dataset.id);
+                            window.dispatchEvent(new CustomEvent('local_content_changed'));
                         }
                     },
                     {
@@ -110,17 +131,35 @@
                 );
             }
 
+            /**
+             * @param {number} imageWidth
+             */
+            #validate(imageWidth) {
+                let minWidth = Number(this.dataset.width_px);
+                imageWidth = Math.round(imageWidth);
+
+                // To blurry for any device
+                if (imageWidth < Math.min(640, minWidth)) {
+                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended.';
+                    return;
+                }
+                // To blurry for desktop devices
+                if (imageWidth < minWidth) {
+                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended for desktop devices (~40% of all users).';
+                    return;
+                }
+                // To blurry for macbook devices
+                if (imageWidth < (minWidth * 2)) {
+                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + (minWidth * 2) + ' pixels is recommended for macbook devices (~6% of all users).';
+                    return;
+                }
+
+                this.data.message = '';
+            }
+
             uploading(target) {
                 // Set local image as the original image before we can use the uploaded image
-                let value = this.data.value;
-                value.original = URL.createObjectURL(target);
-                this.data.value = value;
-
-
-
-
-
-
+                this.data.value.original = URL.createObjectURL(target);
                 document.dispatchEvent(new CustomEvent('status-created', {
                     detail: {
                         id: this.dataset.id + '.upload',
@@ -137,15 +176,7 @@
                     }));
 
                     // Set image as loaded to render the cropper. Set src
-                    Storage.saveToLocalStorage(this.dataset.id, {
-                        original: response[0]['original'],
-                        crop: {
-                            x: 0,
-                            y: 0,
-                            width: 0,
-                            height: 0,
-                        }
-                    });
+                    Storage.saveToLocalStorage(this.dataset.id, {original: response[0]['original']});
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
             }
@@ -154,23 +185,17 @@
                 console.log('removeImage');
                 this.data.value = {};
                 this.data.message = '';
-                if (this.cropper !== undefined) {
-                    this.cropper.destroy();
-                    this.cropper = undefined;
-                }
+                this.cropper?.destroy();
+                this.cropper = undefined;
                 this.querySelector('input').value = '';
             }
 
             #imageLoaded(element) {
-                console.log('imageLoaded');
-                console.log(this.data.value);
                 // Every time the crop has been changed, the image loaded event is fired,
-                // but we only want to render the cropper once
+                // but we only want to render the cropper once per page load or image change
                 if (this.cropper !== undefined) {
-                    console.error('imageLoaded: cropper already exists');
                     return;
                 }
-                console.log('imageLoaded: render cropper');
                 this.cropper = this.#renderCropper(element);
                 // Fix: When resizing the window, the cropper is not triggered
                 // to update the crop area, so it gets out the viewport
@@ -181,7 +206,7 @@
                     doIt = setTimeout(() => {
                         this.cropper.destroy();
                         this.cropper = this.#renderCropper(element);
-                    }, 100);
+                    }, 10);
                 })
             }
 
@@ -264,32 +289,6 @@
                 });
             }
 
-            /**
-             * @param {number} imageWidth
-             */
-            #validate(imageWidth) {
-                let minWidth = Number(this.dataset.width_px);
-                imageWidth = Math.round(imageWidth);
-
-                // To blurry for any device
-                if (imageWidth < Math.min(640, minWidth)) {
-                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended.';
-                    return;
-                }
-                // To blurry for desktop devices
-                if (imageWidth < minWidth) {
-                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + minWidth + ' pixels is recommended for desktop devices (~40% of all users).';
-                    return;
-                }
-                // To blurry for macbook devices
-                if (imageWidth < (minWidth * 2)) {
-                    this.data.message = 'The current image is ' + imageWidth + ' pixels wide. ' + (minWidth * 2) + ' pixels is recommended for macbook devices (~6% of all users).';
-                    return;
-                }
-
-                this.data.message = '';
-            }
-
             #getFullUrl(path) {
                 if (path === undefined) {
                     return '';
@@ -299,22 +298,6 @@
                     return path;
                 }
                 return `${this.dataset.service_api}/confetti-cms/media/images${path}`;
-            }
-
-            #getRequirements() {
-                let requirements = [{left: 'Supported formats:', right: 'jpg, jpeg, png, webp'}];
-                if (this.dataset.width_px) {
-                    requirements.push({left: 'Good width:', right: this.dataset.width_px + ' pixels or more'});
-                    requirements.push({left: 'Perfect width:', right: this.dataset.width_px * 2 + ' pixels or more'});
-                }
-                return html`
-                    <div class="grid grid-cols-2 gap-x-1 text-sm text-gray-500">
-                        ${requirements.map(requirement => html`
-                            <div class="text-right">${requirement.left}</div>
-                            <div class="text-left">${requirement.right}</div>
-                        `)}
-                    </div>
-                `;
             }
 
             #getCurrentValue() {
