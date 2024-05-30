@@ -34,10 +34,10 @@
             constructor() {
                 super();
                 this.data = reactive(this.data);
-                this.data.value = this.#getCurrentValue();
+                this.data.value = this.getCurrentValue();
                 // when local_content_changed is fired, update the value
                 window.addEventListener('local_content_changed', () => {
-                    this.data.value = this.#getCurrentValue();
+                    this.data.value = this.getCurrentValue();
                 });
             }
 
@@ -107,7 +107,7 @@
                         closeOnActivate: true,
                         onActivate: async () => {
                             this.removeImage();
-                            this.data.value = this.#getCurrentValue();
+                            this.data.value = JSON.parse(this.dataset.value);
                             Storage.removeLocalStorageItems(this.dataset.id);
                             window.dispatchEvent(new CustomEvent('local_content_changed'));
                         }
@@ -190,6 +190,10 @@
                 this.querySelector('input').value = '';
             }
 
+            getCurrentValue() {
+                return Storage.getFromLocalStorage(this.dataset.id) || JSON.parse(this.dataset.value);
+            }
+
             #imageLoaded(element) {
                 // Every time the crop has been changed, the image loaded event is fired,
                 // but we only want to render the cropper once per page load or image change
@@ -241,7 +245,7 @@
                         cropDetails = event.detail
                     },
                     cropend(event) {
-                        let value = Storage.getFromLocalStorage(parentThis.dataset.id) || {};
+                        let value = parentThis.getCurrentValue();
                         value.crop = {
                             x: Math.round(cropDetails.x),
                             y: Math.round(cropDetails.y),
@@ -298,10 +302,6 @@
                     return path;
                 }
                 return `${this.dataset.service_api}/confetti-cms/media/images${path}`;
-            }
-
-            #getCurrentValue() {
-                return Storage.getFromLocalStorage(this.dataset.id) || JSON.parse(this.dataset.value) || {}
             }
         });
     </script>
