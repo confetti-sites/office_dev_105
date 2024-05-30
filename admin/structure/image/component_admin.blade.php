@@ -24,12 +24,18 @@
         import Cropper from 'https://esm.sh/cropperjs';
 
         customElements.define('image-component', class extends HTMLElement {
+            valueFunction = {
+                // Mark the value as removed. So when
+                // the page is saved, the value can be removed.
+                remove: 'this.remove()',
+            }
             data = {
                 value: null,
                 dragover: false,
                 message: '',
                 cropper: undefined,
             };
+
 
             constructor() {
                 super();
@@ -118,6 +124,8 @@
                         closeOnActivate: true,
                         onActivate: async () => {
                             this.removeImage();
+                            Storage.saveToLocalStorage(this.dataset.id, this.valueFunction.remove);
+                            window.dispatchEvent(new CustomEvent('local_content_changed'));
                         }
                     },
                     {
@@ -191,7 +199,14 @@
             }
 
             getCurrentValue() {
-                return Storage.getFromLocalStorage(this.dataset.id) || JSON.parse(this.dataset.value);
+                let local = Storage.getFromLocalStorage(this.dataset.id);
+                if (local === this.valueFunction.remove) {
+                    return {};
+                }
+                if (local !== null) {
+                    return local;
+                }
+                return JSON.parse(this.dataset.value);
             }
 
             #imageLoaded(element) {
