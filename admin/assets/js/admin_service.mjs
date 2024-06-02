@@ -93,12 +93,10 @@ export class Storage {
         if (items.length === 0) {
             return Promise.resolve(true);
         }
-        document.dispatchEvent(new CustomEvent('status-created', {
-            detail: {
-                id: id + '-save-from-local-storage',
-                state: 'loading',
-                title: 'Saving content',
-            }
+        window.dispatchEvent(new CustomEvent('status-created', {
+            id: id + '.save_from_local_storage',
+            state: 'loading',
+            title: 'Saving content',
         }));
 
         // Save all items to the server
@@ -106,12 +104,10 @@ export class Storage {
             // if not successful, console.error
             if (r instanceof Error) {
                 console.error('Error saving to server');
-                document.dispatchEvent(new CustomEvent('status-created', {
-                    detail: {
-                        id: id + '-save-from-local-storage',
-                        state: 'error',
-                        title: r.message,
-                    }
+                window.dispatchEvent(new CustomEvent('status-created', {
+                    id: id + '.save_from_local_storage',
+                    state: 'error',
+                    title: r.message,
                 }));
                 return false;
             }
@@ -121,33 +117,17 @@ export class Storage {
                 localStorage.removeItem(item.id);
             });
             window.dispatchEvent(new Event('local_content_changed'));
-            document.dispatchEvent(new CustomEvent('status-created', {
-                detail: {
-                    id: id + '-save-from-local-storage',
-                    state: 'success',
-                    title: 'Saved'
-                }
+            window.dispatchEvent(new CustomEvent('status-created', {
+                id: id + '.save_from_local_storage',
+                state: 'success',
+                title: 'Saved'
             }));
+            EventService.handleEvent('saving', id);
 
-            return true;
+            return false;
+            // return true;
         });
     }
-
-    // static redirectAway(items) {
-    //     let needsRedirectBack = true;
-    //     items.forEach(item => {
-    //         // item ends with - we don't want to redirect back,
-    //         // the user may want to continue editing the children
-    //         if (item.id.endsWith('-')) {
-    //             needsRedirectBack = false;
-    //         }
-    //     });
-    //     if (needsRedirectBack) {
-    //         this.redirectAway(id);
-    //     } else {
-    //         window.location.reload();
-    //     }
-    // }
 
     /**
      * @param {string} serviceApiUrl
@@ -262,6 +242,49 @@ export class Storage {
         }
 
         return out;
+    }
+}
+
+export class EventService {
+    static handleEvent(event, key) {
+        // loop over local storage with prefix `/listener/`
+        console.log('EventService.handleEvent', event, key);
+        Storage.getLocalStorageItems(`/listener`).forEach(item => {
+            const data = JSON.parse(item.value);
+            if (data.when.event === event && (data.when.id === key || data.when.id.startsWith(key + '/'))) {
+                this.call(key, data.title, data.then.method, data.then.url, data.then.body);
+            }
+        });
+    }
+
+    static call(key, title, method, url, body) {
+        window.dispatchEvent(new CustomEvent('status-created', {
+            id: key + '.call',
+            state: 'loading',
+            title: title,
+        }));
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(body)
+        }).then(r => {
+            if (r instanceof Error) {
+                console.error("Error status: " + r.status + " " + r.statusText + " " + r.message);
+                window.dispatchEvent(new CustomEvent('status-created', {
+                    id: key + '.call',
+                    state: 'error',
+                    title: r.message,
+                }));
+            }
+            window.dispatchEvent(new CustomEvent('status-created', {
+                id: key + '.call',
+                state: 'success',
+                title: title,
+            }));
+        });
     }
 }
 

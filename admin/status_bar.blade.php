@@ -23,8 +23,8 @@
 
             connectedCallback() {
                 this.statuses = reactive(this.statuses);
-                document.addEventListener('status-created', (event) => {
-                    this.#upsertStatus(event.detail.id, event.detail.state, event.detail.title);
+                window.addEventListener('status-created', (event) => {
+                    this.#upsertStatus(event.id, event.state, event.title);
                 });
             }
 

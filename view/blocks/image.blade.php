@@ -1,4 +1,4 @@
-@php($m = extendModel($model)->label('Image')))
+@php($m = extendModel($model)->label('Image test')))
 
 <picture>{{ $m->image('image_without_decoration')->getSource() }}</picture>
 <picture>

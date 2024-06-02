@@ -23,19 +23,29 @@
         // https://fengyuanchen.github.io/cropperjs
         import Cropper from 'https://esm.sh/cropperjs';
 
+        /**
+         * @typedef {object} Value
+         * @property {string} original
+         * @property {object} crop
+         * @property {number} crop.x
+         * @property {number} crop.y
+         * @property {number} crop.width
+         * @property {number} crop.height
+         */
+
         customElements.define('image-component', class extends HTMLElement {
             valueFunction = {
                 // Mark the value as removed. So when
                 // the page is saved, the value can be removed.
                 remove: 'this.remove()',
             }
+
             data = {
                 value: null,
                 dragover: false,
                 message: '',
                 cropper: undefined,
             };
-
 
             constructor() {
                 super();
@@ -167,25 +177,22 @@
             }
 
             uploading(target) {
+                const id = this.dataset.id;
                 // Set local image as the original image before we can use the uploaded image
                 this.data.value.original = URL.createObjectURL(target);
-                document.dispatchEvent(new CustomEvent('status-created', {
-                    detail: {
-                        id: this.dataset.id + '.upload',
-                        state: 'loading',
-                        title: 'Uploading ' + this.dataset.label,
-                    }
+                window.dispatchEvent(new CustomEvent('status-created', {
+                    id: id + '.upload',
+                    state: 'loading',
+                    title: 'Uploading ' + this.dataset.label,
                 }));
-                Media.upload(this.dataset.service_api, this.dataset.id, target, (response) => {
-                    document.dispatchEvent(new CustomEvent('status-created', {
-                        detail: {
-                            id: this.dataset.id + '.upload',
-                            state: 'success',
-                        }
+                // Upload the image to the server
+                Media.upload(this.dataset.service_api, id, target, (response) => {
+                    window.dispatchEvent(new CustomEvent('status-created', {
+                        id: id + '.upload',
+                        state: 'success',
                     }));
-
                     // Set image as loaded to render the cropper. Set src
-                    Storage.saveToLocalStorage(this.dataset.id, {original: response[0]['original']});
+                    Storage.saveToLocalStorage(id, {original: response[0]['original']});
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
             }
@@ -260,6 +267,7 @@
                         cropDetails = event.detail
                     },
                     cropend(event) {
+                        const id = parentThis.dataset.id;
                         let value = parentThis.getCurrentValue();
                         value.crop = {
                             x: Math.round(cropDetails.x),
@@ -267,13 +275,42 @@
                             width: Math.round(cropDetails.width),
                             height: Math.round(cropDetails.height),
                         }
-                        Storage.removeLocalStorageItems(parentThis.dataset.id);
+                        Storage.removeLocalStorageItems(id);
                         if (value !== this.dataset.original) {
-                            Storage.saveToLocalStorage(parentThis.dataset.id, value);
+                            Storage.saveToLocalStorage(id, value);
                         }
                         window.dispatchEvent(new CustomEvent('local_content_changed'));
+                        parentThis.saveCropped(parentThis.dataset.label, id, value);
                     },
                 });
+            }
+
+            /**
+             * @param {string} label
+             * @param {string} id
+             * @param {Value} value
+             */
+            saveCropped(label, id, value) {
+                Storage.saveToLocalStorage(`/listener${id}.cropped`, {
+                    title: 'Cropping ' + label,
+                    when: {
+                        event: 'saving',
+                        id: id,
+                    },
+                    then: {
+                        'method': 'POST',
+                        'url': this.dataset.service_api + '/confetti-cms/media/crop',
+                        'body': {
+                            'original': value.original,
+                            'crop': {
+                                'x': value.crop.x,
+                                'y': value.crop.y,
+                                'width': value.crop.width,
+                                'height': value.crop.height,
+                            },
+                        },
+                    },
+                })
             }
 
             #addDropZoneListeners() {
