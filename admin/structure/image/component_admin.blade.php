@@ -293,21 +293,22 @@
             saveCropped(label, id, value) {
                 Storage.saveToLocalStorage(`/listener${id}.cropped`, {
                     title: 'Cropping ' + label,
+                    remove_when_done: true,
                     when: {
                         event: 'saving',
                         id: id,
                     },
                     then: {
                         'method': 'POST',
-                        'url': this.dataset.service_api + '/confetti-cms/media/crop',
+                        'url': this.dataset.service_api + '/confetti-cms/media/sources',
                         'body': {
+                            'id': id,
                             'original': value.original,
-                            'crop': {
-                                'x': value.crop.x,
-                                'y': value.crop.y,
-                                'width': value.crop.width,
-                                'height': value.crop.height,
-                            },
+                            'target_width': this.dataset.width_px,
+                            'height': value.crop.height,
+                            'width': value.crop.width,
+                            'x': value.crop.x,
+                            'y': value.crop.y,
                         },
                     },
                 })

@@ -36,12 +36,12 @@
                 import {Storage} from '/admin/assets/js/admin_service.mjs';
                 import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-                const toSave = () => Storage.getLocalStorageItems('{{ $id }}').length;
+                const toPublish = () => Storage.getLocalStorageItems('{{ $id }}').length;
                 const id = '{{ $id }}';
-                let state = {count: toSave(), confirmDelete: false, waiting: false};
+                let state = {count: toPublish(), confirmDelete: false, waiting: false};
                 state = reactive(state);
                 window.addEventListener('local_content_changed', () => {
-                    state.count = toSave();
+                    state.count = toPublish();
                 });
 
                 function addLoaderBtn(element) {

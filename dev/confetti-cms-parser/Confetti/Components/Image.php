@@ -12,7 +12,11 @@ abstract class Image extends ComponentStandard {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
-            return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+            try {
+                return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                throw new \Exception('Invalid JSON in content. JSON: ' . $content);
+            }
         }
 
         if (!$this->contentStore->canFake()) {

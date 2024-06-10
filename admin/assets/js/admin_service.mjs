@@ -72,6 +72,8 @@ export class Storage {
      * @returns {Promise<boolean>}
      */
     static saveFromLocalStorage(serviceApiUrl, id, specific = false) {
+        EventService.handleEvent('saving', id);
+
         const prefixQ = id + '/'
         // Get all items from local storage (exact match and prefix + '/')
         let items = Object.keys(localStorage)
@@ -122,8 +124,8 @@ export class Storage {
                 state: 'success',
                 title: 'Saved'
             }));
-            EventService.handleEvent('saving', id);
 
+            // @todo return true if successful (otherwise it will refresh the page)
             return false;
             // return true;
         });
@@ -135,6 +137,28 @@ export class Storage {
      * @returns {Promise<any>}
      */
     static save(serviceApiUrl, data) {
+        // Remove all items from the database where the value is 'this.remove()'
+        const toRemove = data.filter(item => item.value === 'this.remove()');
+        // Loop over every item and remove. Example: DELETE /contents?id=/model/title
+        toRemove.forEach(item => {
+            fetch(`${serviceApiUrl}/confetti-cms/content/contents?id=${item.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + document.cookie.split('access_token=')[1].split(';')[0],
+                },
+            }).then(response => {
+                if (response.status >= 300) {
+                    return new Error('Cannot remove content. Error status: ' + response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        const toPublish = data.filter(item => item.value !== 'this.remove()');
+
         return fetch(`${serviceApiUrl}/confetti-cms/content/contents`, {
             method: 'PATCH',
             headers: {
@@ -142,7 +166,7 @@ export class Storage {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer ' + document.cookie.split('access_token=')[1].split(';')[0],
             },
-            body: JSON.stringify({"data": data})
+            body: JSON.stringify({"data": toPublish})
         })
             .then(response => {
                 if (response.status >= 500) {
@@ -253,6 +277,9 @@ export class EventService {
             const data = JSON.parse(item.value);
             if (data.when.event === event && (data.when.id === key || data.when.id.startsWith(key + '/'))) {
                 this.call(key, data.title, data.then.method, data.then.url, data.then.body);
+                if (data.remove_when_done) {
+                    localStorage.removeItem(item.id);
+                }
             }
         });
     }
@@ -268,6 +295,7 @@ export class EventService {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'Authorization': 'Bearer ' + document.cookie.split('access_token=')[1].split(';')[0],
             },
             body: JSON.stringify(body)
         }).then(r => {

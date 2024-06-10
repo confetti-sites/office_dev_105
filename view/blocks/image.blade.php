@@ -3,7 +3,7 @@
 <picture>{{ $m->image('image_without_decoration')->getSource() }}</picture>
 <picture>
     <source media="(min-width: 640px)" srcset="giraffe.jpeg 1x" />
-    <source srcset="giraffe.small.jpeg 1x, giraffe.small2x.jpeg 2x" />
+    <source srcset="giraffe.small.jpeg 1x, giraffe.small_2x.jpeg 2x" />
     <img src="giraffe.jpeg" alt="" />
 </picture>
 
@@ -12,7 +12,9 @@
 
 <picture>{{ $m->image('image')->label('Image')->widthPx(1200)->ratio(1, 1)->getSource() }}</picture>
 <picture>
-    <source media="(min-width: 640px)" srcset="giraffe.jpeg 1x, giraffe.2x.jpeg 2x" />
-    <source srcset="giraffe.small.jpeg 1x, giraffe.small2x.jpeg 2x" />
+    <source media="(min-width: 640px)" srcset="giraffe.jpeg 1x, giraffe_2x.jpeg 2x" />
+    <source srcset="giraffe.small.jpeg 1x, giraffe.small_2x.jpeg 2x" />
     <img src="giraffe.jpeg" alt="" />
 </picture>
+
+<picture>{{ $m->image('image_test')->label('The test image')->widthPx(1200)->ratio(1, 1)->getSource() }}</picture>
