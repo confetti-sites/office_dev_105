@@ -96,9 +96,11 @@ export class Storage {
             return Promise.resolve(true);
         }
         window.dispatchEvent(new CustomEvent('status-created', {
-            id: id + '.save_from_local_storage',
-            state: 'loading',
-            title: 'Saving content',
+            detail: {
+                id: id + '.save_from_local_storage',
+                state: 'loading',
+                title: 'Saving content',
+            }
         }));
 
         // Save all items to the server
@@ -152,9 +154,9 @@ export class Storage {
                     return new Error('Cannot remove content. Error status: ' + response.status);
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
 
         const toPublish = data.filter(item => item.value !== 'this.remove()');
@@ -276,7 +278,7 @@ export class EventService {
         Storage.getLocalStorageItems(`/listener`).forEach(item => {
             const data = JSON.parse(item.value);
             if (data.when.event === event && (data.when.id === key || data.when.id.startsWith(key + '/'))) {
-                this.call(key, data.title, data.then.method, data.then.url, data.then.body);
+                this.call(data.when.id, data.title, data.then.method, data.then.url, data.then.body);
                 if (data.remove_when_done) {
                     localStorage.removeItem(item.id);
                 }
@@ -286,10 +288,13 @@ export class EventService {
 
     static call(key, title, method, url, body) {
         window.dispatchEvent(new CustomEvent('status-created', {
-            id: key + '.call',
-            state: 'loading',
-            title: title,
+            detail: {
+                id: key + '.call',
+                state: 'loading',
+                title: title,
+            }
         }));
+
         fetch(url, {
             method: method,
             headers: {
@@ -302,15 +307,19 @@ export class EventService {
             if (r instanceof Error) {
                 console.error("Error status: " + r.status + " " + r.statusText + " " + r.message);
                 window.dispatchEvent(new CustomEvent('status-created', {
-                    id: key + '.call',
-                    state: 'error',
-                    title: r.message,
+                    detail: {
+                        id: key + '.call',
+                        state: 'error',
+                        title: r.message,
+                    }
                 }));
             }
             window.dispatchEvent(new CustomEvent('status-created', {
-                id: key + '.call',
-                state: 'success',
-                title: title,
+                detail: {
+                    id: key + '.call',
+                    state: 'success',
+                    title: title,
+                }
             }));
         });
     }

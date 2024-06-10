@@ -181,15 +181,19 @@
                 // Set local image as the original image before we can use the uploaded image
                 this.data.value.original = URL.createObjectURL(target);
                 window.dispatchEvent(new CustomEvent('status-created', {
-                    id: id + '.upload',
-                    state: 'loading',
-                    title: 'Uploading ' + this.dataset.label,
+                    detail: {
+                        id: id + '.upload',
+                        state: 'loading',
+                        title: 'Uploading ' + this.dataset.label,
+                    }
                 }));
                 // Upload the image to the server
                 Media.upload(this.dataset.service_api, id, target, (response) => {
                     window.dispatchEvent(new CustomEvent('status-created', {
-                        id: id + '.upload',
-                        state: 'success',
+                        detail: {
+                            id: id + '.upload',
+                            state: 'success',
+                        }
                     }));
                     // Set image as loaded to render the cropper. Set src
                     Storage.saveToLocalStorage(id, {original: response[0]['original']});

@@ -24,7 +24,7 @@
             connectedCallback() {
                 this.statuses = reactive(this.statuses);
                 window.addEventListener('status-created', (event) => {
-                    this.#upsertStatus(event.id, event.state, event.title);
+                    this.#upsertStatus(event.detail.id, event.detail.state, event.detail.title);
                 });
             }
 
@@ -39,8 +39,10 @@
                 }
                 this.#renderStatus();
                 // If the state is success, remove it after 2 seconds
+                let timeoutId = false;
                 if (state === this.state.success) {
-                    setTimeout(() => {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
                         this.statuses = this.statuses.filter(status => status.id !== id || status.state !== this.state.success);
                         this.#renderStatus();
                     }, 2000);
