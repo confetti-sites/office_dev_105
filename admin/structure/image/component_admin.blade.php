@@ -46,6 +46,7 @@
                 message: '',
                 cropper: undefined,
             };
+            cropDetails = {};
 
             constructor() {
                 super();
@@ -197,6 +198,7 @@
                     }));
                     // Set image as loaded to render the cropper. Set src
                     Storage.saveToLocalStorage(id, {original: response[0]['original']});
+                    this.saveCropped(id, this.dataset.label);
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
             }
@@ -227,13 +229,12 @@
                     return;
                 }
                 this.cropper = this.#renderCropper(element);
-                // Fix: When resizing the window, the cropper is not triggered
+                // Fix for when resizing the window, the cropper is not triggered
                 // to update the crop area, so it gets out the viewport
-                let doIt
+                let afterResize
                 window.addEventListener('resize', () => {
-                    console.log('resize')
-                    clearTimeout(doIt);
-                    doIt = setTimeout(() => {
+                    clearTimeout(afterResize);
+                    afterResize = setTimeout(() => {
                         this.cropper.destroy();
                         this.cropper = this.#renderCropper(element);
                     }, 10);
@@ -246,8 +247,6 @@
                     ratio = this.dataset.ratio_width / this.dataset.ratio_height;
                 }
                 const parentThis = this;
-
-                let cropDetails = {}
 
                 return new Cropper(element, {
                     aspectRatio: ratio,
@@ -268,33 +267,31 @@
                     },
                     crop(event) {
                         parentThis.#validate(event.detail.width);
-                        cropDetails = event.detail
+                        parentThis.cropDetails = event.detail
                     },
-                    cropend(event) {
-                        const id = parentThis.dataset.id;
-                        let value = parentThis.getCurrentValue();
-                        value.crop = {
-                            x: Math.round(cropDetails.x),
-                            y: Math.round(cropDetails.y),
-                            width: Math.round(cropDetails.width),
-                            height: Math.round(cropDetails.height),
-                        }
-                        Storage.removeLocalStorageItems(id);
-                        if (value !== this.dataset.original) {
-                            Storage.saveToLocalStorage(id, value);
-                        }
-                        window.dispatchEvent(new CustomEvent('local_content_changed'));
-                        parentThis.saveCropped(parentThis.dataset.label, id, value);
+                    cropend() {
+                        parentThis.saveCropped(parentThis.dataset.id, parentThis.dataset.label);
                     },
                 });
             }
 
             /**
-             * @param {string} label
              * @param {string} id
-             * @param {Value} value
+             * @param {string} label
              */
-            saveCropped(label, id, value) {
+            saveCropped(id, label) {
+                let value = this.getCurrentValue();
+                value.crop = {
+                    x: Math.round(this.cropDetails.x),
+                    y: Math.round(this.cropDetails.y),
+                    width: Math.round(this.cropDetails.width),
+                    height: Math.round(this.cropDetails.height),
+                }
+                Storage.removeLocalStorageItems(id);
+                if (value !== this.dataset.original) {
+                    Storage.saveToLocalStorage(id, value);
+                }
+                window.dispatchEvent(new CustomEvent('local_content_changed'));
                 Storage.saveToLocalStorage(`/listener${id}.cropped`, {
                     title: 'Process ' + label,
                     remove_when_done: true,
