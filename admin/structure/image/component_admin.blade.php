@@ -179,7 +179,7 @@
             uploading(target) {
                 const id = this.dataset.id;
                 // Set local image as the original image before we can use the uploaded image
-                this.data.value.original = URL.createObjectURL(target);
+                this.data.value = {original: URL.createObjectURL(target)};
                 window.dispatchEvent(new CustomEvent('status-created', {
                     detail: {
                         id: id + '.upload',
