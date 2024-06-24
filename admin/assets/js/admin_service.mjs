@@ -109,9 +109,11 @@ export class Storage {
             if (r instanceof Error) {
                 console.error('Error saving to server');
                 window.dispatchEvent(new CustomEvent('status-created', {
-                    id: id + '.save_from_local_storage',
-                    state: 'error',
-                    title: r.message,
+                    detail: {
+                        id: id + '.save_from_local_storage',
+                        state: 'error',
+                        title: r.message,
+                    }
                 }));
                 return false;
             }
@@ -122,9 +124,11 @@ export class Storage {
             });
             window.dispatchEvent(new Event('local_content_changed'));
             window.dispatchEvent(new CustomEvent('status-created', {
-                id: id + '.save_from_local_storage',
-                state: 'success',
-                title: 'Saved'
+                detail: {
+                    id: id + '.save_from_local_storage',
+                    state: 'success',
+                    title: 'Saved'
+                }
             }));
 
             // @todo return true if successful (otherwise it will refresh the page)
@@ -303,25 +307,27 @@ export class EventService {
                 'Authorization': 'Bearer ' + document.cookie.split('access_token=')[1].split(';')[0],
             },
             body: JSON.stringify(body)
-        }).then(r => {
-            if (r instanceof Error) {
-                console.error("Error status: " + r.status + " " + r.statusText + " " + r.message);
+        })
+            .then(r => {
+                if (r.status >= 400) {
+                    console.error("Error status: " + r.status + " " + r.statusText + " " + r.message);
+                    window.dispatchEvent(new CustomEvent('status-created', {
+                        detail: {
+                            id: key + '.call',
+                            state: 'error',
+                            title: r.message,
+                        }
+                    }));
+                    return;
+                }
                 window.dispatchEvent(new CustomEvent('status-created', {
                     detail: {
                         id: key + '.call',
-                        state: 'error',
-                        title: r.message,
+                        state: 'success',
+                        title: title,
                     }
                 }));
-            }
-            window.dispatchEvent(new CustomEvent('status-created', {
-                detail: {
-                    id: key + '.call',
-                    state: 'success',
-                    title: title,
-                }
-            }));
-        });
+            });
     }
 }
 

@@ -296,7 +296,7 @@
              */
             saveCropped(label, id, value) {
                 Storage.saveToLocalStorage(`/listener${id}.cropped`, {
-                    title: 'Cropping ' + label,
+                    title: 'Process ' + label,
                     remove_when_done: true,
                     when: {
                         event: 'saving',
