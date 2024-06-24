@@ -312,6 +312,7 @@
                             'y': value.crop.y,
                         },
                     },
+                    patch_in: "sources"
                 })
             }
 

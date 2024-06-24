@@ -72,68 +72,68 @@ export class Storage {
      * @returns {Promise<boolean>}
      */
     static saveFromLocalStorage(serviceApiUrl, id, specific = false) {
-        EventService.handleEvent('saving', id);
-
-        const prefixQ = id + '/'
-        // Get all items from local storage (exact match and prefix + '/')
-        let items = Object.keys(localStorage)
-            // We want to update the children, and we need to update the parents as well
-            .filter(key => specific ? key === id : (prefixQ.startsWith(key) || key.startsWith(prefixQ)))
-            .map(key => {
-                // We want to decode, so we can save numbers and booleans
-                let value = JSON.parse(localStorage.getItem(key));
-                // We can't save objects to the server, so we need to convert them to strings
-                if (typeof value === 'object') {
-                    value = JSON.stringify(value);
-                }
-                return {
-                    "id": key,
-                    "value": value
-                };
-            });
-
-        if (items.length === 0) {
-            return Promise.resolve(true);
-        }
-        window.dispatchEvent(new CustomEvent('status-created', {
-            detail: {
-                id: id + '.save_from_local_storage',
-                state: 'loading',
-                title: 'Saving content',
-            }
-        }));
-
-        // Save all items to the server
-        return this.save(serviceApiUrl, items).then(r => {
-            // if not successful, console.error
-            if (r instanceof Error) {
-                console.error('Error saving to server');
-                window.dispatchEvent(new CustomEvent('status-created', {
-                    detail: {
-                        id: id + '.save_from_local_storage',
-                        state: 'error',
-                        title: r.message,
+        return EventService.handleEvent('saving', id).then(r => {
+            const prefixQ = id + '/'
+            // Get all items from local storage (exact match and prefix + '/')
+            let items = Object.keys(localStorage)
+                // We want to update the children, and we need to update the parents as well
+                .filter(key => specific ? key === id : (prefixQ.startsWith(key) || key.startsWith(prefixQ)))
+                .map(key => {
+                    // We want to decode, so we can save numbers and booleans
+                    let value = JSON.parse(localStorage.getItem(key));
+                    // We can't save objects to the server, so we need to convert them to strings
+                    if (typeof value === 'object') {
+                        value = JSON.stringify(value);
                     }
-                }));
-                return false;
-            }
+                    return {
+                        "id": key,
+                        "value": value
+                    };
+                });
 
-            // Remove saved items from local storage
-            items.forEach(item => {
-                localStorage.removeItem(item.id);
-            });
-            window.dispatchEvent(new Event('local_content_changed'));
+            if (items.length === 0) {
+                return Promise.resolve(true);
+            }
             window.dispatchEvent(new CustomEvent('status-created', {
                 detail: {
                     id: id + '.save_from_local_storage',
-                    state: 'success',
-                    title: 'Saved'
+                    state: 'loading',
+                    title: 'Saving content',
                 }
             }));
 
-            // @todo return true if successful (otherwise it will refresh the page)
-            return false;
-            // return true;
+            // Save all items to the server
+            return this.save(serviceApiUrl, items).then(r => {
+                // if not successful, console.error
+                if (r instanceof Error) {
+                    console.error('Error saving to server');
+                    window.dispatchEvent(new CustomEvent('status-created', {
+                        detail: {
+                            id: id + '.save_from_local_storage',
+                            state: 'error',
+                            title: r.message,
+                        }
+                    }));
+                    return false;
+                }
+
+                // Remove saved items from local storage
+                items.forEach(item => {
+                    localStorage.removeItem(item.id);
+                });
+                window.dispatchEvent(new Event('local_content_changed'));
+                window.dispatchEvent(new CustomEvent('status-created', {
+                    detail: {
+                        id: id + '.save_from_local_storage',
+                        state: 'success',
+                        title: 'Saved'
+                    }
+                }));
+
+                // @todo return true if successful (otherwise it will refresh the page)
+                return false;
+                // return true;
+            });
         });
     }
 
@@ -277,29 +277,49 @@ export class Storage {
 
 export class EventService {
     static handleEvent(event, key) {
+        let promises = [];
+
         // loop over local storage with prefix `/listener/`
-        console.log('EventService.handleEvent', event, key);
-        Storage.getLocalStorageItems(`/listener`).forEach(item => {
-            const data = JSON.parse(item.value);
+        Storage.getLocalStorageItems(`/listener`).forEach(listener => {
+            const data = JSON.parse(listener.value);
             if (data.when.event === event && (data.when.id === key || data.when.id.startsWith(key + '/'))) {
-                this.call(data.when.id, data.title, data.then.method, data.then.url, data.then.body);
+                let response = this.call(data.when.id, data.title, data.then.method, data.then.url, data.then.body);
+
+                // Get response body and save to local storage
+                if (data.patch_in !== undefined) {
+                    promises.push(response.then(r => {
+                        return r.json();
+                    }).then(body => {
+                        let value = Storage.getFromLocalStorage(data.when.id);
+                        value[data.patch_in] = body
+                        Storage.saveToLocalStorage(data.when.id, value);
+                    }));
+                }
                 if (data.remove_when_done) {
-                    localStorage.removeItem(item.id);
+                    localStorage.removeItem(listener.id);
                 }
             }
         });
+        return Promise.all(promises);
     }
 
-    static call(key, title, method, url, body) {
+    /**
+     * @param {string} id
+     * @param {string} title
+     * @param {string} method
+     * @param {string} url
+     * @param {object} body
+     */
+    static async call(id, title, method, url, body) {
         window.dispatchEvent(new CustomEvent('status-created', {
             detail: {
-                id: key + '.call',
+                id: id + '.call',
                 state: 'loading',
                 title: title,
             }
         }));
 
-        fetch(url, {
+        const r = await fetch(url, {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
@@ -308,26 +328,25 @@ export class EventService {
             },
             body: JSON.stringify(body)
         })
-            .then(r => {
-                if (r.status >= 400) {
-                    console.error("Error status: " + r.status + " " + r.statusText + " " + r.message);
-                    window.dispatchEvent(new CustomEvent('status-created', {
-                        detail: {
-                            id: key + '.call',
-                            state: 'error',
-                            title: r.message,
-                        }
-                    }));
-                    return;
+        if (r.status >= 400) {
+            console.error("Error status: " + r.status + " " + r.statusText + " " + r.message);
+            window.dispatchEvent(new CustomEvent('status-created', {
+                detail: {
+                    id: id + '.call',
+                    state: 'error',
+                    title: r.message,
                 }
-                window.dispatchEvent(new CustomEvent('status-created', {
-                    detail: {
-                        id: key + '.call',
-                        state: 'success',
-                        title: title,
-                    }
-                }));
-            });
+            }));
+            return;
+        }
+        window.dispatchEvent(new CustomEvent('status-created', {
+            detail: {
+                id: id + '.call',
+                state: 'success',
+                title: title,
+            }
+        }));
+        return await r;
     }
 }
 
