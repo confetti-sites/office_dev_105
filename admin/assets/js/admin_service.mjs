@@ -73,6 +73,10 @@ export class Storage {
      */
     static saveFromLocalStorage(serviceApiUrl, id, specific = false) {
         return EventService.handleEvent('saving', id).then(r => {
+            // Loop over every item in r, if it contains undefined, it is not successful
+            if (r.includes(undefined)) {
+                return false;
+            }
             const prefixQ = id + '/'
             // Get all items from local storage (exact match and prefix + '/')
             let items = Object.keys(localStorage)
@@ -129,10 +133,7 @@ export class Storage {
                         title: 'Saved'
                     }
                 }));
-
-                // @todo return true if successful (otherwise it will refresh the page)
-                return false;
-                // return true;
+                return true;
             });
         });
     }
@@ -284,20 +285,25 @@ export class EventService {
             const data = JSON.parse(listener.value);
             if (data.when.event === event && (data.when.id === key || data.when.id.startsWith(key + '/'))) {
                 let response = this.call(data.when.id, data.title, data.then.method, data.then.url, data.then.body);
-
                 // Get response body and save to local storage
-                if (data.patch_in !== undefined) {
-                    promises.push(response.then(r => {
-                        return r.json();
-                    }).then(body => {
+                promises.push(response.then(r => {
+                    if (r === undefined) {
+                        return;
+                    }
+                    return r.json();
+                }).then(body => {
+                    if (!body) {
+                        return;
+                    }
+                    if (data.patch_in !== undefined) {
                         let value = Storage.getFromLocalStorage(data.when.id);
                         value[data.patch_in] = body
                         Storage.saveToLocalStorage(data.when.id, value);
-                    }));
-                }
-                if (data.remove_when_done) {
-                    localStorage.removeItem(listener.id);
-                }
+                    }
+                    if (data.remove_when_done) {
+                        localStorage.removeItem(listener.id);
+                    }
+                }));
             }
         });
         return Promise.all(promises);
@@ -329,15 +335,18 @@ export class EventService {
             body: JSON.stringify(body)
         })
         if (r.status >= 400) {
-            console.error("Error status: " + r.status + " " + r.statusText + " " + r.message);
-            window.dispatchEvent(new CustomEvent('status-created', {
-                detail: {
-                    id: id + '.call',
-                    state: 'error',
-                    title: r.message,
-                }
-            }));
-            return;
+            // get body
+            r.json().then(json => {
+                console.error("Error status: " + r.status + " " + json.error);
+                window.dispatchEvent(new CustomEvent('status-created', {
+                    detail: {
+                        id: id + '.call',
+                        state: 'error',
+                        title: json.error,
+                    }
+                }));
+            });
+            return undefined;
         }
         window.dispatchEvent(new CustomEvent('status-created', {
             detail: {
@@ -346,7 +355,7 @@ export class EventService {
                 title: title,
             }
         }));
-        return await r;
+        return r;
     }
 }
 

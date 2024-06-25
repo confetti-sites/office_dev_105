@@ -38,7 +38,7 @@
                     this.statuses = [...this.statuses, {id, state, title}];
                 }
                 this.#renderStatus();
-                // If the state is success, remove it after 2 seconds
+                // If the state is a success, remove it after 2 seconds
                 let timeoutId = false;
                 if (state === this.state.success) {
                     clearTimeout(timeoutId);

@@ -293,7 +293,7 @@
                 }
                 window.dispatchEvent(new CustomEvent('local_content_changed'));
                 Storage.saveToLocalStorage(`/listener${id}.cropped`, {
-                    title: 'Process ' + label,
+                    title: 'Process: ' + label,
                     remove_when_done: true,
                     when: {
                         event: 'saving',
