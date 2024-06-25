@@ -73,8 +73,8 @@ export class Storage {
      */
     static saveFromLocalStorage(serviceApiUrl, id, specific = false) {
         return EventService.handleEvent('saving', id).then(r => {
-            // Loop over every item in r, if it contains undefined, it is not successful
-            if (r.includes(undefined)) {
+            // Loop over every item in r, if it contains instanceof Error, return false
+            if (r.some(item => item instanceof Error)) {
                 return false;
             }
             const prefixQ = id + '/'
@@ -133,6 +133,7 @@ export class Storage {
                         title: 'Saved'
                     }
                 }));
+                console.log('Saved to server');
                 return true;
             });
         });
@@ -287,13 +288,13 @@ export class EventService {
                 let response = this.call(data.when.id, data.title, data.then.method, data.then.url, data.then.body);
                 // Get response body and save to local storage
                 promises.push(response.then(r => {
-                    if (r === undefined) {
-                        return;
+                    if (r instanceof Error) {
+                        return r;
                     }
                     return r.json();
                 }).then(body => {
-                    if (!body) {
-                        return;
+                    if (body instanceof Error) {
+                        return body;
                     }
                     if (data.patch_in !== undefined) {
                         let value = Storage.getFromLocalStorage(data.when.id);
@@ -346,7 +347,7 @@ export class EventService {
                     }
                 }));
             });
-            return undefined;
+            return new Error('Error status: ' + r.status);
         }
         window.dispatchEvent(new CustomEvent('status-created', {
             detail: {
