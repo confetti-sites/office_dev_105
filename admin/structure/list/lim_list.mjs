@@ -149,7 +149,7 @@ export default class LimList {
                 // originalRows is not iterable
                 for (const [key, row] of Object.entries(originalRows)) {
                     const id = row.id;
-                    const oldIdOnThisIndex = row.data['.'];
+                    const oldIdOnThisIndex = row['.'];
                     const inStorage = JSON.parse(localStorage.getItem(id));
                     // Only store the new index if it is different from the old index
                     if (oldIdOnThisIndex === inStorage) {

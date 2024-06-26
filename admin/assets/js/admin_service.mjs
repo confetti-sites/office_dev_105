@@ -133,7 +133,6 @@ export class Storage {
                         title: 'Saved'
                     }
                 }));
-                console.log('Saved to server');
                 return true;
             });
         });
