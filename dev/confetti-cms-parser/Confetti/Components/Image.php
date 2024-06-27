@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Confetti\Components;
 
 use Confetti\Helpers\ComponentStandard;
+use Confetti\Helpers\Request;
 
 abstract class Image extends ComponentStandard {
     public function get(): array
@@ -15,7 +16,7 @@ abstract class Image extends ComponentStandard {
             try {
                 return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
             } catch (\JsonException $e) {
-                throw new \Exception('Invalid JSON in content. JSON: ' . $content);
+                throw new \RuntimeException('Invalid JSON in content. JSON: ' . $content);
             }
         }
 
@@ -58,8 +59,32 @@ abstract class Image extends ComponentStandard {
         return $this;
     }
 
+    // Popular ratios are 16:9, 4:3, 1:1
+    public function ratio(int $ratioWidth, int $ratioHeight): self
+    {
+        $this->setDecoration('ratio', [
+            'ratioWidth' => $ratioWidth,
+            'ratioHeight' => $ratioHeight,
+        ]);
+        return $this;
+    }
+
+    public function getSource(string $media): ?string
+    {
+        $data = $this->get();
+        foreach ($data['sources'] ?? [] as $source) {
+            if ($source['media'] === $media) {
+                if (empty($source['name'])) {
+                    return null;
+                }
+                return getServiceApi() . '/confetti-cms/media/images' . $source['name'];
+            }
+        }
+        return null;
+    }
+
     public function __toString(): string
     {
-        return $this->get()['standard'];
+        return $this->getSource('standard') ?? '';
     }
 }

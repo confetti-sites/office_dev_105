@@ -6,7 +6,7 @@ namespace Confetti\Helpers;
 
 class Request
 {
-    public static function host(): string
+    public function host(): string
     {
         return $_SERVER['HTTP_HOST'];
     }
