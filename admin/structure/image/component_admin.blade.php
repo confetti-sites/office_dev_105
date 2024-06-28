@@ -47,6 +47,7 @@
                 cropper: undefined,
             };
             cropDetails = {};
+            defaultMaxWidth = 1200;
 
             constructor() {
                 super();
@@ -305,7 +306,7 @@
                         'body': {
                             'id': id,
                             'original': value.original,
-                            'target_width': this.dataset.width_px,
+                            'target_width': this.dataset.width_px ?? this.defaultMaxWidth,
                             'height': value.crop.height,
                             'width': value.crop.width,
                             'x': value.crop.x,

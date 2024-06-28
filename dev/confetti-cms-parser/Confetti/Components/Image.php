@@ -7,7 +7,8 @@ namespace Confetti\Components;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\Request;
 
-abstract class Image extends ComponentStandard {
+abstract class Image extends ComponentStandard
+{
     public function get(): array
     {
         // Get saved value
@@ -63,7 +64,7 @@ abstract class Image extends ComponentStandard {
     public function ratio(int $ratioWidth, int $ratioHeight): self
     {
         $this->setDecoration('ratio', [
-            'ratioWidth' => $ratioWidth,
+            'ratioWidth'  => $ratioWidth,
             'ratioHeight' => $ratioHeight,
         ]);
         return $this;
@@ -77,14 +78,61 @@ abstract class Image extends ComponentStandard {
                 if (empty($source['name'])) {
                     return null;
                 }
-                return getServiceApi() . '/confetti-cms/media/images' . $source['name'];
+                return getServiceApi() . '/confetti-cms/media/images' . htmlspecialchars($source['name']);
             }
         }
         return null;
     }
 
+    /**
+     * @return string
+     * Example:
+     * <source media="(min-width: 640px)" srcset="giraffe.jpeg 1x, giraffe_2x.jpeg 2x" />
+     * <source srcset="giraffe.small.jpeg 1x, giraffe.small_2x.jpeg 2x" />
+     * <img src="giraffe.jpeg" alt="" />
+     */
+    public function getSourcesHtml(): string
+    {
+        $html = '';
+        if (empty($this->get()['sources'])) {
+            return $html;
+        }
+        $html .= $this->getBigSource();
+        $html .= $this->getMobileSource();
+        if ($this->getSource('standard')) {
+            $html .= '<img src="' . $this->getSource('standard') . '" alt="Image">';
+        }
+        return $html;
+    }
+
     public function __toString(): string
     {
         return $this->getSource('standard') ?? '';
+    }
+
+    private function getBigSource(): ?string
+    {
+        if (!$this->getSource('big')) {
+            return null;
+        }
+        $big = "{$this->getSource('big')} 1x";
+        if ($this->getSource('big2x')) {
+            $big .= ", {$this->getSource('big2x')} 2x";
+        }
+
+        return '<source media="(min-width: 640px)" srcset="' . $big . '" />';
+    }
+
+    private function getMobileSource(): ?string
+    {
+        if (!$this->getSource('mobile')) {
+            return null;
+        }
+        $mobile = "{$this->getSource('mobile')} 1x";
+        if ($this->getSource('mobile2x')) {
+            $mobile .= ", {$this->getSource('mobile2x')} 2x";
+        }
+
+        return '<source srcset="' . $mobile . '" />';
     }
 }
