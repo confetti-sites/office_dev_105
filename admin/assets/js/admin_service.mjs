@@ -373,15 +373,21 @@ export class Media {
         }).then(response => {
             if (response.status >= 300) {
                 console.error("Error status: " + response.status);
-                return null;
+                return;
             }
+
+            if (response.headers.get('Content-Length') === '0') {
+                console.error("Content-Length is 0");
+                return;
+            }
+
             if (!response.headers.get('Content-Type').includes('application/json')) {
                 // response cut by 400 characters
                 response = response.clone();
                 response.text().then(text => {
                     console.error("No json returned: " + text.slice(0, 400));
                 });
-                return null;
+                return
             }
 
             response.json().then(json => {
