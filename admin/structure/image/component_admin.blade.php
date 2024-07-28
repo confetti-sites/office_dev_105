@@ -182,7 +182,7 @@
                 const id = this.dataset.id;
                 // Set local image as the original image before we can use the uploaded image
                 this.data.value = {original: URL.createObjectURL(target)};
-                window.dispatchEvent(new CustomEvent('status-created', {
+                window.dispatchEvent(new CustomEvent('state', {
                     detail: {
                         id: id + '.upload',
                         state: 'loading',
@@ -191,7 +191,7 @@
                 }));
                 // Upload the image to the server
                 Media.upload(this.dataset.service_api, id, target, (response) => {
-                    window.dispatchEvent(new CustomEvent('status-created', {
+                    window.dispatchEvent(new CustomEvent('state', {
                         detail: {
                             id: id + '.upload',
                             state: 'success',

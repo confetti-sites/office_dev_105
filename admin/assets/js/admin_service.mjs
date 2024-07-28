@@ -98,7 +98,7 @@ export class Storage {
             if (items.length === 0) {
                 return Promise.resolve(true);
             }
-            window.dispatchEvent(new CustomEvent('status-created', {
+            window.dispatchEvent(new CustomEvent('state', {
                 detail: {
                     id: id + '.save_from_local_storage',
                     state: 'loading',
@@ -111,7 +111,7 @@ export class Storage {
                 // if not successful, console.error
                 if (r instanceof Error) {
                     console.error('Error saving to server');
-                    window.dispatchEvent(new CustomEvent('status-created', {
+                    window.dispatchEvent(new CustomEvent('state', {
                         detail: {
                             id: id + '.save_from_local_storage',
                             state: 'error',
@@ -126,7 +126,7 @@ export class Storage {
                     localStorage.removeItem(item.id);
                 });
                 window.dispatchEvent(new Event('local_content_changed'));
-                window.dispatchEvent(new CustomEvent('status-created', {
+                window.dispatchEvent(new CustomEvent('state', {
                     detail: {
                         id: id + '.save_from_local_storage',
                         state: 'success',
@@ -317,7 +317,7 @@ export class EventService {
      * @param {object} body
      */
     static async call(id, title, method, url, body) {
-        window.dispatchEvent(new CustomEvent('status-created', {
+        window.dispatchEvent(new CustomEvent('state', {
             detail: {
                 id: id + '.call',
                 state: 'loading',
@@ -338,7 +338,7 @@ export class EventService {
             // get body
             r.json().then(json => {
                 console.error("Error status: " + r.status + " " + json.error);
-                window.dispatchEvent(new CustomEvent('status-created', {
+                window.dispatchEvent(new CustomEvent('state', {
                     detail: {
                         id: id + '.call',
                         state: 'error',
@@ -348,7 +348,7 @@ export class EventService {
             });
             return new Error('Error status: ' + r.status);
         }
-        window.dispatchEvent(new CustomEvent('status-created', {
+        window.dispatchEvent(new CustomEvent('state', {
             detail: {
                 id: id + '.call',
                 state: 'success',
@@ -373,6 +373,13 @@ export class Media {
         }).then(response => {
             if (response.status >= 300) {
                 console.error("Error status: " + response.status);
+                window.dispatchEvent(new CustomEvent('state', {
+                    detail: {
+                        id: id + '.upload',
+                        state: 'error',
+                        title: 'Error uploading image: ' + response.status,
+                    }
+                }));
                 return;
             }
 
