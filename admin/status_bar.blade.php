@@ -29,8 +29,9 @@
             }
 
             #upsertStatus(id, state, title) {
-                // If status already exists, update it
-                // Otherwise, add it
+                // Split every line break into a separate lines
+                title = title.split('. ').map(line => line.trim()).join('.<br>');
+                // If status already exists, update it. Otherwise, add it.
                 const statusIndex = this.statuses.findIndex(status => status.id === id);
                 if (statusIndex !== -1) {
                     this.statuses[statusIndex] = {id, state, title: title || this.statuses[statusIndex].title};

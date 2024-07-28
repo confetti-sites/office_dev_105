@@ -370,14 +370,23 @@ export class Media {
                 'Authorization': 'Bearer ' + document.cookie.split('access_token=')[1].split(';')[0],
             },
             body: formData
-        }).then(response => {
+        }).then(async response => {
             if (response.status >= 300) {
                 console.error("Error status: " + response.status);
+                let message = "Error uploading image: ";
+                await response.json().then(json => {
+                    if (json.message) {
+                        message = json.message;
+                    } else {
+                        message += response.statusText;
+                    }
+                });
+
                 window.dispatchEvent(new CustomEvent('state', {
                     detail: {
                         id: id + '.upload',
                         state: 'error',
-                        title: 'Error uploading image: ' + response.status,
+                        title: message,
                     }
                 }));
                 return;
