@@ -401,7 +401,7 @@ export class Media {
                 // response cut by 400 characters
                 response = response.clone();
                 response.text().then(text => {
-                    console.error("No json returned: " + text.slice(0, 400));
+                    console.error("Response header is not application/json. Response: " + text.slice(0, 400));
                 });
                 return
             }

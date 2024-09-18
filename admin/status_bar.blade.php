@@ -30,7 +30,7 @@
 
             #upsertStatus(id, state, title) {
                 // Split every line break into a separate lines
-                title = title.split('. ').map(line => line.trim()).join('.<br>');
+                title = title ? title.split('. ').map(line => line.trim()).join('.<br>') : null
                 // If status already exists, update it. Otherwise, add it.
                 const statusIndex = this.statuses.findIndex(status => status.id === id);
                 if (statusIndex !== -1) {

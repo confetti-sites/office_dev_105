@@ -9,7 +9,7 @@
         @stack('script_*')
     </script>
 </head>
-<body class="text-md overflow-x-hidden" :class="{ 'dark': dark }" x-data="data()">
+<body class="text-md overflow-x-hidden">
 {{--@guest()--}}
 {{--    @include('view.under_construction')--}}
 {{--@else()--}}

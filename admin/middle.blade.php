@@ -27,7 +27,7 @@
                 @continue
             @endif
             <div>
-                @include("admin.structure.{$component->type}.component_admin", ['model' => $child])
+                @include(method_exists($child, 'getViewAdminInput') ? $child->getViewAdminInput() : 'method_getViewAdminInput_not_found_in_' . $child::class, ['model' => $child])
             </div>
         @endforeach
         <div class="mt-16 mb-16 loader _loading-hide"
