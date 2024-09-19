@@ -1,5 +1,4 @@
-@php($blogPage = newRoot(new \model\blog_overview)->label('Blogs'))
-
+@php($blogPage = newRoot(new \model\blog_overview))
 <div class="bg-gray-50 flex items-center justify-center">
     @foreach($blogPage->list('blog')->columns(['title', 'description'])->get() as $blog)
         <div class="m-10 mt-0 relative space-y-4">

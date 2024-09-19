@@ -29,9 +29,13 @@ export class LimText extends Paragraph {
     }
 
     /**
-     * @return {string}
+     * @return {string|null}
      */
     get storageValue() {
+        const value = localStorage.getItem(this.config.contentId)
+        if (value === null) {
+            return null;
+        }
         return JSON.parse(localStorage.getItem(this.config.contentId));
     }
 
@@ -61,13 +65,15 @@ export class LimText extends Paragraph {
     }
 
     /**
-     * @param {string} value
+     * @param {string|null} value
      */
     updateValueChangedStyle(value) {
         const inputHolder = this.config.component.querySelector('._input');
         const message = this._validateWithMessage(value);
         if (message != null) {
-            inputHolder.classList.add('border-red-200');
+            if (value !== null) {
+                inputHolder.classList.add('border-red-200');
+            }
             this.config.component.getElementsByClassName('_error')[0].innerHTML = message;
             return;
         }
@@ -200,12 +206,12 @@ export class LimText extends Paragraph {
 
     /**
      * We don't use the default validation, because we want to interact with the ui.
-     * @param {string} value
+     * @param {string|null} value
      */
     _validateWithMessage(value) {
         // Convert html entities in one function. Otherwise, the value length is wrong.
         // For example &nbsp; is one character, but the length is 6.
-        value = new DOMParser().parseFromString(value, 'text/html').body.textContent;
+        value = value ? new DOMParser().parseFromString(value, 'text/html').body.textContent : null;
         for (const validator of this.config.validators) {
             const message = validator(this.config, value);
             if (message != null) {
@@ -218,23 +224,30 @@ export class LimText extends Paragraph {
 export class Validators {
     /**
      * @param {object} config
-     * @param {string} value
+     * @param {string|null} value
      * @return {string|null}
      */
     static validateMinLength(config, value) {
-        if (config.decorations.min === undefined || value.length === 0 || value.length >= config.decorations.min.min) {
+        if (value === null) {
+            value = "";
+        }
+        if (config.decorations.min.min === null || (value.length >= config.decorations.min.min)) {
             return null;
         }
-        return `The value must be at least ${config.decorations.min.min} characters long.`;
+        if (value.length === 0) {
+            return `This field is required.`;
+        }
+        const character = config.decorations.min.min === 1 ? 'character' : 'characters';
+        return `The value must be at least ${config.decorations.min.min} ${character} long.`
     }
 
     /**
      * @param {object} config
-     * @param {string} value
+     * @param {string|null} value
      * @return {string|null}
      */
     static validateMaxLength(config, value) {
-        if (config.decorations.max === undefined || value.length <= config.decorations.max.max) {
+        if (config.decorations.max.max === null || value.length <= config.decorations.max.max) {
             return null;
         }
         // Cut the value to the max length, and get the rest
@@ -244,6 +257,7 @@ export class Validators {
             toMuch = toMuch.substring(0, 26);
             suffix = '(...)';
         }
-        return `The value must be at most ${config.decorations.max.max} characters long.<br>Therefore you cannot use: <span class="text-red-600 underline">${toMuch}</span> ${suffix}`
+        const character = config.decorations.max.max === 1 ? 'character' : 'characters';
+        return `The value must be at most ${config.decorations.max.max} ${character} long.<br>Therefore you cannot use: <span class="text-red-600 underline">${toMuch}</span> ${suffix}`
     }
 }

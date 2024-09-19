@@ -33,8 +33,8 @@
                                             {{ $step->text('description')->min(1)->max(100) }}
                                         </div>
                                     </div>
-                                    @php($example = $step->text('example')->default(''))
-                                    @if($example != '')
+                                    @php($example = (string)$step->text('example'))
+                                    @if($example !== '')
                                         <div class="pb-3 text-center text-gray-500 font-body">
                                             {{ $example }}
                                         </div>
