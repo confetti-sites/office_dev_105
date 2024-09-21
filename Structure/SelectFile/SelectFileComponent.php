@@ -83,7 +83,7 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
 
     public function getViewAdminInput(): string
     {
-        return 'structure.SelectFile.input';
+        return 'structure.selectfile.input';
     }
 
     public function getViewAdminListItem(): string
@@ -105,7 +105,7 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
         return $this;
     }
 
-    // List all files by directories. You can use the glob pattern. For example: `->match(['/view/footers'])`
+    // List all files by directories. You can use the glob pattern. For example, `->match(['/view/footers'])`
     //
     // @param string $pattern A glob pattern.
     //

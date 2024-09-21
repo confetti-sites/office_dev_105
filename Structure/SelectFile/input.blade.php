@@ -25,7 +25,7 @@
 @foreach($model->getOptions() as $pointerChild)
     @foreach($pointerChild->getChildren() as $grandChild)
         <template show_when="{{ $grandChild->getComponent()->source->getPath() }}">
-            @include("admin.structure.{$grandChild->getComponent()->type}.component_admin", ['model' => $grandChild])
+            @include($grandChild->getViewAdminInput(), ['model' => $grandChild])
         </template>
     @endforeach
 @endforeach

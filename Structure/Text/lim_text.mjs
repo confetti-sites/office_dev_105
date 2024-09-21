@@ -88,7 +88,7 @@ export class LimText extends Paragraph {
 
     render() {
         // Set the correct style corresponding to the value
-        this.updateValueChangedStyle(this.storageValue);
+        this.updateValueChangedStyle(this.storageValue ?? this.config.originalValue);
 
         // Add the toolbar to the editor
         new Toolbar(this.config.component).init([
@@ -231,7 +231,6 @@ export class Validators {
             return null;
         }
         if (value.length === 0) {
-            console.log(value);
             return `This field is required.`;
         }
         const character = config.decorations.min.min === 1 ? 'character' : 'characters';
@@ -244,7 +243,7 @@ export class Validators {
      * @return {string|null}
      */
     static validateMaxLength(config, value) {
-        if (config.decorations.max.max === null || value.length <= config.decorations.max.max) {
+        if (value === null || config.decorations.max.max === null || value.length <= config.decorations.max.max) {
             return null;
         }
         // Cut the value to the max length, and get the rest
