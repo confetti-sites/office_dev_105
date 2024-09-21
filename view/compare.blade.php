@@ -30,7 +30,7 @@
                                             Step {{ $nr + 1 }}
                                         </div>
                                         <div class="flex-1 flex justify-between items-center font-body">
-                                            {{ $step->text('description')->min(1)->max(100) }}
+                                            {{ $step->text('description')->min(3)->max(100) }}
                                         </div>
                                     </div>
                                     @php($example = (string)$step->text('example'))

@@ -26,6 +26,9 @@ export class LimText extends Paragraph {
     constructor({data, config, api, readOnly}) {
         super({data, config, api, readOnly});
         this.config = config;
+
+        // Update the style if saving changes the value
+        window.addEventListener('local_content_changed', () => this.updateValueChangedStyle(this.storageValue ?? this.config.originalValue));
     }
 
     /**
@@ -43,17 +46,14 @@ export class LimText extends Paragraph {
      * @param {string} value
      */
     set storageValue(value) {
-        // if value is same as original value, remove it from local storage
         if (value === this.config.originalValue) {
+            // if value is same as original value, remove it from local storage
             localStorage.removeItem(this.config.contentId);
-            window.dispatchEvent(new Event('local_content_changed'));
-            return;
+        } else {
+            // Use JSON.stringify to encode special characters
+            localStorage.setItem(this.config.contentId, JSON.stringify(value));
         }
-        // Use JSON.stringify to encode special characters
-        localStorage.setItem(this.config.contentId, JSON.stringify(value));
         window.dispatchEvent(new Event('local_content_changed'));
-        // Update the style if the value is changed (by saving)
-        window.addEventListener('local_content_changed', () => this.updateValueChangedStyle(this.storageValue));
     }
 
     /**
@@ -71,15 +71,11 @@ export class LimText extends Paragraph {
         const inputHolder = this.config.component.querySelector('._input');
         const message = this._validateWithMessage(value);
         if (message != null) {
-            if (value !== null) {
-                inputHolder.classList.add('border-red-200');
-            }
             this.config.component.getElementsByClassName('_error')[0].innerHTML = message;
             return;
         }
         // Remove the error message
         this.config.component.getElementsByClassName('_error')[0].innerText = '';
-        inputHolder.classList.remove('border-red-200');
         // Value can be null, when it's not set in local storage.
         if (value !== null && value !== this.config.originalValue) {
             inputHolder.classList.remove('border-gray-200');
@@ -235,6 +231,7 @@ export class Validators {
             return null;
         }
         if (value.length === 0) {
+            console.log(value);
             return `This field is required.`;
         }
         const character = config.decorations.min.min === 1 ? 'character' : 'characters';
