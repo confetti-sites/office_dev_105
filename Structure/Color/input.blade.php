@@ -1,40 +1,87 @@
 @php /** @var \Confetti\Components\Hidden $model */ @endphp
 <!--suppress HtmlUnknownTag -->
-<hidden-component
+<color-component
         data-id="{{ $model->getId() }}"
+        data-label="{{ $model->getComponent()->getLabel() }}"
+        data-help="{{ $model->getComponent()->getDecoration('help') }}"
+        data-decorations='@json($model->getComponent()->getDecorations())'
         data-original="{{ $model->get() }}"
-></hidden-component>
+></color-component>
 
-@pushonce('end_of_body_hidden_component')
+@pushonce('end_of_body_color_component')
+    <style>
+        color-component {
+            & input[type=color]{
+                height: 48px;
+            }
+            & input[type=color]::-webkit-color-swatch-wrapper {
+                padding: 0;
+            }
+            & input[type=color]::-webkit-color-swatch {
+                /*border: solid 1px #000; !*change color of the swatch border here*!*/
+                border-width: 2px;
+                border-radius: 0.5rem;
+            }
+        }
+    </style>
     <script type="module">
+        import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
         import {Storage} from '/admin/assets/js/admin_service.mjs';
+        import {IconUndo} from 'https://esm.sh/@codexteam/icons';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-        customElements.define('hidden-component', class extends HTMLElement {
+        customElements.define('color-component', class extends HTMLElement {
+            data
+
             connectedCallback() {
-                let data = reactive({
+                this.data = reactive({
                     value: Storage.getFromLocalStorage(this.dataset.id) || this.dataset.original || '',
                 });
 
-                data.$on('value', value => {
+                this.data.$on('value', value => {
+                    console.log('color-component', value);
                     Storage.removeLocalStorageItems(this.dataset.id);
                     if (value !== this.dataset.original) {
                         Storage.saveToLocalStorage(this.dataset.id, value);
                     }
+                    this.#checkStyle();
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
 
-                // Listen for value changes from other components. Other components
-                // can push their value to this component using the value_pushed event:
-                // window.dispatchEvent(new CustomEvent('value_pushed', {detail: {toId: '/model/banner/title', value: 'The title'}}));
-                window.addEventListener('value_pushed', (event) => {
-                    if (this.dataset.id !== event.detail['toId'] || event.detail['value'] === data.value) {
-                        return;
-                    }
-                    data.value = event.detail['value'];
-                });
+                html`
+                    <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
+                    <input class="${() => ` block w-full ${this.data.value === this.dataset.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg`}"
+                            type="color"
+                            name="${this.dataset.id}"
+                            value="${() => this.data.value}"
+                            @input="${(e) => this.data.value = e.target.value}">
 
-                html`<input type="hidden" name="${this.dataset.id}" value="${() => data.value}"/>`(this)
+                    ${this.dataset.help ? `<p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>` : ''}
+                `(this)
+
+                new Toolbar(this).init([{
+                        label: 'Remove unpublished changes',
+                        icon: IconUndo,
+                        closeOnActivate: true,
+                        onActivate: async () => {
+                            this.querySelector('input').value = this.dataset.original;
+                            this.querySelector('input').dispatchEvent(new Event('change'));
+                            this.data.value = this.dataset.original;
+                        }
+                    }],
+                );
+            }
+
+            #checkStyle() {
+                const input = this.querySelector('input');
+                if (this.data.value === this.dataset.original) {
+                    input.classList.remove('border-emerald-300');
+                    input.classList.add('border-gray-200');
+                } else {
+                    // Mark the input element as dirty
+                    input.classList.remove('border-gray-200');
+                    input.classList.add('border-emerald-300');
+                }
             }
         });
     </script>

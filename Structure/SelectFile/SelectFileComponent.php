@@ -131,6 +131,17 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
         ]);
         return $this;
     }
+
+    /**
+     * We can save the label of the selected file in a (hidden) field.
+     * Then we can use this label in the admin to show in the list.
+     * Please do not remove this method since it is used in the '#useLabelFor()' method.
+     */
+    public function useLabelFor(string $useLabelFor): self
+    {
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        return $this;
+    }
 }
 
 

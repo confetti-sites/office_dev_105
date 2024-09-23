@@ -19,7 +19,7 @@ abstract class ColorComponent extends ComponentStandard
         // Get saved value
         $value = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($value !== null) {
-            return $value->value;
+            return $value;
         }
 
         // Get default value
@@ -49,15 +49,15 @@ abstract class ColorComponent extends ComponentStandard
         return $this;
     }
 
-    // Default value is used when the user hasn't saved any value
-    public function default(string $default): self
+    // Help is used as a description for the admin panel
+    public function help(string $help): self
     {
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
 
-    // Template is used as an indicator that the user can select a template
-    public function template(#[FilePatternArray] array $templates): self
+    // Default value is used when the user hasn't saved any value
+    public function default(string $default): self
     {
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;

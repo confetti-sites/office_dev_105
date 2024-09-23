@@ -28,13 +28,15 @@
                 // can push their value to this component using the value_pushed event:
                 // window.dispatchEvent(new CustomEvent('value_pushed', {detail: {toId: '/model/banner/title', value: 'The title'}}));
                 window.addEventListener('value_pushed', (event) => {
+                    console.log('hidden-component value_pushed', event.detail);
                     if (this.dataset.id !== event.detail['toId'] || event.detail['value'] === data.value) {
                         return;
                     }
                     data.value = event.detail['value'];
                 });
 
-                html`<input type="hidden" name="${this.dataset.id}" value="${() => data.value}"/>`(this)
+                /** html`<input type="" name="${this.dataset.id}" value="${() => data.value}"/>`(this) */
+                html`<input type="" name="${this.dataset.id}" value="${() => data.value}"/>`(this)
             }
         });
     </script>

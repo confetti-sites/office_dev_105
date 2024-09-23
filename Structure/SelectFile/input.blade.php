@@ -122,6 +122,7 @@
             // the value of the select element to another component
             #useLabelFor() {
                 if (!this.dataset.use_label_for) {
+                    console.log('use_label_for is not set');
                     return;
                 }
 

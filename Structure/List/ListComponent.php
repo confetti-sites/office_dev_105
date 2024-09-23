@@ -329,7 +329,6 @@ class ListComponent
     public static function getColumnsAndRows(self $model): array
     {
         // Get defined columns if possible
-        // E.g. [['id' => 'selected_block', 'label' => 'Selected Block', 'default_value' => null], ...]
         $columns = self::getDefinedColumns($model);
         if ($columns === null) {
             $columns = self::getDefaultColumns($model);
