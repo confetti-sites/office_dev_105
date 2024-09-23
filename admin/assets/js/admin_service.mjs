@@ -148,7 +148,7 @@ export class Storage {
         const toRemove = data.filter(item => item.value === 'this.remove()');
         // Loop over every item and remove. Example: DELETE /contents?id=/model/title
         toRemove.forEach(item => {
-            fetch(`${serviceApiUrl}/confetti-cms/content/contents?id=${item.id}`, {
+            fetch(`${serviceApiUrl}/confetti-cms/content/contents?id_prefix=${item.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
@@ -201,7 +201,7 @@ export class Storage {
      */
     static delete(serviceApiUrl, id, then = null) {
         // Remove from database
-        return fetch(`${serviceApiUrl}/confetti-cms/content/contents?id=${id}`, {
+        return fetch(`${serviceApiUrl}/confetti-cms/content/contents?id_prefix=${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

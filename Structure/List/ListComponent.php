@@ -383,8 +383,8 @@ class ListComponent
         }
         $key = self::keyToArgumentKey(array_shift($keys));
         if ($child instanceof SelectModelInterface) {
-            $children = $child->getSelected()->getChildren();
-            if (!array_key_exists($key, $children)) {
+            $children = $child->getSelected()?->getChildren();
+            if ($children === null || !array_key_exists($key, $children)) {
                 return null;
             }
 

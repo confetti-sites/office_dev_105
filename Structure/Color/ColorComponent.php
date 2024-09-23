@@ -23,7 +23,7 @@ abstract class ColorComponent extends ComponentStandard
         }
 
         // Get default value
-        $component = $this->componentStore->find($this->getId());
+        $component = $this->getComponent();
         if ($component->hasDecoration('default')) {
             return $component->getDecoration('default');
         }
@@ -44,13 +44,6 @@ abstract class ColorComponent extends ComponentStandard
 
     // Label is used as a title for the admin panel
     public function label(string $label): self
-    {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
-        return $this;
-    }
-
-    // Default value is used when the user hasn't saved any value
-    public function tint(Tiner $tint): self
     {
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;

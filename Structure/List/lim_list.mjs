@@ -100,6 +100,7 @@ export default class LimList {
 
             // Add an event listener for when the drag starts
             row.addEventListener('dragstart', function (e) {
+                console.log('dragstart');
                 // Set the drag source element to the current row
                 dragSrcEl = this;
                 // Set the drag effect to "move"
@@ -115,6 +116,7 @@ export default class LimList {
 
             // Add an event listener for when the drag ends
             row.addEventListener('dragend', function (e) {
+                console.log('dragend');
                 // Restore the background color of the real target row
                 dragSrcEl.classList.remove('bg-gray-100');
                 // Restore all default hover:bg colors
@@ -163,6 +165,7 @@ export default class LimList {
 
             // Add an event listener for when the dragged row is over another row
             row.addEventListener('dragover', function (e) {
+                console.log('dragover');
                 // Prevent the default dragover behavior
                 e.preventDefault();
                 // Add border classes to the current row to indicate it is a drop target

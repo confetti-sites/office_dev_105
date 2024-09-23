@@ -63,7 +63,7 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
         throw new \RuntimeException('This method `getOptions` should be overridden in the child class.');
     }
 
-    public function getSelected(): Map
+    public function getSelected(): ?Map
     {
         $file = self::getPointerValues($this->getId(), $this->contentStore)[$this->getId()] ?? null;
 
@@ -78,7 +78,7 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
             $file = array_key_first($this->getOptions());
         }
 
-        return $this->getOptions()[$file] ?? throw new \RuntimeException("Can't select child model in '{$this->getComponent()->key}'. Function 'extendModel(\$model)' not found in '$file'");
+        return $this->getOptions()[$file] ?? null;
     }
 
     public function getViewAdminInput(): string
