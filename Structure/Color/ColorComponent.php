@@ -37,9 +37,9 @@ abstract class ColorComponent extends ComponentStandard
         return 'structure.color.input';
     }
 
-    public function getViewAdminListItem(): string
+    public function getViewAdminListItemHtml(): string
     {
-        return 'structure.color.list_item';
+        return '<div style="background-color: ' . $this->get() . '" class=""></div>';
     }
 
     // Label is used as a title for the admin panel

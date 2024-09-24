@@ -49,7 +49,7 @@ class ListComponent
 
     public function getViewAdminInput(): string
     {
-        return 'structure.list.input';
+        return 'admin.structure.list.input';
     }
 
     /**
@@ -340,11 +340,17 @@ class ListComponent
             $data = [];
             foreach ($columns as $column) {
                 $keys = explode('/', $column['id']);
-                $key = array_shift($keys);
+                $key  = array_shift($keys);
 
                 foreach ($row->getChildren() as $cKey => $child) {
                     if ($cKey === self::keyToArgumentKey($key)) {
-                        $data[$column['id']] = self::getDataFromChild($child, $keys);
+                        $target = self::getDataFromChild($child, $keys);
+                        if (method_exists($target, 'getViewAdminListItemHtml')) {
+                            $variable = $target->getViewAdminListItemHtml();
+                        } else {
+                            $variable = $target?->get();
+                        }
+                        $data[$column['id']] = $variable;
                     }
                 }
             }
@@ -375,10 +381,10 @@ class ListComponent
         }
     }
 
-    private static function getDataFromChild(ComponentStandard|Map $child, array $keys): mixed
+    private static function getDataFromChild(ComponentStandard|Map $child, array $keys): ComponentStandard|Map|null
     {
         if (empty($keys)) {
-            return $child->get();
+            return $child;
         }
         $key = self::keyToArgumentKey(array_shift($keys));
         if ($child instanceof SelectModelInterface) {

@@ -5,6 +5,7 @@ module.exports = {
     content: [
         './**/*.blade.php',
         './**/*.mjs',
+        './**/*.html',
     ],
     darkMode: 'class',
     theme: {

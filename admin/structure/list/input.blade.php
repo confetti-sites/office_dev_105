@@ -18,10 +18,13 @@
         data-service_api="{{ getServiceApi() }}"
 ></list-component>
 
+<div class="mx-auto h-16 w-16 rounded-lg bg-blue-500">Todo let this style by tailwind</div>
+
+
 @pushonce('end_of_body_list_component')
     <script type="module">
         import {Storage} from '/admin/assets/js/admin_service.mjs';
-        import LimList from '/structure/list/lim_list.mjs';
+        import LimList from '/admin/view/list/lim_list.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
@@ -77,6 +80,7 @@
                                 };
                                 state = reactive(state);
                                 let columns = this.service.getColumns(row);
+                                console.log('columns', columns);
                                 window.addEventListener('local_content_changed', () => state.changed = Storage.hasLocalStorageItems(row.id));
                                 let i = 0;
                                 return html`
@@ -91,7 +95,8 @@
                                     ${columns.map(value => html`
                                     <td class="${()=>` p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
                                         @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
-                                        <span class="line-clamp-2">${value ?? ''}</span>
+                                        <div class="h-16 w-16 rounded-full bg-blue-500">hello</div>
+                                        <span class="line-clamp-2">${value}</span>
                                     </td>`)}
                                     <td class="hidden sm:table-cell sm:w-[140px]">
                                         <div class="${()=>`flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
