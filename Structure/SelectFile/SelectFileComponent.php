@@ -86,9 +86,9 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
         return 'admin.structure.select_file.input';
     }
 
-    public function getViewAdminListItem(): string
+    public static function getViewAdminListItemMjs(): string
     {
-        return 'structure.SelectFile.list_item';
+        return '/admin/structure/select_file/list_item.mjs';
     }
 
     // Label is used as a title for the admin panel

@@ -73,12 +73,7 @@ abstract class TextComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'structure.text.input';
-    }
-
-    public function getViewAdminListItem(): string
-    {
-        return 'structure.text.list_item';
+        return '!!!!!';
     }
 
     // Default will be used if no value is saved

@@ -41,12 +41,7 @@ abstract class SelectComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'structure.Select.input';
-    }
-
-    public function getViewAdminListItem(): string
-    {
-        return 'structure.Select.list_item';
+        return '!!!!!';
     }
 
     /**

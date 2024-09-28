@@ -38,12 +38,7 @@ abstract class ContentComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'structure.Content.input';
-    }
-
-    public function getViewAdminListItem(): string
-    {
-        return 'structure.Content.list_item';
+        return '!!!';
     }
 
     /**

@@ -38,7 +38,7 @@ export default class LimList {
                 if (localStorage.hasOwnProperty(item.id + '/' + column.id)) {
                     data[column.id]['value'] = JSON.parse(localStorage.getItem(item.id + '/' + column.id));
                 } else {
-                    data[column.id]['value'] = JSON.parse(column.default_value) ?? 'no default';
+                    data[column.id]['value'] = JSON.parse(column.default_value) ?? 'Error; no default value found';
                 }
             }
             rowsWithNew.push({id: item.id, data: data});
