@@ -1,12 +1,23 @@
+// noinspection GrazieInspection
+
 export default class {
     id;
     value;
 
     /**
      * @param {string} id
-     * @param value
+     * @param {any} value
+     * @param decorations {object} Example:
+     * {
+     *     "label": {                          |
+     *      ^^^^^                              | The name of the decoration method
+     *         "label": "Choose your template" |
+     *          ^^^^^                          | The name of the parameter
+     *                   ^^^^^^^^^^^^^^^^^^^^  | The value given to the parameter
+     *     },                                  |
+     * }
      */
-    constructor(id, value) {
+    constructor(id, value, decorations) {
         this.id = id;
         this.value = value;
     }

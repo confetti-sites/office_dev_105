@@ -46,15 +46,6 @@ abstract class HiddenComponent extends ComponentStandard
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
-
-    /**
-     * The Label is used as a title for the admin panel
-     */
-    public function tmpLabel(string $label): self
-    {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
-        return $this;
-    }
 }
 
 

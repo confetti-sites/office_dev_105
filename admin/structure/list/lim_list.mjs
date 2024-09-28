@@ -15,6 +15,7 @@ export default class LimList {
     getColumns(row) {
         // Do not update the original row by reference
         let withoutReference = this.columns.map(function (column) {
+            row.data[column.id]['decorations'] = column['decorations'];
             row.data[column.id]['mjs'] = column['mjs'];
             return row.data[column.id];
         });

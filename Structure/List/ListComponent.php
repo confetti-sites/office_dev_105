@@ -427,6 +427,7 @@ class ListComponent
             $mjs = method_exists($class, 'getViewAdminListItemMjs') ? $class::getViewAdminListItemMjs() : null;
 
             return [
+                'decorations'   => $class->getComponent()->getDecorations(),
                 'default_value' => $defaultValue,
                 'id'            => $column['id'],
                 'label'         => $column['label'],
@@ -456,6 +457,7 @@ class ListComponent
             $mjs = method_exists($column->generates, 'getViewAdminListItemMjs') ? $column->generates::getViewAdminListItemMjs() : null;
 
             return [
+                'decorations'   => $column->getDecorations(),
                 'default_value' => $column->getDecoration('default'),
                 'id'            => $key,
                 'label'         => titleByKey($key),

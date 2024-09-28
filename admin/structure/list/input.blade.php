@@ -90,7 +90,7 @@
                                         ${columns.map(item => html`
                                             <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
                                                 @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
-                                                ${item.mjs ? this.#loadMjs(item.mjs, item.id, item.value) : html`${item.value}`}
+                                                ${item.mjs ? this.#loadMjs(item.mjs, item.id, item.value, item.decorations) : html`${item.value}`}
                                             </td>`)}
                                         <td class="hidden sm:table-cell sm:w-[140px]">
                                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
@@ -130,9 +130,9 @@
                 this.#renderedCallback();
             }
 
-            #loadMjs(mjs, id, value) {
+            #loadMjs(mjs, id, value, decorations) {
                 let promise = import(mjs).then(module => {
-                    const instance = new module.default(id, value);
+                    const instance = new module.default(id, value, decorations);
                     return instance.toHtml();
                 });
 
