@@ -66,7 +66,9 @@
                         icon: IconUndo,
                         closeOnActivate: true,
                         onActivate: async () => {
-                            this.dataset.original = this.defaultWhenNoDefaultColor
+                            if (this.dataset.original === '') {
+                                this.dataset.original = this.defaultWhenNoDefaultColor
+                            }
                             this.querySelector('input').value = this.dataset.original;
                             this.querySelector('input').dispatchEvent(new Event('change'));
                             this.data.value = this.dataset.original;
