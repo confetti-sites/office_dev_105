@@ -83,7 +83,7 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
 
     public function getViewAdminInput(): string
     {
-        return 'structure.selectfile.input';
+        return 'admin.structure.select_file.input';
     }
 
     public function getViewAdminListItem(): string
