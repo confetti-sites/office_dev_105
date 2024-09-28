@@ -14,7 +14,10 @@ export default class LimList {
      */
     getColumns(row) {
         // Do not update the original row by reference
-        let withoutReference = this.columns.map(column => row.data[column.id]);
+        let withoutReference = this.columns.map(function (column) {
+            row.data[column.id]['mjs'] = column['mjs'];
+            return row.data[column.id];
+        });
         delete withoutReference['.'];
         return withoutReference;
     }
@@ -31,10 +34,11 @@ export default class LimList {
             const data = {};
             data['.'] = item.data['.'];
             for (const column of this.columns) {
+                data[column.id] = {}
                 if (localStorage.hasOwnProperty(item.id + '/' + column.id)) {
-                    data[column.id] = JSON.parse(localStorage.getItem(item.id + '/' + column.id));
+                    data[column.id]['value'] = JSON.parse(localStorage.getItem(item.id + '/' + column.id));
                 } else {
-                    data[column.id] = column.default_value ?? '';
+                    data[column.id]['value'] = JSON.parse(column.default_value) ?? 'no default';
                 }
             }
             rowsWithNew.push({id: item.id, data: data});
@@ -47,12 +51,12 @@ export default class LimList {
             for (const column of this.columns) {
                 // Use localstorage if available
                 const id = rowRaw.id + '/' + column.id;
+                data[column.id] = rowRaw.data[column.id]
                 if (localStorage.hasOwnProperty(id)) {
-                    data[column.id] = JSON.parse(localStorage.getItem(id));
-                } else {
-                    data[column.id] = rowRaw.data[column.id];
+                    data[column.id]['value'] = JSON.parse(localStorage.getItem(id));
                 }
             }
+            // The `.` value is from the item itself, mainly used for sorting
             if (localStorage.hasOwnProperty(rowRaw.id)) {
                 data['.'] = JSON.parse(localStorage.getItem(rowRaw.id));
             } else {

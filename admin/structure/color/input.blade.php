@@ -1,5 +1,5 @@
-@php /** @var \Confetti\Components\Hidden $model */ @endphp
-<!--suppress HtmlUnknownTag -->
+@php /** @var \Src\Structure\Color\ColorComponent $model */ @endphp
+        <!--suppress HtmlUnknownTag -->
 <color-component
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
@@ -11,12 +11,14 @@
 @pushonce('end_of_body_color_component')
     <style>
         color-component {
-            & input[type=color]{
+            & input[type=color] {
                 height: 48px;
             }
+
             & input[type=color]::-webkit-color-swatch-wrapper {
                 padding: 0;
             }
+
             & input[type=color]::-webkit-color-swatch {
                 /*border: solid 1px #000; !*change color of the swatch border here*!*/
                 border-width: 2px;
@@ -32,14 +34,15 @@
 
         customElements.define('color-component', class extends HTMLElement {
             data
+            defaultWhenNoDefaultColor = '#ffffff';
 
             connectedCallback() {
                 this.data = reactive({
+                    // If no value is given, we will save defaultWhenNoDefaultColor when the element is loaded
                     value: Storage.getFromLocalStorage(this.dataset.id) || this.dataset.original || '',
                 });
 
                 this.data.$on('value', value => {
-                    console.log('color-component', value);
                     Storage.removeLocalStorageItems(this.dataset.id);
                     if (value !== this.dataset.original) {
                         Storage.saveToLocalStorage(this.dataset.id, value);
@@ -51,11 +54,10 @@
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
                     <input class="${() => ` block w-full ${this.data.value === this.dataset.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg`}"
-                            type="color"
-                            name="${this.dataset.id}"
-                            value="${() => this.data.value}"
-                            @input="${(e) => this.data.value = e.target.value}">
-
+                           type="color"
+                           name="${this.dataset.id}"
+                           value="${() => this.data.value}"
+                           @input="${(e) => this.data.value = e.target.value}">
                     ${this.dataset.help ? `<p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>` : ''}
                 `(this)
 
@@ -64,12 +66,19 @@
                         icon: IconUndo,
                         closeOnActivate: true,
                         onActivate: async () => {
+                            this.dataset.original = this.defaultWhenNoDefaultColor
                             this.querySelector('input').value = this.dataset.original;
                             this.querySelector('input').dispatchEvent(new Event('change'));
                             this.data.value = this.dataset.original;
                         }
                     }],
                 );
+
+                // If no value is saved and not already known as a new value,
+                // set the default value and make is saved to the local storage
+                if (this.data?.value === '') {
+                    this.data.value = this.defaultWhenNoDefaultColor;
+                }
             }
 
             #checkStyle() {

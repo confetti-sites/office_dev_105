@@ -345,11 +345,10 @@ class ListComponent
                 foreach ($row->getChildren() as $cKey => $child) {
                     if ($cKey === self::keyToArgumentKey($key)) {
                         $target = self::getDataFromChild($child, $keys);
-                        if (method_exists($target, 'getViewAdminListItemHtml')) {
-                            $variable = $target->getViewAdminListItemHtml();
-                        } else {
-                            $variable = $target?->get();
-                        }
+                        $variable = [
+                            'id'    => $target?->getId(),
+                            'value' => $target?->get(),
+                        ];
                         $data[$column['id']] = $variable;
                     }
                 }
@@ -423,17 +422,15 @@ class ListComponent
 
         return array_map(static function (array $column) use ($model) {
             // find default value (from getDecoration) from children
-            $defaultValue = null;
-            foreach ($model->getComponentsFromChildren() as $child) {
-                if ($child->key === $model->getId() . '/' . $column['id']) {
-                    $defaultValue = $child->getDecoration('default');
-                    break;
-                }
-            }
+            $class = modelById($model->getId() . '/' . $column['id']);
+            $defaultValue = $class->getComponent()->getDecoration('default');
+            $mjs = method_exists($class, 'getViewAdminListItemMjs') ? $class::getViewAdminListItemMjs() : null;
+
             return [
+                'default_value' => $defaultValue,
                 'id'            => $column['id'],
                 'label'         => $column['label'],
-                'default_value' => $defaultValue,
+                'mjs'           => $mjs,
             ];
         }, $definedColumns);
     }
@@ -445,13 +442,24 @@ class ListComponent
         $columns = array_filter($model->getComponentsFromChildren(), static fn(ComponentEntity $column) => $column->type === 'text');
         // Get max 4 columns
         $columns = array_slice($columns, 0, 4);
+        if (empty($columns)) {
+            // If no text columns are found, then get the first 4 columns
+            // Filter out non-text columns
+            $columns = $model->getComponentsFromChildren();
+            // Get max 4 columns
+            $columns = array_slice($columns, 0, 4);
+        }
+
         return array_map(static function (ComponentEntity $column) {
             $key = explode('/', $column->key);
             $key = end($key);
+            $mjs = method_exists($column->generates, 'getViewAdminListItemMjs') ? $column->generates::getViewAdminListItemMjs() : null;
+
             return [
+                'default_value' => $column->getDecoration('default'),
                 'id'            => $key,
                 'label'         => titleByKey($key),
-                'default_value' => $column->getDecoration('default'),
+                'mjs'           => $mjs,
             ];
         }, $columns);
     }

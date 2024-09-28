@@ -16,6 +16,5 @@
                 </a>
             </div>
         </div>
-        <div>hello</div>
     </div>
 @endguest

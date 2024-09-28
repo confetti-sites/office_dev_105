@@ -14,32 +14,36 @@ abstract class ColorComponent extends ComponentStandard
         return 'color';
     }
 
-    public function get(): string
+    public function get(bool $random = false): string
     {
         // Get saved value
         $value = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($value !== null) {
-            return $value;
+            return htmlspecialchars($value);
         }
 
         // Get default value
         $component = $this->getComponent();
         if ($component->hasDecoration('default')) {
-            return $component->getDecoration('default');
+            return htmlspecialchars($component->getDecoration('default'));
         }
 
-        // Generate random color
-        return sprintf('#%06X', random_int(0, 0xFFFFFF));
+        if ($random) {
+            // Generate random color
+            return sprintf('#%06X', random_int(0, 0xFFFFFF));
+        }
+
+        return '';
     }
 
     public function getViewAdminInput(): string
     {
-        return 'structure.color.input';
+        return 'admin.structure.color.input';
     }
 
-    public function getViewAdminListItemHtml(): string
+    public static function getViewAdminListItemMjs(): string
     {
-        return '<div style="background-color: ' . $this->get() . '" class=""></div>';
+        return '/admin/structure/color/list_item.mjs';
     }
 
     // Label is used as a title for the admin panel

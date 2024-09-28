@@ -8,7 +8,7 @@
     [$columns, $originalRows] = ListComponent::getColumnsAndRows($model);
 @endphp
 
-<!--suppress HtmlUnknownAttribute, HtmlUnknownTag -->
+        <!--suppress HtmlUnknownAttribute, HtmlUnknownTag -->
 <list-component
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
@@ -18,13 +18,10 @@
         data-service_api="{{ getServiceApi() }}"
 ></list-component>
 
-<div class="mx-auto h-16 w-16 rounded-lg bg-blue-500">Todo let this style by tailwind</div>
-
-
 @pushonce('end_of_body_list_component')
     <script type="module">
         import {Storage} from '/admin/assets/js/admin_service.mjs';
-        import LimList from '/admin/view/list/lim_list.mjs';
+        import LimList from '/admin/structure/list/lim_list.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
@@ -53,7 +50,6 @@
 
                 html`
                     <div class="block text-bold text-xl mt-8 mb-4">${this.label} List</div>
-
                     <!-- border rounded -->
                     <div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
                         <table class="table-auto">
@@ -80,47 +76,46 @@
                                 };
                                 state = reactive(state);
                                 let columns = this.service.getColumns(row);
-                                console.log('columns', columns);
                                 window.addEventListener('local_content_changed', () => state.changed = Storage.hasLocalStorageItems(row.id));
                                 let i = 0;
                                 return html`
-                                <tr class="${()=>'border-t transition-all hover:bg-gray-100 relative border-b border-gray-200' + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
-                                    content_id="${row.id}" index="${row.data['.']}">
-                                    ${this.sortable ? `
+                                    <tr class="${() => 'border-t transition-all hover:bg-gray-100 relative border-b border-gray-200' + (state.changed ? ` border-x border-x-emerald-700` : ``)}"
+                                        content_id="${row.id}" index="${row.data['.']}">
+                                        ${this.sortable ? `
                                     <td class="hidden sm:table-cell sm:p-2 sm:pl-4 w-[20px]">
                                         <div class="flex flex-nowrap cursor-move _drag_grip">
                                             ${IconDrag}
                                         </div>
                                     </td>` : ''}
-                                    ${columns.map(value => html`
-                                    <td class="${()=>` p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
-                                        @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
-                                        <div class="h-16 w-16 rounded-full bg-blue-500">hello</div>
-                                        <span class="line-clamp-2">${value}</span>
-                                    </td>`)}
-                                    <td class="hidden sm:table-cell sm:w-[140px]">
-                                        <div class="${()=>`flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
-                                            <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                               @mousedown="${() => this.#editItem(row.id)}">
-                                                Edit
-                                            </a>
-                                            <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                    @mousedown="${() => state.confirmDelete = true}">
-                                                Delete
-                                            </button>
-                                        </div>
-                                        <div class="${()=>`absolute flex right-0 ` + (state.confirmDelete ? `` : `collapse`)}">
-                                            <div>
-                                                <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                        @mousedown="${() => state.confirmDelete = false}">Cancel</button>
-                                                <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                                        @mousedown="${element => this.#removeItem(element, rows, row)}">
-                                                    Confirm
+                                        ${columns.map(item => html`
+                                            <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
+                                                @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
+                                                ${item.mjs ? this.#until(item.mjs, item.id, item.value) : html`${item.value}`}
+                                            </td>`)}
+                                        <td class="hidden sm:table-cell sm:w-[140px]">
+                                            <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
+                                                <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                                   @mousedown="${() => this.#editItem(row.id)}">
+                                                    Edit
+                                                </a>
+                                                <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                                        @mousedown="${() => state.confirmDelete = true}">
+                                                    Delete
                                                 </button>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>`;
+                                            <div class="${() => `absolute flex right-0 ` + (state.confirmDelete ? `` : `collapse`)}">
+                                                <div>
+                                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                                            @mousedown="${() => state.confirmDelete = false}">Cancel
+                                                    </button>
+                                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
+                                                            @mousedown="${element => this.#removeItem(element, rows, row)}">
+                                                        Confirm
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>`;
                             })}`}
                             </tbody>
                         </table>
@@ -133,6 +128,43 @@
                     </label>
                 `(this)
                 this.#renderedCallback();
+            }
+
+            #until(mjs, id, value) {
+                let promise = import(mjs).then(module => {
+                    const instance = new module.default(id, value);
+                    return instance.toHtml();
+                });
+
+                // Generate a unique ID for the span element
+                const uniqueId = 'async-content-' + id + Math.floor(Math.random() * 1000);
+
+                // Create the wrapper with a unique ID and return its string representation
+                const placeholder = `<span id="${uniqueId}"></span>`;
+
+                // Once the promise resolves, update the content
+                promise.then(resolvedContent => {
+                    const wrapper = document.getElementById(uniqueId);
+                    if (wrapper) {
+                        wrapper.innerHTML = resolvedContent;  // Replace placeholder with resolved content
+                    }
+                }).catch(error => {
+                    const wrapper = document.getElementById(uniqueId);
+                    if (wrapper) {
+                        console.error(error);
+                        wrapper.innerHTML = 'Error loading content';
+                    }
+                });
+
+                // Return the placeholder string immediately
+                return placeholder;
+            }
+
+
+            #htmlEncode(input) {
+                const textArea = document.createElement("textarea");
+                textArea.innerText = input;
+                return textArea.innerHTML.split("<br>").join("\n");
             }
 
             #renderedCallback() {
