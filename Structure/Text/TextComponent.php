@@ -6,7 +6,7 @@ namespace Src\Structure\Text;
 
 use Confetti\Helpers\ComponentStandard;
 
-abstract class TextComponent extends ComponentStandard
+class TextComponent extends ComponentStandard
 {
     public function type(): string
     {
@@ -73,7 +73,12 @@ abstract class TextComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return '!!!!!';
+        return 'admin.structure.text.input';
+    }
+
+    public static function getViewAdminListItemMjs(): string
+    {
+        return '/admin/structure/text/list_item.mjs';
     }
 
     // Default will be used if no value is saved

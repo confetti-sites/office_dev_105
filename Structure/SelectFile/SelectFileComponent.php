@@ -11,7 +11,7 @@ use Confetti\Contracts\SelectModelInterface;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
 
-abstract class SelectFileComponent extends ComponentStandard implements SelectModelInterface, SelectFileInterface
+class SelectFileComponent extends ComponentStandard implements SelectModelInterface, SelectFileInterface
 {
     public function type(): string
     {
@@ -81,11 +81,17 @@ abstract class SelectFileComponent extends ComponentStandard implements SelectMo
         return $this->getOptions()[$file] ?? null;
     }
 
+    /**
+     * The return value is a full path from the root to a blade file.
+     */
     public function getViewAdminInput(): string
     {
         return 'admin.structure.select_file.input';
     }
 
+    /**
+     * The return value is a full path from the root to a mjs file.
+     */
     public static function getViewAdminListItemMjs(): string
     {
         return '/admin/structure/select_file/list_item.mjs';

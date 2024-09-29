@@ -1,5 +1,5 @@
 @php
-    /** @var \\Src\Structure\List\ListComponent $model */
+    /** @var \Src\Structure\List\ListComponent $model */
     /** @var \Confetti\Helpers\ComponentEntity $component */
     use \Src\Structure\List\ListComponent;
     use Confetti\Components\Map;
@@ -21,7 +21,7 @@
 @pushonce('end_of_body_list_component')
     <script type="module">
         import {Storage} from '/admin/assets/js/admin_service.mjs';
-        import LimList from '/admin/structure/list/lim_list.mjs';
+        import LimList from '/admin/structure/list/list.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 
@@ -90,7 +90,7 @@
                                         ${columns.map(item => html`
                                             <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
                                                 @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
-                                                ${item.mjs ? this.#loadMjs(item.mjs, item.id, item.value, item.decorations) : html`${item.value}`}
+                                                ${console.log(item.mjs) && item.mjs ? this.#loadMjs(item.mjs, item.id, item.value, item.decorations) : html`${item.value}`}
                                             </td>`)}
                                         <td class="hidden sm:table-cell sm:w-[140px]">
                                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">

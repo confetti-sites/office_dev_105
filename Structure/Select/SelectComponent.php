@@ -6,7 +6,7 @@ namespace Src\Structure\Select;
 
 use Confetti\Helpers\ComponentStandard;
 
-abstract class SelectComponent extends ComponentStandard
+class SelectComponent extends ComponentStandard
 {
     public function type(): string
     {
@@ -41,7 +41,12 @@ abstract class SelectComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return '!!!!!';
+        return 'admin.structure.select.input';
+    }
+
+    public static function getViewAdminListItemMjs(): string
+    {
+        return '/admin/structure/select/list_item.mjs';
     }
 
     /**

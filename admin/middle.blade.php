@@ -27,7 +27,7 @@
                 @continue
             @endif
             <div>
-                @include(method_exists($child, 'getViewAdminInput') ? $child->getViewAdminInput() : 'method_getViewAdminInput_not_found_in_' . $child::class, ['model' => $child])
+                @include($child->getViewAdminInput(), ['model' => $child])
             </div>
         @endforeach
         <div class="mt-16 mb-16 loader _loading-hide"

@@ -7,7 +7,7 @@ namespace Src\Structure\Color;
 use Confetti\Components\FilePatternArray;
 use Confetti\Helpers\ComponentStandard;
 
-abstract class ColorComponent extends ComponentStandard
+class ColorComponent extends ComponentStandard
 {
     public function type(): string
     {
@@ -36,11 +36,17 @@ abstract class ColorComponent extends ComponentStandard
         return '';
     }
 
+    /**
+     * The return value is a full path from the root to a blade file.
+     */
     public function getViewAdminInput(): string
     {
         return 'admin.structure.color.input';
     }
 
+    /**
+     * The return value is a full path from the root to a mjs file.
+     */
     public static function getViewAdminListItemMjs(): string
     {
         return '/admin/structure/color/list_item.mjs';

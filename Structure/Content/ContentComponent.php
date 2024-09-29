@@ -7,7 +7,7 @@ namespace Src\Structure\Content;
 use Confetti\Helpers\ComponentStandard;
 use Random\RandomException;
 
-abstract class ContentComponent extends ComponentStandard
+class ContentComponent extends ComponentStandard
 {
     public function type(): string
     {

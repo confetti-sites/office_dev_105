@@ -6,16 +6,11 @@ namespace Src\Structure\Image;
 
 use Confetti\Helpers\ComponentStandard;
 
-abstract class ImageComponent extends ComponentStandard
+class ImageComponent extends ComponentStandard
 {
     public function type(): string
     {
         return 'image';
-    }
-
-    public function getViewAdminInput(): string
-    {
-        return 'structure.image.input';
     }
 
     public function get(): array
@@ -52,6 +47,16 @@ abstract class ImageComponent extends ComponentStandard
     public function __toString(): string
     {
         return $this->getSource('standard') ?? '';
+    }
+
+    public function getViewAdminInput(): string
+    {
+        return 'admin.structure.image.input';
+    }
+
+    public static function getViewAdminListItemMjs(): string
+    {
+        return '/admin/structure/image/list_item.mjs';
     }
 
     public function getSource(string $media): ?string

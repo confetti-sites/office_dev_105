@@ -1,6 +1,6 @@
 <!--suppress HtmlUnknownAttribute, HtmlUnknownTag, PhpParamsInspection -->
 @php
-    /** @var \Confetti\Components\SelectFile $model */
+    /** @var \Src\Structure\SelectFile\SelectFileComponent $model */
     use Confetti\Helpers\ComponentStandard;
     $useLabelForRelative = $model->getComponent()->getDecoration('useLabelFor');
     $optionsValues = array_map(function ($option) {
@@ -15,7 +15,9 @@
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-original="{{ $model->get() }}"
-        data-default="{{  $model->getComponent()->getDecoration('default') }}"
+        data-default="{{ $model->getComponent()->getDecoration('default') }}"
+        data-has_match="{{ $model->getComponent()->getDecoration('match', 'matches') !== null ? 'true' : 'false' }}"
+        data-source="{{ (string) $model->getComponent()->source }}"
         data-required="{{ $model->getComponent()->getDecoration('required') }}"
         data-use_label_for="{{ $useLabelForRelative ? ComponentStandard::mergeIds($model->getId(), $useLabelForRelative) : '' }}"
         data-options='@json($optionsValues)'
@@ -90,6 +92,7 @@
                                 >${option.label}</option>
                             `)}
                         </select>
+                        ${this.dataset.has_match !== 'true' ? html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator match found. Please add \`->match(['/view/a_directory/*.blade.php'])\` in ${this.dataset.source}</p>` : ''}
                     </div>
                 `(this)
 
