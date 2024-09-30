@@ -7,22 +7,32 @@ export default class {
     /**
      * @param {string} id
      * @param {any} value
-     * @param decorations {object} Example:
+     * @param component {object}
+     * For example:
      * {
-     *     "label": {                          |
-     *      ^^^^^                              | The name of the decoration method
-     *         "label": "Choose your template" |
-     *          ^^^^^                          | The name of the parameter
-     *                   ^^^^^^^^^^^^^^^^^^^^  | The value given to the parameter
-     *     },                                  |
+     *   "decorations": {                     |
+     *     "label": {                         |
+     *      ^^^^^                             | The name of the decoration method
+     *        "label": "Choose your template" |
+     *         ^^^^^                          | The name of the parameter
+     *                  ^^^^^^^^^^^^^^^^^^^^  | The value given to the parameter
+     *     }
+     *   },
+     *   "key": "/model/view/features/select_file_basic/value-",
+     *   "source": {"directory": "view/features", "file": "select_file_basic.blade.php", "from": 5, "line": 2, "to": 28},
      * }
      */
-    constructor(id, value, decorations) {
+    constructor(id, value, component) {
         this.id = id;
         this.value = value;
     }
 
     toHtml() {
+        if (this.id === undefined || this.value === undefined) {
+            console.error(`The id is ${this.id} and value is ${this.value} select_file/list_item.mjs`);
+            return '';
+        }
+
         // Get all after the last slash
         let value = this.value.split('/').pop();
 

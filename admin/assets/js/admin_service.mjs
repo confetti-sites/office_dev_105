@@ -1,6 +1,12 @@
 export class Storage {
-    static saveToLocalStorage(id, data) {
+    static saveLocalStorageModel(id, data, component = null) {
         const value = JSON.stringify(data);
+
+        if (component) {
+            // We need to save the component: When we load the list, we need to know what the component details are.
+            localStorage.setItem('/component' + id, component);
+        }
+
         // Don't save if the value is the same
         if (localStorage.hasOwnProperty(id) && localStorage.getItem(id) === value) {
             return;
@@ -55,7 +61,7 @@ export class Storage {
         return this.getLocalStorageItems(prefix).length > 0;
     }
 
-    static removeLocalStorageItems(prefix) {
+    static removeLocalStorageModels(prefix) {
         // Remove from local storage
         // Get all items from local storage (exact match and prefix + `/`)
         let items = Object.keys(localStorage).filter(key => key === prefix || key.startsWith(prefix + '/'));
@@ -212,7 +218,7 @@ export class Storage {
             if (response.status >= 300) {
                 console.error("Error status: " + response.status);
             } else {
-                this.removeLocalStorageItems(id);
+                this.removeLocalStorageModels(id);
                 window.dispatchEvent(new Event('local_content_changed'));
                 if (then) {
                     then();
@@ -298,7 +304,7 @@ export class EventService {
                     if (data.patch_in !== undefined) {
                         let value = Storage.getFromLocalStorage(data.when.id);
                         value[data.patch_in] = body
-                        Storage.saveToLocalStorage(data.when.id, value);
+                        Storage.saveLocalStorageModel(data.when.id, value);
                     }
                     if (data.remove_when_done) {
                         localStorage.removeItem(listener.id);

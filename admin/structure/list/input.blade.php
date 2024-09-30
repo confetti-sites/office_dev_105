@@ -75,7 +75,7 @@
                                     changed: Storage.hasLocalStorageItems(row.id),
                                 };
                                 state = reactive(state);
-                                let columns = this.service.getColumns(row);
+                                let rowColumns = this.service.getColumns(row);
                                 window.addEventListener('local_content_changed', () => state.changed = Storage.hasLocalStorageItems(row.id));
                                 let i = 0;
                                 return html`
@@ -87,10 +87,10 @@
                                             ${IconDrag}
                                         </div>
                                     </td>` : ''}
-                                        ${columns.map(item => html`
+                                        ${rowColumns.map((item) => html`
                                             <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
                                                 @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
-                                                ${console.log(item.mjs) && item.mjs ? this.#loadMjs(item.mjs, item.id, item.value, item.decorations) : html`${item.value}`}
+                                                ${(item.component !== null ? this.#loadMjs(item.id, item.value, item.component) : '')}
                                             </td>`)}
                                         <td class="hidden sm:table-cell sm:w-[140px]">
                                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
@@ -130,9 +130,9 @@
                 this.#renderedCallback();
             }
 
-            #loadMjs(mjs, id, value, decorations) {
-                let promise = import(mjs).then(module => {
-                    const instance = new module.default(id, value, decorations);
+            #loadMjs(id, value, component) {
+                let promise = import(component.mjs).then(module => {
+                    const instance = new module.default(id, value, component);
                     return instance.toHtml();
                 });
 

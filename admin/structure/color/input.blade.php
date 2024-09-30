@@ -6,6 +6,7 @@
         data-help="{{ $model->getComponent()->getDecoration('help') }}"
         data-decorations='@json($model->getComponent()->getDecorations())'
         data-original="{{ $model->get() }}"
+        data-component="{{ json_encode($model->getComponent()) }}"
 ></color-component>
 
 @pushonce('end_of_body_color_component')
@@ -43,9 +44,9 @@
                 });
 
                 this.data.$on('value', value => {
-                    Storage.removeLocalStorageItems(this.dataset.id);
+                    Storage.removeLocalStorageModels(this.dataset.id);
                     if (value !== this.dataset.original) {
-                        Storage.saveToLocalStorage(this.dataset.id, value);
+                        Storage.saveLocalStorageModel(this.dataset.id, value, this.dataset.component);
                     }
                     this.#checkStyle();
                     window.dispatchEvent(new CustomEvent('local_content_changed'));

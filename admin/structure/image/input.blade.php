@@ -10,6 +10,7 @@
         data-value='@json($model->get())'
         data-service_api="{{ getServiceApi() }}"
         data-value='@json($model->get())'
+        data-component="{{ json_encode($model->getComponent()) }}"
 ></image-component>
 
 @pushonce('styles_cropper')
@@ -126,7 +127,7 @@
                         onActivate: async () => {
                             this.removeImage();
                             this.data.value = JSON.parse(this.dataset.value);
-                            Storage.removeLocalStorageItems(this.dataset.id);
+                            Storage.removeLocalStorageModels(this.dataset.id);
                             window.dispatchEvent(new CustomEvent('local_content_changed'));
                         }
                     },
@@ -136,7 +137,7 @@
                         closeOnActivate: true,
                         onActivate: async () => {
                             this.removeImage();
-                            Storage.saveToLocalStorage(this.dataset.id, this.valueFunction.remove);
+                            Storage.saveLocalStorageModel(this.dataset.id, this.valueFunction.remove, this.dataset.component);
                             window.dispatchEvent(new CustomEvent('local_content_changed'));
                         }
                     },
@@ -199,7 +200,7 @@
                     }));
                     response = await response;
                     // Set image as loaded to render the cropper. Set src
-                    Storage.saveToLocalStorage(id, {original: response[0]['original']});
+                    Storage.saveLocalStorageModel(id, {original: response[0]['original']}, this.dataset.component);
                     this.saveCropped(id, this.dataset.label);
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
@@ -289,12 +290,12 @@
                     width: Math.round(this.cropDetails.width),
                     height: Math.round(this.cropDetails.height),
                 }
-                Storage.removeLocalStorageItems(id);
+                Storage.removeLocalStorageModels(id);
                 if (value !== this.dataset.original) {
-                    Storage.saveToLocalStorage(id, value);
+                    Storage.saveLocalStorageModel(id, value, this.dataset.component);
                 }
                 window.dispatchEvent(new CustomEvent('local_content_changed'));
-                Storage.saveToLocalStorage(`/listener${id}.cropped`, {
+                Storage.saveLocalStorageModel(`/listener${id}.cropped`, {
                     title: 'Process: ' + label,
                     remove_when_done: true,
                     when: {

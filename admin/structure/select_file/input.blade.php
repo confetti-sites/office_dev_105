@@ -21,6 +21,7 @@
         data-required="{{ $model->getComponent()->getDecoration('required') }}"
         data-use_label_for="{{ $useLabelForRelative ? ComponentStandard::mergeIds($model->getId(), $useLabelForRelative) : '' }}"
         data-options='@json($optionsValues)'
+        data-component="{{ json_encode($model->getComponent()) }}"
 ></select-file-component>
 
 <select-file-children-templates>
@@ -64,9 +65,9 @@
                 });
 
                 this.data.$on('value', value => {
-                    Storage.removeLocalStorageItems(this.dataset.id);
+                    Storage.removeLocalStorageModels(this.dataset.id);
                     if (value !== this.dataset.original) {
-                        Storage.saveToLocalStorage(this.dataset.id, value);
+                        Storage.saveLocalStorageModel(this.dataset.id, value, this.dataset.component);
                     }
                     this.#checkStyle();
                     this.#useLabelFor();
@@ -101,6 +102,11 @@
                         icon: IconUndo,
                         closeOnActivate: true,
                         onActivate: async () => {
+                            // !!!!!! BUG: when nothing is selected, the value is an empty string
+                            // the selector will be empty instead of the first option
+                            // !!!!
+                            // !!!!
+                            // !!!!
                             this.querySelector('select').value = this.dataset.original;
                             this.querySelector('select').dispatchEvent(new Event('change'));
                             data.value = this.dataset.original;

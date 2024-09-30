@@ -14,11 +14,7 @@ export default class LimList {
      */
     getColumns(row) {
         // Do not update the original row by reference
-        let withoutReference = this.columns.map(function (column) {
-            row.data[column.id]['decorations'] = column['decorations'];
-            row.data[column.id]['mjs'] = column['mjs'];
-            return row.data[column.id];
-        });
+        let withoutReference = this.columns.map(column => row.data[column.id]);
         delete withoutReference['.'];
         return withoutReference;
     }
@@ -35,11 +31,15 @@ export default class LimList {
             const data = {};
             data['.'] = item.data['.'];
             for (const column of this.columns) {
-                data[column.id] = {}
-                if (localStorage.hasOwnProperty(item.id + '/' + column.id)) {
-                    data[column.id]['value'] = JSON.parse(localStorage.getItem(item.id + '/' + column.id));
-                } else {
-                    data[column.id]['value'] = column.default_value;
+                data[column.id] = {id: column.id};
+                // In the list we can have normal values and file pointer values (suffixed -)
+                let suffix = '';
+                if (!localStorage.hasOwnProperty('/component' + item.id + '/' + column.id)) {
+                    suffix = '-';
+                }
+                data[column.id]['component'] = JSON.parse(localStorage.getItem('/component' + item.id + '/' + column.id + suffix));
+                if (localStorage.hasOwnProperty(item.id + '/' + column.id + suffix)) {
+                    data[column.id]['value'] = JSON.parse(localStorage.getItem(item.id + '/' + column.id + suffix));
                 }
             }
             rowsWithNew.push({id: item.id, data: data});
@@ -52,9 +52,15 @@ export default class LimList {
             for (const column of this.columns) {
                 // Use localstorage if available
                 const id = rowRaw.id + '/' + column.id;
-                data[column.id] = rowRaw.data[column.id]
-                if (localStorage.hasOwnProperty(id)) {
-                    data[column.id]['value'] = JSON.parse(localStorage.getItem(id));
+                data[column.id] = rowRaw.data[column.id];
+                // In the list we can have normal values and file pointer values (suffixed -)
+                let suffix = '';
+                if (!localStorage.hasOwnProperty(id)) {
+                    suffix = '-';
+                }
+                if (localStorage.hasOwnProperty(id + suffix)) {
+                    data[column.id]['value'] = JSON.parse(localStorage.getItem(id + suffix));
+                    data[column.id]['component'] = JSON.parse(localStorage.getItem('/component' + id + suffix));
                 }
             }
             // The `.` value is from the item itself, mainly used for sorting
@@ -69,6 +75,7 @@ export default class LimList {
         result = result.sort((a, b) => {
             return b.data['.'] - a.data['.'];
         })
+
         return result;
     }
 

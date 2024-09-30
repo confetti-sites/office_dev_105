@@ -344,10 +344,12 @@ class ListComponent
 
                 foreach ($row->getChildren() as $cKey => $child) {
                     if ($cKey === self::keyToArgumentKey($key)) {
-                        $target = self::getDataFromChild($child, $keys);
-                        $variable = [
-                            'id'    => $target?->getId(),
-                            'value' => $target?->get(),
+                        $target              = self::getDataFromChild($child, $keys);
+                        $variable            = [
+                            // We need to set this for every value, because columns can have different component values
+                            'component' => $target?->getComponent(),
+                            'id'        => $target?->getId(),
+                            'value'     => $target?->get(),
                         ];
                         $data[$column['id']] = $variable;
                     }
@@ -415,25 +417,18 @@ class ListComponent
 
     private static function getDefinedColumns(self $model): ?array
     {
-        $definedColumns = $model->getComponent()->getDecoration('columns');
-        if (!$definedColumns) {
-            return null;
-        }
-
-        return array_map(static function (array $column) use ($model) {
-            // find default value (from getDecoration) from children
-            $class = modelById($model->getId() . '/' . $column['id']);
-            $defaultValue = $class->getComponent()->getDecoration('default');
-            $mjs = method_exists($class, 'getViewAdminListItemMjs') ? $class::getViewAdminListItemMjs() : null;
-
-            return [
-                'decorations'   => $class->getComponent()->getDecorations(),
-                'default_value' => $defaultValue,
-                'id'            => $column['id'],
-                'label'         => $column['label'],
-                'mjs'           => $mjs,
-            ];
-        }, $definedColumns);
+        return $model->getComponent()->getDecoration('columns');
+//        $definedColumns = $model->getComponent()->getDecoration('columns');
+//        if (!$definedColumns) {
+//            return null;
+//        }
+//
+//        return array_map(static function (array $column) use ($model) {
+//            return [
+//                'id'            => $column['id'],
+//                'label'         => $column['label'],
+//            ];
+//        }, $definedColumns);
     }
 
     private static function getDefaultColumns(self $model): array
@@ -454,14 +449,10 @@ class ListComponent
         return array_map(static function (ComponentEntity $column) {
             $key = explode('/', $column->key);
             $key = end($key);
-            $mjs = method_exists($column->generates, 'getViewAdminListItemMjs') ? $column->generates::getViewAdminListItemMjs() : null;
 
             return [
-                'decorations'   => $column->getDecorations(),
-                'default_value' => $column->getDecoration('default'),
-                'id'            => $key,
-                'label'         => titleByKey($key),
-                'mjs'           => $mjs,
+                'id'        => $key,
+                'label'     => titleByKey($key),
             ];
         }, $columns);
     }

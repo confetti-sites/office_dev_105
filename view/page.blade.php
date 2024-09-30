@@ -5,5 +5,3 @@
     @php($contentRow->hidden('selected_feature')->label('Type'))
     @include($row->getView(), ['model' => $row])
 @endforeach
-
-

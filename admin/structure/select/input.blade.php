@@ -7,6 +7,7 @@
     data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
     data-help="{{ $model->getComponent()->getDecoration('help') }}"
     data-options='@json($model->getComponent()->getDecoration('options'))'
+    data-component="{{ json_encode($model->getComponent()) }}"
 ></select-component>
 
 @pushonce('end_of_body_select_component')
@@ -30,9 +31,9 @@
                 });
 
                 data.$on('value', value => {
-                    Storage.removeLocalStorageItems(this.dataset.id);
+                    Storage.removeLocalStorageModels(this.dataset.id);
                     if (value !== this.dataset.original) {
-                        Storage.saveToLocalStorage(this.dataset.id, value);
+                        Storage.saveLocalStorageModel(this.dataset.id, value, this.dataset.component);
                     }
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });

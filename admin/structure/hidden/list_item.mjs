@@ -28,6 +28,6 @@ export default class {
     }
 
     toHtml() {
-        return `<div class="h-5 w-5 rounded-full" id="${this.id}" style="background-color:${this.value}"></div>`;
+        return `${this.value}`;
     }
 }

@@ -3,6 +3,7 @@
 <hidden-component
         data-id="{{ $model->getId() }}"
         data-original="{{ $model->get() }}"
+        data-component="{{ json_encode($model->getComponent()) }}"
 ></hidden-component>
 
 @pushonce('end_of_body_hidden_component')
@@ -17,9 +18,9 @@
                 });
 
                 data.$on('value', value => {
-                    Storage.removeLocalStorageItems(this.dataset.id);
+                    Storage.removeLocalStorageModels(this.dataset.id);
                     if (value !== this.dataset.original) {
-                        Storage.saveToLocalStorage(this.dataset.id, value);
+                        Storage.saveLocalStorageModel(this.dataset.id, value, this.dataset.component);
                     }
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
