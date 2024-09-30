@@ -13,13 +13,13 @@
 
 @pushonce('end_of_body_text_component')
     <style>
-        @import url('/admin/structure/text/lim_text.css');
+        @import url('/admin/structure/text/editor_text.css');
     </style>
     <script type="module">
         import {html} from 'https://esm.sh/@arrow-js/core';
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {LimText, Validators} from '/admin/structure/text/lim_text.mjs'
+        import {LimText, Validators} from '/admin/structure/text/editor_text.mjs'
         import Underline from '/admin/structure/content/tools/underline.mjs';
         import Bold from '/admin/structure/content/tools/bold.mjs';
         import Italic from '/admin/structure/content/tools/italic.mjs';
