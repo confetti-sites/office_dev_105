@@ -53,6 +53,11 @@ export class LimText extends Paragraph {
             // Use JSON.stringify to encode special characters
             localStorage.setItem(this.config.contentId, JSON.stringify(value));
         }
+        // Store the component entity in local storage
+        // We need to know which component is saved in the local storage
+        // That way we can show the data in the list view
+        localStorage.setItem('/component' + this.config.contentId, this.config.componentEntity);
+        // Trigger an event to let the other code know that the content has changed
         window.dispatchEvent(new Event('local_content_changed'));
     }
 

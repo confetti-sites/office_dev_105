@@ -8,6 +8,7 @@
         data-help="{{ $model->getComponent()->getDecoration('help') }}"
         data-decorations='@json($model->getComponent()->getDecorations())'
         data-original='@json($model->get())'
+        data-component="{{ json_encode($model->getComponent()) }}"
 ></text-component>
 
 @pushonce('end_of_body_text_component')
@@ -94,6 +95,9 @@
                                     Validators.validateMinLength,
                                     Validators.validateMaxLength,
                                 ],
+                                // componentEntity is our own component object.
+                                // We can use this to get the label, default value, etc.
+                                componentEntity: this.dataset.component,
                             }
                         },
                     },

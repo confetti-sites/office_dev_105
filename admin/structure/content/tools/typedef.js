@@ -73,6 +73,7 @@
  * @property {object} decorations
  * @property {function[]} validators
  * @property {array} renderSettings
+ * @property {string} componentEntity
  */
 
 /**
