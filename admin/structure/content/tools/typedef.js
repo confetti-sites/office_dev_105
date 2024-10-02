@@ -54,6 +54,7 @@
  * @property {Data} data
  * E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
  * @property {object} decorations
+ * @property {object} defaultData
  * @property {string} defaultBlock
  * @property {boolean} inlineToolbar
  * @property {object} tools

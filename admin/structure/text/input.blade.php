@@ -106,7 +106,7 @@
                                  * E.g. /model/homepage/title
                                  * @type {string}
                                  **/
-                                contentId: this.dataset.id,
+                                contentId: this.id,
                                 // This is the value stored in the database.
                                 // Lim is using LocalStorage to store the data before it is saved/published.
                                 originalValue: this.original,

@@ -14,7 +14,7 @@ class ContentComponent extends ComponentStandard
         return 'content';
     }
 
-    public function get(): array
+    public function get(): ?array
     {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
@@ -23,14 +23,8 @@ class ContentComponent extends ComponentStandard
         }
 
         // Get default value
-        $component = $this->getComponent();
-        $default = $component->getDecoration('default');
-        if ($default) {
-            return $this->getEditorDataByText($default);
-        }
-
         if (!$this->contentStore->canFake()) {
-            return [];
+            return null;
         }
 
         return $this->getEditorDataByText($this->generateLoremIpsum());
@@ -38,7 +32,12 @@ class ContentComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return '!!!';
+        return 'admin.structure.content.input';
+    }
+
+    public static function getViewAdminListItemMjs(): string
+    {
+        return '/admin/structure/content/list_item.mjs';
     }
 
     /**
@@ -86,6 +85,11 @@ class ContentComponent extends ComponentStandard
         return $this;
     }
 
+    public function getDefaultData(): array
+    {
+        return $this->getEditorDataByText($this->getComponent()->getDecoration('default'));
+    }
+
     private function getEditorDataByText(mixed $value): array
     {
         return [
@@ -98,7 +102,7 @@ class ContentComponent extends ComponentStandard
                     ],
                 ],
             ],
-            'version' => '2.29.1'
+            'version' => '2.29.1',
         ];
     }
 

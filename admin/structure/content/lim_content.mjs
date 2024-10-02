@@ -44,6 +44,11 @@ export default class LimContent {
             toSave = JSON.stringify(value);
         }
         localStorage.setItem(this.editor.configuration.id, toSave);
+        // Store the component entity in local storage
+        // We need to know which component is saved in the local storage
+        // That way we can show the data in the list view
+        localStorage.setItem('/component' + this.editor.configuration.id, this.editor.configuration.config.componentEntity);
+        // Trigger an event to let the other code know that the content has changed
         window.dispatchEvent(new Event('local_content_changed'));
     }
 
@@ -65,8 +70,8 @@ export default class LimContent {
             icon: IconUndo,
             closeOnActivate: true,
             onActivate: async () => {
-                this.editor.blocks.render(this.editor.configuration.originalData);
-                this.storageData = this.editor.configuration.originalData;
+                this.editor.blocks.render(this.editor.configuration.originalData || this.editor.configuration.defaultData);
+                this.storageData = this.editor.configuration.originalData || this.editor.configuration.defaultData;
                 this.updateValueChangedStyle();
             }}],
         );

@@ -6,28 +6,32 @@ export default class {
 
     /**
      * @param {string} id
+     *
+     *  For example:
+     * {
+     *   blocks: [{
+     *     data: {
+     *        text: "The&nbsp;value"
+     *     },
+     *     id: "jfJmb5kz8l",
+     *     type: "paragraph",
+     *     length: 1,
+     *   }],
+     * }
      * @param {any} value
      * @param component {object}
-     * For example:
-     * {
-     *   "decorations": {                     |
-     *     "label": {                         |
-     *      ^^^^^                             | The name of the decoration method
-     *        "label": "Choose your template" |
-     *         ^^^^^                          | The name of the parameter
-     *                  ^^^^^^^^^^^^^^^^^^^^  | The value given to the parameter
-     *     }
-     *   },
-     *   "key": "/model/view/features/select_file_basic/value-",
-     *   "source": {"directory": "view/features", "file": "select_file_basic.blade.php", "from": 5, "line": 2, "to": 28},
-     * }
      */
     constructor(id, value, component) {
         this.id = id;
-        this.value = value;
+        this.value = value.blocks[0].data.text;
+        // If the value is to long it will be truncated
+        // so the data in the html is not to long
+        if (this.value.length > 200) {
+            this.value = this.value.substring(0, 200) + "...";
+        }
     }
 
     toHtml() {
-        return `list_item.mjs not implemented`;
+        return `<span class="line-clamp-2">${this.value}</span>`;
     }
 }

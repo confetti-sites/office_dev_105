@@ -47,7 +47,6 @@
                     if (this.id !== event.detail['toId'] || event.detail['value'] === this.data.value) {
                         return;
                     }
-                    console.log('hidden-component: value_pushed', event.detail['value']);
                     this.data.value = event.detail['value'];
                 });
 
