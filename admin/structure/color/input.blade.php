@@ -36,8 +36,8 @@
             defaultWhenNoDefaultColor = '#ffffff';
             id
             label
-            data
             original
+            data
             decorations = {
                 help: {help: null},
                 default: {default: null},

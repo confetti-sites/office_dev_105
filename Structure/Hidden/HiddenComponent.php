@@ -13,24 +13,13 @@ class HiddenComponent extends ComponentStandard
         return 'hidden';
     }
 
-    public function get(): string
+    public function get(): ?string
     {
         if ($this->contentStore === null) {
             throw new \RuntimeException('This component is only used as a reference. Therefore, you can\'t call __toString() or get().');
         }
         // Get saved value
-        $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
-        if ($content !== null) {
-            return $content;
-        }
-
-        // Get default value
-        $component = $this->getComponent();
-        if ($component->hasDecoration('default')) {
-            return $component->getDecoration('default')['value'];
-        }
-
-        return '';
+        return $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
     }
 
     public function getViewAdminInput(): string
@@ -47,6 +36,15 @@ class HiddenComponent extends ComponentStandard
      * The Label is used as a title for the admin panel
      */
     public function label(string $label): self
+    {
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        return $this;
+    }
+
+    /**
+     * The default value will be used if no value is saved
+     */
+    public function default(string $default): self
     {
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
