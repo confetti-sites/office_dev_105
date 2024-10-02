@@ -60,7 +60,6 @@
             'bold',
             'underline',
             'italic',
-            'link',
         ];
 
         customElements.define('content-component', class extends HTMLElement {
@@ -117,7 +116,7 @@
                     placeholder: this.decorations.placeholder.placeholder,
                     originalData: this.original,
                     data: localStorage.hasOwnProperty('{{ $model->getId() }}') ? JSON.parse(localStorage.getItem(this.id)) : this.original,
-                    // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
+                    // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"}};
                     decorations: this.decorations,
                     defaultData: this.default_data,
                     /** Use minHeight 100, because the default is too big. */

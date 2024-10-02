@@ -59,24 +59,6 @@ class ContentComponent extends ComponentStandard
     }
 
     /**
-     * Minimum number of characters
-     */
-    public function min(int $min): self
-    {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
-        return $this;
-    }
-
-    /**
-     * Maximum number of characters
-     */
-    public function max(int $max): self
-    {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
-        return $this;
-    }
-
-    /**
      * Placeholder is used as a hint for the user
      */
     public function placeholder(string $placeholder): self
