@@ -28,6 +28,11 @@ export default class {
     }
 
     toHtml() {
-        return `list_item.mjs not implemented`;
+        if (this.id === undefined || this.value === undefined) {
+            console.error(`The id is ${this.id} and value is ${this.value} select/list_item.mjs`);
+            return '';
+        }
+
+        return `${this.value}`;
     }
 }

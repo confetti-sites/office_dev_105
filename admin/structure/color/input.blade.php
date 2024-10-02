@@ -3,9 +3,8 @@
 <color-component
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
-        data-help="{{ $model->getComponent()->getDecoration('help') }}"
-        data-decorations='@json($model->getComponent()->getDecorations())'
-        data-original="{{ $model->get() }}"
+        data-decorations='{{ json_encode($model->getComponent()->getDecorations()) }}'
+        data-original="{{ json_encode($model->get()) }}"
         data-component="{{ json_encode($model->getComponent()) }}"
 ></color-component>
 
@@ -34,32 +33,46 @@
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
         customElements.define('color-component', class extends HTMLElement {
-            data
             defaultWhenNoDefaultColor = '#ffffff';
+            id
+            label
+            data
+            original
+            decorations = {
+                help: {help: null},
+                default: {default: null},
+            }
 
-            connectedCallback() {
+            constructor() {
+                super();
+                this.id = this.dataset.id;
+                this.label = this.dataset.label;
+                this.original = JSON.parse(this.dataset.original);
+                this.decorations = JSON.parse(this.dataset.decorations);
                 this.data = reactive({
                     // If no value is given, we will save defaultWhenNoDefaultColor when the element is loaded
-                    value: Storage.getFromLocalStorage(this.dataset.id) || this.dataset.original || '',
+                    value: Storage.getFromLocalStorage(this.id) || this.original
                 });
+            }
 
+            connectedCallback() {
                 this.data.$on('value', value => {
-                    Storage.removeLocalStorageModels(this.dataset.id);
-                    if (value !== this.dataset.original) {
-                        Storage.saveLocalStorageModel(this.dataset.id, value, this.dataset.component);
+                    Storage.removeLocalStorageModels(this.id);
+                    if (value !== this.original) {
+                        Storage.saveLocalStorageModel(this.id, value, this.dataset.component);
                     }
                     this.#checkStyle();
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
 
                 html`
-                    <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
-                    <input class="${() => ` block w-full ${this.data.value === this.dataset.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg`}"
+                    <label class="block text-bold text-xl mt-8 mb-4">${this.label}</label>
+                    <input class="${() => ` block w-full ${this.data.value === this.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg`}"
                            type="color"
-                           name="${this.dataset.id}"
+                           name="${this.id}"
                            value="${() => this.data.value}"
                            @input="${(e) => this.data.value = e.target.value}">
-                    ${this.dataset.help ? `<p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>` : ''}
+                    ${this.decorations.help.help ? `<p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}
                 `(this)
 
                 new Toolbar(this).init([{
@@ -67,26 +80,22 @@
                         icon: IconUndo,
                         closeOnActivate: true,
                         onActivate: async () => {
-                            if (this.dataset.original === '') {
-                                this.dataset.original = this.defaultWhenNoDefaultColor
-                            }
-                            this.querySelector('input').value = this.dataset.original;
+                            this.querySelector('input').value = this.original;
                             this.querySelector('input').dispatchEvent(new Event('change'));
-                            this.data.value = this.dataset.original;
+                            this.data.value = this.original || this.defaultWhenNoDefaultColor;
                         }
                     }],
                 );
 
-                // If no value is saved and not already known as a new value,
-                // set the default value and make is saved to the local storage
-                if (this.data?.value === '') {
-                    this.data.value = this.defaultWhenNoDefaultColor;
+                // We need to save some value (with component) to show it in the list
+                if (this.data.value === null) {
+                    this.data.value = this.decorations.default.default ? this.decorations.default.default : this.defaultWhenNoDefaultColor;
                 }
             }
 
             #checkStyle() {
                 const input = this.querySelector('input');
-                if (this.data.value === this.dataset.original) {
+                if (this.data.value === this.original) {
                     input.classList.remove('border-emerald-300');
                     input.classList.add('border-gray-200');
                 } else {

@@ -4,10 +4,8 @@
         data-id="{{ $model->getId() }}"
         data-id_slug="{{ slugId($model->getId()) }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
-        data-placeholder="{{ $model->getComponent()->getDecoration('placeholder') }}"
-        data-help="{{ $model->getComponent()->getDecoration('help') }}"
-        data-decorations='@json($model->getComponent()->getDecorations())'
-        data-original='@json($model->get())'
+        data-decorations='{{ json_encode($model->getComponent()->getDecorations()) }}'
+        data-original="{{ json_encode($model->get()) }}"
         data-component="{{ json_encode($model->getComponent()) }}"
 ></text-component>
 
@@ -23,21 +21,51 @@
         import Underline from '/admin/structure/content/tools/underline.mjs';
         import Bold from '/admin/structure/content/tools/bold.mjs';
         import Italic from '/admin/structure/content/tools/italic.mjs';
+        import {Storage} from '/admin/assets/js/admin_service.mjs';
 
         /**
          * These are the settings for the editor.js
          */
         customElements.define('text-component', class extends HTMLElement {
+            id
+            id_slug
+            label
+            data
+            decorations = {
+                help: {help: null},
+                default: {default: null},
+                placeholder: {placeholder: null},
+                min: {min: null},
+                max: {max: null},
+            }
+            original
+            component
+
+            constructor() {
+                super();
+                this.id = this.dataset.id;
+                this.id_slug = this.dataset.id_slug;
+                this.label = this.dataset.label;
+                this.decorations = JSON.parse(this.dataset.decorations);
+                this.original = JSON.parse(this.dataset.original);
+                this.component = JSON.parse(this.dataset.component);
+
+                // Here we set the default value if it is not set.
+                if (this.original === null && !Storage.hasLocalStorageItem(this.id)) {
+                    Storage.saveLocalStorageModel(this.id, this.decorations.default.default ? this.decorations.default.default : '', this.dataset.component);
+                }
+            }
+
             connectedCallback() {
                 html`
                     <div class="block text-bold text-xl mt-8 mb-4">
-                        ${this.dataset.label}
+                        ${this.label}
                     </div>
                     <div class="_input px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
-                        <span id="_${this.dataset.id_slug}"></span>
+                        <span id="_${this.id_slug}"></span>
                     </div>
                     <p class="mt-2 text-sm text-red-600 _error"></p>
-                    <p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>
+                    ${this.decorations.help.help ? html`<p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}
                 `(this)
                 this.renderedCallback();
             }
@@ -48,8 +76,8 @@
                  */
                 new EditorJS({
                     // Id of Element that should contain Editor instance
-                    holder: '_' + this.dataset.id_slug,
-                    placeholder: this.dataset.placeholder,
+                    holder: '_' + this.id_slug,
+                    placeholder: this.decorations.placeholder.placeholder,
                     // Use minHeight 0, because the default is too big
                     minHeight: 0,
                     // We keep using the therm "paragraph",
@@ -81,12 +109,12 @@
                                 contentId: this.dataset.id,
                                 // This is the value stored in the database.
                                 // Lim is using LocalStorage to store the data before it is saved/published.
-                                originalValue: JSON.parse(this.dataset.original),
+                                originalValue: this.original,
                                 /** @type {HTMLElement} */
                                 component: this,
                                 // E.g. {"label":{"label":"Title"},"default":{"default":"Confetti CMS"},"min":{"min":1},"max":{"max":20}};
                                 /** @type {object} */
-                                decorations: JSON.parse(this.dataset.decorations),
+                                decorations: this.decorations,
                                 // Feel free to add more validators
                                 // The config object is the object on this level.
                                 // The value is the value of the input field.

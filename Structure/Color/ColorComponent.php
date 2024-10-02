@@ -14,7 +14,7 @@ class ColorComponent extends ComponentStandard
         return 'color';
     }
 
-    public function get(bool $random = false): string
+    public function get(bool $random = false): ?string
     {
         // Get saved value
         $value = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
@@ -22,18 +22,12 @@ class ColorComponent extends ComponentStandard
             return htmlspecialchars($value);
         }
 
-        // Get default value
-        $component = $this->getComponent();
-        if ($component->hasDecoration('default')) {
-            return htmlspecialchars($component->getDecoration('default'));
-        }
-
         if ($random) {
             // Generate random color
             return sprintf('#%06X', random_int(0, 0xFFFFFF));
         }
 
-        return '';
+        return null;
     }
 
     /**

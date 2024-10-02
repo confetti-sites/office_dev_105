@@ -1,13 +1,14 @@
-@php /** @var \Confetti\Components\Select $model */ @endphp
-<!--suppress HtmlUnknownTag, HtmlUnknownAttribute -->
+@php /** @var \Src\Structure\Select\SelectComponent $model */ @endphp
+        <!--suppress HtmlUnknownTag, HtmlUnknownAttribute, JSUnresolvedReference -->
 <select-component
-    data-id="{{ $model->getId() }}"
-    data-original="{{ $model->get() }}"
-    data-label="{{ $model->getComponent()->getLabel() }}"
-    data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
-    data-help="{{ $model->getComponent()->getDecoration('help') }}"
-    data-options='@json($model->getComponent()->getDecoration('options'))'
-    data-component="{{ json_encode($model->getComponent()) }}"
+        data-id="{{ $model->getId() }}"
+        data-original="{{ $model->get() }}"
+        data-label="{{ $model->getComponent()->getLabel() }}"
+        data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
+        data-help="{{ $model->getComponent()->getDecoration('help') }}"
+        data-options='@json($model->getComponent()->getDecoration('options'))'
+        data-component="{{ json_encode($model->getComponent()) }}"
+        data-source="{{ $model->getComponent()->source }}"
 ></select-component>
 
 @pushonce('end_of_body_select_component')
@@ -44,10 +45,11 @@
                             name="${this.dataset.id}"
                             @input="${e => data.value = e.target.value}">
                         ${this.dataset.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
-                        ${options.map(option =>
-                                `<option value="${option.id}" ${option.id === data.value ? 'selected' : ''}>${option.label}</option>`
-                        ).join('')}
+                        ${options === null ? '' : options.map(option =>
+                            `<option value="${option.id}" ${option.id === data.value ? 'selected' : ''}>${option.label}</option>`
+                        )}
                     </select>
+                    ${options === null ? html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`options\` found. Please add \`->options(['first', 'second'])\` in ${this.dataset.source}</p>` : ''}
                     ${this.dataset.help ? `<p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>` : ''}
                 `(this)
 

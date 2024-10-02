@@ -68,6 +68,7 @@ export class Storage {
         // Remove items from local storage
         items.forEach(item => {
             localStorage.removeItem(item);
+            localStorage.removeItem('/component' + item);
         });
     }
 
@@ -130,6 +131,7 @@ export class Storage {
                 // Remove saved items from local storage
                 items.forEach(item => {
                     localStorage.removeItem(item.id);
+                    localStorage.removeItem('/component' + item.id);
                 });
                 window.dispatchEvent(new Event('local_content_changed'));
                 window.dispatchEvent(new CustomEvent('state', {

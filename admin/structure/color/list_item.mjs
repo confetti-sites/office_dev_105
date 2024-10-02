@@ -24,6 +24,9 @@ export default class {
      */
     constructor(id, value, component) {
         this.id = id;
+        if (value === null && component.decorations.default !== undefined) {
+            this.value = component.decorations.default.default;
+        }
         this.value = value;
     }
 

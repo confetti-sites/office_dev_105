@@ -12,16 +12,14 @@
 @endphp
 <!--suppress HtmlUnknownTag -->
 <select-file-component
+        data-component="{{ json_encode($model->getComponent()) }}"
+        data-decorations='{{ json_encode($model->getComponent()->getDecorations()) }}'
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
-        data-original="{{ $model->get() }}"
-        data-default="{{ $model->getComponent()->getDecoration('default') }}"
-        data-has_match="{{ $model->getComponent()->getDecoration('match', 'matches') !== null ? 'true' : 'false' }}"
+        data-original="{{ json_encode($model->get()) }}"
         data-source="{{ (string) $model->getComponent()->source }}"
-        data-required="{{ $model->getComponent()->getDecoration('required') }}"
         data-use_label_for="{{ $useLabelForRelative ? ComponentStandard::mergeIds($model->getId(), $useLabelForRelative) : '' }}"
-        data-options='@json($optionsValues)'
-        data-component="{{ json_encode($model->getComponent()) }}"
+        data-options="{{ json_encode($optionsValues) }}"
 ></select-file-component>
 
 <select-file-children-templates>
@@ -51,23 +49,55 @@
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
         customElements.define('select-file-component', class extends HTMLElement {
+            id
+            label
             data
+            original
+            source
+            decorations = {
+                help: {help: null},
+                default: {default: null},
+                match: {matches: null},
+                required: {required: null},
+            }
+            use_label_for
+            options = {
+                source_path: '',
+                label: '',
+            }
+
+            constructor() {
+                super();
+                this.id = this.dataset.id;
+                this.label = this.dataset.label;
+                this.original = JSON.parse(this.dataset.original);
+                this.source = this.dataset.source;
+                this.decorations = JSON.parse(this.dataset.decorations);
+                this.use_label_for = this.dataset.use_label_for;
+                this.options = Object.values(JSON.parse(this.dataset.options));
+                this.data = reactive({
+                    // If no value is given, we will save defaultWhenNoDefaultColor when the element is loaded
+                    value: Storage.getFromLocalStorage(this.id) || this.original
+                });
+                // If no value is saved in the local storage, we will save the default value
+                if (this.data.value === null) {
+                    this.data.value = this.decorations.default.default ? this.decorations.default.default : '';
+                    Storage.saveLocalStorageModel(this.id, this.data.value, this.dataset.component);
+                }
+            }
 
             connectedCallback() {
-                this.data = reactive({
-                    value: Storage.getFromLocalStorage(this.dataset.id) || this.dataset.original || '',
-                });
-
-                document.addEventListener('DOMContentLoaded', () => {
+                // We need to wait for the element to be rendered
+                setTimeout(() => {
                     this.#checkStyle();
                     this.#useLabelFor();
                     this.#showChildren();
-                });
+                }, 1);
 
                 this.data.$on('value', value => {
-                    Storage.removeLocalStorageModels(this.dataset.id);
-                    if (value !== this.dataset.original) {
-                        Storage.saveLocalStorageModel(this.dataset.id, value, this.dataset.component);
+                    Storage.removeLocalStorageModels(this.id);
+                    if (value !== this.original) {
+                        Storage.saveLocalStorageModel(this.id, value, this.dataset.component);
                     }
                     this.#checkStyle();
                     this.#useLabelFor();
@@ -75,26 +105,21 @@
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
 
-                const options = Object.values(JSON.parse(this.dataset.options));
-                html`
-                    <div><!-- @this, can this div be removed? -->
-                        <div class="block text-bold text-xl mt-8 mb-4">
-                            ${this.dataset.label}
-                        </div>
-                        <select class="w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50"
-                                style="-webkit-appearance: none !important;-moz-appearance: none !important;" {{-- Remove default icon --}}
-                                name="${this.dataset.id}"
-                                @change="${(e) => this.data.value = e.target.value}"
-                        >
-                            ${this.dataset.required === 'true' ? '' : html`<option selected>Nothing selected</option>`}
-                            ${options.map(option => html`
-                                <option value="${option.source_path}"
-                                        ${this.data.value === option.source_path ? 'selected' : ''}
-                                >${option.label}</option>
-                            `)}
-                        </select>
-                        ${this.dataset.has_match !== 'true' ? html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator match found. Please add \`->match(['/view/a_directory/*.blade.php'])\` in ${this.dataset.source}</p>` : ''}
+                html`<div class="block text-bold text-xl mt-8 mb-4">
+                        ${this.label}
                     </div>
+                    <select class="w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50"
+                            style="-webkit-appearance: none !important;-moz-appearance: none !important;" {{-- Remove default icon --}}
+                            name="${this.id}"
+                            @change="${(e) => this.data.value = e.target.value}"
+                    >
+                        ${this.decorations.required !== undefined && this.decorations.required.required === 'true' ? '' : html`<option selected>Nothing selected</option>`}
+                        ${this.options.map(option => html`
+                            <option value="${option.source_path}" ${this.data.value === option.source_path ? 'selected' : ''}
+                            >${option.label}</option>
+                        `)}
+                    </select>
+                    ${this.decorations.match.matches !== null ? '' : html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`match\` found. Please add \`->match(['/view/a_directory/*.blade.php'])\` in ${this.source}</p>`}
                 `(this)
 
                 new Toolbar(this).init([{
@@ -102,14 +127,9 @@
                         icon: IconUndo,
                         closeOnActivate: true,
                         onActivate: async () => {
-                            // !!!!!! BUG: when nothing is selected, the value is an empty string
-                            // the selector will be empty instead of the first option
-                            // !!!!
-                            // !!!!
-                            // !!!!
-                            this.querySelector('select').value = this.dataset.original;
+                            this.querySelector('select').value = this.original || this.decorations.default.default;
                             this.querySelector('select').dispatchEvent(new Event('change'));
-                            data.value = this.dataset.original;
+                            data.value = this.original || this.decorations.default.default;
                         }
                     }],
                 );
@@ -117,7 +137,7 @@
 
             #checkStyle() {
                 const select = this.querySelector('select');
-                if (this.data.value === this.dataset.original) {
+                if (this.data.value === this.original) {
                     select.classList.remove('border-emerald-300');
                     select.classList.add('border-gray-200');
                 } else {
@@ -130,15 +150,14 @@
             // With the use_label_for attribute, we can send
             // the value of the select element to another component
             #useLabelFor() {
-                if (!this.dataset.use_label_for) {
-                    console.log('use_label_for is not set');
+                if (!this.use_label_for) {
                     return;
                 }
 
                 const select = this.querySelector('select');
                 window.dispatchEvent(new CustomEvent('value_pushed', {
                     detail: {
-                        toId: this.dataset.use_label_for,
+                        toId: this.use_label_for,
                         value: select.options[select.selectedIndex].innerHTML,
                     }
                 }));

@@ -28,21 +28,10 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
         $this->contentStore->joinPointer($this->relativeContentId);
     }
 
-    public function get(): string
+    public function get(): ?string
     {
         // Get saved value
-        $filePath = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
-        if ($filePath !== null) {
-            return $filePath;
-        }
-        $component = $this->getComponent();
-
-        // Get default view
-        $filePath = $component->getDecoration('default');
-        if ($filePath === null) {
-            return '';
-        }
-        return $filePath;
+        return $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
     }
 
     public function getView(): ?string

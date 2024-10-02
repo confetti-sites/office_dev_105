@@ -13,7 +13,7 @@ class SelectComponent extends ComponentStandard
         return 'select';
     }
 
-    public function get(): string
+    public function get(bool $random = false): string
     {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
@@ -31,7 +31,7 @@ class SelectComponent extends ComponentStandard
 
         // Get random value from all options
         $options = $component->getDecoration('options');
-        if (count($options) === 0) {
+        if (empty($options) || !$random) {
             return '';
         }
 
