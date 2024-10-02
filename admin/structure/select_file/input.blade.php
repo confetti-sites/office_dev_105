@@ -16,10 +16,10 @@
         data-decorations='{{ json_encode($model->getComponent()->getDecorations()) }}'
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
+        data-options="{{ json_encode($optionsValues) }}"
         data-original="{{ json_encode($model->get()) }}"
         data-source="{{ (string) $model->getComponent()->source }}"
         data-use_label_for="{{ $useLabelForRelative ? ComponentStandard::mergeIds($model->getId(), $useLabelForRelative) : '' }}"
-        data-options="{{ json_encode($optionsValues) }}"
 ></select-file-component>
 
 <select-file-children-templates>

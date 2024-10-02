@@ -1,13 +1,11 @@
 @php /** @var \Src\Structure\Select\SelectComponent $model */ @endphp
         <!--suppress HtmlUnknownTag, HtmlUnknownAttribute, JSUnresolvedReference -->
 <select-component
-        data-id="{{ $model->getId() }}"
-        data-original="{{ $model->get() }}"
-        data-label="{{ $model->getComponent()->getLabel() }}"
-        data-required="{{ $model->getComponent()->getDecoration('required') ? 'true' : ''}}"
-        data-help="{{ $model->getComponent()->getDecoration('help') }}"
-        data-options='@json($model->getComponent()->getDecoration('options'))'
         data-component="{{ json_encode($model->getComponent()) }}"
+        data-decorations='{{ json_encode($model->getComponent()->getDecorations()) }}'
+        data-id="{{ $model->getId() }}"
+        data-label="{{ $model->getComponent()->getLabel() }}"
+        data-original="{{ json_encode($model->get()) }}"
         data-source="{{ $model->getComponent()->source }}"
 ></select-component>
 
@@ -25,32 +23,58 @@
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
         customElements.define('select-component', class extends HTMLElement {
-            connectedCallback() {
-                const options = JSON.parse(this.dataset.options)
-                let data = reactive({
-                    value: Storage.getFromLocalStorage(this.dataset.id) || this.dataset.original || '',
-                });
+            id
+            label
+            data
+            original
+            source
+            decorations = {
+                help: {help: null},
+                default: {default: null},
+                options: {options: null},
+            }
 
-                data.$on('value', value => {
-                    Storage.removeLocalStorageModels(this.dataset.id);
-                    if (value !== this.dataset.original) {
-                        Storage.saveLocalStorageModel(this.dataset.id, value, this.dataset.component);
+            constructor() {
+                super();
+                this.id = this.dataset.id;
+                this.label = this.dataset.label;
+                this.original = JSON.parse(this.dataset.original);
+                this.source = this.dataset.source;
+                this.decorations = JSON.parse(this.dataset.decorations);
+                this.data = reactive({
+                    // If no value is given, we will save defaultWhenNoDefaultColor when the element is loaded
+                    value: Storage.getFromLocalStorage(this.id) || this.original
+                });
+                // If no value is saved in the local storage, we will save the default value
+                if (this.data.value === null) {
+                    this.data.value = this.decorations.default.default ? this.decorations.default.default : '';
+                    Storage.saveLocalStorageModel(this.id, this.data.value, this.dataset.component);
+                }
+            }
+
+            connectedCallback() {
+                this.data.$on('value', value => {
+                    Storage.removeLocalStorageModels(this.id);
+                    if (value !== this.original) {
+                        Storage.saveLocalStorageModel(this.id, value, this.dataset.component);
                     }
                     window.dispatchEvent(new CustomEvent('local_content_changed'));
                 });
 
+                const options = this.decorations.options.options;
+
                 html`
-                    <label class="block text-bold text-xl mt-8 mb-4">${this.dataset.label}</label>
-                    <select class="${() => `appearance-none pr-5 pl-3 py-3 bg-gray-50 border-2 ${data.value === this.dataset.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg block w-full`}"
-                            name="${this.dataset.id}"
-                            @input="${e => data.value = e.target.value}">
-                        ${this.dataset.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
-                        ${options === null ? '' : options.map(option =>
-                            `<option value="${option.id}" ${option.id === data.value ? 'selected' : ''}>${option.label}</option>`
+                    <label class="block text-bold text-xl mt-8 mb-4">${this.label}</label>
+                    <select class="${() => `appearance-none pr-5 pl-3 py-3 bg-gray-50 border-2 ${this.data.value === this.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg block w-full`}"
+                            name="${this.id}"
+                            @input="${e => this.data.value = e.target.value}">
+                        ${this.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
+                        ${this.decorations.options.options === null ? '' : options.map(option =>
+                            `<option value="${option.id}" ${option.id === this.data.value ? 'selected' : ''}>${option.label}</option>`
                         )}
                     </select>
-                    ${options === null ? html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`options\` found. Please add \`->options(['first', 'second'])\` in ${this.dataset.source}</p>` : ''}
-                    ${this.dataset.help ? `<p class="mt-2 text-sm text-gray-500">${this.dataset.help}</p>` : ''}
+                    ${options === null ? html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`options\` found. Please add \`->options(['first', 'second'])\` in ${this.source}</p>` : ''}
+                    ${this.decorations.help !== undefined ? `<p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}
                 `(this)
 
                 new Toolbar(this).init([{
@@ -58,9 +82,9 @@
                         icon: IconUndo,
                         closeOnActivate: true,
                         onActivate: async () => {
-                            this.querySelector('select').value = this.dataset.original;
+                            this.querySelector('select').value = this.original;
                             this.querySelector('select').dispatchEvent(new Event('change'));
-                            data.value = this.dataset.original;
+                            this.data.value = this.original || this.decorations.default.default;
                         }
                     }],
                 );
