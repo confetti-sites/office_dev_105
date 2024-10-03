@@ -88,16 +88,14 @@ export default class LimContent {
             events = [events];
         }
 
-        for (const event of events) {
-            if (event.type !== 'block-changed') {
-                continue;
-            }
-
-            // Update data
-            this.storageData = await api.saver.save();
-            // Update the style
-            this.updateValueChangedStyle();
+        if (events.length === 0) {
+            return;
         }
+
+        // Update data
+        this.storageData = await api.saver.save();
+        // Update the style
+        this.updateValueChangedStyle();
     }
 
     updateValueChangedStyle() {

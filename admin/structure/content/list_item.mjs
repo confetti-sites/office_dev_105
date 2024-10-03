@@ -23,7 +23,16 @@ export default class {
      */
     constructor(id, value, component) {
         this.id = id;
-        this.value = value.blocks[0].data.text;
+        this.value = '';
+
+        // Loop through all the blocks until a valid text is found
+        for (let i = 0; i < value.blocks.length; i++) {
+            if (value.blocks[i].data.text !== undefined) {
+                this.value = value.blocks[i].data.text;
+                break; // Stop the loop once a valid value is found
+            }
+        }
+
         // If the value is to long it will be truncated
         // so the data in the html is not to long
         if (this.value.length > 200) {
