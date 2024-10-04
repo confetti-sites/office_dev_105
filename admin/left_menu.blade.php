@@ -23,7 +23,7 @@
                 {{-- Where are only interested in the children that are maps (not a list or value field). --}}
                 @php($children = method_exists($firstChild, 'getChildren') ? array_filter($firstChild->getChildren(), fn($c) => $c instanceof Map) : [])
                 @if(!empty($children))
-                    <ul class=" mt-2 pl-4 space-y-2 overflow-hidden font-medium text-gray-500"
+                    <ul class=" mt-2 pl-4 overflow-hidden font-medium text-gray-500"
                         aria-label="submenu">
                         @foreach($children as $secondChild)
                             @php($isCurrent = $secondChild->getId() === $currentContentId)

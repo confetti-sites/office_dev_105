@@ -20,8 +20,17 @@
             @php($component = $child->getComponent())
             @if($component->type === 'root')
                 <a href="/admin{{ $child->getId() }}">
-                    <div class="flex items-center justify-between w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-600 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
+                    <div class="flex mt-10 p-5 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
                         {{ $component->getLabel() }}
+                        <div class="ml-auto">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            <div>
+                            </div>
+                        </div>
                     </div>
                 </a>
                 @continue
@@ -36,13 +45,16 @@
                 import {Storage} from '/admin/assets/js/admin_service.mjs';
                 import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-                const toPublish = () => Storage.getLocalStorageItems('{{ $id }}').length;
                 const id = '{{ $id }}';
-                let state = {count: toPublish(), confirmDelete: false, waiting: false};
+                let state = {count: count(), confirmDelete: false, waiting: false};
                 state = reactive(state);
                 window.addEventListener('local_content_changed', () => {
-                    state.count = toPublish();
+                    state.count = count();
                 });
+
+                function count() {
+                    return Storage.getLocalStorageItems('{{ $id }}').length;
+                }
 
                 function addLoaderBtn(element) {
                     element.classList.add('_loading-blur');
