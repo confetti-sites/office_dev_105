@@ -89,14 +89,16 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
     // Label is used as a title for the admin panel
     public function label(string $label): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // Default value is used when the user hasn't saved any value
     public function default(string $default): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
@@ -134,7 +136,8 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
      */
     public function useLabelFor(string $useLabelFor): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 }

@@ -290,13 +290,15 @@
                     width: Math.round(this.cropDetails.width),
                     height: Math.round(this.cropDetails.height),
                 }
+                // Get file name from the original image
+                const fileName = value.original.split('/').pop();
                 Storage.removeLocalStorageModels(id);
                 if (value !== this.dataset.original) {
                     Storage.saveLocalStorageModel(id, value, this.dataset.component);
                 }
                 window.dispatchEvent(new CustomEvent('local_content_changed'));
                 Storage.saveLocalStorageModel(`/listener${id}.cropped`, {
-                    title: 'Process: ' + label,
+                    title: 'Process ' + label + ': ' + fileName,
                     remove_when_done: true,
                     when: {
                         event: 'saving',

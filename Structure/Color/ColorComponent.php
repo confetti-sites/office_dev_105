@@ -49,21 +49,24 @@ class ColorComponent extends ComponentStandard
     // Label is used as a title for the admin panel
     public function label(string $label): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // Help is used as a description for the admin panel
     public function help(string $help): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // Default value is used when the user hasn't saved any value
     public function default(string $default): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 }

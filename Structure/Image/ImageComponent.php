@@ -39,7 +39,6 @@ class ImageComponent extends ComponentStandard
         $random = rand(0, 10000);
 
         return [
-            'standard' => "https://picsum.photos/$width/$height?random=" . $random,
             'original' => "https://picsum.photos/$width/$height?random=" . $random,
         ];
     }
@@ -99,7 +98,8 @@ class ImageComponent extends ComponentStandard
      */
     public function label(string $label): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
@@ -108,7 +108,8 @@ class ImageComponent extends ComponentStandard
      */
     public function widthPx(int $widthPx): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
@@ -117,7 +118,8 @@ class ImageComponent extends ComponentStandard
      */
     public function ratio(int $width, int $height): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 

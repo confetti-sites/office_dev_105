@@ -79,42 +79,48 @@ class TextComponent extends ComponentStandard
     // Default will be used if no value is saved
     public function default(string $default): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // Label is used as a field title in the admin panel
     public function label(string $label): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // Minimum number of characters
     public function min(int $min): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // Maximum number of characters
     public function max(int $max): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // The placeholder text for the input field
     public function placeholder(string $placeholder): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
     // Help text is shown below the input field
     public function help(string $help): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 

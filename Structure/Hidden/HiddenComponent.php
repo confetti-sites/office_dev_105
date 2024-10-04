@@ -37,7 +37,8 @@ class HiddenComponent extends ComponentStandard
      */
     public function label(string $label): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 
@@ -46,7 +47,8 @@ class HiddenComponent extends ComponentStandard
      */
     public function default(string $default): self
     {
-        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        // The arguments must be hardcoded, any additional
+        // values can only be used within this class.
         return $this;
     }
 }

@@ -80,7 +80,7 @@ export class Storage {
      */
     static saveFromLocalStorage(serviceApiUrl, id, specific = false) {
         return EventService.handleEvent('saving', id).then(r => {
-            // Loop over every item in r, if it contains instanceof Error, return false
+            // Loop over every item in r, if it contains instanceof Error, filter it out
             if (r.some(item => item instanceof Error)) {
                 return false;
             }
@@ -305,6 +305,9 @@ export class EventService {
                     }
                     if (data.patch_in !== undefined) {
                         let value = Storage.getFromLocalStorage(data.when.id);
+                        if (value === null) {
+                            console.error(`Cannot add patch_in to local storage. No value found. ${data.when.id} not found in local storage.`);
+                        }
                         value[data.patch_in] = body
                         Storage.saveLocalStorageModel(data.when.id, value);
                     }
@@ -345,12 +348,11 @@ export class EventService {
         if (r.status >= 400) {
             // get body
             r.json().then(json => {
-                console.error("Error status: " + r.status + " " + json.error);
                 window.dispatchEvent(new CustomEvent('state', {
                     detail: {
                         id: id + '.call',
                         state: 'error',
-                        title: json.error,
+                        title: json.error || json.message,
                     }
                 }));
             });
@@ -383,11 +385,7 @@ export class Media {
                 console.error("Error status: " + response.status);
                 let message = "Error uploading image: ";
                 await response.json().then(json => {
-                    if (json.message) {
-                        message = json.message;
-                    } else {
-                        message += response.statusText;
-                    }
+                    message = `${json.message} ${response.statusText}`;
                 });
 
                 window.dispatchEvent(new CustomEvent('state', {

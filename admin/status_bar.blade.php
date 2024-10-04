@@ -12,7 +12,7 @@
             };
 
             /**
-             * @type {Array<{id: string, state: string, title: string}>}
+             * @type {Array<{id: string, state: string, title: string, originalTitle: string}>}
              */
             statuses
 
@@ -34,9 +34,14 @@
                 // If status already exists, update it. Otherwise, add it.
                 const statusIndex = this.statuses.findIndex(status => status.id === id);
                 if (statusIndex !== -1) {
-                    this.statuses[statusIndex] = {id, state, title: title || this.statuses[statusIndex].title};
+                    let originalTitle = this.statuses[statusIndex].originalTitle;
+                    let message = originalTitle;
+                    if (title && message !== title) {
+                        message += '<br><span class="text-gray-400">' + title + '</span>';
+                    }
+                    this.statuses[statusIndex] = {id, state, title: message, originalTitle: originalTitle};
                 } else {
-                    this.statuses = [...this.statuses, {id, state, title}];
+                    this.statuses = [...this.statuses, {id, state, title, originalTitle: title}];
                 }
                 this.#renderStatus();
                 // If the state is a success, remove it after 2 seconds
@@ -46,7 +51,7 @@
                     timeoutId = setTimeout(() => {
                         this.statuses = this.statuses.filter(status => status.id !== id || status.state !== this.state.success);
                         this.#renderStatus();
-                    }, 2000);
+                    }, 4000);
                 }
             }
 
