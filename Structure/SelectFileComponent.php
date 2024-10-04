@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure\SelectFile;
+namespace Src\Structure;
 
 use Confetti\Components\FilePatternArray;
 use Confetti\Components\Map;

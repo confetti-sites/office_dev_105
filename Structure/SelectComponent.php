@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure\Select;
+namespace Src\Structure;
 
 use Confetti\Helpers\ComponentStandard;
 

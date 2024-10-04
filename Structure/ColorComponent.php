@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure\Color;
+namespace Src\Structure;
 
-use Confetti\Components\FilePatternArray;
 use Confetti\Helpers\ComponentStandard;
 
 class ColorComponent extends ComponentStandard

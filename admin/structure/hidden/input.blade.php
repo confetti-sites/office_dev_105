@@ -1,5 +1,5 @@
-@php /** @var \Src\Structure\Hidden\HiddenComponent $model */ @endphp
-<!--suppress HtmlUnknownTag -->
+@php /** @var \Src\Structure\HiddenComponent $model */ @endphp
+        <!--suppress HtmlUnknownTag -->
 <hidden-component
         data-id="{{ $model->getId() }}"
         data-original="{{ json_encode($model->get()) }}"

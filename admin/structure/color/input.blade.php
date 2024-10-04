@@ -1,4 +1,4 @@
-@php /** @var \Src\Structure\Color\ColorComponent $model */ @endphp
+@php /** @var \Src\Structure\ColorComponent $model */ @endphp
         <!--suppress HtmlUnknownTag -->
 <color-component
         data-id="{{ $model->getId() }}"

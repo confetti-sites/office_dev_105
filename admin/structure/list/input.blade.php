@@ -1,9 +1,7 @@
 @php
-    /** @var \Src\Structure\List\ListComponent $model */
+    /** @var \Src\Structure\ListComponent $model */
     /** @var \Confetti\Helpers\ComponentEntity $component */
-    use \Src\Structure\List\ListComponent;
-    use Confetti\Components\Map;
-    use Confetti\Helpers\ComponentStandard;
+    use Src\Structure\ListComponent;
     $component = $model->getComponent();
     [$columns, $originalRows] = ListComponent::getColumnsAndRows($model);
 @endphp

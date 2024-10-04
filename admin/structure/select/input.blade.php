@@ -1,4 +1,4 @@
-@php /** @var \Src\Structure\Select\SelectComponent $model */ @endphp
+@php /** @var \Src\Structure\SelectComponent $model */ @endphp
         <!--suppress HtmlUnknownTag, HtmlUnknownAttribute, JSUnresolvedReference -->
 <select-component
         data-component="{{ json_encode($model->getComponent()) }}"
@@ -70,8 +70,8 @@
                             @input="${e => this.data.value = e.target.value}">
                         ${this.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
                         ${this.decorations.options.options === null ? '' : options.map(option =>
-                            `<option value="${option.id}" ${option.id === this.data.value ? 'selected' : ''}>${option.label}</option>`
-                        )}
+                    `<option value="${option.id}" ${option.id === this.data.value ? 'selected' : ''}>${option.label}</option>`
+                )}
                     </select>
                     ${options === null ? html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`options\` found. Please add \`->options(['first', 'second'])\` in ${this.source}</p>` : ''}
                     ${this.decorations.help !== undefined ? `<p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}

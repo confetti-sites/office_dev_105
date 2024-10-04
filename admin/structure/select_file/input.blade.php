@@ -1,6 +1,6 @@
 <!--suppress HtmlUnknownAttribute, HtmlUnknownTag, PhpParamsInspection -->
 @php
-    /** @var \Src\Structure\SelectFile\SelectFileComponent $model */
+    /** @var \Src\Structure\SelectFileComponent $model */
     use Confetti\Helpers\ComponentStandard;
     $useLabelForRelative = $model->getComponent()->getDecoration('useLabelFor');
     $optionsValues = array_map(function ($option) {
@@ -10,7 +10,7 @@
         ];
     }, $model->getOptions());
 @endphp
-<!--suppress HtmlUnknownTag -->
+        <!--suppress HtmlUnknownTag -->
 <select-file-component
         data-component="{{ json_encode($model->getComponent()) }}"
         data-decorations='{{ json_encode($model->getComponent()->getDecorations()) }}'
@@ -23,13 +23,13 @@
 ></select-file-component>
 
 <select-file-children-templates>
-@foreach($model->getOptions() as $pointerChild)
-    @foreach($pointerChild->getChildren() as $grandChild)
-        <template show_when="{{ $grandChild->getComponent()->source->getPath() }}">
-            @include($grandChild->getViewAdminInput(), ['model' => $grandChild])
-        </template>
+    @foreach($model->getOptions() as $pointerChild)
+        @foreach($pointerChild->getChildren() as $grandChild)
+            <template show_when="{{ $grandChild->getComponent()->source->getPath() }}">
+                @include($grandChild->getViewAdminInput(), ['model' => $grandChild])
+            </template>
+        @endforeach
     @endforeach
-@endforeach
 </select-file-children-templates>
 <template-result></template-result>
 
@@ -37,6 +37,7 @@
     <style>
         select-file-component {
             /* Remove the default focus-visible border */
+
             & ._select_file:focus {
                 outline: none;
             }
@@ -110,7 +111,7 @@
                     </div>
                     <select class="w-full pr-5 pl-3 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50"
                             style="-webkit-appearance: none !important;-moz-appearance: none !important;" {{-- Remove default icon --}}
-                            name="${this.id}"
+                name="${this.id}"
                             @change="${(e) => this.data.value = e.target.value}"
                     >
                         ${this.decorations.required !== undefined && this.decorations.required.required === 'true' ? '' : html`<option selected>Nothing selected</option>`}

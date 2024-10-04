@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure\Hidden;
+namespace Src\Structure;
 
 use Confetti\Helpers\ComponentStandard;
 
