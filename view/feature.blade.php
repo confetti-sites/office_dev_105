@@ -1,4 +1,4 @@
-@php($page = newRoot(new \model\page)->label('Page'))
+@php($page = newRoot(new \model\feature)->label('Features'))
 
 @foreach($page->list('feature')->columns(['selected_feature', 'type-/value'])->sortable()->get() as $contentRow)
     @php($row = $contentRow->selectFile('type')->match(['/view/features/*.blade.php'])->default('/view/features')->useLabelFor('../selected_feature'))

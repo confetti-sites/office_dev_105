@@ -61,15 +61,18 @@ export class Storage {
         return this.getLocalStorageItems(prefix).length > 0;
     }
 
-    static removeLocalStorageModels(prefix) {
-        // Remove from local storage
-        // Get all items from local storage (exact match and prefix + `/`)
-        let items = Object.keys(localStorage).filter(key => key === prefix || key.startsWith(prefix + '/'));
-        // Remove items from local storage
-        items.forEach(item => {
-            localStorage.removeItem(item);
-            localStorage.removeItem('/component' + item);
-        });
+    static removeLocalStorageModels(model) {
+        let prefixes = [model, '/component' + model, '/listener' + model];
+
+        for (let prefix of prefixes) {
+            // Remove from local storage
+            // Get all items from local storage (exact match and prefix + `/`)
+            let items = Object.keys(localStorage).filter(key => key === prefix || key.startsWith(prefix + '/'));
+            // Remove items from local storage
+            items.forEach(item => {
+                localStorage.removeItem(item);
+            });
+        }
     }
 
     /**
@@ -132,6 +135,7 @@ export class Storage {
                 items.forEach(item => {
                     localStorage.removeItem(item.id);
                     localStorage.removeItem('/component' + item.id);
+                    localStorage.removeItem('/listener' + item.id);
                 });
                 window.dispatchEvent(new Event('local_content_changed'));
                 window.dispatchEvent(new CustomEvent('state', {
