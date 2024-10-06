@@ -35,6 +35,10 @@ export class Storage {
         return localStorage.hasOwnProperty(id);
     }
 
+    static hasLocalStorageItems(prefix) {
+        return this.getLocalStorageItems(prefix).length > 0;
+    }
+
     /**
      * @param {string} prefix
      * @returns {{id: string, value: string}[]}
@@ -55,10 +59,6 @@ export class Storage {
                     "value": localStorage.getItem(key)
                 };
             });
-    }
-
-    static hasLocalStorageItems(prefix) {
-        return this.getLocalStorageItems(prefix).length > 0;
     }
 
     static removeLocalStorageModels(model) {

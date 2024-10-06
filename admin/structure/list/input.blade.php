@@ -11,8 +11,8 @@
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-sortable="{{ $model->getComponent()->getDecoration('sortable') ? 'true' : '' }}"
-        data-columns='@json($columns)'
-        data-original_rows='@json($originalRows)'
+        data-columns="{{ json_encode($columns) }}"
+        data-original_rows="{{ json_encode($originalRows) }}"
         data-service_api="{{ getServiceApi() }}"
 ></list-component>
 

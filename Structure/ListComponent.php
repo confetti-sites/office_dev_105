@@ -52,6 +52,11 @@ class ListComponent
         return 'admin.structure.list.input';
     }
 
+    public function getViewAdminPreview(): string
+    {
+        return '/admin/structure/list/preview.mjs';
+    }
+
     /**
      * The label of the list
      */
@@ -382,7 +387,7 @@ class ListComponent
         }
     }
 
-    private static function getDataFromChild(ComponentStandard|Map $child, array $keys): ComponentStandard|Map|null
+    private static function getDataFromChild(ComponentStandard|Map|ListComponent $child, array $keys): ComponentStandard|Map|ListComponent|null
     {
         if (empty($keys)) {
             return $child;
