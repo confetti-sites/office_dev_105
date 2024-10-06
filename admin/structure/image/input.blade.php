@@ -14,7 +14,7 @@
 @endpushonce
 @pushonce('end_of_body_image_component')
     <script type="module">
-        import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
+        import {Toolbar} from '/admin/assets/js/editor.mjs';
         import {IconTrash, IconUndo, IconUpload, Media, Storage} from '/admin/assets/js/admin_service.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         // https://fengyuanchen.github.io/cropperjs

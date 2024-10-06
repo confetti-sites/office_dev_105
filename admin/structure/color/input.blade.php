@@ -27,7 +27,7 @@
         }
     </style>
     <script type="module">
-        import {Toolbar} from '/admin/assets/js/lim_editor.mjs';
+        import {Toolbar} from '/admin/assets/js/editor.mjs';
         import {Storage} from '/admin/assets/js/admin_service.mjs';
         import {IconUndo} from 'https://esm.sh/@codexteam/icons';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';

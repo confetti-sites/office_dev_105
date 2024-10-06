@@ -12,14 +12,14 @@
 
 @pushonce('end_of_body_content_component')
     <style>
-        @import url('/admin/structure/content/lim_content.css');
+        @import url('/admin/structure/content/editor_content.css');
     </style>
     <script type="module">
         import {html} from 'https://esm.sh/@arrow-js/core';
 
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import LimContent from '/admin/structure/content/lim_content.mjs';
+        import LimContent from '/admin/structure/content/editor_content.mjs';
 
         /** Block tools */
         /**

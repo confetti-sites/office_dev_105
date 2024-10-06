@@ -2,7 +2,7 @@
 
 /** @see https://github.com/codex-team/icons */
 import {IconEtcVertical, IconUndo} from 'https://esm.sh/@codexteam/icons';
-import {Toolbar} from "/admin/assets/js/lim_editor.mjs";
+import {Toolbar} from "/admin/assets/js/editor.mjs";
 
 export default class LimContent {
     /**
