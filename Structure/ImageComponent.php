@@ -53,9 +53,9 @@ class ImageComponent extends ComponentStandard
         return 'admin.structure.image.input';
     }
 
-    public static function getViewAdminListItemMjs(): string
+    public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/image/list_item.mjs';
+        return '/admin/structure/image/preview.mjs';
     }
 
     public function getSource(string $media): ?string

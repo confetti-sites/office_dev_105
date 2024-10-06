@@ -129,7 +129,7 @@
             }
 
             #loadMjs(id, value, component) {
-                let promise = import(component.mjs).then(module => {
+                let promise = import(component.preview).then(module => {
                     const instance = new module.default(id, value, component);
                     return instance.toHtml();
                 });

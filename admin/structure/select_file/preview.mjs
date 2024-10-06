@@ -29,7 +29,7 @@ export default class {
 
     toHtml() {
         if (this.id === undefined || this.value === undefined) {
-            console.error(`The id is ${this.id} and value is ${this.value} select_file/list_item.mjs`);
+            console.error(`The id is ${this.id} and value is ${this.value} select_file/preview.mjs`);
             return '';
         }
 

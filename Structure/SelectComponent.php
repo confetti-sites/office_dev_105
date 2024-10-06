@@ -38,9 +38,9 @@ class SelectComponent extends ComponentStandard
         return 'admin.structure.select.input';
     }
 
-    public static function getViewAdminListItemMjs(): string
+    public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/select/list_item.mjs';
+        return '/admin/structure/select/preview.mjs';
     }
 
     /**

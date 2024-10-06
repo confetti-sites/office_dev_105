@@ -81,9 +81,9 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
     /**
      * The return value is a full path from the root to a mjs file.
      */
-    public static function getViewAdminListItemMjs(): string
+    public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/select_file/list_item.mjs';
+        return '/admin/structure/select_file/preview.mjs';
     }
 
     // Label is used as a title for the admin panel

@@ -27,9 +27,9 @@ class HiddenComponent extends ComponentStandard
         return 'admin.structure.hidden.input';
     }
 
-    public static function getViewAdminListItemMjs(): string
+    public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/hidden/list_item.mjs';
+        return '/admin/structure/hidden/preview.mjs';
     }
 
     /**

@@ -71,9 +71,9 @@ class TextComponent extends ComponentStandard
         return 'admin.structure.text.input';
     }
 
-    public static function getViewAdminListItemMjs(): string
+    public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/text/list_item.mjs';
+        return '/admin/structure/text/preview.mjs';
     }
 
     // Default will be used if no value is saved

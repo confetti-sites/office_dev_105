@@ -35,9 +35,9 @@ class ContentComponent extends ComponentStandard
         return 'admin.structure.content.input';
     }
 
-    public static function getViewAdminListItemMjs(): string
+    public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/content/list_item.mjs';
+        return '/admin/structure/content/preview.mjs';
     }
 
     /**

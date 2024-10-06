@@ -28,6 +28,6 @@ export default class {
     }
 
     toHtml() {
-        return `list_item.mjs not implemented`;
+        return `preview.mjs not implemented`;
     }
 }
