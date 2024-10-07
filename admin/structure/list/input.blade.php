@@ -158,13 +158,6 @@
                 return placeholder;
             }
 
-
-            #htmlEncode(input) {
-                const textArea = document.createElement("textarea");
-                textArea.innerText = input;
-                return textArea.innerHTML.split("<br>").join("\n");
-            }
-
             #renderedCallback() {
                 if (this.sortable) {
                     this.service.makeDraggable(this.getElementsByTagName('tbody')[0]);

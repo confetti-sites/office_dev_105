@@ -30,6 +30,13 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
 
     public function get(): ?string
     {
+        // For now, we do not allow to select itself. Than we create a recursive 'from' value. For example:
+        // /model/feature/feature~2HEF1WN1HS/type-/value-/value-/value-/value-/value-/value-/value-/value-/
+        // count slashes and throw an exception if the count is higher than 20
+        if (substr_count($this->parentContentId . '/' . $this->relativeContentId, '/') > 20) {
+            throw new \RuntimeException("Recursive structure detected. For now, we do not allow SelectFileComponent to select with the same selection as it is in. Current selection: $this->parentContentId/$this->relativeContentId");
+        }
+
         // Get saved value
         return $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
     }
