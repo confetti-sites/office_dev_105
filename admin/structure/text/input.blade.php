@@ -1,4 +1,4 @@
-@php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
+@php /** @var \Src\Structure\TextComponent $model */ @endphp
 <!--suppress HtmlUnknownTag -->
 <text-component
         data-id="{{ $model->getId() }}"

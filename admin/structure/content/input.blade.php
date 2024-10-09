@@ -1,5 +1,5 @@
-@php /** @var \Confetti\Helpers\ComponentStandard $model */ @endphp
-<!--suppress HtmlUnknownTag -->
+@php /** @var \Src\Structure\ContentComponent $model */ @endphp
+        <!--suppress HtmlUnknownTag -->
 <content-component
         data-id="{{ $model->getId() }}"
         data-id_slug="{{ slugId($model->getId()) }}"

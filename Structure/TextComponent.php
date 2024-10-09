@@ -79,48 +79,54 @@ class TextComponent extends ComponentStandard
     // Default will be used if no value is saved
     public function default(string $default): self
     {
-        // The arguments must be hardcoded, any additional
-        // values can only be used within this class.
+        // The arguments must be hardcoded,
+        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
 
     // Label is used as a field title in the admin panel
     public function label(string $label): self
     {
-        // The arguments must be hardcoded, any additional
-        // values can only be used within this class.
+        // The arguments must be hardcoded,
+        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
 
     // Minimum number of characters
     public function min(int $min): self
     {
-        // The arguments must be hardcoded, any additional
-        // values can only be used within this class.
+        // The arguments must be hardcoded,
+        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
 
     // Maximum number of characters
     public function max(int $max): self
     {
-        // The arguments must be hardcoded, any additional
-        // values can only be used within this class.
+        // The arguments must be hardcoded,
+        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
 
     // The placeholder text for the input field
     public function placeholder(string $placeholder): self
     {
-        // The arguments must be hardcoded, any additional
-        // values can only be used within this class.
+        // The arguments must be hardcoded,
+        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
 
     // Help text is shown below the input field
     public function help(string $help): self
     {
-        // The arguments must be hardcoded, any additional
-        // values can only be used within this class.
+        // The arguments must be hardcoded,
+        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
 
