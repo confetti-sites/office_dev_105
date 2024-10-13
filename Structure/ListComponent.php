@@ -237,12 +237,9 @@ class ListComponent
                 $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
 
                 // Get the number of items. If not present,
-                // then use default values. To prevent rendering too
-                // many items, we don't fake to many items in deeper levels.
-                $deeper = $this->contentStore->isFake();
-                $min    = $component->getDecoration('min')['value'] ?? 1;
-                $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 20);
-                $amount = (int)[$min, ($max-$min)/2, $max][random_int(0, 2)];
+                $min = $component->getDecoration('min')['value'] ?? null;
+                $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? null;
+                $amount = $this->getFakeAmount($min, $max);
 
                 $i     = 1;
                 $items = [];
@@ -259,6 +256,24 @@ class ListComponent
                     );
                 }
                 return $items;
+            }
+
+            private function getFakeAmount(?int $min, ?int $max): int
+            {
+                if ($min === null) {
+                    $min = 1;
+                }
+                if ($max === null) {
+                    // To prevent rendering too many items, we don't fake to many items in deeper levels.
+                    $deeper = $this->contentStore->isFake();
+                    // When you can divide the current seconds by 2, then we use 20, otherwise 1-3
+                    $max =  ((int) date('s')) % 2 === 0 ? ($deeper ? 5 : 20) : random_int(1, 3);
+                }
+
+                // Use min, average or max
+                $average = ($min + $max) / 2;
+                $amount = [$min, $average, $max];
+                return (int)$amount[array_rand($amount)];
             }
         };
     }
