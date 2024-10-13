@@ -2,7 +2,7 @@
 @php([$currentContentId] = variables($variables))
 
 @php /** @var string $currentContentId */ @endphp
-@php($root = newRoot(new \model))
+@php($root = newRoot(new \model)->canFake(false))
 
 <div class="text-gray-500">
     <ul class="mt-16">

@@ -2,6 +2,10 @@
   environments: [
     {
       key: 'sandbox',
+      options: {
+        // The view service is the main service
+        when_no_data_is_saved_show_fake_data: true,
+      },
       containers: [
         // Main view service
         {

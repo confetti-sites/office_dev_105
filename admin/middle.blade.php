@@ -1,6 +1,6 @@
 @php
     [$id] = variables($variables);
-    $model = modelById($id);
+    $model = modelById($id)->canFake(false);
     $children = $model->getChildren();
     // If model is part of a list (has ~ in the id), it can be deleted
     $canBeDeleted = str_contains($id, '~');

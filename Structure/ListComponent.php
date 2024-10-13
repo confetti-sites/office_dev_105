@@ -115,7 +115,7 @@ class ListComponent
         // Most of the time we run the entire query once. But when we are
         // missing some data, we want to run a second query very efficiently
         // to prevent n+1 problems. With yield, we can fetch the first item and
-        // cache that part of the query. When we now the first item, the query is
+        // cache that part of the query. Now we know the first item, the query is
         // cached, and we can fetch the rest of the items in one go. Traditionally, with
         // an n+1 problem, the number of queries is equal to the number of items x child items.
         // With this method, the number of queries is less than the number of component types. Most
@@ -240,9 +240,9 @@ class ListComponent
                 // then use default values. To prevent rendering too
                 // many items, we don't fake to many items in deeper levels.
                 $deeper = $this->contentStore->isFake();
-                $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 20);
                 $min    = $component->getDecoration('min')['value'] ?? 1;
-                $amount = random_int($min, $max);
+                $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? ($deeper ? 5 : 20);
+                $amount = (int)[$min, ($max-$min)/2, $max][random_int(0, 2)];
 
                 $i     = 1;
                 $items = [];
