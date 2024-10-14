@@ -139,7 +139,7 @@ class TextComponent extends ComponentStandard
             $lorem      .= $words[$randomWord] . ' ';
             $size       -= strlen($words[$randomWord]);
         }
-        return ucfirst($lorem);
+        return trim(ucfirst($lorem));
     }
 
     private function randomOf(array $possibilities): int

@@ -31,6 +31,9 @@
     @case(str_starts_with(request()->uri(), '/blogs'))
         @include('view.blog_overview')
         @break
+    @case(str_starts_with(request()->uri(), '/playground'))
+        @include('view.playground.index')
+        @break
     @default
         @include('view.homepage')
         @break

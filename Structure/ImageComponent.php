@@ -66,10 +66,13 @@ class ImageComponent extends ComponentStandard
                 if (empty($source['name'])) {
                     return null;
                 }
+                if (str_starts_with($source['name'], 'http')) {
+                    return $source['name'];
+                }
                 return getServiceApi() . '/confetti-cms/media/images' . htmlspecialchars($source['name']);
             }
         }
-        return null;
+        return $data['original'] ?? null;
     }
 
     /**
@@ -79,17 +82,19 @@ class ImageComponent extends ComponentStandard
      * <source srcset="giraffe.small.jpeg 1x, giraffe.small_2x.jpeg 2x" />
      * <img src="giraffe.jpeg" alt="" />
      */
-    public function getSourcesHtml(): string
+    public function getSourcesHtml(string $title = ''): string
     {
-        $html = '';
-        if (empty($this->get()['sources'])) {
-            return $html;
-        }
-        $html .= $this->getBigSource();
-        $html .= $this->getMobileSource();
+        $title = htmlspecialchars($title);
+
+        $data = $this->get();
         if ($this->getSource('standard')) {
-            $html .= '<img src="' . $this->getSource('standard') . '" alt="Image">';
+            $url = $this->getSource('standard');
+        } else {
+            $url = $data['original'] ?? '';
         }
+        $html = $this->getBigSource() ?? '';
+        $html .= $this->getMobileSource();
+        $html .= "<img src=\"$url\" alt=\"$title\">";
         return $html;
     }
 
