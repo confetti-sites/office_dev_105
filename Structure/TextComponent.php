@@ -57,13 +57,13 @@ class TextComponent extends ComponentStandard
 
         // Generate Lorem Ipsum
         // Use different lengths for max to make it more interesting
-        $min     = $component->getDecoration('min') ?? 6;
-        $max     = $component->getDecoration('max') ?? $this->randomOf([10, 100, 1000]);
+        $min     = $component->getDecoration('min', 'min') ?? 6;
+        $max     = $component->getDecoration('max', 'max') ?? $this->randomOf([10, 100, 1000]);
         if ($min > $max) {
             $min = $max;
         }
 
-        return $this->generateLoremIpsum(random_int($min, $max));
+        return $this->generateLoremIpsum(rand($min, $max));
     }
 
     public function getViewAdminInput(): string

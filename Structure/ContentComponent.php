@@ -14,6 +14,18 @@ class ContentComponent extends ComponentStandard
         return 'content';
     }
 
+    public function __toString(): string
+    {
+        $value = $this->get();
+        if ($value === null) {
+            return '';
+        }
+        if (!is_array($value)) {
+            return '<template>Error: Content is not in expected format: '.json_encode($value).'</template>';
+        }
+
+    }
+
     public function get(): ?array
     {
         // Get saved value
@@ -100,17 +112,13 @@ class ContentComponent extends ComponentStandard
 
         // Generate Lorem Ipsum
         // Use different lengths for max to make it more interesting
-        $min = $component->getDecoration('min')['value'] ?? 6;
-        $max = $component->getDecoration('max')['value'] ?? array_rand([10, 100, 1000]);
+        $min = $component->getDecoration('min')['min'] ?? 6;
+        $max = $component->getDecoration('max')['max'] ?? $this->randomOf([10, 100, 1000]);
         if ($min > $max) {
             $min = $max;
         }
 
-        try {
-            $size = random_int($min, $max);
-        } catch (RandomException) {
-            $size = 100;
-        }
+        $size = rand($min, $max);
         $words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'praesent', 'interdum', 'dictum', 'mi', 'non', 'egestas', 'nulla', 'in', 'lacus', 'sed', 'sapien', 'placerat', 'malesuada', 'at', 'erat', 'etiam', 'id', 'velit', 'finibus', 'viverra', 'maecenas', 'mattis', 'volutpat', 'justo', 'vitae', 'vestibulum', 'metus', 'lobortis', 'mauris', 'luctus', 'leo', 'feugiat', 'nibh', 'tincidunt', 'a', 'integer', 'facilisis', 'lacinia', 'ligula', 'ac', 'suspendisse', 'eleifend', 'nunc', 'nec', 'pulvinar', 'quisque', 'ut', 'semper', 'auctor', 'tortor', 'mollis', 'est', 'tempor', 'scelerisque', 'venenatis', 'quis', 'ultrices', 'tellus', 'nisi', 'phasellus', 'aliquam', 'molestie', 'purus', 'convallis', 'cursus', 'ex', 'massa', 'fusce', 'felis', 'fringilla', 'faucibus', 'varius', 'ante', 'primis', 'orci', 'et', 'posuere', 'cubilia', 'curae', 'proin', 'ultricies', 'hendrerit', 'ornare', 'augue', 'pharetra', 'dapibus'];
         $lorem = '';
         while ($size > 0) {
@@ -119,6 +127,11 @@ class ContentComponent extends ComponentStandard
             $size       -= strlen($words[$randomWord]);
         }
         return ucfirst($lorem);
+    }
+
+    private function randomOf(array $possibilities): int
+    {
+        return $possibilities[array_rand($possibilities)];
     }
 }
 
