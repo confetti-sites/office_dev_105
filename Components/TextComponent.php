@@ -17,12 +17,8 @@ class TextComponent extends ComponentStandard
     {
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
-        if ($content !== null) {
+        if ($content !== null || !$this->contentStore->canFake()) {
             return $content;
-        }
-
-        if (!$this->contentStore->canFake()) {
-            return null;
         }
 
         // Guess value

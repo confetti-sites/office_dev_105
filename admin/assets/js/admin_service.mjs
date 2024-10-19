@@ -21,7 +21,12 @@ export class Storage {
      */
     static getFromLocalStorage(id) {
         if (localStorage.hasOwnProperty(id)) {
-            return JSON.parse(localStorage.getItem(id));
+            let raw = localStorage.getItem(id);
+            if (raw === 'undefined') {
+                console.warn('Local storage item id ' +id+ ' has string: "undefined". Skipping.');
+                return null;
+            }
+            return JSON.parse(raw);
         }
         return null;
     }
@@ -92,6 +97,7 @@ export class Storage {
             let items = Object.keys(localStorage)
                 // We want to update the children, and we need to update the parents as well
                 .filter(key => specific ? key === id : (prefixQ.startsWith(key) || key.startsWith(prefixQ)))
+                .filter(key => localStorage.getItem(key) !== 'undefined')
                 .map(key => {
                     // We want to decode, so we can save numbers and booleans
                     let value = JSON.parse(localStorage.getItem(key));
@@ -157,7 +163,7 @@ export class Storage {
      */
     static save(serviceApiUrl, data) {
         // Remove all items from the database where the value is 'this.remove()'
-        const toRemove = data.filter(item => item.value === 'this.remove()');
+        const toRemove = data.filter(item => item && item.value === 'this.remove()');
         // Loop over every item and remove. Example: DELETE /contents?id=/model/title
         toRemove.forEach(item => {
             fetch(`${serviceApiUrl}/confetti-cms/content/contents?id_prefix=${item.id}`, {
@@ -176,7 +182,7 @@ export class Storage {
                 });
         });
 
-        const toPublish = data.filter(item => item.value !== 'this.remove()');
+        const toPublish = data.filter(item => item && item.value !== 'this.remove()');
 
         return fetch(`${serviceApiUrl}/confetti-cms/content/contents`, {
             method: 'PATCH',

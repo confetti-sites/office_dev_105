@@ -10,8 +10,16 @@
         </div>
     </div>
     <div class="container py-4 mt-8 p-2 py-2">
-        <h2 class="text-2xl dark:text-white text-gray-900">Hidden</h2>
-        <p>{{ $playground->hidden('the_hidden_value') }}</p>
+        <h2 class="text-2xl dark:text-white text-gray-900">List</h2>
+        <ul class="max-w-md mt-3 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+            @foreach($playground->list('list')->min(1)->max(3)->get() as $item)
+                <li class="text-sm">{!! $item->text('the_text') !!}</li>
+            @endforeach
+        </ul>
+    </div>
+    <div class="container py-4 mt-8 p-2 py-2">
+        <h2 class="text-2xl dark:text-white text-gray-900">Select</h2>
+        Selected: {{ $playground->select('select')->options(['Option 1', 'Option 2', 'Option 3']) }}
     </div>
     <div class="container py-4 mt-8 p-2 py-2">
         <h2 class="text-2xl dark:text-white text-gray-900">Rich text</h2>

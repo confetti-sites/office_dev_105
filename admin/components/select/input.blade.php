@@ -68,7 +68,7 @@
                     <select class="${() => `appearance-none pr-5 pl-3 py-3 bg-gray-50 border-2 ${this.data.value === this.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg block w-full`}"
                             name="${this.id}"
                             @input="${e => this.data.value = e.target.value}">
-                        ${this.required === 'true' ? '' : `<option value="">Nothing selected</option>`}
+                        ${this.decorations.required.required === true ? '' : `<option value="">Nothing selected</option>`}
                         ${this.decorations.options.options === null ? '' : options.map(option =>
                     `<option value="${option.id}" ${option.id === this.data.value ? 'selected' : ''}>${option.label}</option>`
                 )}
