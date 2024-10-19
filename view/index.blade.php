@@ -28,8 +28,11 @@
     @case(str_starts_with(request()->uri(), '/docs'))
         @include('view.docs')
         @break
-    @case(str_starts_with(request()->uri(), '/blogs'))
+    @case(request()->uri() === '/blogs'))
         @include('view.blog_overview')
+        @break
+    @case(str_starts_with(request()->uri(), '/blogs/'))
+        @include('view.blog_detail')
         @break
     @case(str_starts_with(request()->uri(), '/playground'))
         @include('view.playground.index')

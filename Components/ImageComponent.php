@@ -82,9 +82,9 @@ class ImageComponent extends ComponentStandard
      * <source srcset="giraffe.small.jpeg 1x, giraffe.small_2x.jpeg 2x" />
      * <img src="giraffe.jpeg" alt="" />
      */
-    public function getSourcesHtml(string $title = ''): string
+    public function getSourcesHtml(string $alt = ''): string
     {
-        $title = htmlspecialchars($title);
+        $alt = htmlspecialchars($alt);
 
         $data = $this->get();
         if ($this->getSource('standard')) {
@@ -94,7 +94,7 @@ class ImageComponent extends ComponentStandard
         }
         $html = $this->getBigSource() ?? '';
         $html .= $this->getMobileSource();
-        $html .= "<img src=\"$url\" alt=\"$title\">";
+        $html .= "<img src=\"$url\" alt=\"$alt\">";
         return $html;
     }
 

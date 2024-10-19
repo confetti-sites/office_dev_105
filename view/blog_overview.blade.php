@@ -8,7 +8,7 @@
             <div class="flex-1 flex justify-between items-center font-body">
                 {{ $blog->text('description')->min(1)->max(100) }}
             </div>
-            <div><a href="{{ $blog->text('url_path') }}"></a></div>
+            <div><a href="/blogs/{{ $blog->text('alias')->help('This will be used to generate the URL for this blog post.')->min(1)->max(50) }}" class="text-blue-500">Read more</a></div>
         </div>
     @endforeach
 </div>
