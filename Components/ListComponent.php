@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Components\Map;
 use Confetti\Contracts\SelectModelInterface;
@@ -49,12 +49,12 @@ class ListComponent
 
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.list.input';
+        return 'admin.components.list.input';
     }
 
     public function getViewAdminPreview(): string
     {
-        return '/admin/structure/list/preview.mjs';
+        return '/admin/components/list/preview.mjs';
     }
 
     /**

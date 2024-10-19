@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
@@ -50,12 +50,12 @@ class ImageComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.image.input';
+        return 'admin.components.image.input';
     }
 
     public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/image/preview.mjs';
+        return '/admin/components/image/preview.mjs';
     }
 
     public function getSource(string $media): ?string

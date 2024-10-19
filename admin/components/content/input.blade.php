@@ -1,4 +1,4 @@
-@php /** @var \Src\Structure\ContentComponent $model */ @endphp
+@php /** @var \Src\Components\ContentComponent $model */ @endphp
         <!--suppress HtmlUnknownTag -->
 <content-component
         data-id="{{ $model->getId() }}"
@@ -12,14 +12,14 @@
 
 @pushonce('end_of_body_content_component')
     <style>
-        @import url('/admin/structure/content/editor_content.css');
+        @import url('/admin/components/content/editor_content.css');
     </style>
     <script type="module">
         import {html} from 'https://esm.sh/@arrow-js/core';
 
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import LimContent from '/admin/structure/content/editor_content.mjs';
+        import LimContent from '/admin/components/content/editor_content.mjs';
 
         /** Block tools */
         /**
@@ -49,9 +49,9 @@
         import Table from 'https://esm.sh/@editorjs/table';
 
         /** Inline tools */
-        import Underline from '/admin/structure/content/tools/underline.mjs';
-        import Bold from '/admin/structure/content/tools/bold.mjs';
-        import Italic from '/admin/structure/content/tools/italic.mjs';
+        import Underline from '/admin/components/content/tools/underline.mjs';
+        import Bold from '/admin/components/content/tools/bold.mjs';
+        import Italic from '/admin/components/content/tools/italic.mjs';
         import {Storage} from '/admin/assets/js/admin_service.mjs';
 
         // General toolbar is set in the onReady event

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Helpers\ComponentStandard;
 use Random\RandomException;
@@ -44,12 +44,12 @@ class ContentComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.content.input';
+        return 'admin.components.content.input';
     }
 
     public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/content/preview.mjs';
+        return '/admin/components/content/preview.mjs';
     }
 
     /**

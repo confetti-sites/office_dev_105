@@ -1,7 +1,7 @@
 @php
-    /** @var \Src\Structure\ListComponent $model */
+    /** @var \Src\Components\ListComponent $model */
     /** @var \Confetti\Helpers\ComponentEntity $component */
-    use Src\Structure\ListComponent;
+    use Src\Components\ListComponent;
     $component = $model->getComponent();
     [$columns, $originalRows] = ListComponent::getColumnsAndRows($model);
 @endphp
@@ -19,7 +19,7 @@
 @pushonce('end_of_body_list_component')
     <script type="module">
         import {Storage} from '/admin/assets/js/admin_service.mjs';
-        import LimList from '/admin/structure/list/list.mjs';
+        import LimList from '/admin/components/list/list.mjs';
         import {html, reactive} from 'https://esm.sh/@arrow-js/core';
         import {IconMenu as IconDrag} from 'https://esm.sh/@codexteam/icons';
 

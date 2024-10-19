@@ -1,4 +1,4 @@
-@php /** @var \Src\Structure\TextComponent $model */ @endphp
+@php /** @var \Src\Components\TextComponent $model */ @endphp
 <!--suppress HtmlUnknownTag -->
 <text-component
         data-id="{{ $model->getId() }}"
@@ -11,16 +11,16 @@
 
 @pushonce('end_of_body_text_component')
     <style>
-        @import url('/admin/structure/text/editor_text.css');
+        @import url('/admin/components/text/editor_text.css');
     </style>
     <script type="module">
         import {html} from 'https://esm.sh/@arrow-js/core';
         /** see https://github.com/codex-team/editor.js/blob/next/types/configs/editor-config.d.ts */
         import EditorJS from 'https://esm.sh/@editorjs/editorjs@^2';
-        import {LimText, Validators} from '/admin/structure/text/editor_text.mjs'
-        import Underline from '/admin/structure/content/tools/underline.mjs';
-        import Bold from '/admin/structure/content/tools/bold.mjs';
-        import Italic from '/admin/structure/content/tools/italic.mjs';
+        import {LimText, Validators} from '/admin/components/text/editor_text.mjs'
+        import Underline from '/admin/components/content/tools/underline.mjs';
+        import Bold from '/admin/components/content/tools/bold.mjs';
+        import Italic from '/admin/components/content/tools/italic.mjs';
         import {Storage} from '/admin/assets/js/admin_service.mjs';
 
         /**

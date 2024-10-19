@@ -1,4 +1,4 @@
-@php /** @var \Src\Structure\SelectComponent $model */ @endphp
+@php /** @var \Src\Components\SelectComponent $model */ @endphp
         <!--suppress HtmlUnknownTag, HtmlUnknownAttribute, JSUnresolvedReference -->
 <select-component
         data-component="{{ json_encode($model->getComponent()) }}"

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
@@ -24,12 +24,12 @@ class HiddenComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.hidden.input';
+        return 'admin.components.hidden.input';
     }
 
     public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/hidden/preview.mjs';
+        return '/admin/components/hidden/preview.mjs';
     }
 
     /**

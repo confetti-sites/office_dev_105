@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
@@ -35,12 +35,12 @@ class SelectComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.select.input';
+        return 'admin.components.select.input';
     }
 
     public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/select/preview.mjs';
+        return '/admin/components/select/preview.mjs';
     }
 
     /**

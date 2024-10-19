@@ -2,9 +2,7 @@
 
 <footer class="border-t border-gray-100 pt-10 pb-8 dark:border-gray-800 dark:bg-gray-900/80">
     <div>
-        <div
-                class="container space-y-8"
-        >
+        <div class="container space-y-8">
             <div class="grid grid-cols-8 gap-6 md:gap-0">
                 <div class="col-span-8 md:col-span-2 lg:col-span-3">
                     <div

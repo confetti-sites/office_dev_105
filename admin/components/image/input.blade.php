@@ -1,4 +1,4 @@
-@php /** @var \Src\Structure\ImageComponent $model */ @endphp
+@php /** @var \Src\Components\ImageComponent $model */ @endphp
         <!--suppress HtmlUnknownTag, HtmlUnknownAttribute -->
 <image-component
         data-id="{{ $model->getId() }}"
@@ -10,7 +10,7 @@
 ></image-component>
 
 @pushonce('styles_cropper')
-    <link rel="stylesheet" href="/admin/structure/image/cropper.css">
+    <link rel="stylesheet" href="/admin/components/image/cropper.css">
 @endpushonce
 @pushonce('end_of_body_image_component')
     <script type="module">

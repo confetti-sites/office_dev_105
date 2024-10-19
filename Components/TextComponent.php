@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
@@ -21,7 +21,6 @@ class TextComponent extends ComponentStandard
             return $content;
         }
 
-        // Get default value
         if (!$this->contentStore->canFake()) {
             return null;
         }
@@ -68,12 +67,12 @@ class TextComponent extends ComponentStandard
 
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.text.input';
+        return 'admin.components.text.input';
     }
 
     public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/text/preview.mjs';
+        return '/admin/components/text/preview.mjs';
     }
 
     // Default will be used if no value is saved

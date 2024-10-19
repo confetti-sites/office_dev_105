@@ -1,6 +1,6 @@
 <!--suppress HtmlUnknownAttribute, HtmlUnknownTag, PhpParamsInspection -->
 @php
-    /** @var \Src\Structure\SelectFileComponent $model */
+    /** @var \Src\Components\SelectFileComponent $model */
     use Confetti\Helpers\ComponentStandard;
     $useLabelForRelative = $model->getComponent()->getDecoration('useLabelFor');
     $optionsValues = array_map(function ($option) {

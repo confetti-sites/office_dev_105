@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Components\FilePatternArray;
 use Confetti\Components\Map;
@@ -82,7 +82,7 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
      */
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.select_file.input';
+        return 'admin.components.select_file.input';
     }
 
     /**
@@ -90,7 +90,7 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
      */
     public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/select_file/preview.mjs';
+        return '/admin/components/select_file/preview.mjs';
     }
 
     // Label is used as a title for the admin panel

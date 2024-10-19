@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Structure;
+namespace Src\Components;
 
 use Confetti\Helpers\ComponentStandard;
 
@@ -13,20 +13,19 @@ class ColorComponent extends ComponentStandard
         return 'color';
     }
 
-    public function get(bool $random = false): ?string
+    public function get(): ?string
     {
         // Get saved value
         $value = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($value !== null) {
             return htmlspecialchars($value);
         }
-
-        if ($random) {
-            // Generate random color
-            return sprintf('#%06X', random_int(0, 0xFFFFFF));
+        if (!$this->contentStore->canFake()) {
+            return null;
         }
 
-        return null;
+        // Generate random color
+        return sprintf('#%06X', rand(0, 0xFFFFFF));
     }
 
     /**
@@ -34,7 +33,7 @@ class ColorComponent extends ComponentStandard
      */
     public function getViewAdminInput(): string
     {
-        return 'admin.structure.color.input';
+        return 'admin.components.color.input';
     }
 
     /**
@@ -42,7 +41,7 @@ class ColorComponent extends ComponentStandard
      */
     public static function getViewAdminPreview(): string
     {
-        return '/admin/structure/color/preview.mjs';
+        return '/admin/components/color/preview.mjs';
     }
 
     // Label is used as a title for the admin panel
