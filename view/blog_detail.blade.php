@@ -1,6 +1,6 @@
 @php
     $alias = str_replace('/blogs/', '', request()->uri());
-    $blog = \model\blog_overview\blog_list::query()->whereAliasIs($alias)->first()
+    $blog = \model\blog_overview\blog_list::query()->whereAliasIs($alias)->first();
 @endphp
 
 <div class="max-w-3xl mx-auto">

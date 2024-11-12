@@ -24,7 +24,6 @@ class ContentStore
 
     public function __construct(string $from, string $as)
     {
-        exit('this is a test');
         if (self::$canFake === null) {
             self::$canFake = envConfig('options.when_no_data_is_saved_show_fake_data', false);
         }
@@ -38,7 +37,9 @@ class ContentStore
 
         // One level deeper, we want to select other data from the tree.
         // So we want to point to another query and data higher in the tree.
-        if ($from !== '/model') {
+        // We only want tot do this if it is not suffixed with a ~. Because then
+        // it is already added to the query in the constructor of ListComponent.
+        if ($from !== '/model' && !str_ends_with($from, '~')){
             $this->joinPointer($from);
         }
     }
@@ -143,7 +144,7 @@ class ContentStore
         // Go back 1 to match the fact that the first item is on index 0.
         $last = $this->breadcrumbs[count($this->breadcrumbs) - 1];
         // Note: when can run a query from a component: `\model\page\banner_list\title::query()->get()`
-        // Than we have multiple titles, but the title itself is not a list.
+        // Then we have multiple titles, but the title itself is not a list.
         $this->breadcrumbs[] = ['type' => 'join', 'path' => $as];
         // When searching in the child, we want to the parent to be specific
         // parent~1234567890, we want to use ids and not abstract parent~.
