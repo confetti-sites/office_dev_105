@@ -34,7 +34,7 @@ class ListComponent
     {
         $this->componentKey = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
         $this->contentStore = clone $this->parentContentStore;
-        $this->contentStore->join($this->getId(), $as);
+        $this->contentStore->join($this->relativeContentId, $as);
     }
 
     public function type(): string

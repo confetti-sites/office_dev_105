@@ -6,7 +6,7 @@ namespace Confetti\Helpers;
 
 class ContentStore
 {
-    private \Confetti\Helpers\QueryBuilder $queryBuilder;
+    private QueryBuilder $queryBuilder;
     private array $content = [];
     private bool $alreadyInit = false;
     // This is a fake store, used for mocking
@@ -32,14 +32,17 @@ class ContentStore
         // For example, the cached pointer keys.
         // We use /model as the root, because we want to
         // the rest of the data from the tree.
-        $this->queryBuilder  = new \Confetti\Helpers\QueryBuilder('/model', $as);
+        $this->queryBuilder  = new QueryBuilder('/model', $as);
         $this->breadcrumbs[] = ['type' => 'id', 'path' => '/model'];
 
         // One level deeper, we want to select other data from the tree.
         // So we want to point to another query and data higher in the tree.
-        // We only want tot do this if it is not suffixed with a ~. Because then
-        // it is already added to the query in the constructor of ListComponent.
-        if ($from !== '/model' && !str_ends_with($from, '~')){
+        if ($from !== '/model'){
+            // If we construct this store to get a list (for example: /model/item~),
+            // item~ will be added when constructing ListComponent, so we need to remove it.
+            if (str_ends_with($from, '~')){
+                $from = ComponentStandard::explodeKey($from)[0];
+            }
             $this->joinPointer($from);
         }
     }
@@ -223,7 +226,7 @@ class ContentStore
             if ($found) {
                 return $result;
             }
-        } catch (\Confetti\Helpers\ConditionDoesNotMatchConditionFromContent) {
+        } catch (ConditionDoesNotMatchConditionFromContent) {
             // We need to fetch the content with the correct condition
         }
         // Query the content and cache the selection
@@ -360,6 +363,10 @@ class ContentStore
                     if (array_key_exists($breadcrumb['path'], $content['join'] ?? []) === false) {
                         return null;
                     }
+
+                    // Get the current content before we check if the condition is the same.
+                    $content = $content['join'][$breadcrumb['path']];
+
                     // We need to check if the condition is the same.
                     // Data from joins with dynamic conditions do
                     // not always match the result when a query is cached.
@@ -369,9 +376,8 @@ class ContentStore
                     $checkIfQueryMatches = !$ignoreCondition && array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []);
                     $contentCondition    = $checkIfQueryMatches ? $content['join_condition'][$breadcrumb['path']] : null;
                     if ($checkIfQueryMatches && $contentCondition !== $currentCondition) {
-                        throw new \Confetti\Helpers\ConditionDoesNotMatchConditionFromContent("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");
+                        throw new ConditionDoesNotMatchConditionFromContent("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");
                     }
-                    $content = $content['join'][$breadcrumb['path']];
                     break;
                 case 'join_pointer':
                     if (empty($content['join'][$breadcrumb['path']])) {
