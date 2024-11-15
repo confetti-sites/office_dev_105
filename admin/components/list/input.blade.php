@@ -88,7 +88,7 @@
                                         ${rowColumns.map((item) => html`
                                             <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
                                                 @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
-                                                ${(item.component !== null ? this.#loadMjs(item.id, item.value, item.component) : console.warn('Can\'t show value in list. Component not found.') && '')}
+                                                ${(item !== undefined && item.component !== null ? this.#loadMjs(item.id, item.value, item.component) : console.warn('Can\'t show value in list. Component not found.') && '')}
                                             </td>`)}
                                         <td class="hidden sm:table-cell sm:w-[140px]">
                                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">

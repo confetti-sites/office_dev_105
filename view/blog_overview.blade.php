@@ -1,14 +1,29 @@
-@php($blogPage = newRoot(new \model\blog_overview))
-<div class="bg-gray-50 flex items-center justify-center">
-    @foreach($blogPage->list('blog')->columns(['title', 'description'])->get() as $blog)
-        <div class="m-10 mt-0 relative space-y-4">
-            <div class="rounded-lg p-4 bg-blue-300 text-xl flex justify-center m-8">
-                <h3>{{ $blog->text('title')->min(1)->max(50)->default('Blog default title') }}</h3>
-            </div>
-            <div class="flex-1 flex justify-between items-center font-body">
-                {{ $blog->text('description')->min(1)->max(100) }}
-            </div>
-            <div><a href="/blogs/{{ $blog->text('alias')->help('This will be used to generate the URL for this blog post.')->min(1)->max(50) }}" class="text-blue-500">Read more</a></div>
-        </div>
-    @endforeach
+@php
+    $blogPage = newRoot(new \model\blog_overview);
+    $page = request()->parameter('page') ?: 1;
+    $perPage = 10;
+    $offset = ($page - 1) * $perPage;
+@endphp
+<div class="bg-gray-50 py-8">
+    <ul class="space-y-8 max-w-4xl mx-auto">
+        @foreach($blogPage->list('blog')->columns(['title'])->limit($perPage)->offset($offset)->get() as $blog)
+            <li class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-2xl font-semibold text-blue-500">{{ $blog->text('title')->min(1)->max(50)->default('Blog default title') }}</h3>
+                </div>
+                <div class="mt-4">
+                    <a href="/blogs/{{ $blog->text('alias')->min(1)->max(50) }}" class="text-blue-500">Read more</a>
+                </div>
+            </li>
+        @endforeach
+    </ul>
+    <div class="mt-8 flex justify-center">
+        @if($page > 1)
+            <a href="{{ request()->uri() }}?page={{ $page-1 }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2">Previous</a>
+        @endif
+        @if($blogPage->blogs()->offset($offset + 1)->first() !== null)
+            <a href="{{ request()->uri() }}?page={{ $page+1 }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Next</a>
+        @endif
+    </div>
 </div>
+

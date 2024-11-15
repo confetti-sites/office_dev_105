@@ -104,8 +104,8 @@ class ListComponent
     public function get(): IteratorAggregate
     {
         // Ensure that the content is initialized
-        $runInit = $this->contentStore->runInit();
-        if ($runInit) {
+        $initRan = $this->contentStore->runInit();
+        if ($initRan) {
             // When the content is init (because of the list is the first component),
             // we want to use the content for the parent. So the parent has all the data.
             $this->parentContentStore->setContent($this->contentStore->getContent());
@@ -145,10 +145,12 @@ class ListComponent
                     }
                     return;
                 }
+
                 try {
                     // Get items if present
                     $items = $this->contentStore->getContentOfThisLevel();
                 } catch (ConditionDoesNotMatchConditionFromContent) {
+
                     // When the content is present but received with another query condition
                     $this->contentStore->runCurrentQuery([
                         'use_cache'               => true,
@@ -203,6 +205,11 @@ class ListComponent
                 $childContentStore->appendCurrentJoin($first['id']);
                 yield new $this->className($this->parentContentId, $first['id'], $childContentStore);
 
+                // When the limit is 1, we don't need to load the rest of the items
+                if ($this->contentStore->getLimit() === 1) {
+                    return;
+                }
+
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin() ?? [];
                 foreach ($contents as $content) {
@@ -237,7 +244,7 @@ class ListComponent
                 $contentId = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
 
                 // Get the number of items. If not present,
-                $min = $component->getDecoration('min')['value'] ?? null;
+                $min    = $component->getDecoration('min')['value'] ?? null;
                 $max    = $this->contentStore->getLimit() ?? $component->getDecoration('max')['value'] ?? null;
                 $amount = $this->getFakeAmount($min, $max);
 
@@ -267,13 +274,13 @@ class ListComponent
                     // To prevent rendering too many items, we don't fake to many items in deeper levels.
                     $deeper = $this->contentStore->isFake();
                     // When you can divide the current seconds by 2, then we use 20, otherwise 1-3
-                    $max =  ((int) date('s')) % 2 === 0 ? ($deeper ? 5 : 20) : random_int(1, 3);
+                    $max = ((int) date('s')) % 2 === 0 ? ($deeper ? 5 : 20) : random_int(1, 3);
                 }
 
                 // Use min, average or max
                 $average = ($min + $max) / 2;
-                $amount = [$min, $average, $max];
-                return (int)$amount[array_rand($amount)];
+                $amount  = [$min, $average, $max];
+                return (int) $amount[array_rand($amount)];
             }
         };
     }
@@ -455,7 +462,7 @@ class ListComponent
     {
         // If columns are not defined, then get the first 4 text columns
         // Filter out non-text columns
-        $columns = array_filter($model->getComponentsFromChildren(), static fn(ComponentEntity $column) => $column->type === 'text');
+        $columns = array_filter($model->getComponentsFromChildren(), static fn (ComponentEntity $column) => $column->type === 'text');
         // Get max 4 columns
         $columns = array_slice($columns, 0, 4);
         if (empty($columns)) {
@@ -471,8 +478,8 @@ class ListComponent
             $key = end($key);
 
             return [
-                'id'        => $key,
-                'label'     => titleByKey($key),
+                'id'    => $key,
+                'label' => titleByKey($key),
             ];
         }, $columns);
     }

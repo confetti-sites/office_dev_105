@@ -37,10 +37,10 @@ class ContentStore
 
         // One level deeper, we want to select other data from the tree.
         // So we want to point to another query and data higher in the tree.
-        if ($from !== '/model'){
+        if ($from !== '/model') {
             // If we construct this store to get a list (for example: /model/item~),
             // item~ will be added when constructing ListComponent, so we need to remove it.
-            if (str_ends_with($from, '~')){
+            if (str_ends_with($from, '~')) {
                 $from = ComponentStandard::explodeKey($from)[0];
             }
             $this->joinPointer($from);
@@ -191,6 +191,11 @@ class ContentStore
         $this->queryBuilder->setLimit($limit);
     }
 
+    public function getOffset(): int
+    {
+        return $this->queryBuilder->getOffset();
+    }
+
     public function setOffset(int $offset): void
     {
         $this->queryBuilder->setOffset($offset);
@@ -232,11 +237,14 @@ class ContentStore
         // Query the content and cache the selection
         $query = $this->queryBuilder;
         $query->setOptions([
-            'patch_cache_select'    => true,
-            'only_first'            => true,
-            'use_cache'             => false,
+            'patch_cache_select' => true,
+            'only_first'         => true,
+            'use_cache'          => false,
         ]);
-        $query->setSelect([$id]);
+        $query->setSelect([$id])
+            // In this case, we want to fetch the data without the old condition
+            // because we already target one data with the correct id (in the 'from').
+            ->resetConditions();
         $result = $query->run();
         if (count($result) === 0) {
             return null;
@@ -261,9 +269,9 @@ class ContentStore
         }
         $this->selectInRoot($id);
         $this->runCurrentQuery([
-            'use_cache'               => true,
-            'use_cache_from_root'     => true,
-            'patch_cache_select'      => true,
+            'use_cache'           => true,
+            'use_cache_from_root' => true,
+            'patch_cache_select'  => true,
         ]);
         return $this->content['data'][$id] ?? null;
     }
@@ -336,8 +344,12 @@ class ContentStore
 
     public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false): ?array
     {
-        $content ??= $this->content;
+        $content             ??= $this->content;
+        $latestJoinCondition = null;
         foreach ($this->breadcrumbs as $breadcrumb) {
+            if (array_key_exists('join_condition', $content) && array_key_exists($breadcrumb['path'], $content['join_condition'])) {
+                $latestJoinCondition = $content['join_condition'][$breadcrumb['path']];
+            }
             switch ($breadcrumb['type']) {
                 case 'id':
                     // We already are on the correct level
@@ -368,13 +380,12 @@ class ContentStore
                     $content = $content['join'][$breadcrumb['path']];
 
                     // We need to check if the condition is the same.
-                    // Data from joins with dynamic conditions do
-                    // not always match the result when a query is cached.
                     // We need to be able to verify if the data from
                     // the cache matches the data from the given condition.
                     $currentCondition    = $this->queryBuilder->getCurrentCondition();
-                    $checkIfQueryMatches = !$ignoreCondition && array_key_exists($breadcrumb['path'], $content['join_condition'] ?? []);
-                    $contentCondition    = $checkIfQueryMatches ? $content['join_condition'][$breadcrumb['path']] : null;
+                    $checkIfQueryMatches = !$ignoreCondition && $currentCondition !== '';
+                    $contentCondition    = $checkIfQueryMatches ? $latestJoinCondition : null;
+
                     if ($checkIfQueryMatches && $contentCondition !== $currentCondition) {
                         throw new ConditionDoesNotMatchConditionFromContent("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");
                     }
@@ -396,16 +407,27 @@ class ContentStore
         $this->queryBuilder = clone $this->queryBuilder;
     }
 
-    private function mergeRecursive(array $array1, array $array2): array
+    private function mergeRecursive(array $old, array $new): array
     {
-        if (empty($array1)) {
-            return $array2;
+        if (empty($old)) {
+            return $new;
         }
-        if (empty($array2)) {
-            return $array1;
+        if (empty($new)) {
+            return $old;
         }
-        $merged = $array1;
-        foreach ($array2 as $key => $value) {
+        $merged = $old;
+        foreach ($new as $key => $value) {
+            // If the new value is empty, it is empty for a reason.
+            // So we overwrite the old value with the new value.
+            // This fixes the situation:
+            // 1. First, we query the data with a condition.
+            // 2. Then we receive the data with another condition. (query from the query cache)
+            // 3. We want to collect the new data with the new condition.
+            // 4. The new data is empty, but we don't want to merge it with the old data.
+            if (empty($value)) {
+                $merged[$key] = $value;
+                continue;
+            }
             if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
                 $merged[$key] = $this->mergeRecursive($merged[$key], $value);
             } else {

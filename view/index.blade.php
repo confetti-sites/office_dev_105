@@ -28,7 +28,7 @@
     @case(str_starts_with(request()->uri(), '/docs'))
         @include('view.docs')
         @break
-    @case(request()->uri() === '/blogs'))
+    @case(request()->uri() === '/blogs')
         @include('view.blog_overview')
         @break
     @case(str_starts_with(request()->uri(), '/blogs/'))
@@ -44,10 +44,6 @@
 
 @php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_small.blade.php'))
 @include($target, ['model' => $target])
-
-
-
-
 
 {{--    @endguest--}}
 

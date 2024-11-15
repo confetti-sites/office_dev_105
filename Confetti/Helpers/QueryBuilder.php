@@ -91,7 +91,7 @@ class QueryBuilder
 
     public function ignoreFirstRow(): void
     {
-        // Ignore first row of this leven
+        // Ignore first row of this level
         $limit = $this->getLimit();
         if ($limit !== null) {
             $this->setLimit($limit - 1);
@@ -150,6 +150,14 @@ class QueryBuilder
     {
         $this->query['offset'] = $offset;
         return $this;
+    }
+
+    public function resetConditions(): void
+    {
+        $this->query['where'] = [];
+        $this->query['order_by'] = [];
+        $this->query['limit'] = null;
+        $this->query['offset'] = 0;
     }
 
     private function getFullQuery(): array
