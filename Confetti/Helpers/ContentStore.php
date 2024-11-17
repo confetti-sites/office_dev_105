@@ -22,7 +22,7 @@ class ContentStore
      */
     private array $breadcrumbs = [];
 
-    public function __construct(string $from, string $as)
+    public function __construct(string $from, string $as, bool $putInNewLevel = false)
     {
         if (self::$canFake === null) {
             self::$canFake = envConfig('options.when_no_data_is_saved_show_fake_data', false);
@@ -30,19 +30,14 @@ class ContentStore
 
         // In the root, we want to select general data.
         // For example, the cached pointer keys.
-        // We use /model as the root, because we want to
-        // the rest of the data from the tree.
+        // We use /model as the root because we want to
+        // put here all the queried model data.
         $this->queryBuilder  = new QueryBuilder('/model', $as);
         $this->breadcrumbs[] = ['type' => 'id', 'path' => '/model'];
 
-        // One level deeper, we want to select other data from the tree.
-        // So we want to point to another query and data higher in the tree.
-        if ($from !== '/model') {
-            // If we construct this store to get a list (for example: /model/item~),
-            // item~ will be added when constructing ListComponent, so we need to remove it.
-            if (str_ends_with($from, '~')) {
-                $from = ComponentStandard::explodeKey($from)[0];
-            }
+        // To select one field (title from a map), we need to create
+        // a new level so we can put the title in this level.
+        if ($from !== '/model' && $putInNewLevel) {
             $this->joinPointer($from);
         }
     }

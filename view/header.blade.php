@@ -31,7 +31,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/pricing"
+                                <a href="/docs"
                                    class="block transition hover:text-primary dark:hover:text-primaryLight px-4">
                                     <span>Docs</span>
                                 </a>

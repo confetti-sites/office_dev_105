@@ -30,11 +30,16 @@ class ListComponent
         protected string        $relativeContentId,
         protected ContentStore  &$parentContentStore,
         private readonly string $as,
+        bool                    $useFullId = false,
     )
     {
         $this->componentKey = ComponentStandard::componentKeyFromContentId($this->relativeContentId);
         $this->contentStore = clone $this->parentContentStore;
-        $this->contentStore->join($this->relativeContentId, $as);
+        $id                 = $this->relativeContentId;
+        if ($useFullId) {
+            $id = ComponentStandard::mergeIds($this->parentContentId, $this->relativeContentId);
+        }
+        $this->contentStore->join($id, $as);
     }
 
     public function type(): string
