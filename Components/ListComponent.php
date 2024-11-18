@@ -126,7 +126,7 @@ class ListComponent
         // With this method, the number of queries is less than the number of component types. Most
         // of the time, the number of component types is less than 2 because when you adjust one part
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
-        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate {
+        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate, \Countable {
             public function __construct(
                 protected string       $parentContentId,
                 protected string       $relativeContentId,
@@ -140,6 +140,11 @@ class ListComponent
             public function toArray(): array
             {
                 return iterator_to_array($this);
+            }
+
+            public function count(): int
+            {
+                return iterator_count($this->getIterator());
             }
 
             public function getIterator(): Traversable
