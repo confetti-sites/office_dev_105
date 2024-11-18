@@ -127,6 +127,8 @@ class ListComponent
         // of the time, the number of component types is less than 2 because when you adjust one part
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
         return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate, \Countable {
+            private ?array $fakeComponents = null;
+
             public function __construct(
                 protected string       $parentContentId,
                 protected string       $relativeContentId,
@@ -137,9 +139,17 @@ class ListComponent
             {
             }
 
+            /**
+             * @return void
+             */
+            public function generateFakeComponents(): void
+            {
+                $this->fakeComponents ??= $this->getFakeComponents($this->className);
+            }
+
             public function toArray(): array
             {
-                return iterator_to_array($this);
+                return iterator_to_array($this->getIterator());
             }
 
             public function count(): int
@@ -150,7 +160,8 @@ class ListComponent
             public function getIterator(): Traversable
             {
                 if ($this->contentStore->canFake() && $this->contentStore->isFake()) {
-                    foreach ($this->getFakeComponents($this->className) as $item) {
+                    $this->generateFakeComponents();
+                    foreach ($this->fakeComponents as $item) {
                         yield $item;
                     }
                     return;
@@ -176,7 +187,8 @@ class ListComponent
                 // If data is present and not empty, then we can use it
                 if ($items !== null && $firstEmptyContent === null) {
                     if ($this->contentStore->canFake() && count($items) === 0) {
-                        foreach ($this->getFakeComponents($this->className) as $item) {
+                        $this->generateFakeComponents();
+                        foreach ($this->fakeComponents as $item) {
                             yield $item;
                         }
                         return;

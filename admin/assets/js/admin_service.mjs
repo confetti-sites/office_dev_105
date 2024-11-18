@@ -164,6 +164,10 @@ export class Storage {
     static save(serviceApiUrl, data) {
         // Remove all items from the database where the value is 'this.remove()'
         const toRemove = data.filter(item => item && item.value === 'this.remove()');
+        // If the cookie is not set, we can't save to the server
+        if (document.cookie.indexOf('access_token=') === -1) {
+            window.location.reload();
+        }
         // Loop over every item and remove. Example: DELETE /contents?id=/model/title
         toRemove.forEach(item => {
             fetch(`${serviceApiUrl}/confetti-cms/content/contents?id_prefix=${item.id}`, {
@@ -208,7 +212,6 @@ export class Storage {
             .catch(error => {
                 console.error('Error:', error);
             });
-
     }
 
     /**
