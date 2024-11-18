@@ -38,7 +38,11 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
         }
 
         // Get saved value
-        return $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
+        $result = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
+        if ($result === null) {
+            $result = $this->getComponent()->getDecoration('default', 'default');
+        }
+        return $result;
     }
 
     public function getView(): ?string
@@ -48,6 +52,7 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
             return null;
         }
         $file = str_replace('.blade.php', '', $file);
+        $file = ltrim($file, '/');
         return str_replace('/', '.', $file);
     }
 

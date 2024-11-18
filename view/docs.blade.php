@@ -3,6 +3,25 @@
     $current = \model\docs\category_list\page_list::query()->whereAliasIs($alias)->first();
     $docs = newRoot(new \model\docs)->label('Docs');
 @endphp
+
+<link rel="stylesheet" href="/view/assets/css/github-light.css"/>
+<style>
+    code {
+        padding: 0.2em 0.4em;
+        margin: 0;
+        font-size: 85%;
+        background-color: rgba(27, 31, 35, 0.05);
+        border-radius: 3px;
+    }
+    .highlight {
+        padding: 0.5em;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        font-size: 85%;
+        background-color: rgba(27, 31, 35, 0.05);
+        border-radius: 3px;
+    }
+</style>
 <div class="relative mx-auto flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
     <div class="hidden lg:relative lg:block lg:flex-none">
         <div class="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-0.5">
@@ -10,8 +29,8 @@
                 <ul class="space-y-9">
                     @foreach($docs->list('category')->sortable()->get() as $category)
                         <li>
-                            <h2 class="text-lg">{{ $category->text('title')->min(1)->max(50) }}</h2>
-                            <ul class="space-y-2">
+                            <h2 class="text-lg font-body">{{ $category->text('title')->min(1)->max(50) }}</h2>
+                            <ul class="space-y-2 font-body">
                                 @foreach($category->list('page')->sortable()->get() as $page)
                                     <li class="ml-2">
                                         <a href="/docs/{{ $page->text('alias')->min(1)->max(50) }}" class="text-blue-500">{{ $page->text('title')->min(1)->max(50) }}</a>
@@ -28,12 +47,12 @@
         <article>
             <header class="mb-9 space-y-1">
                 <h1 class="text-3xl font-semibold">{{ $current->text('title')->min(1)->max(50) }}</h1>
-                <p class="text-gray-500">@include('view.blocks.index', ['model' => $current->content('content')])</p>
+                <p class="font-body text-gray-500">@include('view.blocks.index', ['model' => $current->content('content')])</p>
             </header>
             <div>
                 @foreach($current->list('feature')->sortable()->columns(['feature'])->get() as $feature)
                     <section class="mb-8">
-                        <p class="text-gray-500">{!! $feature->discussion('feature')->label('The URL to the GitHub Discussion')->getHtml() !!}</p>
+                        <p class="font-body text-gray-500">{!! $feature->discussion('feature')->label('GitHub Discussion')->help('The URL to the GitHub Discussion')->getHtml() !!}</p>
                     </section>
                 @endforeach
             </div>

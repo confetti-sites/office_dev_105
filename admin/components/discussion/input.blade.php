@@ -74,7 +74,7 @@
                         <label class="m-2 h-10 block">
                             <button class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                 onclick="navigator.clipboard.writeText('${this.data.value.url}').then(() => this.innerHTML = 'Copied!').catch(() => this.innerHTML = 'Failed!');">
-                                Open discussion
+                                Copy URL
                             </button>
                         </label>
                     ` : ''}

@@ -19,7 +19,7 @@
                     <div class="text-gray-600 dark:text-gray-300">
                         <ul class="text-base font-medium tracking-wide flex space-y-0 text-sm">
                             <li>
-                                <a href="/playground"
+                                <a href="/features"
                                    class="block transition hover:text-primary dark:hover:text-primaryLight px-4">
                                     <span>Features</span>
                                 </a>

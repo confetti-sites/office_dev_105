@@ -21,7 +21,7 @@ class ImageComponent extends ComponentStandard
             try {
                 return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
             } catch (\JsonException $e) {
-                throw new \RuntimeException('Invalid JSON in content. JSON: ' . $content);
+                return ['error' => 'Invalid JSON in content. JSON: ' . $content];
             }
         }
 

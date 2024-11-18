@@ -34,8 +34,8 @@
     @case(str_starts_with(request()->uri(), '/blogs/'))
         @include('view.blog_detail')
         @break
-    @case(str_starts_with(request()->uri(), '/playground'))
-        @include('view.playground.index')
+    @case(str_starts_with(request()->uri(), '/features'))
+        @include('view.feature')
         @break
     @default
         @include('view.homepage')
