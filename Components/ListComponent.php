@@ -10,6 +10,7 @@ use Confetti\Helpers\ComponentEntity;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ConditionDoesNotMatchConditionFromContent;
 use Confetti\Helpers\ContentStore;
+use Countable;
 use IteratorAggregate;
 use Traversable;
 
@@ -126,7 +127,7 @@ class ListComponent
         // With this method, the number of queries is less than the number of component types. Most
         // of the time, the number of component types is less than 2 because when you adjust one part
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
-        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate, \Countable {
+        return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate, Countable {
             private ?array $fakeComponents = null;
 
             public function __construct(
@@ -144,6 +145,8 @@ class ListComponent
              */
             public function generateFakeComponents(): void
             {
+                // We store the fake components in a property, because we want to generate them only once.
+                // Otherwise, we generate them every time with different results.
                 $this->fakeComponents ??= $this->getFakeComponents($this->className);
             }
 

@@ -24,6 +24,7 @@ class DiscussionComponent extends ComponentStandard
                 throw new \RuntimeException('Invalid JSON in content. JSON: ' . $content);
             }
         }
+
         if (!$this->contentStore->canFake()) {
             return null;
         }
@@ -33,6 +34,7 @@ class DiscussionComponent extends ComponentStandard
             'url' => 'https://github.com/confetti-cms/community/discussions/1',
             'discussion' => [
                 'body' => '<p>Discussion body</p>',
+                'title' => 'Discussion title',
             ],
         ];
     }
@@ -44,6 +46,24 @@ class DiscussionComponent extends ComponentStandard
             return 'Content missing';
         }
         return $value['discussion']['body'];
+    }
+
+    public function getTitle(): string
+    {
+        $value = $this->get();
+        if (empty($value['discussion']) || empty($value['discussion']['title'])) {
+            return 'Title missing';
+        }
+        return $value['discussion']['title'];
+    }
+
+    public function getUrl(): string
+    {
+        $value = $this->get();
+        if (empty($value['url'])) {
+            return 'Url missing';
+        }
+        return $value['url'];
     }
 
     /**
@@ -73,6 +93,15 @@ class DiscussionComponent extends ComponentStandard
 
     // Label is used as a title for the admin panel
     public function label(string $label): self
+    {
+        // The arguments must be hardcoded,
+        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        return $this;
+    }
+
+    // Default is used as a default value when no value is set
+    public function default(string $default): self
     {
         // The arguments must be hardcoded,
         // do not change the parameter values

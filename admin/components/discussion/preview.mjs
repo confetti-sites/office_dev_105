@@ -33,7 +33,6 @@ export default class {
         if (this.value.error) {
             return `<span id="${this.id}">${this.value.error}</span>`;
         }
-        console.log(this.value);
         if (!this.value.discussion && !this.value.discussion.title) {
             return `<span id="${this.id}">No title</span>`;
         }
