@@ -177,6 +177,7 @@ class ListComponent
 
                     // When the content is present but received with another query condition
                     $this->contentStore->runCurrentQuery([
+                        'reason'                  => 'Condition does not match condition from content (List)',
                         'use_cache'               => true,
                         'response_with_condition' => true, // The children need to know if the data is retrieved with the same conditions.
                     ]);
@@ -234,6 +235,7 @@ class ListComponent
                 if ($this->contentStore->getLimit() === 1) {
                     return;
                 }
+
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin() ?? [];

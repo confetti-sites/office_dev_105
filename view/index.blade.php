@@ -13,6 +13,7 @@
 {{--@guest()--}}
 {{--    @include('view.under_construction')--}}
 {{--@else()--}}
+
 @include('view.header')
 
 @switch(true)

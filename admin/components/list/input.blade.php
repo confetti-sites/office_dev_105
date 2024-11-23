@@ -49,7 +49,7 @@
                 html`
                     <div class="block text-bold text-xl mt-8 mb-4">${this.label} List</div>
                     <!-- border rounded -->
-                    <div class="container grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
+                    <div class="grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
                         <table class="table-auto">
                             ${this.columns.length > 1 ? html`
                                 <thead class="hidden sm:table-header-group text-left border-b border-gray-300">

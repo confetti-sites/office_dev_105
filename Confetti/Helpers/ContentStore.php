@@ -52,6 +52,7 @@ class ContentStore
             return true;
         }
         $this->queryBuilder->setOptions([
+            'reason'                  => 'Init',
             'use_cache'               => true,
             'use_cache_from_root'     => true, // We want all the data. Even if it is for the parent.
             'patch_cache_select'      => true,
@@ -232,6 +233,7 @@ class ContentStore
         // Query the content and cache the selection
         $query = $this->queryBuilder;
         $query->setOptions([
+            'reason'             => 'Find selected data',
             'patch_cache_select' => true,
             'only_first'         => true,
             'use_cache'          => false,
@@ -264,6 +266,7 @@ class ContentStore
         }
         $this->selectInRoot($id);
         $this->runCurrentQuery([
+            'reason'              => 'Find pointer data',
             'use_cache'           => true,
             'use_cache_from_root' => true,
             'patch_cache_select'  => true,
@@ -283,6 +286,7 @@ class ContentStore
         $child = $this->queryBuilder;
         // Get the content and cache the selection
         $child->setOptions([
+            'reason'                  => 'Find first of join. This is to prevent n+1 problems. We need to load the first item.',
             'patch_cache_join'        => true,
             'only_first'              => true,
             'use_cache'               => true,
@@ -302,6 +306,7 @@ class ContentStore
     {
         $child = clone $this->queryBuilder;
         $child->setOptions([
+            'reason'                  => 'Find rest of join. This is to prevent n+1 problems. We need to load the rest of the items in one go.',
             'use_cache'               => true,
             // although we ignore the condition in the next getContentOfThisLevel,
             // we still want to know if the data is retrieved with the same conditions

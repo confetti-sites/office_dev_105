@@ -8,6 +8,9 @@
         data-component='{{ json_encode($model->getComponent()) }}'
 ></discussion-component>
 
+@pushonce('styles_discussion_component')
+    <link rel="stylesheet" href="/view/assets/css/github-light.css"/>
+@endpushonce
 @pushonce('end_of_body_discussion_component')
     <script type="module">
         import {Toolbar} from '/admin/assets/js/editor.mjs';
@@ -63,17 +66,18 @@
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.label}</label>
                     <input class="${() => `w-full px-5 py-3 text-gray-700 border-2 rounded-lg bg-gray-50 ${this.data.value === this.original ? `border-gray-300` : `border-emerald-300`}`}"
-                           type="discussion"
                            name="${this.id}"
                            value="${() => this.data.inputValue}"
                            @input="${(e) => this.data.inputValue = e.target.value}">
-                    ${this.decorations.help.help ? `<p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}
-                    ${() => this.data.value.error ? `<p class="mt-2 text-sm text-red-500">${this.data.value.error}</p>` : ''}
+                    ${this.decorations.help.help ? html`
+                        <p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}
+                    ${() => this.data.value.error ? html`
+                        <p class="mt-2 text-sm text-red-500">${this.data.value.error}</p>` : ''}
 
                     ${() => this.data.value.url ? html`
                         <label class="m-2 h-10 block">
                             <button class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                onclick="navigator.clipboard.writeText('${this.data.value.url}').then(() => this.innerHTML = 'Copied!').catch(() => this.innerHTML = 'Failed!');">
+                                    onclick="navigator.clipboard.writeText('${this.data.value.url}').then(() => this.innerHTML = 'Copied!').catch(() => this.innerHTML = 'Failed!');">
                                 Copy URL
                             </button>
                         </label>
@@ -81,7 +85,7 @@
                     ${() => this.data.value.discussion ? html`
                         <label class="block text-bold text-l mt-8 mb-4">The discussion content:</label>
                         <div class="mt-2 p-4 bg-gray-100 rounded-lg">
-                            <div class="markdown-body">${this.data.value.discussion.body}</div>
+                            <discussion>${this.data.value.discussion.body}</discussion>
                         </div>
                     ` : ''}
                 `(this)

@@ -75,6 +75,12 @@ class ImageComponent extends ComponentStandard
         return null;
     }
 
+    public function getOriginal(): ?string
+    {
+        $data = $this->get();
+        return $data['original'] ?? null;
+    }
+
     /**
      * @return string
      * Example:
