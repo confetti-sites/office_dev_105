@@ -100,6 +100,7 @@ class ListComponent
      */
     public function sortable(): self
     {
+        $this->contentStore->appendOrderBy('', 'ascending');
         return $this;
     }
 
@@ -388,35 +389,38 @@ class ListComponent
             $columns = self::getDefaultColumns($model);
         }
 
+        $rows = $model->get();
+
         // Get rows
-        $rows = [];
-        foreach ($model->get() as $row) {
-            $data = [];
+        $resultRows = [];
+        foreach ($rows as $row) {
+            $resultData = [];
             foreach ($columns as $column) {
                 $keys = explode('/', $column['id']);
                 $key  = array_shift($keys);
 
                 foreach ($row->getChildren() as $cKey => $child) {
                     if ($cKey === self::keyToArgumentKey($key)) {
-                        $target              = self::getDataFromChild($child, $keys);
-                        $variable            = [
+                        $target                    = self::getDataFromChild($child, $keys);
+                        $variable                  = [
                             // We need to set this for every value, because columns can have different component values
                             'component' => $target?->getComponent(),
                             'id'        => $target?->getId(),
                             'value'     => $target?->get(),
                         ];
-                        $data[$column['id']] = $variable;
+                        $resultData[$column['id']] = $variable;
                     }
                 }
             }
-            $rows[] = [
+
+            $resultRows[] = [
                 'id'   => $row->getId(),
                 '.'    => $row->getValue(),
-                'data' => $data,
+                'data' => $resultData,
             ];
         }
 
-        return [$columns, $rows];
+        return [$columns, $resultRows];
     }
 
     /**
@@ -472,17 +476,6 @@ class ListComponent
     private static function getDefinedColumns(self $model): ?array
     {
         return $model->getComponent()->getDecoration('columns');
-//        $definedColumns = $model->getComponent()->getDecoration('columns');
-//        if (!$definedColumns) {
-//            return null;
-//        }
-//
-//        return array_map(static function (array $column) use ($model) {
-//            return [
-//                'id'            => $column['id'],
-//                'label'         => $column['label'],
-//            ];
-//        }, $definedColumns);
     }
 
     private static function getDefaultColumns(self $model): array

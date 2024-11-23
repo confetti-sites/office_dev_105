@@ -32,7 +32,7 @@ if ($currentContentId === '') {
         @include('auth.redirect_to_login')
     @else
         @can('admin')
-            <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
+            <div class="flex h-screen dark:bg-gray-900">
                 <!-- Desktop sidebar -->
                 <aside class="z-20 flex-shrink-0 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block">
                     @include('admin.left_menu', [$currentContentId])

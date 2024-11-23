@@ -44,7 +44,7 @@
             }
 
             connectedCallback() {
-                const rows = this.service.getRows();
+                const rows = this.service.getRows(this.sortable);
 
                 html`
                     <div class="block text-bold text-xl mt-8 mb-4">${this.label} List</div>
@@ -160,7 +160,7 @@
 
             #renderedCallback() {
                 if (this.sortable) {
-                    this.service.makeDraggable(this.getElementsByTagName('tbody')[0]);
+                    this.service.makeDraggable(this.getElementsByTagName('tbody')[0], true);
                 }
             }
 

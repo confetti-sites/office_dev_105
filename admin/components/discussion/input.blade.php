@@ -84,7 +84,7 @@
                     ` : ''}
                     ${() => this.data.value.discussion ? html`
                         <label class="block text-bold text-l mt-8 mb-4">The discussion content:</label>
-                        <div class="mt-2 p-4 bg-gray-100 rounded-lg">
+                        <div class="mt-2 p-4 border border-gray-400 rounded-lg">
                             <discussion>${this.data.value.discussion.body}</discussion>
                         </div>
                     ` : ''}

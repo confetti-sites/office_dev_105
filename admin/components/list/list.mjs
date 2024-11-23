@@ -19,7 +19,7 @@ export default class LimList {
         return withoutReference;
     }
 
-    getRows() {
+    getRows(ascending) {
         // Merge new rows from local storage
         // With row.id as key
         let rowsWithNew = this.rows;
@@ -72,9 +72,11 @@ export default class LimList {
             result.push({id: rowRaw.id, data: data});
         }
 
-        result = result.sort((a, b) => {
-            return b.data['.'] - a.data['.'];
-        })
+        if (ascending) {
+            result.sort((a, b) => a.data['.'] - b.data['.']);
+        } else {
+            result.sort((a, b) => b.data['.'] - a.data['.']);
+        }
 
         return result;
     }
@@ -83,7 +85,7 @@ export default class LimList {
      * @see https://onclick.blog/blog/creating-resizable-table-with-drag-drop-reorder-functionality-using-pure-javascript-and-tailwind-css
      * @param {HTMLElement} tbody
      */
-    makeDraggable(tbody) {
+    makeDraggable(tbody, ascending) {
         const originalRows = this.originalRows;
         let rows = tbody.querySelectorAll('tr');
         // Initialize the drag source element to null
@@ -97,7 +99,11 @@ export default class LimList {
             });
             // order indexes
             indexes = indexes.map((index) => parseInt(index));
-            indexes.sort((a, b) => b - a);
+            if (ascending) {
+                indexes.sort((a, b) => a - b);
+            } else {
+                indexes.sort((a, b) => b - a);
+            }
             return indexes;
         };
         // Loop through each row (skipping the first row which contains the table headers)
@@ -105,10 +111,14 @@ export default class LimList {
             let row = rows[i];
             // Make each row draggable, but only if the icon is on mouse down
             if (row.getElementsByClassName('_drag_grip').length > 0) {
-                row.getElementsByClassName('_drag_grip')[0].addEventListener('mousedown', e => {row.draggable = true});
+                row.getElementsByClassName('_drag_grip')[0].addEventListener('mousedown', e => {
+                    row.draggable = true
+                });
             }
             // Unsubscribe the drag event listener when the mouse is up
-            row.addEventListener('mouseup', e => {row.draggable = false});
+            row.addEventListener('mouseup', e => {
+                row.draggable = false
+            });
 
             // Add an event listener for when the drag starts
             row.addEventListener('dragstart', function (e) {

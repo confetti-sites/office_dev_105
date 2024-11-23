@@ -14,7 +14,7 @@
 {{--    @include('view.under_construction')--}}
 {{--@else()--}}
 
-@include('view.header')
+{{--@include('view.header')--}}
 
 @switch(true)
     @case(request()->uri() === '/waiting-list-step-1')
@@ -43,8 +43,8 @@
         @break
 @endswitch
 
-@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_small.blade.php'))
-@include($target, ['model' => $target])
+{{--@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_small.blade.php'))--}}
+{{--@include($target, ['model' => $target])--}}
 
 {{--    @endguest--}}
 
