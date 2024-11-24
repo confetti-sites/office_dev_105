@@ -6,12 +6,17 @@ class QueryBuilder
 {
     private const MODEL_PREFIX = '/model/';
 
-    private array $queryStack = [];
-    private array $query;
+    public array $queryStack = [];
+    public array $query;
 
     public function __construct(string $from = '', string $as = null)
     {
         $this->newQuery($from, $as);
+    }
+
+    public function getFullQueryStack(): array
+    {
+        return array_merge($this->queryStack, [$this->query]);
     }
 
     public function replaceFrom(string $relativeId): void
@@ -179,9 +184,9 @@ class QueryBuilder
      * With this condition, we can check if the desired condition
      * is met with the condition of the already retrieved content.
      */
-    public function getCurrentCondition(): string
+    public function getCurrentCondition($query): string
     {
-        $parentQuery = $this->query ?? null;
+        $parentQuery = $query ?? null;
         $result = "";
         foreach ($parentQuery['where'] ?? [] as $i => $where) {
             $prefix = $i == 0 ? 'where' : 'and';

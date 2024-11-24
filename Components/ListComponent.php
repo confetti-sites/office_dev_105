@@ -100,7 +100,7 @@ class ListComponent
      */
     public function sortable(): self
     {
-        $this->contentStore->appendOrderBy('', 'ascending');
+        $this->orderAscBy($this->getId());
         return $this;
     }
 

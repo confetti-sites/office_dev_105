@@ -89,13 +89,13 @@
 
                 <div class="col-span-8 md:col-span-6 lg:col-span-5 text-gray-600">
                     <div class="grid grid-cols-2 gap-6 pb-16 sm:grid-cols-3 md:pl-16">
-                        @foreach($footer->list('column')->min(1)->max(3)->get() as $list)
+                        @foreach($footer->list('column')->min(1)->max(3)->sortable()->get() as $list)
                             <div>
                                 <h2 class="text-base font-medium text-gray-800 dark:text-gray-200">
                                     {{ $list->text('header_title')->min(2)->max(30) }}
                                 </h2>
                                 <ul class="mt-4 list-inside space-y-4">
-                                    @foreach($list->list('row')->columns(['title'])->min(1)->max(10)->get() as $item)
+                                    @foreach($list->list('row')->columns(['title'])->min(1)->max(10)->sortable()->get() as $item)
                                         <li>
                                             <a
                                                     href="{{ $item->text('link')->min(2)->max(200) }}"

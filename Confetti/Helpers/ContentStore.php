@@ -345,6 +345,7 @@ class ContentStore
     public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false): ?array
     {
         $content             ??= $this->content;
+        $queryStack          = $this->queryBuilder->queryStack;
         $latestJoinCondition = null;
         foreach ($this->breadcrumbs as $breadcrumb) {
             if (array_key_exists('join_condition', $content) && array_key_exists($breadcrumb['path'], $content['join_condition'])) {
@@ -356,7 +357,7 @@ class ContentStore
                     if (!empty($content['id'])) {
                         break;
                     }
-                    // Find the correct level in an array
+                    // Find the correct level in the array
                     $found = false;
                     foreach ($content as $item) {
                         if (!array_key_exists('id', $item)) {
@@ -376,24 +377,27 @@ class ContentStore
                         return null;
                     }
 
-                    // Get the current content before we check if the condition is the same.
-                    $content = $content['join'][$breadcrumb['path']];
+                    // Remove the previous query from the stack
+                    $queryStack = array_pop($queryStack);
 
                     // We need to check if the condition is the same.
                     // We need to be able to verify if the data from
                     // the cache matches the data from the given condition.
-                    $currentCondition    = $this->queryBuilder->getCurrentCondition();
+                    $currentCondition    = $this->queryBuilder->getCurrentCondition($queryStack[0] ?? null);
                     $checkIfQueryMatches = !$ignoreCondition && $currentCondition !== '';
                     $contentCondition    = $checkIfQueryMatches ? $latestJoinCondition : null;
 
-                    if ($checkIfQueryMatches && $contentCondition !== $currentCondition) {
+                    if ($checkIfQueryMatches && $currentCondition !== $contentCondition) {
                         throw new ConditionDoesNotMatchConditionFromContent("The query that is used to fetch the data is not the same as the query that is used to generate the response. This is a bug in Confetti. Given condition: `{$currentCondition}`, response condition: `$contentCondition`");
                     }
+
+                    $content = $content['join'][$breadcrumb['path']];
                     break;
                 case 'join_pointer':
                     if (empty($content['join'][$breadcrumb['path']])) {
                         return null;
                     }
+
                     $content = $content['join'][$breadcrumb['path']][0];
                     break;
             }
