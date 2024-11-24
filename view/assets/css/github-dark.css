@@ -45,8 +45,16 @@ discussion {
         padding-bottom: 5px;
     }
 
-    & h3 {
+    & h1, h2 {
         font-size: 1.5rem;
+        line-height: 2.5rem;
+        font-weight: 600;
+        padding-top: 20px;
+        padding-bottom: 5px;
+    }
+
+    & h3 {
+        font-size: 1.3rem;
         line-height: 2rem;
         font-weight: 600;
         padding-top: 20px;
