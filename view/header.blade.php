@@ -1,63 +1,68 @@
 @php($header = newRoot(new \model\homepage\header)->label('Header'))
 
 <header class="z-50 bg-white/80 backdrop-blur border-b border-gray-100 dark:border-gray-700/30 dark:bg-gray-900/80 w-full">
-    <nav id="navbar" class=" relative inset-x-0">
-        <div>
-            <div class="relative flex flex-wrap items-center justify-between">
-                <div class="relative z-20 flex w-full justify-between px-0 w-max">
-                    <a href="/" aria-label="logo" class="flex items-center space-x-2 p-2">
-                        <img src="/view/assets/confetti_cms_logo.png" class="h-10 pl-4">
-                        <span class="hidden sm:block pt-2">{!! $header->text('title')->min(1)->max(20)->default('Confetti CMS') !!}</span>
+    <nav class="relative">
+        <div class="flex items-center justify-between px-4 py-2">
+            <!-- Logo Container -->
+            <div id="logo" class="flex items-center p-2">
+                <a href="/" aria-label="logo" class="flex items-center space-x-2">
+                    <img src="/view/assets/confetti_cms_logo.png" class="h-10">
+                </a>
+            </div>
+            <div></div>
+            <div class="flex justify-end md:w-full md:justify-end">
+                <!-- Hamburger Icon -->
+                <button id="menu-toggle"
+                        aria-label="Toggle Navigation"
+                        class="text-gray-600 dark:text-gray-300 focus:outline-none md:hidden"
+                >
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                    </svg>
+                </button>
+
+                <!-- Navigation Links -->
+                <div
+                        class="js-menu hidden flex-col space-y-2 px-4 py-2 bg-white dark:bg-gray-900 dark:border-gray-700 md:flex md:flex-row md:space-y-0 md:space-x-4 md:border-none md:py-0"
+                >
+                    <a href="/features" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
+                        Features
                     </a>
-                </div>
-                <div id="layer"
-                     aria-hidden="true"
-                     class="fixed inset-0 z-10 h-screen w-screen origin-bottom scale-y-0 bg-white/70 backdrop-blur-2xl transition duration-500 dark:bg-gray-900/70"
-                ></div>
-                <div id="navlinks"
-                     class="absolute left-0 z-20 origin-top-right translate-y-1 scale-90 justify-end gap-6 rounded-3xl border border-gray-100 bg-white p-8 opacity-0 shadow-2xl shadow-gray-600/10 transition-all duration-300 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none visible relative flex w-auto translate-y-0 scale-100 flex-row items-center gap-0 border-none bg-transparent p-0 opacity-100 shadow-none peer-checked:translate-y-0 dark:bg-transparent">
-                    <div class="text-gray-600 dark:text-gray-300">
-                        <ul class="text-base font-medium tracking-wide flex space-y-0 text-sm">
-                            <li>
-                                <a href="/features"
-                                   class="block transition hover:text-primary dark:hover:text-primaryLight px-4">
-                                    <span>Features</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/pricing"
-                                   class="block transition hover:text-primary dark:hover:text-primaryLight px-4">
-                                    <span>Pricing</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/docs"
-                                   class="block transition hover:text-primary dark:hover:text-primaryLight px-4">
-                                    <span>Docs</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/blogs"
-                                   class="block transition hover:text-primary dark:hover:text-primaryLight px-4">
-                                    <span>Blogs</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <a href="/pricing" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
+                        Pricing
+                    </a>
+                    <a href="/docs" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
+                        Docs
+                    </a>
+                    <a href="/blogs" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
+                        Blogs
+                    </a>
                     @guest
-                        <div class="ml-2 mr-4 flex w-full flex-col space-y-2 border-primary/10 dark:border-gray-700">
-                            <a href="https://tally.so/r/mK5kgK"
-                               class="relative ml-auto flex h-9 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-primaryLight px-4"
-                            >
-                        <span class="relative text-sm font-semibold text-white dark:text-gray-900">
-                            Join<span class="hidden sm:contents"> the waiting list</span>
-                        </span>
-                            </a>
-                        </div>
+                    <a href="https://tally.so/r/mK5kgK"
+                       class="relative ml-auto flex h-10 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-primaryLight px-4"
+                    >
+                                <span class="relative text-sm font-semibold text-white dark:text-gray-900">
+                                    Join<span class="hidden sm:contents"> the waiting list</span>
+                                </span>
+                    </a>
                     @endguest
                 </div>
             </div>
         </div>
     </nav>
 </header>
+
+<script>
+    // Toggle menu visibility
+    const menuToggle = document.getElementById('menu-toggle');
+    const menu = document.getElementsByClassName('js-menu')[0];
+    const logo = document.getElementById('logo');
+
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('hidden');
+        menu.classList.toggle('hidden');
+        logo.classList.toggle('hidden');
+    });
+</script>
+
 

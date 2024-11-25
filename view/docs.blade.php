@@ -5,9 +5,15 @@
 @endphp
 
 <link rel="stylesheet" href="/view/assets/css/github-light.css"/>
-<div class="relative mx-auto flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
-    <div class="hidden lg:relative lg:block lg:flex-none">
-        <div class="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-0.5">
+<script defer>
+    const docMenuToggle = document.getElementById('menu-toggle');
+    docMenuToggle.addEventListener('click', () => {
+        document.getElementsByClassName('js-left-menu')[0].classList.toggle('hidden');
+    });
+</script>
+<div class="relative mx-auto md:flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
+    <div class="js-left-menu hidden md:relative md:relative md:block md:flex-none">
+        <div class="sticky md:top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-6 md:py-16 ml-4 md:pl-0.5">
             <nav class="text-base lg:text-sm w-64 pr-8 xl:w-64 xl:pr-4">
                 <ul class="space-y-4">
                     @foreach($docs->list('category')->sortable()->get() as $category)
