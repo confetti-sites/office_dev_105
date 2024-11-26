@@ -4,7 +4,7 @@
       key: 'sandbox',
       options: {
         // The view service is the main service
-        when_no_data_is_saved_show_fake_data: true,
+        when_no_data_is_saved_show_fake_data: false,
       },
       containers: [
         // Main view service

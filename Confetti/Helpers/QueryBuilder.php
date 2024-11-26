@@ -6,17 +6,17 @@ class QueryBuilder
 {
     private const MODEL_PREFIX = '/model/';
 
-    public array $queryStack = [];
-    public array $query;
+    private array $queryStack = [];
+    private array $query;
 
     public function __construct(string $from = '', string $as = null)
     {
         $this->newQuery($from, $as);
     }
 
-    public function getFullQueryStack(): array
+    public function getQueryStack(): array
     {
-        return array_merge($this->queryStack, [$this->query]);
+        return $this->queryStack;
     }
 
     public function replaceFrom(string $relativeId): void
@@ -133,6 +133,11 @@ class QueryBuilder
         ];
 
         return $this;
+    }
+
+    public function getOrderBy(): array
+    {
+        return $this->query['order_by'] ?? [];
     }
 
     public function getLimit(): ?int

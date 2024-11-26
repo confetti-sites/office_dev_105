@@ -177,6 +177,11 @@ class ContentStore
         $this->queryBuilder->appendOrderBy($key, $direction);
     }
 
+    public function getOrderBy(): array
+    {
+        return $this->queryBuilder->getOrderBy();
+    }
+
     public function getLimit(): ?int
     {
         return $this->queryBuilder->getLimit();
@@ -345,7 +350,7 @@ class ContentStore
     public function getContentOfThisLevel(array $content = null, bool $ignoreCondition = false): ?array
     {
         $content             ??= $this->content;
-        $queryStack          = $this->queryBuilder->queryStack;
+        $queryStack          = $this->queryBuilder->getQueryStack();
         $latestJoinCondition = null;
         foreach ($this->breadcrumbs as $breadcrumb) {
             if (array_key_exists('join_condition', $content) && array_key_exists($breadcrumb['path'], $content['join_condition'])) {

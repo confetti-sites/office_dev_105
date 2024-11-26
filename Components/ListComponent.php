@@ -110,6 +110,12 @@ class ListComponent
      */
     public function get(): IteratorAggregate
     {
+        // If has a decoration sortable, then we want to sort the list
+        // But if the order is already set, then we don't want to sort the list
+        if ($this->getComponent()->getDecoration('sortable') && empty($this->contentStore->getOrderBy())) {
+            $this->sortable();
+        }
+
         // Ensure that the content is initialized
         $initRan = $this->contentStore->runInit();
         if ($initRan) {

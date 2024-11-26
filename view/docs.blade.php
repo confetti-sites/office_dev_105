@@ -4,13 +4,6 @@
     $docs = newRoot(new \model\docs)->label('Docs');
 @endphp
 
-<link rel="stylesheet" href="/view/assets/css/github-light.css"/>
-<script defer>
-    const docMenuToggle = document.getElementById('menu-toggle');
-    docMenuToggle.addEventListener('click', () => {
-        document.getElementsByClassName('js-left-menu')[0].classList.toggle('hidden');
-    });
-</script>
 <div class="relative mx-auto md:flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
     <div class="js-left-menu hidden md:relative md:relative md:block md:flex-none">
         <div class="sticky md:top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-6 md:py-16 ml-4 md:pl-0.5">
@@ -66,7 +59,7 @@
                 <nav class="text-base lg:text-sm w-64 pr-8 xl:w-64 xl:pr-4">
                 <h2 class="pb-2 text-lg font-body text-gray-700">On this page:</h2>
                 <ul class="space-y-2 text-lg font-body">
-                    @foreach($current->features()->orderAscBy('')->get() as $feature)
+                    @foreach($current->features()->get() as $feature)
                         <li class="ml-2">
                             <a href="#{{ $feature->content->getTitle() }}" class="text-blue-500">{{ $feature->content->getTitle() }}</a>
                         </li>
@@ -82,3 +75,13 @@
         </div>
     @endif
 </div>
+
+@pushonce('script_docs')
+    <link rel="stylesheet" href="/view/assets/css/github-light.css"/>
+    <script defer>
+        const docMenuToggle = document.getElementById('menu-toggle');
+        docMenuToggle.addEventListener('click', () => {
+            document.getElementsByClassName('js-left-menu')[0].classList.toggle('hidden');
+        });
+    </script>
+@endpushonce
