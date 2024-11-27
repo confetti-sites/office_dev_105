@@ -109,8 +109,6 @@ class ImageComponent extends ComponentStandard
      */
     public function label(string $label): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -120,8 +118,6 @@ class ImageComponent extends ComponentStandard
      */
     public function widthPx(int $widthPx): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -131,8 +127,6 @@ class ImageComponent extends ComponentStandard
      */
     public function ratio(int $width, int $height): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }

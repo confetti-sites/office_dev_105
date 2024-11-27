@@ -57,8 +57,6 @@ class ContentComponent extends ComponentStandard
      */
     public function default(string $default): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -68,8 +66,6 @@ class ContentComponent extends ComponentStandard
      */
     public function label(string $label): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -79,8 +75,6 @@ class ContentComponent extends ComponentStandard
      */
     public function placeholder(string $placeholder): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }

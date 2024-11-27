@@ -74,8 +74,6 @@ class TextComponent extends ComponentStandard
     // Default will be used if no value is saved
     public function default(string $default): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -83,8 +81,6 @@ class TextComponent extends ComponentStandard
     // Label is used as a field title in the admin panel
     public function label(string $label): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -92,8 +88,6 @@ class TextComponent extends ComponentStandard
     // Minimum number of characters
     public function min(int $min): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -101,8 +95,40 @@ class TextComponent extends ComponentStandard
     // Maximum number of characters
     public function max(int $max): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        return $this;
+    }
+
+    /**
+     * Let the user style the text with the following tools.
+     * By default the following styles are supported:
+     *   b - bold
+     *   i - italic
+     *   u - underline
+     *
+     * Feel free to add more tools.
+     * 1. Change this function and update
+     * 2. EditorJS({tools:{}}) in the preview.mjs file. For example:
+     *    ```
+     *      tools: {
+     *       b: Bold,
+     *       u: Underline,
+     *       i: Italic,
+     *       r: RedCircle,
+     *      }
+     *    ```
+     * 3. Copy and modify `/admin/components/content/tools/italic.mjs` to `/admin/components/content/tools/red-circle.mjs`
+     * 4. Import the new tool in preview.mjs `import Italic from /admin/components/content/tools/italic.mjs`
+     */
+    public function bar(array $tools): self
+    {
+        $supported = ['b', 'i', 'u'];
+        foreach ($tools as $tool) {
+            if (!in_array($tool, $supported)) {
+                throw new \InvalidArgumentException('Invalid tool: ' . $tool . '. Supported tools are: ' . implode(', ', $supported));
+            }
+        }
+
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -110,8 +136,6 @@ class TextComponent extends ComponentStandard
     // The placeholder text for the input field
     public function placeholder(string $placeholder): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -119,8 +143,6 @@ class TextComponent extends ComponentStandard
     // Help text is shown below the input field
     public function help(string $help): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }

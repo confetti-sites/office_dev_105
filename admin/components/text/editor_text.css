@@ -26,4 +26,13 @@ text-component {
     & .ce-inline-tool {
         padding: 12px;
     }
+
+    /** Remove item from the toolbar because we can't convert it to a other block */
+    & .ce-popover-item[data-item-name="convert-to"] {
+        display: none;
+    }
+    /** and first separator */
+    & .ce-popover-item-separator:first-of-type {
+        display: none;
+    }
 }

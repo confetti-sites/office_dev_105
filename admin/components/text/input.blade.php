@@ -32,11 +32,12 @@
             label
             data
             decorations = {
-                help: {help: null},
                 default: {default: null},
-                placeholder: {placeholder: null},
-                min: {min: null},
+                help: {help: null},
                 max: {max: null},
+                min: {min: null},
+                placeholder: {placeholder: null},
+                bar: {tools: []},
             }
             original
             component
@@ -49,6 +50,9 @@
                 this.decorations = JSON.parse(this.dataset.decorations);
                 this.original = JSON.parse(this.dataset.original);
                 this.component = JSON.parse(this.dataset.component);
+
+                // Get all the ids from the array, not the labels
+                this.decorations.bar.tools = this.decorations.bar?.tools?.map(tool => tool.id);
 
                 // Here we set the default value if it is not set.
                 if (this.original === null && !Storage.hasLocalStorageItem(this.id)) {
@@ -90,17 +94,12 @@
                     // 1. Map tool names to the actual tools
                     // 2. Add the tool to the inlineToolbar
                     tools: {
-                        bold: Bold,
-                        underline: Underline,
-                        italic: Italic,
+                        b: Bold,
+                        u: Underline,
+                        i: Italic,
                         paragraph: {
                             class: LimText,
-                            inlineToolbar: [
-                                'bold',
-                                'underline',
-                                'italic',
-                            ],
-
+                            inlineToolbar: this.decorations.bar.tools,
                             config: {
                                 /**
                                  * E.g. /model/homepage/title

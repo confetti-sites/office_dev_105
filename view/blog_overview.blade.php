@@ -10,7 +10,7 @@
         @foreach($blogs as $blog)
             <li class="bg-white rounded-lg shadow p-6">
                 <div class="flex justify-between items-start">
-                    <h3 class="text-2xl font-semibold text-blue-500">{{ $blog->text('title')->min(1)->max(50) }}</h3>
+                    <h3 class="text-2xl font-semibold text-blue-500">{{ $blog->text('title')->min(1)->max(50)->bar(['b', 'i', 'u']) }}</h3>
                 </div>
                 <div class="mt-4">
                     <a href="/blogs/{{ $blog->text('alias')->min(1)->max(50) }}" class="text-blue-500">Read more</a>

@@ -17,7 +17,7 @@
                                     <li class="ml-2 my-2">
                                         <a href="/docs/{{ $page->text('alias')->min(1)->max(50) }}" class="text-blue-500">{{ $page->text('title')->min(1)->max(50) }}</a>
                                         @foreach($page->list('feature')->sortable()->columns(['content'])->get() as $feature)
-                                            <ul class="md:hidden space-y-3">
+                                            <ul class="lg:hidden space-y-3">
                                                 <li class="ml-2 my-2">
                                                     <a href="/docs/{{ $page->text('alias')->min(1)->max(50) }}#{{ urlencode($feature->content->getTitle()) }}" class="text-blue-500">{{ $feature->content->getTitle() }}</a>
                                                 </li>

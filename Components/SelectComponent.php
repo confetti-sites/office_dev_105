@@ -61,8 +61,6 @@ class SelectComponent extends ComponentStandard
      */
     public function default(string $default): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -72,8 +70,6 @@ class SelectComponent extends ComponentStandard
      */
     public function label(string $label): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -83,8 +79,6 @@ class SelectComponent extends ComponentStandard
      */
     public function options(array $options): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }

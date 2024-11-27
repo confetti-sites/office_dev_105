@@ -85,8 +85,6 @@ class DiscussionComponent extends ComponentStandard
     // Help is used as a description for the admin panel
     public function help(string $help): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -94,8 +92,6 @@ class DiscussionComponent extends ComponentStandard
     // Label is used as a title for the admin panel
     public function label(string $label): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
@@ -103,8 +99,6 @@ class DiscussionComponent extends ComponentStandard
     // Default is used as a default value when no value is set
     public function default(string $default): self
     {
-        // The arguments must be hardcoded,
-        // do not change the parameter values
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
     }
