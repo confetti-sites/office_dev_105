@@ -52,14 +52,14 @@
             <span class="text-body-color text-base font-medium"> / month</span>
           </div>
           <p class="text-body-color mb-2 pb-2 text-base font-body font-bold">
-              Perfect for a personal website, local club or a small business.
+              Perfect for a personal website or a small business.
           </p>
           <div class="absolute -bottom-16 -right-2 md:-right-4 py-5 px-4 md:px-5 border-primary rounded-xl border border-opacity-20 bg-white">
             <h2 class="text-primary mb-4 block text-lg font-semibold">
               High traffic website
             </h2>
             <div class="text-dark text-lg font-bold">
-              + €24 <span class="text-body-color text-base font-medium">/ month</span>
+              + €78 <span class="text-body-color text-base font-medium">/ month</span>
               <div class="text-body-color text-base font-medium">
                 <div class="flex-col text-base font-body"><div>for every</div><div>additional resource</div></div>
               </div>

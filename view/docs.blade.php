@@ -12,10 +12,17 @@
                     @foreach($docs->list('category')->sortable()->get() as $category)
                         <li>
                             <h2 class="text-lg font-body">{{ $category->text('title')->min(1)->max(50) }}</h2>
-                            <ul class="text-lg space-y-2 font-body">
+                            <ul class="text-lg mt-1 space-y-4 font-body">
                                 @foreach($category->list('page')->sortable()->get() as $page)
-                                    <li class="ml-2">
+                                    <li class="ml-2 my-2">
                                         <a href="/docs/{{ $page->text('alias')->min(1)->max(50) }}" class="text-blue-500">{{ $page->text('title')->min(1)->max(50) }}</a>
+                                        @foreach($page->list('feature')->sortable()->columns(['content'])->get() as $feature)
+                                            <ul class="md:hidden space-y-3">
+                                                <li class="ml-2 my-2">
+                                                    <a href="/docs/{{ $page->text('alias')->min(1)->max(50) }}#{{ urlencode($feature->content->getTitle()) }}" class="text-blue-500">{{ $feature->content->getTitle() }}</a>
+                                                </li>
+                                            </ul>
+                                        @endforeach
                                     </li>
                                 @endforeach
                             </ul>
@@ -26,6 +33,7 @@
         </div>
     </div>
     @if($current !== null)
+        @php($features = $current->features()->get())
         <div class="min-w-0 max-w-3xl flex-auto px-4 py-16 lg:max-w-none lg:pl-8 lg:pr-0 xl:px-16">
             <article class="text-gray-700">
                 <header class="mb-9 space-y-1">
@@ -40,9 +48,9 @@
                     @endif
                 </header>
                 <div>
-                    @foreach($current->list('feature')->sortable()->columns(['content'])->get() as $feature)
+                    @foreach($features as $feature)
                         <section class="mb-8 font-body">
-                            <h2 id="{{ $feature->content->getTitle() }}" class="text-2xl font-semibold text-blue-500">{{ $feature->content->getTitle() }}</h2>
+                            <h2 id="{{ urlencode($feature->content->getTitle()) }}" class="text-2xl font-semibold text-blue-500">{{ $feature->content->getTitle() }}</h2>
                             <div class="mt-2 text-gray-800">{!! $feature->discussion('content')->label('GitHub Discussion')->help('The URL to the GitHub Discussion')->getHtml() !!}</div>
                             <label class="m-2 h-10 block">
                                 <a href="{{ $feature->content->getUrl() }}" class="float-right justify-between px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white rounded-md">
@@ -57,14 +65,16 @@
         <div class="hidden lg:relative lg:block lg:flex-none">
             <div class="sticky top-[4.5rem] ml-2 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-0.5">
                 <nav class="text-base lg:text-sm w-64 pr-8 xl:w-64 xl:pr-4">
-                <h2 class="pb-2 text-lg font-body text-gray-700">On this page:</h2>
-                <ul class="space-y-2 text-lg font-body">
-                    @foreach($current->features()->get() as $feature)
-                        <li class="ml-2">
-                            <a href="#{{ $feature->content->getTitle() }}" class="text-blue-500">{{ $feature->content->getTitle() }}</a>
-                        </li>
-                    @endforeach
-                </ul>
+                    @if(count($features))
+                        <h2 class="pb-2 text-lg font-body text-gray-700">On this page:</h2>
+                        <ul class="space-y-3 text-lg font-body">
+                            @foreach($features as $feature)
+                                <li class="ml-2">
+                                    <a href="#{{ urlencode($feature->content->getTitle()) }}" class="text-blue-500">{{ $feature->content->getTitle() }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </nav>
             </div>
         </div>

@@ -135,7 +135,8 @@ class ListComponent
         // of the time, the number of component types is less than 2 because when you adjust one part
         // (in the middle) of the query, we can use the cached query to retrieve the rest of the query.
         return new class($this->parentContentId, $this->relativeContentId, $this->contentStore, $this->as, $className) implements IteratorAggregate, Countable {
-            private ?array $fakeComponents = null;
+            private array $result = [];
+            private bool $complete = false;
 
             public function __construct(
                 protected string       $parentContentId,
@@ -152,9 +153,14 @@ class ListComponent
              */
             public function generateFakeComponents(): void
             {
+                if ($this->complete) {
+                    return;
+                }
+
                 // We store the fake components in a property, because we want to generate them only once.
                 // Otherwise, we generate them every time with different results.
-                $this->fakeComponents ??= $this->getFakeComponents($this->className);
+                $this->result ??= $this->getFakeComponents($this->className);
+                $this->complete = true;
             }
 
             public function toArray(): array
@@ -171,7 +177,9 @@ class ListComponent
             {
                 if ($this->contentStore->canFake() && $this->contentStore->isFake()) {
                     $this->generateFakeComponents();
-                    foreach ($this->fakeComponents as $item) {
+                }
+                if ($this->complete) {
+                    foreach ($this->result as $item) {
                         yield $item;
                     }
                     return;
@@ -199,7 +207,7 @@ class ListComponent
                 if ($items !== null && $firstEmptyContent === null) {
                     if ($this->contentStore->canFake() && count($items) === 0) {
                         $this->generateFakeComponents();
-                        foreach ($this->fakeComponents as $item) {
+                        foreach ($this->result as $item) {
                             yield $item;
                         }
                         return;
@@ -236,21 +244,27 @@ class ListComponent
                 }
                 $childContentStore = clone $this->contentStore;
                 $childContentStore->appendCurrentJoin($first['id']);
-                yield new $this->className($this->parentContentId, $first['id'], $childContentStore);
+                $firstRow = new $this->className($this->parentContentId, $first['id'], $childContentStore);
+                $this->result[] = $firstRow;
+                yield $firstRow;
+
 
                 // When the limit is 1, we don't need to load the rest of the items
                 if ($this->contentStore->getLimit() === 1) {
+                $this->complete = true;
                     return;
                 }
-
 
                 // After the first item is loaded and cached, we can load the rest of the items in one go.
                 $contents = $this->contentStore->findRestOfJoin() ?? [];
                 foreach ($contents as $content) {
                     $childContentStore = clone $this->contentStore;
                     $childContentStore->appendCurrentJoin($content['id']);
-                    yield new $this->className($this->parentContentId, $content['id'], $childContentStore);
+                    $row = new $this->className($this->parentContentId, $content['id'], $childContentStore);
+                    $this->result[] = $row;
+                    yield $row;
                 }
+                $this->complete = true;
             }
 
             /**
