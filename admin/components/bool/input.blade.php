@@ -48,13 +48,13 @@
 
                 html`
                     <div class="flex items center mt-8 mb-4 flex items center space-x-2" @click="${() => this.data.value = !this.data.value}">
-                        <span class="text-gray-900 text-bold text-xl">${this.label}</span>
-                        <div class="relative inline-block mt-1 w-12 h-7 align-middle select-none toggle-label block overflow-hidden rounded-full bg-gray-300 cursor-pointer">
+                        <div class="relative inline-block w-12 h-7 align-middle select-none toggle-label block overflow-hidden rounded-full bg-gray-300 cursor-pointer">
                             <input type="checkbox" name="${this.id}" id="${this.id}"
                                    class="${() => 'absolute block w-7 h-7 rounded-full appearance-none cursor-pointer transition-all duration-1000 ease-in-out ' + (this.data.value === true ? 'bg-emerald-600 right-0' : 'bg-gray-200')}"
                                    checked="${() => this.data.value}"
                             />
                         </div>
+                        <span class="text-gray-900 text-bold text-xl">${this.label}</span>
                     </div>
                     ${this.decorations.help.help ? `<p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}
                 `(this);
