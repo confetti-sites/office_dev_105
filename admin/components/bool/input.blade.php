@@ -74,6 +74,7 @@
                 // We need to save some value (with component) to show it in the list
                 if (this.data.value === null) {
                     this.data.value = this.decorations.default.default ? this.decorations.default.default : false;
+                    Storage.saveLocalStorageModel(this.id, this.data.value, this.dataset.component);
                 }
             }
         });

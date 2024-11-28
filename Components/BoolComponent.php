@@ -22,12 +22,6 @@ class BoolComponent extends ComponentStandard
             return $value === true;
         }
 
-        // Use default if decoration is set
-        $default = $this->getComponent()->getDecoration('default', 'default');
-        if ($default !== null) {
-            return $default;
-        }
-
         if ($this->contentStore->canFake()) {
             return $this->random();
         }
