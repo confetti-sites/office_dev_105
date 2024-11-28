@@ -1,2 +1,2 @@
-@php($footer = extendModel($model)->label('Select required'))
-@php($footer->select('value')->options(['First', 'Second'])->required())
+@php($feature = extendModel($model)->label('Select required'))
+@php($feature->select('value')->options(['First', 'Second'])->required())

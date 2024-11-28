@@ -1,2 +1,2 @@
-@php($footer = extendModel($model)->label('Select nothing'))
-@php($footer->select('value'))
+@php($feature = extendModel($model)->label('Select nothing'))
+@php($feature->select('value'))

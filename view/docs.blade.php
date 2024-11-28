@@ -39,7 +39,7 @@
                 <header class="mb-9 space-y-1">
                     <h1 class="text-3xl font-semibold text-blue-500">{{ $current->intro->getTitle() }}</h1>
                     <div class="font-body">{!! $current->discussion('intro')->label('Intro')->help('The URL to the GitHub Discussion')->default('')->getHtml() !!}</div>
-                    @if($current->text('show_faq')->default('false')->get() === 'true')
+                    @if($current->bool('show_faq')->default(false)->get())
                         <label class="m-2 h-10 block">
                             <a href="{{ $current->intro->getUrl() }}" class="float-right justify-between px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white rounded-md">
                                 FAQ

@@ -52,8 +52,6 @@
                     } else {
                         value = {'error': 'Invalid url', 'url': null};
                     }
-                    console.log('value');
-                    console.log(value);
                     this.data.value = value;
                     Storage.removeLocalStorageModels(this.id);
                     if (value !== this.original) {

@@ -1,2 +1,2 @@
-@php($footer = extendModel($model)->label('Content basic'))
-@php($footer->content('value')->default('Confetti CMS'))
+@php($feature = extendModel($model)->label('Content basic'))
+@php($feature->content('value')->default('Confetti CMS'))

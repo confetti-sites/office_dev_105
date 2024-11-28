@@ -26,7 +26,6 @@ export default class {
     constructor(id, value, component) {
         this.id = id;
         this.value = value;
-        console.log('Preview', this.value);
     }
 
     toHtml() {

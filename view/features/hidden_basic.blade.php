@@ -1,3 +1,3 @@
-@php($footer = extendModel($model)->label('Hidden basic'))
-@php($footer->hidden('value'))
+@php($feature = extendModel($model)->label('Hidden basic'))
+@php($feature->hidden('value'))
 

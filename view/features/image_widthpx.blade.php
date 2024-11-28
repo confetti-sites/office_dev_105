@@ -1,2 +1,2 @@
-@php($footer = extendModel($model)->label('Image widthPx'))
-<picture>{!! $footer->image('value')->widthPx(400)->getSourcesHtml() !!}</picture>
+@php($feature = extendModel($model)->label('Image widthPx'))
+<picture>{!! $feature->image('value')->widthPx(400)->getSourcesHtml() !!}</picture>
