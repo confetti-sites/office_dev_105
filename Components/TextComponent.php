@@ -18,6 +18,9 @@ class TextComponent extends ComponentStandard
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null || !$this->contentStore->canFake()) {
+            if (!is_string($content)) {
+                return null;
+            }
             return $content;
         }
 

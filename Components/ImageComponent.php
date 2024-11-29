@@ -19,6 +19,9 @@ class ImageComponent extends ComponentStandard
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
             try {
+                if (!is_string($content)) {
+                    return ['error' => 'Content is not in expected format: ' . $content];
+                }
                 return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
             } catch (\JsonException $e) {
                 return ['error' => 'Invalid JSON in content. JSON: ' . $content];

@@ -18,7 +18,7 @@ class ColorComponent extends ComponentStandard
         // Get saved value
         $value = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($value !== null) {
-            return htmlspecialchars($value);
+            return htmlspecialchars((string)$value);
         }
         if (!$this->contentStore->canFake()) {
             return null;

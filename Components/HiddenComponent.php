@@ -19,7 +19,11 @@ class HiddenComponent extends ComponentStandard
             throw new \RuntimeException('This component is only used as a reference. Therefore, you can\'t call __toString() or get().');
         }
         // Get saved value
-        return $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
+        $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
+        if ($content == null) {
+            return null;
+        }
+        return (string) $content;
     }
 
     public function getViewAdminInput(): string

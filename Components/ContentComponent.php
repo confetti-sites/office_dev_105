@@ -19,7 +19,11 @@ class ContentComponent extends ComponentStandard
         // Get saved value
         $content = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($content !== null) {
-            return json_decode($content, true);
+            $result = json_decode((string) $content, true);
+            if (is_array($result)) {
+                return $result;
+            }
+            return null;
         }
 
         // Get default value

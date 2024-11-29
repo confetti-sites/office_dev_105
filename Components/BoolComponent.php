@@ -18,8 +18,10 @@ class BoolComponent extends ComponentStandard
         // Get saved value
         $value = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
         if ($value !== null) {
-            // Value can be other types than bool, like a string from a previous/other type. So cast it strictly to bool.
-            return $value === true;
+            // From sqlite, the value is an int. So we want to cast it to a bool.
+            // Value can be other types than an int, like a string from a previous/other type.
+            // So that is the reason for the strict comparison.
+            return $value === 1;
         }
 
         if ($this->contentStore->canFake()) {
