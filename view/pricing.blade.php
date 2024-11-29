@@ -21,13 +21,6 @@
         </div>
       </div>
     </div>
-    <div class="text-center pt-8">
-      <div class="py-2 px-4 bg-primary items-center leading-none rounded-full flex inline-flex text-white">
-        <span class="flex rounded-full border border-opacity-20 border-white uppercase px-2 py-1 text-sm font-bold mr-3">Beta</span>
-        <div class="font-semibold mr-2 text-left flex-col md:hidden"><div>Since Confetti is in beta</div><div>all plans are currently free</div></div>
-        <div class="font-semibold mr-2 text-left flex-col hidden md:block">Since Confetti is in beta, all plans are currently free</div>
-      </div>
-    </div>
     <div class="-mx-4 md:mx-2 flex flex-wrap justify-center pt-8">
       <div class="w-full md:w-1/2 px-4 md:pt-8">
         <div class="border-primary relative overflow-hidden rounded-xl border border-opacity-20 bg-white p-8">
@@ -43,6 +36,12 @@
         </div>
       </div>
       <div class="w-full md:w-1/2 px-4 mb-10 pt-8">
+        <div class="absolute text-center z-10 rotate-6 skew-y-6 right-0">
+          <div class="py-2 px-4 bg-primary items-center leading-none rounded-full flex inline-flex text-white">
+            <span class="flex rounded-full border border-opacity-20 border-white uppercase px-2 py-1 text-sm font-bold mr-3">Beta</span>
+            <div class="font-semibold mr-2 text-left flex-col"><div>Since Confetti is in beta</div><div>all plans are currently free</div></div>
+          </div>
+        </div>
         <div class="relative h-full rounded-xl border border-primary border-opacity-20 bg-white mb-16 p-8">
           <h2 class="text-primary mb-4 block text-lg font-semibold">
               Personal & small business
