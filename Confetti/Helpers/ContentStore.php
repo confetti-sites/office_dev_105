@@ -383,7 +383,10 @@ class ContentStore
                     }
 
                     // Remove the previous query from the stack
-                    $queryStack = array_pop($queryStack);
+                    if (!empty($queryStack)) {
+                        $queryStack = array_pop($queryStack);
+                    }
+
 
                     // We need to check if the condition is the same.
                     // We need to be able to verify if the data from
