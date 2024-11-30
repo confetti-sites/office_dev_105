@@ -23,6 +23,7 @@
             decorations = {
                 help: {help: null},
                 default: {default: null},
+                labelsOnOff: {on: '', off: ''}
             }
 
             constructor() {
@@ -79,8 +80,8 @@
             }
 
             #getLabel() {
-                if (this.decorations.labels !== undefined) {
-                    return this.data.value ? this.decorations.labels.on : this.decorations.labels.off;
+                if (this.decorations.labelsOnOff !== undefined) {
+                    return this.data.value ? this.decorations.labelsOnOff.on : this.decorations.labelsOnOff.off;
                 }
                 return this.label;
             }

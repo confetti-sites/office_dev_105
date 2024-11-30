@@ -54,8 +54,8 @@ class BoolComponent extends ComponentStandard
         return $this;
     }
 
-    // Labels is used to set different labels for on and off
-    public function labels(string $on, string $off): self
+    // Labels on/off are used for a boolean field
+    public function labelsOnOff(string $on, string $off): self
     {
         $this->setDecoration(__FUNCTION__, get_defined_vars());
         return $this;
@@ -75,9 +75,9 @@ class BoolComponent extends ComponentStandard
         return $this;
     }
 
-    private function random(): mixed
+    private function random(): bool
     {
-        return [true, false][array_rand([true, false])];
+        return (bool)random_int(0, 1);
     }
 }
 
