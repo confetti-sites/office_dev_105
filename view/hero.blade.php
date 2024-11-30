@@ -8,7 +8,7 @@
                 <span>{{ $hero->text('title')->min(1)->max(30)->default('Confetti CMS') }}</span>
             </h1>
             <p class="mt-4 text-xl dark:text-white text-gray-900">
-                The fastest way to compose a CMS from your HTML
+                The quickest way to create a CMS using only HTML and CSS
             </p>
             <div class="flex">
                 <div class="mt-8">

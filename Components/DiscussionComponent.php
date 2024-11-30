@@ -45,7 +45,9 @@ class DiscussionComponent extends ComponentStandard
         if (empty($value['discussion']) || empty($value['discussion']['body'])) {
             return 'Content missing';
         }
-        return '<discussion>' . $value['discussion']['body'] . '</discussion>';
+        $content = $value['discussion']['body'];
+        $content = preg_replace('/<hr.*?>.*/s', '', $content);
+        return '<discussion>' . $content . '</discussion>';
     }
 
     public function getTitle(): string

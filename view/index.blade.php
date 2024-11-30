@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/resources/view__tailwind/tailwind.output.css"/>
     <link rel="stylesheet" href="/view/assets/css/fonts.css"/>
     <script defer>
-        @stack('script_*')
+        @stack('style_*')
     </script>
 </head>
 <body class="text-md overflow-x-hidden">

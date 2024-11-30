@@ -50,8 +50,11 @@
                 <div>
                     @foreach($features as $feature)
                         <section class="mb-8 font-body">
-                            <h2 id="{{ urlencode($feature->content->getTitle()) }}" class="text-2xl font-semibold text-blue-500">{{ $feature->content->getTitle() }}</h2>
-                            <div class="mt-2 text-gray-800">{!! $feature->discussion('content')->label('GitHub Discussion')->help('The URL to the GitHub Discussion')->getHtml() !!}</div>
+                            <h2 id="{{ urlencode($feature->content->getTitle()) }}" class="mt-4 mb-4 text-2xl font-semibold text-blue-500">{{ $feature->content->getTitle() }}</h2>
+                            <picture class="mt-4 mb-4 w-full rounded-lg" alt="{{ $feature->content->getTitle() }}">
+                                {!! $feature->image('feature_banner')->widthPx(700)->getSourcesHtml() !!}
+                            </picture>
+                            <div class="mt-4 mb-4 text-gray-800">{!! $feature->discussion('content')->label('GitHub Discussion')->help('The URL to the GitHub Discussion')->getHtml() !!}</div>
                             <label class="m-2 h-10 block">
                                 <a href="{{ $feature->content->getUrl() }}" class="float-right justify-between px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white rounded-md">
                                     FAQ
@@ -63,10 +66,10 @@
             </article>
         </div>
         <div class="hidden lg:relative lg:block lg:flex-none">
-            <div class="sticky top-[4.5rem] ml-2 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-0.5">
-                <nav class="text-base lg:text-sm w-64 pr-8 xl:w-64 xl:pr-4">
+            <div class="sticky top-[4.5rem] ml-2 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-4">
+                <nav class="text-base lg:text-sm w-52 pr-8 xl:w-64 xl:pr-4">
                     @if(count($features))
-                        <h2 class="pb-2 text-lg font-body text-gray-700">On this page:</h2>
+                        <h2 class="pb-2 text-lg font-body text-gray-700">All components:</h2>
                         <ul class="space-y-3 text-lg font-body">
                             @foreach($features as $feature)
                                 <li class="ml-2">
@@ -88,6 +91,8 @@
 
 @pushonce('script_docs')
     <link rel="stylesheet" href="/view/assets/css/github-light.css"/>
+@endpushonce
+@pushonce('script_docs')
     <script defer>
         const docMenuToggle = document.getElementById('menu-toggle');
         docMenuToggle.addEventListener('click', () => {
