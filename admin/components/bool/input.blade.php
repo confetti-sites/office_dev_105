@@ -54,7 +54,7 @@
                                    checked="${() => this.data.value}"
                             />
                         </div>
-                        <span class="text-bold text-l mt-1">${this.label}</span>
+                        <span class="text-bold text-l mt-1">${() => this.#getLabel()}</span>
                     </div>
                     ${this.decorations.help.help ? `<p class="mt-2 text-sm text-gray-500">${this.decorations.help.help}</p>` : ''}
                 `(this);
@@ -76,6 +76,13 @@
                     this.data.value = this.decorations.default.default ? this.decorations.default.default : false;
                     Storage.saveLocalStorageModel(this.id, this.data.value, this.dataset.component);
                 }
+            }
+
+            #getLabel() {
+                if (this.decorations.labels !== undefined) {
+                    return this.data.value ? this.decorations.labels.on : this.decorations.labels.off;
+                }
+                return this.label;
             }
         });
     </script>

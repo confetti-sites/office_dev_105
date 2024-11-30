@@ -54,6 +54,13 @@ class BoolComponent extends ComponentStandard
         return $this;
     }
 
+    // Labels is used to set different labels for on and off
+    public function labels(string $on, string $off): self
+    {
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        return $this;
+    }
+
     // Help is used as a description for the admin panel
     public function help(string $help): self
     {
