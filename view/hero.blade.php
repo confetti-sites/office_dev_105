@@ -3,7 +3,7 @@
     <div
             class="container py-28 md:flex md:items-center"
     >
-        <div class="md:w-1/2" x-intersect="$el.classList.add('slide-in-top')">
+        <div class="md:w-1/2">
             <h1 class="text-6xl font-bold leading-tight dark:text-white text-gray-900">
                 <span>{{ $hero->text('title')->min(1)->max(30)->default('Confetti CMS') }}</span>
             </h1>
@@ -28,9 +28,7 @@
             </div>
         </div>
         <div class="md:w-1/2 mt-8 md:mt-0 md:ml-14 relative">
-            <picture class="w-full h-full object-cover rounded-lg shadow-md">
-                {!! $hero->image('image')->getSourcesHtml() !!}
-            </picture>
+            {!! $hero->image('image')->getPicture(class: 'w-full h-full object-cover rounded-lg shadow-md') !!}
         </div>
     </div>
 </div>

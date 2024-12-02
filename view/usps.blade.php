@@ -30,9 +30,6 @@
                         <p class="mt-2 text-base text-gray-500 dark:text-white font-body">
                             {{ $usp->description }}
                         </p>
-                        <p class="mt-2 text-base text-gray-500 dark:text-white font-body">
-                            {{ $usp->text('extra_description') }}
-                        </p>
                     </div>
                 </div>
             @endforeach

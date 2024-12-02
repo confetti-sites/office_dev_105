@@ -3,7 +3,7 @@
     <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
       <span class="text-sm text-gray-500 sm:text-center">
           © {{ date('Y') }}
-          <a href="https://flowbite.com/" class="hover:underline">
+          <a href="/" class="hover:underline">
               {{ $footer->text('first_line')->default('Confetti™') }}
           </a>
     </span>

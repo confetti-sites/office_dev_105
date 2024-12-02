@@ -70,7 +70,11 @@
                     addLoaderBtn(e.target);
                     Storage.saveFromLocalStorage('{{ getServiceApi() }}', id).then((result) => {
                         if (result) {
-                            document.location.reload();
+                            if ('{{ $id }}'.includes('~')) {
+                                Storage.redirectAway('{{ $parent }}');
+                            } else {
+                                document.location.reload();
+                            }
                         } else {
                             removeLoaderBtn(e.target)
                         }

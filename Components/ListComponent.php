@@ -72,6 +72,14 @@ class ListComponent
     }
 
     /**
+     * The plural version of the label. Needed for the list in the admin.
+     */
+    public function labelPlural(string $labelPlural): self
+    {
+        return $this;
+    }
+
+    /**
      * Minimum number of items
      */
     public function min(int $min): self
@@ -524,6 +532,3 @@ class ListComponent
         }, $columns);
     }
 }
-
-
-

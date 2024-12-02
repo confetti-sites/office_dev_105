@@ -41,6 +41,11 @@ discussion {
         padding: 20px;
     }
 
+    & ol {
+        list-style-type: decimal;
+        padding: 20px;
+    }
+
     & p {
         padding-bottom: 5px;
     }

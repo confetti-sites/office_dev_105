@@ -43,7 +43,7 @@
         @break
 @endswitch
 
-@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->default('/view/footers/footer_small.blade.php'))
+@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->required()->default('/view/footers/footer_small.blade.php'))
 @include($target, ['model' => $target])
 
 {{--    @endguest--}}

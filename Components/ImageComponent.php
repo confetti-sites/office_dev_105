@@ -87,11 +87,13 @@ class ImageComponent extends ComponentStandard
     /**
      * @return string
      * Example:
+     * <picture>
      * <source media="(min-width: 640px)" srcset="giraffe.jpeg 1x, giraffe_2x.jpeg 2x" />
      * <source srcset="giraffe.small.jpeg 1x, giraffe.small_2x.jpeg 2x" />
-     * <img src="giraffe.jpeg" alt="" />
+     * <img src="giraffe.jpeg" />
+     * </picture>
      */
-    public function getSourcesHtml(string $alt = ''): string
+    public function getPicture(string $alt = '', string $class = '', string $style = ''): string
     {
         $alt = htmlspecialchars($alt);
 
@@ -101,9 +103,11 @@ class ImageComponent extends ComponentStandard
         } else {
             $url = $data['original'] ?? '';
         }
-        $html = $this->getBigSource() ?? '';
+        $html = '<picture>';
+        $html .= $this->getBigSource() ?? '';
         $html .= $this->getMobileSource();
-        $html .= "<img src=\"$url\" alt=\"$alt\">";
+        $html .= "<img src=\"$url\" alt=\"$alt\" class='$class' style='$style' />";
+        $html .= '</picture>';
         return $html;
     }
 

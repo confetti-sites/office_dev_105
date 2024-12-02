@@ -139,6 +139,13 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
         return $this;
     }
 
+    // Required removes the "Nothing selected" option.
+    public function required(): self
+    {
+        $this->setDecoration(__FUNCTION__, get_defined_vars());
+        return $this;
+    }
+
     /**
      * We can save the label of the selected file in a (hidden) field.
      * Then we can use this label in the admin to show in the list.

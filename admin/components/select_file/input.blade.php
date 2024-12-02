@@ -59,7 +59,7 @@
                 help: {help: null},
                 default: {default: null},
                 match: {matches: null},
-                required: {required: null},
+                required: null,
             }
             use_label_for
             options = {
@@ -114,7 +114,7 @@
                 name="${this.id}"
                             @change="${(e) => this.data.value = e.target.value}"
                     >
-                        ${this.decorations.required !== undefined && this.decorations.required.required === 'true' ? '' : html`<option selected>Nothing selected</option>`}
+                        ${this.decorations.required !== undefined && this.decorations.required.required ? '' : html`<option selected>Nothing selected</option>`}
                         ${this.options.map(option => html`
                             <option value="${option.source_path}" ${this.data.value === option.source_path ? 'selected' : ''}
                             >${option.label}</option>

@@ -11,6 +11,7 @@
         data-id="{{ $model->getId() }}"
         data-label="{{ $model->getComponent()->getLabel() }}"
         data-sortable="{{ $model->getComponent()->getDecoration('sortable') ? 'true' : '' }}"
+        data-decorations="{{ json_encode($model->getComponent()->getDecorations()) }}"
         data-columns="{{ json_encode($columns) }}"
         data-original_rows="{{ json_encode($originalRows) }}"
         data-service_api="{{ getServiceApi() }}"
@@ -31,6 +32,9 @@
             originalRows;
             service;
             serviceApi;
+            decorations = {
+                labelPlural: {labelPlural: null},
+            }
 
             constructor() {
                 super();
@@ -41,13 +45,14 @@
                 this.originalRows = JSON.parse(this.dataset.original_rows);
                 this.service = new LimList(this.dataset.id, this.columns, this.originalRows);
                 this.serviceApi = this.dataset.service_api;
+                this.decorations = JSON.parse(this.dataset.decorations);
             }
 
             connectedCallback() {
                 const rows = this.service.getRows(this.sortable);
 
                 html`
-                    <div class="block text-bold text-xl mt-8 mb-4">${this.label} List</div>
+                    <div class="block text-bold text-xl mt-8 mb-4">${this.decorations.labelPlural.labelPlural ?? this.label}</div>
                     <!-- border rounded -->
                     <div class="grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
                         <table class="table-auto">
@@ -150,7 +155,7 @@
                     const wrapper = document.getElementById(uniqueId);
                     if (wrapper) {
                         console.error(error);
-                        wrapper.innerHTML = 'Error loading content';
+                        wrapper.innerHTML = `Can't load component`;
                     }
                 });
 

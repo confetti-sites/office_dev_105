@@ -146,6 +146,3 @@ class ContentComponent extends ComponentStandard
         return $possibilities[$i];
     }
 }
-
-
-

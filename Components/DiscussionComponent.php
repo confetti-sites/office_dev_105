@@ -46,7 +46,7 @@ class DiscussionComponent extends ComponentStandard
             return 'Content missing';
         }
         $content = $value['discussion']['body'];
-        $content = preg_replace('/<hr.*?>.*/s', '', $content);
+        $content = preg_replace('/<hr\>.*/s', '', $content);
         return '<discussion>' . $content . '</discussion>';
     }
 
