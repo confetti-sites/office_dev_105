@@ -1,4 +1,4 @@
-FROM alpine:3.20 as tailwindcss_view_tmp_name
+FROM alpine:3.20
 
 WORKDIR /src
 COPY . .

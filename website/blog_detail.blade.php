@@ -14,7 +14,7 @@
             @foreach($blog->list('content_block')->columns(['content'])->sortable()->get() as $contentRow)
                 <div class="mx-4 w-full">
                     {!! $contentRow->image('image')->widthPx(800)->getPicture(class: 'relative w-full sm:w-220 p-3 rounded-lg') !!}
-                    @include('view.blocks.index', ['model' => $contentRow->content('content')])
+                    @include('website.blocks.index', ['model' => $contentRow->content('content')])
                 </div>
             @endforeach
         </div>

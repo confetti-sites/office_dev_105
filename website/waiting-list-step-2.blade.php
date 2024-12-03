@@ -1,5 +1,5 @@
 @guest()
-    @include('auth.redirect_to_login')
+    @include('website.auth.redirect_to_login')
 @else
     <div class="relative ">
         <div class="flex items-center justify-center w-full h-screen bg-gray-50 dark:bg-gray-900">

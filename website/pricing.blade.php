@@ -92,4 +92,4 @@
   </div>
 </section>
 <!-- End pricing -->
-@include('view.faq')
+@include('website.faq')
