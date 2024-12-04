@@ -16,6 +16,6 @@ LABEL for_development_only="true"
 CMD /bin/tailwindcss \
 -i /src/assets/css/tailwind.css \
 -c /src/tailwind.config.js \
--o /var/resources/view__tailwind/tailwind.output.css \
+-o /var/resources/website__tailwind/tailwind.output.css \
 --watch
 

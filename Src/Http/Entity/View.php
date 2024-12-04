@@ -2,21 +2,13 @@
 
 namespace Src\Http\Entity;
 
-class View
+readonly class View
 {
-    private string $view;
-    private array $variables;
-
-    public function __construct()
+    public function __construct(
+        private string $view,
+        private array  $variables = [],
+    )
     {
-    }
-
-    public function view(string $view, array $data = []): self
-    {
-        $this->view      = $view;
-        $this->variables = $data;
-
-        return $this;
     }
 
     public function getView(): string

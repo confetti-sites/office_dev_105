@@ -16,25 +16,27 @@ class Website
     /** @noinspection PhpSwitchCanBeReplacedWithMatchExpressionInspection */
     public static function render(): View
     {
-        $response = new View();
-
         switch (true) {
+            case request()->uri() === '/':
+                return new View('website.homepage');
+            case request()->uri() === '/auth/callback':
+                return new View('website.auth.callback');
             case request()->uri() === '/waiting-list-step-1':
-                return $response->view('website.waiting-list-step-1');
+                return new View('website.waiting-list-step-1');
             case request()->uri() === '/waiting-list-step-2':
-                return $response->view('website.waiting-list-step-2');
+                return new View('website.waiting-list-step-2');
             case request()->uri() === '/pricing':
-                return $response->view('website.pricing');
+                return new View('website.pricing');
             case str_starts_with(request()->uri(), '/docs'):
-                return $response->view('website.documentation');
+                return new View('website.documentation');
             case request()->uri() === '/blogs':
-                return $response->view('website.blog_overview');
+                return new View('website.blog_overview');
             case str_starts_with(request()->uri(), '/blogs/'):
-                return $response->view('website.blog_detail');
+                return new View('website.blog_detail');
             case str_starts_with(request()->uri(), '/features'):
-                return $response->view('website.feature');
+                return new View('website.feature');
             default:
-                return $response->view('website.errors.page_not_found');
+                return new View('website.errors.page_not_found');
         }
     }
 }
