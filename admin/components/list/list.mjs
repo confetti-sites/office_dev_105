@@ -111,7 +111,7 @@ export default class LimList {
             let row = rows[i];
             // Make each row draggable, but only if the icon is on mouse down
             if (row.getElementsByClassName('_drag_grip').length > 0) {
-                row.getElementsByClassName('_drag_grip')[0].addEventListener('mousedown', e => {
+                row.getElementsByClassName('_drag_grip')[0].addEventListener('click', e => {
                     row.draggable = true
                 });
             }

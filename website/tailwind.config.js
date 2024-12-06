@@ -1,4 +1,3 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 
 module.exports = {
@@ -18,7 +17,7 @@ module.exports = {
         }),
         fontFamily: {
             'headings': ['pluto'],
-            'body': ['Lato', 'sans-serif'],
+            'body': ['sans-serif'],
           },
         extend: {
             colors: {
@@ -84,7 +83,6 @@ module.exports = {
         },
     },
     plugins: [
-        // require('@tailwindcss/forms'), // double import ?
         require('@tailwindcss/typography'),
         require('@tailwindcss/forms')({
             strategy: 'class',

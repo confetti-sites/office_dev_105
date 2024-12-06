@@ -6,6 +6,7 @@
 
 <div class="text-gray-500">
     <ul class="mt-16">
+        <li class="sr-only"><a href="#main">Skip to main content</a></li>
         @foreach($root->getChildren() as $firstChild)
             <li class="relative">
                 @php($component = $firstChild->getComponent())

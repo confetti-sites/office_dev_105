@@ -10,7 +10,7 @@
                     Do you offer a plan for students?
                 </h3>
                 <p class="text-gray-500 font-body">
-                    Our mission at Confetti-CMS is to empower individuals of all skill levels to build websites with ease, including students and hobbyists. That's why we offer a free plan for students. And if you want to take your website to the next level and link it to a custom domain name, we offer affordable hosting starting at just €10 per month.
+                    Our mission is to empower developers of all skill levels to build websites with ease, including students and hobbyists. That's why we offer a free plan for students. And if you want to take your website to the next level and link it to a custom domain name, we offer affordable hosting starting at just €10 per month.
                 </p>
             </div>
             <div class="mb-10">
@@ -19,7 +19,7 @@
                     How can I reuse code over multiple websites?
                 </h3>
                 <p class="text-gray-500 font-body">
-                    You can clone repositories anywhere in your project. Similar to Git Submodules, but better.
+                    You can clone repositories anywhere in your project. Similar to Git Submodules, but better. Or use Composer to include packages from Packagist.
                 </p>
             </div>
         </div>
@@ -29,16 +29,7 @@
                     <svg class="flex-shrink-0 mr-2 w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
                     How much CPU do I get for one server?
                 </h3>
-                <p class="text-gray-500 font-body">Not all CPUs are the same. That's why it can be misleading to express CPU and memory in numbers. But we ensure you that our servers are optimized to provide the best performance for your website. With one resource, you can easily run a website with low to moderate traffic. And if you need to handle more traffic, our caching solutions can help you scale up without any hassle. Regardless, using Confetti will be more cost-effective than integrating with AWS.</p>
-            </div>
-            <div class="mb-10">
-                <h3 class="flex items-center mb-4 text-lg font-medium">
-                    <svg class="flex-shrink-0 mr-2 w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
-                    How long will Confetti remain completely free?
-                </h3>
-                <p class="text-gray-500 font-body">
-                    "Move fast and break things" is a motto for many startups. But since we don't have a deadline, we have plenty of time to first establish a solid foundation. We want to make sure that Confetti is a stable and reliable platform before we start charging for it. If you connect your domain to the server, keep in mind that we may charge money in the future.
-                </p>
+                <p class="text-gray-500 font-body">Not all CPUs are the same. That's why it can be misleading to express CPU and memory in numbers. But we ensure you that our servers are optimized to provide the best performance for your website. With one resource, you can easily run most websites. And if you need to handle heavy load, our caching solutions can help you scale up without any hassle. Regardless, using Confetti will be more cost-effective than integrating with AWS.</p>
             </div>
         </div>
     </div>

@@ -9,7 +9,7 @@
 ></discussion-component>
 
 @pushonce('styles_discussion_component')
-    <link rel="stylesheet" href="/view/assets/css/github-light.css"/>
+    <link rel="stylesheet" href="/website/assets/css/github-light.css"/>
 @endpushonce
 @pushonce('end_of_body_discussion_component')
     <script type="module">
@@ -74,7 +74,7 @@
 
                     ${() => this.data.value.url ? html`
                         <label class="m-2 h-10 block">
-                            <button class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                            <button type="button" class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                                     onclick="navigator.clipboard.writeText('${this.data.value.url}').then(() => this.innerHTML = 'Copied!').catch(() => this.innerHTML = 'Failed!');">
                                 Copy URL
                             </button>

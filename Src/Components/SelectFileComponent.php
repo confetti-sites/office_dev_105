@@ -30,7 +30,7 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
 
     public function get(): ?string
     {
-        // For now, we do not allow to select itself. Than we create a recursive 'from' value. For example:
+        // For now, we do not allow to select itself. Then we create a recursive 'from' value. For example:
         // /model/feature/feature~2HEF1WN1HS/type-/value-/value-/value-/value-/value-/value-/value-/value-/
         // count slashes and throw an exception if the count is higher than 20
         if (substr_count($this->parentContentId . '/' . $this->relativeContentId, '/') > 20) {
@@ -42,6 +42,7 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
         if ($result === null) {
             $result = $this->getComponent()->getDecoration('default', 'default');
         }
+
         return $result;
     }
 

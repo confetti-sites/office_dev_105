@@ -1,14 +1,11 @@
 @php(newRoot(new \model\homepage))
 
-@include('website.hero')
-@include('website.usps')
-@include('website.demo')
-@include('website.compare')
+@extends('website.layouts.main')
 
-@include('website.steps')
-
-@include('website.newsletter')
-
-
-{{-- Use one instead of first --}}
-{{--@php($homepage = \model\homepage::query()->one())--}}
+@section('content')
+    @include('website.includes.hero')
+    @include('website.includes.usps')
+    @include('website.includes.demo')
+    @include('website.includes.compare')
+    @include('website.includes.steps')
+@endsection

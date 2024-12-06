@@ -20,7 +20,7 @@
                 </div>
                 <div class="mt-8 ml-4">
                     <a
-                            href="#"
+                            href="/docs"
                             class="inline-block bg-secondary dark:bg-gray-800 text-white px-6 py-3 rounded-lg"
                     >Learn More</a
                     >

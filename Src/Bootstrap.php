@@ -7,7 +7,7 @@ namespace Src;
 use App\Exceptions\FileNotFoundException;
 use App\Render\BladeOne;
 use App\Render\RenderService;
-use HttpRequestException;
+use Exception;
 use Src\Http\Routes\Admin;
 use Src\Http\Routes\Website;
 
@@ -42,7 +42,7 @@ class Bootstrap
 
         $path = str_replace('.', '/', $view);
         if (!file_exists("$this->repository/$path.blade.php")) {
-            throw new HttpRequestException(
+            throw new Exception(
                 "View not found. Looking for file: $path.blade.php"
             );
         }

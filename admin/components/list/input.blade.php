@@ -92,27 +92,27 @@
                                     </td>` : ''}
                                         ${rowColumns.map((item) => html`
                                             <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
-                                                @mousedown="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
+                                                @click="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
                                                 ${(item !== undefined && item.component !== null ? this.#loadMjs(item.id, item.value, item.component) : this.#noComponentFound(item?.id) && '')}
                                             </td>`)}
                                         <td class="hidden sm:table-cell sm:w-[140px]">
                                             <div class="${() => `flex flex-nowrap float-right ` + (state.confirmDelete ? `collapse` : ``)}">
-                                                <a class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                   @mousedown="${() => this.#editItem(row.id)}">
+                                                <button type="button" class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                                   @click="${() => this.#editItem(row.id)}">
                                                     Edit
-                                                </a>
-                                                <button class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                        @mousedown="${() => state.confirmDelete = true}">
+                                                </button>
+                                                <button type="button" class="float-right justify-between px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                                        @click="${() => state.confirmDelete = true}">
                                                     Delete
                                                 </button>
                                             </div>
                                             <div class="${() => `absolute flex right-0 ` + (state.confirmDelete ? `` : `collapse`)}">
                                                 <div>
-                                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                                                            @mousedown="${() => state.confirmDelete = false}">Cancel
+                                                    <button type="button" class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                                                            @click="${() => state.confirmDelete = false}">Cancel
                                                     </button>
-                                                    <button class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
-                                                            @mousedown="${element => this.#removeItem(element, rows, row)}">
+                                                    <button type="button" class="px-2 py-1 m-3 ml-0 text-sm font-medium leading-5 text-white bg-red-500 hover:bg-red-600 border border-transparent rounded-md"
+                                                            @click="${element => this.#removeItem(element, rows, row)}">
                                                         Confirm
                                                     </button>
                                                 </div>
@@ -124,10 +124,10 @@
                         </table>
                     </div>
                     <label class="m-2 h-10 block">
-                        <a class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
-                           @mousedown="${() => this.#redirectToNew()}">
+                        <button type="button" class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
+                           @click="${() => this.#redirectToNew()}">
                             Add ${this.label}
-                        </a>
+                        </button>
                     </label>
                 `(this)
                 this.#renderedCallback();

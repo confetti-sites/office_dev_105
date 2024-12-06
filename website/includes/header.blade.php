@@ -5,14 +5,16 @@
         <div class="flex items-center justify-between px-4 py-2">
             <!-- Logo Container -->
             <div id="logo" class="flex items-center p-2">
-                <a href="/" aria-label="logo" class="flex items-center space-x-2">
-                    <img src="/view/assets/confetti_cms_logo.png" class="h-10">
+                <a href="/" aria-label="logo" class="flex items-center space-x-4">
+                    <img src="/website/assets/confetti_cms_logo.png" class="h-10">
+                    <span class="text-xl">Confetti CMS</span>
                 </a>
             </div>
             <div></div>
-            <div class="flex justify-end md:w-full md:justify-end">
+            <div class="flex justify-end  md:justify-end">
                 <!-- Hamburger Icon -->
                 <button id="menu-toggle"
+                        type="button"
                         aria-label="Toggle Navigation"
                         class="text-gray-600 dark:text-gray-300 focus:outline-none md:hidden"
                 >
@@ -21,12 +23,9 @@
                     </svg>
                 </button>
 
-                <!-- Navigation Links -->
-                <div
-                        class="js-menu hidden flex-col space-y-2 px-4 py-2 bg-white dark:bg-gray-900 dark:border-gray-700 md:flex md:flex-row md:space-y-0 md:space-x-4 md:border-none md:py-0"
-                >
-                    <a href="/features" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
-                        Features
+                <div class="js-menu hidden flex-col space-y-2 px-4 py-2 bg-white dark:bg-gray-900 dark:border-gray-700 md:flex md:flex-row md:space-y-0 md:space-x-4 md:border-none md:py-0">
+                    <a href="/" class="block md:hidden transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
+                        Home
                     </a>
                     <a href="/pricing" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
                         Pricing
@@ -34,19 +33,17 @@
                     <a href="/docs" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
                         Docs
                     </a>
-                    <a href="/blogs" class="block transition hover:text-primary dark:hover:text-primaryLight px-4 py-2 md:py-2">
-                        Blogs
-                    </a>
                     @guest
-                    <a href="https://tally.so/r/mK5kgK"
-                       class="relative ml-auto flex h-10 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-primaryLight px-4"
-                    >
-                                <span class="relative text-sm font-semibold text-white dark:text-gray-900">
-                                    Join<span class="hidden sm:contents"> the waiting list</span>
-                                </span>
-                    </a>
+                        <a href="https://tally.so/r/mK5kgK"
+                           class="relative ml-auto flex h-10 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-primaryLight px-4"
+                        >
+                        <span class="relative text-sm font-semibold text-white dark:text-gray-900">
+                            Join<span class="hidden sm:contents"> the waiting list</span>
+                        </span>
+                        </a>
                     @endguest
                 </div>
+                <!-- Navigation Links -->
             </div>
         </div>
     </nav>

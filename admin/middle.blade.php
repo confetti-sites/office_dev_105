@@ -15,7 +15,7 @@
 
 <div class="container py-6 px-6 mx-auto max-w-4xl grid">
     @include('admin.breadcrumbs', ['currentId' => $id])
-    <div>
+    <div id="main">
         @foreach($children as $child)
             @php($component = $child->getComponent())
             @if($component->type === 'root')
@@ -84,8 +84,8 @@
                 html`
                 <div class="flex flex-row w-full space-x-4">
                     @if($canBeDeleted)
-                    <button class="${() => `basis-1/4 px-5 flex items-center justify-center text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-emerald-700 hover:bg-red-600` : `bg-emerald-700 hover:bg-emerald-800`} border border-transparent rounded-md`}"
-                            @mousedown="${(e) => state.confirmDelete ? addLoaderBtn(e.target) && Storage.delete('{{ getServiceApi() }}', id, ()=> Storage.redirectAway('{{ $parent }}')) && removeLoaderBtn(e.target) : state.confirmDelete = true}">
+                    <button type="button" class="${() => `basis-1/4 px-5 flex items-center justify-center text-sm font-medium leading-5 text-white ${state.confirmDelete ? `bg-emerald-700 hover:bg-red-600` : `bg-emerald-700 hover:bg-emerald-800`} border border-transparent rounded-md`}"
+                            @click="${(e) => state.confirmDelete ? addLoaderBtn(e.target) && Storage.delete('{{ getServiceApi() }}', id, ()=> Storage.redirectAway('{{ $parent }}')) && removeLoaderBtn(e.target) : state.confirmDelete = true}">
                         <span>${() => state.confirmDelete ? `Confirm` : `Delete`}</span>
                     </button>
                     @endif
@@ -94,7 +94,7 @@
                         Back
                     </a>
                     <button class="${() => `{{ $canBeDeleted ? 'basis-1/2' : 'basis-3/4 ' }} _loader_btn px-5 py-3 flex items-center justify-center text-sm font-medium leading-5  border rounded-md ${state.count > 0 ? `text-white bg-emerald-700 hover:bg-emerald-800 border-transparent` : `border-gray-700 disabled}`}`}"
-                            @mousedown="${(e) => publish(e)}"
+                            @click="${(e) => publish(e)}"
                             disabled="${() => state.count > 0 ? false : `disabled`}"
                         >
                         <span>Publish</span>

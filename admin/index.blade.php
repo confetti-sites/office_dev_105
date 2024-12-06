@@ -29,7 +29,7 @@ if ($currentContentId === '') {
 
 <body class="text-gray-700 overflow-hidden">
     @guest()
-        @include('website.auth.redirect_to_login')
+        @include('website.includes.auth.redirect_to_login')
     @else
         @can('admin')
             <div class="flex h-screen dark:bg-gray-900">

@@ -8,7 +8,7 @@
             <div class="md:w-1/2 opacity-1 p-2 py-2">
                 <h2 class="text-2xl dark:text-white text-gray-900">{{ $block->text('title')->min(1)->max(100) }}</h2>
                 <p class="mx-auto mb-8 mt-4 max-w-2xl font-light text-gray-500 md:mb-12 sm:text-xl font-body">
-                    @include('website.blocks.index', ['model' => $block->content('description')])
+                    @include('website.includes.blocks.index', ['model' => $block->content('description')])
                 </p>
             </div>
             <div class="md:w-1/2 mt-8 md:mt-0 opacity-1 py-2 @if($position == 'left') -order-1 @endif">

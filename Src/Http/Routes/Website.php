@@ -20,7 +20,7 @@ class Website
             case request()->uri() === '/':
                 return new View('website.homepage');
             case request()->uri() === '/auth/callback':
-                return new View('website.auth.callback');
+                return new View('website.includes.auth.callback');
             case request()->uri() === '/waiting-list-step-1':
                 return new View('website.waiting-list-step-1');
             case request()->uri() === '/waiting-list-step-2':
@@ -28,15 +28,13 @@ class Website
             case request()->uri() === '/pricing':
                 return new View('website.pricing');
             case str_starts_with(request()->uri(), '/docs'):
-                return new View('website.documentation');
+                return new View('website.docs');
             case request()->uri() === '/blogs':
-                return new View('website.blog_overview');
+                return new View('website.tmp.blog_overview');
             case str_starts_with(request()->uri(), '/blogs/'):
-                return new View('website.blog_detail');
-            case str_starts_with(request()->uri(), '/features'):
-                return new View('website.feature');
+                return new View('website.tmp.blog_detail');
             default:
-                return new View('website.errors.page_not_found');
+                return new View('website.404');
         }
     }
 }

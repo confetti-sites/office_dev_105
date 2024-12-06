@@ -4,7 +4,7 @@
     <title>Confetti CMS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/resources/website__tailwind/tailwind.output.css"/>
-    <link rel="stylesheet" href="/view/assets/css/fonts.css"/>
+    <link rel="stylesheet" href="/website/assets/css/fonts.css"/>
     <script defer>
         @stack('style_*')
     </script>
@@ -14,14 +14,12 @@
 {{--    @include('website.under_construction')--}}
 {{--@else()--}}
 
-@include('website.header')
+@include('website.includes.header')
 
-@switch(true)
+@yield('content')
 
-@endswitch
-
-@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/view/footers/*.blade.php'])->required()->default('/view/footers/footer_small.blade.php'))
-@include($target, ['model' => $target])
+@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/website/includes/footers/*.blade.php'])->required()->default('/website/includes/footers/footer_small.blade.php'))
+@include($target->getView(), ['model' => $target])
 
 {{--    @endguest--}}
 

@@ -94,8 +94,10 @@
                                 <!-- Information for new image -->
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     ${IconUpload(`w-8 h-8 mb-4 text-gray-500`)}
-                                    <p class="mb-2 text-sm text-gray-500"><span
-                                            class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <button type="button" onclick="this.nextElementSibling.click()"
+                                            class="mb-2 text-sm text-gray-500">
+                                        <span class="font-semibold">Click to upload</span> or drag and drop
+                                    </button>
                                     ${this.#getRequirements()}
                                 </div>
                             ` : ``}

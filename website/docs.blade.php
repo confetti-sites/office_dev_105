@@ -4,9 +4,13 @@
     $current = \model\docs\category_list\sub_list\page_list::query()->whereAliasIs($alias)->first();
     // Get all pages on the same subcategory
     /** @var \model\docs\category_list\sub_list $currentCategory */
-    $currentCategory = modelById($current->getParentId());
+    if ($current !== null) {
+        $currentCategory = modelById($current->getParentId());
+    }
 @endphp
+@extends('website.layouts.main')
 
+@section('content')
 <div class="relative mx-auto md:flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
     <div class="js-left-menu hidden md:relative md:relative md:block md:flex-none">
         <div class="sticky md:top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-6 md:py-16 ml-4 md:pl-0.5">
@@ -41,7 +45,7 @@
                 <div class="mb-9 space-y-1">
                     <h1 class="text-3xl font-semibold text-gray-800 mb-2">{{ $current->content->getTitle() }}</h1>
                     @if ($current->banner->get())
-                        {!! $current->image('banner')->widthPx(900)->getPicture(alt: $current->content->getTitle(), class: 'mt-4 mb-4') !!}
+                        {!! $current->image('banner')->widthPx(900)->getPicture(class: 'mt-4 mb-4', alt: 'Example of of result of the ' . $current->content->getTitle() . ' Component') !!}
                     @endif
                     <div class="mt-4 mb-4 text-gray-800 font-body">{!! $current->discussion('content')->label('GitHub Discussion')->help('The URL to the GitHub Discussion')->getHtml() !!}</div>
                     <label class="m-2 h-10 block">
@@ -77,7 +81,7 @@
 </div>
 
 @pushonce('script_docs')
-    <link rel="stylesheet" href="/view/assets/css/github-light.css"/>
+    <link rel="stylesheet" href="/website/assets/css/github-light.css"/>
 @endpushonce
 @pushonce('script_docs')
     <script defer>
@@ -87,3 +91,4 @@
         });
     </script>
 @endpushonce
+@endsection

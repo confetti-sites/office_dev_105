@@ -93,7 +93,7 @@ class ImageComponent extends ComponentStandard
      * <img src="giraffe.jpeg" />
      * </picture>
      */
-    public function getPicture(string $alt = '', string $class = '', string $style = ''): string
+    public function getPicture(string $class = '', string $style = '', string $alt = ''): string
     {
         $alt = htmlspecialchars($alt);
 

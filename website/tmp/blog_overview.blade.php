@@ -5,6 +5,9 @@
     $blogPage = newRoot(new \model\blog_overview);
     $blogs = $blogPage->list('blog')->columns(['title', 'image'])->sortable()->limit($perPage)->offset($offset)->get();
 @endphp
+@extends('website.layouts.main')
+
+@section('content')
 <div class="bg-gray-50 py-8">
     <ul class="space-y-8 max-w-4xl mx-auto">
         @foreach($blogs as $blog)
@@ -27,3 +30,4 @@
         @endif
     </div>
 </div>
+@endsection
