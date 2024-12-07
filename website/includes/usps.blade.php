@@ -1,10 +1,10 @@
-@php($blocks = \model\homepage\demo\block_list::query()->get())
+@php($usps = newRoot(new \model\homepage\usps))
 <div class="bg-gray-50 dark:bg-gray-900/80">
     <div
             class="container pb-12 md:flex md:items-center pt-12"
     >
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            @foreach($blocks as $usp)
+            @foreach($usps->list('usp')->columns(['title', 'description'])->max(3)->get() as $usp)
                 <div
                         class="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
                 >
@@ -24,11 +24,11 @@
                                 ></path>
                             </svg>
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                                {{ $usp->title }}
+                                {{ $usp->text('title')->max(50) }}
                             </h3>
                         </div>
                         <p class="mt-2 text-base text-gray-500 dark:text-white font-body">
-                            {{ $usp->description }}
+                            @include('website.includes.blocks.index', ['model' => $usp->content('content')])
                         </p>
                     </div>
                 </div>

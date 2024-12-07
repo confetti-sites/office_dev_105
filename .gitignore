@@ -1,5 +1,6 @@
 vendor
 .idea
+.old
 .confetti
 node_modules
 .DS_Store

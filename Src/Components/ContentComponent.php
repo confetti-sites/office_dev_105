@@ -43,7 +43,7 @@ class ContentComponent extends ComponentStandard
         if (!is_array($value)) {
             return '<template>Error: Content is not in expected format: ' . json_encode($value) . '</template>';
         }
-
+        return 'Error: Can not render to string. Include all blocks instead. Example: @include(\'website.includes.blocks.index\', [\'model\' => $contentRow->content(\'content\')])';
     }
 
     public function getViewAdminInput(): string

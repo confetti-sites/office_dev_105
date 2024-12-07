@@ -25,9 +25,8 @@
                 </div>
             </div>
         </div>
-        <div class="md:w-1/2 mt-8 md:mt-0 md:ml-14 relative">
-            <example-text></example-text>
-        </div>
+        <hr class="mt-8">
+        <example-text></example-text>
     </div>
 </div>
 
@@ -81,7 +80,7 @@
 
             connectedCallback() {
                 html`
-                    <div class="block mt-8 font-body min-h-56 overflow-x-hidden">
+                    <div class="block mt-4 font-body min-h-56 overflow-x-hidden">
                         <div class="text-sm ml-2">
                             <pre><code><div class="${() => this.state.count > 0 ? 'flex flex-col' : 'flex'}">${() => html`
                                 <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $header->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">) </span></span>${this.state.decorationContent + this.standardSuffix}`}</div></code></pre>
