@@ -1,6 +1,36 @@
 @php($hero = newRoot(new \model\homepage\hero)->label('Hero'))
 
-<example-text></example-text>
+<div class="flex items-center justify-center bg-white dark:bg-gray-900">
+    <div
+            class="container mt-4 md:flex md:items-center"
+    >
+        <div class="md:w-1/2">
+            <h1 class="mt-4 text-xl dark:text-white text-gray-900">
+                The quickest way to create a CMS with HTML
+            </h1>
+            <div class="flex">
+                <div class="mt-8">
+                    <a
+                            href="/docs"
+                            class="inline-block bg-primary text-white px-6 py-3 rounded-lg"
+                    >Get Started</a
+                    >
+                </div>
+                <div class="mt-8 ml-4">
+                    <a
+                            href="/docs"
+                            class="inline-block bg-secondary dark:bg-gray-800 text-white px-6 py-3 rounded-lg"
+                    >Learn More</a
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="md:w-1/2 mt-8 md:mt-0 md:ml-14 relative">
+            <example-text></example-text>
+        </div>
+    </div>
+</div>
+
 
 @pushonce('end_of_body_hero')
     <script type="module" defer>
@@ -51,31 +81,31 @@
 
             connectedCallback() {
                 html`
-                    <div class="block mt-8 px-2 font-body min-h-56">
-                        <div class="text-sm">
+                    <div class="block mt-8 font-body min-h-56 overflow-x-hidden">
+                        <div class="text-sm ml-2">
                             <pre><code><div class="${() => this.state.count > 0 ? 'flex flex-col' : 'flex'}">${() => html`
                                 <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $header->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">) </span></span>${this.state.decorationContent + this.standardSuffix}`}</div></code></pre>
                         </div>
                         <hr class="my-4">
-                        <div class="block text-bold text-xl mt-2 mb-4 h-4">
+                        <div class="block text-bold text-xl mt-2 mb-4 mx-2 h-4">
                             ${() => this.state.label}
                         </div>
-                        <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
+                        <div class="px-5 py-3  mx-2 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
                             ${() => this.state.value}&nbsp;
                         </div>
                         ${() => this.state.help ? html`
-                            <p class="mt-2 text-sm text-gray-600">${() => this.state.helpText}</p>` : ''}
-                        <p class="mt-2 text-sm text-red-600 _error">${() => this.state.error}</p>
+                            <p class="mx-2 mt-2 text-sm text-gray-600">${() => this.state.helpText}</p>` : ''}
+                        <p class="mx-2 mt-2 text-sm text-red-600 _error">${() => this.state.error}</p>
                     </div>
                     <div class="font-body px-2">
                         <button @click="${() => this.#toggleRequired()}" class="${() => `px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 rounded-md ${this.state.required ? 'bg-blue-500 text-white' : ''}`}">
-                            ->required()
+                            required()
                         </button>
                         <button @click="${() => this.#toggleDefault()}" class="${() => `px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 rounded-md ${this.state.default ? 'bg-blue-500 text-white' : ''}`}">
-                            ->default('Confetti CMS')
+                            default('Confetti CMS')
                         </button>
                         <button @click="${() => this.#toggleHelp()}" class="${() => `px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 rounded-md ${this.state.help ? 'bg-blue-500 text-white' : ''}`}">
-                            ->help('The company title')
+                            help('The company title')
                         </button>
                     </div>
                 `(this);
@@ -129,7 +159,7 @@
                 this.state.count = this.#countDeclarations()
                 setTimeout(() => {
                     this.#updateError();
-                }, 1600);
+                }, 1500);
             }
 
             #toggleDefault() {
@@ -219,7 +249,7 @@
             }
 
             #updateError() {
-                if (this.state.required && this.state.default === false) {
+                if (this.state.required && this.state.value.length === 0) {
                     this.state.error = 'The title is required';
                 } else {
                     this.state.error = '';

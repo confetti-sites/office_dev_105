@@ -49,6 +49,7 @@
     </nav>
 </header>
 
+@pushonce('end_of_body_header')
 <script>
     // Toggle menu visibility
     const menuToggle = document.getElementById('menu-toggle');
@@ -61,5 +62,5 @@
         logo.classList.toggle('hidden');
     });
 </script>
-
+@endpushonce
 
