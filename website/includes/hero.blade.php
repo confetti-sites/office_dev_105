@@ -39,6 +39,7 @@
 
                 this.state.$on('defaultContent', () => {
                     this.#updateDecorationContent();
+                    document.getElementById('brand-title').innerText = this.state.value;
                 });
 
                 this.state.$on('helpContent', () => {
@@ -53,7 +54,7 @@
                     <div class="block mt-8 px-2 font-body min-h-56">
                         <div class="text-sm">
                             <pre><code><div class="${() => this.state.count > 0 ? 'flex flex-col' : 'flex'}">${() => html`
-                                <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $hero->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">) </span></span>${this.state.decorationContent + this.standardSuffix}`}</div></code></pre>
+                                <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $header->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">) </span></span>${this.state.decorationContent + this.standardSuffix}`}</div></code></pre>
                         </div>
                         <hr class="my-4">
                         <div class="block text-bold text-xl mt-2 mb-4 h-4">
@@ -66,7 +67,7 @@
                             <p class="mt-2 text-sm text-gray-600">${() => this.state.helpText}</p>` : ''}
                         <p class="mt-2 text-sm text-red-600 _error">${() => this.state.error}</p>
                     </div>
-                    <div>
+                    <div class="font-body px-2">
                         <button @click="${() => this.#toggleRequired()}" class="${() => `px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 rounded-md ${this.state.required ? 'bg-blue-500 text-white' : ''}`}">
                             ->required()
                         </button>
@@ -74,7 +75,7 @@
                             ->default('Confetti CMS')
                         </button>
                         <button @click="${() => this.#toggleHelp()}" class="${() => `px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 rounded-md ${this.state.help ? 'bg-blue-500 text-white' : ''}`}">
-                            ->help('The title of the page')
+                            ->help('The company title')
                         </button>
                     </div>
                 `(this);
@@ -98,7 +99,7 @@
                     const interval = setInterval(() => {
                         this.state.label = label.substring(0, i);
                         i--;
-                        if (i < 5) {
+                        if (i < ' Main'.length) {
                             clearInterval(interval);
                         }
                     }, 100);
@@ -128,7 +129,7 @@
                 this.state.count = this.#countDeclarations()
                 setTimeout(() => {
                     this.#updateError();
-                }, 1500);
+                }, 1600);
             }
 
             #toggleDefault() {
@@ -171,12 +172,11 @@
             #toggleHelp() {
                 this.state.help = !this.state.help
                 if (this.state.help) {
-// type <span class="text-black-500 pl-4">->help('</span><span class="text-green-700">The title of the page</span><span class="text-black-500">')</span>
                     const prefix = `<span class="text-black-500">`;
                     const suffix = `</span>`;
                     const methodPrefix = `->help('`; // black
                     const methodSuffix = `')`; // black
-                    const value = 'The title of the page'; // green
+                    const value = 'The company title'; // green
                     this.state.helpContent = '';
                     let i = 0;
                     const interval = setInterval(() => {
@@ -202,7 +202,6 @@
 
             #updateDecorationContent() {
                 this.state.decorationContent = this.state.requiredContent + this.state.defaultContent + this.state.helpContent;
-                document.getElementById('brand-title').innerText = this.state.value;
             }
 
             #countDeclarations() {
@@ -221,7 +220,7 @@
 
             #updateError() {
                 if (this.state.required && this.state.default === false) {
-                    this.state.error = 'This field is required';
+                    this.state.error = 'The title is required';
                 } else {
                     this.state.error = '';
                 }
