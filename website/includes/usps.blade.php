@@ -1,5 +1,5 @@
 @php($usps = newRoot(new \model\homepage\usps))
-<div class="bg-gray-50 dark:bg-gray-900/80">
+<div class="">
     <div
             class="container pb-12 md:flex md:items-center pt-12"
     >

@@ -1,6 +1,6 @@
 @php($demo = newRoot(new \model\homepage\demo)->label('Demo'))
 
-<div class="dark:bg-gray-900 pt-8">
+<div class="pt-8">
     @php($blocks = $demo->list('block')->label('Demo')->columns(['title', 'description', 'image'])->sortable()->min(1)->max(6)->get())
     @foreach($blocks as $block)
         <div class="container py-4 md:flex gap-6">
