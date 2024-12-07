@@ -10,7 +10,7 @@
     </script>
 </head>
 <body class="text-md overflow-x-hidden">
-@stack('script_*')
+@stack('end_of_body_*')
 </body>
 </html>
 

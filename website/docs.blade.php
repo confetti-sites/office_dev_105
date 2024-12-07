@@ -83,10 +83,10 @@
     @endif
 </div>
 
-@pushonce('script_docs')
+@pushonce('end_of_body_docs')
     <link rel="stylesheet" href="/website/assets/css/github-light.css"/>
 @endpushonce
-@pushonce('script_docs')
+@pushonce('end_of_body_docs')
     <script defer>
         const docMenuToggle = document.getElementById('menu-toggle');
         docMenuToggle.addEventListener('click', () => {

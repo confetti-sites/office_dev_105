@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/resources/website__tailwind/tailwind.output.css"/>
     <link rel="stylesheet" href="/website/assets/css/fonts.css"/>
-    <script defer>
+    <style>
         @stack('style_*')
-    </script>
+    </style>
 </head>
 <body class="text-md overflow-x-hidden">
 {{--@guest()--}}
@@ -23,7 +23,7 @@
 
 {{--    @endguest--}}
 
-@stack('script_*')
+@stack('end_of_body_*')
 </body>
 </html>
 
