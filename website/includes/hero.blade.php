@@ -50,18 +50,20 @@
 
             connectedCallback() {
                 html`
-                    <div class="block px-2 font-body min-h-48">
-                        <div>
+                    <div class="block mt-8 px-2 font-body min-h-56">
+                        <div class="text-sm">
                             <pre><code><div class="${() => this.state.count > 0 ? 'flex flex-col' : 'flex'}">${() => html`
                                 <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $hero->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">) </span></span>${this.state.decorationContent + this.standardSuffix}`}</div></code></pre>
                         </div>
+                        <hr class="my-4">
                         <div class="block text-bold text-xl mt-2 mb-4 h-4">
                             ${() => this.state.label}
                         </div>
                         <div class="px-5 py-3 text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
                             ${() => this.state.value}&nbsp;
                         </div>
-                        ${() => this.state.help ? html`<p class="mt-2 text-sm text-gray-600">${() => this.state.helpText}</p>` : ''}
+                        ${() => this.state.help ? html`
+                            <p class="mt-2 text-sm text-gray-600">${() => this.state.helpText}</p>` : ''}
                         <p class="mt-2 text-sm text-red-600 _error">${() => this.state.error}</p>
                     </div>
                     <div>
@@ -132,7 +134,6 @@
             #toggleDefault() {
                 this.state.default = !this.state.default
                 if (this.state.default) {
-                    // type <span class="text-black-500 pl-4">->default('</span><span class="text-green-700">Confetti CMS</span><span class="text-black-500">')</span>
                     const prefix = `<span class="text-black-500">`;
                     const suffix = `</span>`;
                     const methodPrefix = `->default('`; // black
@@ -161,6 +162,7 @@
                     }, 100);
                 } else {
                     this.state.defaultContent = '';
+                    this.state.value = '';
                     this.#updateError();
                 }
                 this.state.count = this.#countDeclarations()
@@ -193,12 +195,14 @@
                     }, 100);
                 } else {
                     this.state.helpContent = '';
+                    this.state.helpText = '';
                 }
                 this.state.count = this.#countDeclarations()
             }
 
             #updateDecorationContent() {
                 this.state.decorationContent = this.state.requiredContent + this.state.defaultContent + this.state.helpContent;
+                document.getElementById('brand-title').innerText = this.state.value;
             }
 
             #countDeclarations() {
@@ -216,7 +220,7 @@
             }
 
             #updateError() {
-                if (this.state.required && this.state.value === '') {
+                if (this.state.required && this.state.default === false) {
                     this.state.error = 'This field is required';
                 } else {
                     this.state.error = '';
