@@ -1,12 +1,11 @@
 @php($hero = newRoot(new \model\homepage\hero)->label('Hero'))
 
-<div class="flex items-center justify-center bg-white">
-    <div class="container mt-4 md:flex md:items-center">
-        <div class="md:w-1/2">
+<div class="md:flex md:items-center md:justify-center bg-white mt-4">
+        <div class="container md:w-1/2 mb-8 flex flex-col items-center justify-center">
             <h1 class="mt-4 text-xl dark:text-white text-gray-900">
-                The quickest way to create a CMS with HTML
+                The quickest way to create a CMS
             </h1>
-            <div class="flex">
+            <div class="flex items-center">
                 <div class="mt-8">
                     <a
                             href="/docs"
@@ -23,11 +22,11 @@
                 </div>
             </div>
         </div>
-    </div>
+
+        <text-demo>
+            <!-- skeleton loader -->
+        </text-demo>
 </div>
-<text-demo>
-    <!-- skeleton loader -->
-</text-demo>
 
 @pushonce('end_of_body_hero')
     <script type="module" defer>

@@ -48,13 +48,13 @@ export default class extends HTMLElement {
 
     connectedCallback() {
         html`
-            <div class="bg-gray-50 px-2">
+            <div class="bg-gray-50 px-2 pb-2">
                 <div class="font-body overflow-x-hidden py-8">
-                    <div class="text-sm">
+                    <div class="${() => `flex  justify-center text-sm ` + (this.state.count > 0 ? 'min-h-20' : '')}">
                         <pre><code><div class="${() => this.state.count > 0 ? 'flex flex-col' : 'flex'}">${() => html`
                             <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $header->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">) </span></span>${this.state.decorationContent + this.standardSuffix}`}</div></code></pre>
                     </div>
-                    <div class="flex mt-2">
+                    <div class="flex mt-2 justify-center">
                         <button @click="${() => this.#toggleRequired()}" class="${() => `mx-2 my-2 p-2 text-sm leading-5 cursor-pointer border border-blue-500 rounded-md ${this.state.required ? 'bg-blue-500 text-white' : 'text-blue-500'}`}">
                             ->required()
                         </button>
@@ -66,11 +66,11 @@ export default class extends HTMLElement {
                         </button>
                     </div>
                 </div>
-                <div class="mt-4" style="min-height: 120px">
+                <div class="mt-4 min-h-32">
                     <div class="text-bold text-xl mt-2 mb-4 mx-2 h-4">
                         ${() => this.state.label}
                     </div>
-                    <div class="px-5 py-3 mx-2 text-gray-700 border-2 border-gray-700 rounded-lg bg-gray-100">
+                    <div class="px-5 py-3 mx-2 text-gray-700 border-2 border-gray-400 rounded-lg bg-white">
                         ${() => this.state.value}&nbsp;
                     </div>
                     ${() => this.state.help ? html`
@@ -117,8 +117,11 @@ export default class extends HTMLElement {
             const interval = setInterval(() => {
                 this.state.requiredContent = prefix + toType.substring(0, i) + suffix;
                 i++;
-                if (i > this.required.length) {
+                if (i > this.required.length || !this.state.required) {
                     clearInterval(interval);
+                }
+                if (!this.state.required) {
+                    this.state.requiredContent = '';
                 }
             }, 100);
         } else {
@@ -156,8 +159,11 @@ export default class extends HTMLElement {
 
                 this.state.defaultContent = `<span class="pl-4">` + prefix + methodPrefix.substring(0, iMethod) + suffix + `<span class="text-green-700">${value.substring(0, iValue)}</span>` + prefix + methodSuffix.substring(0, iSuffix) + suffix + `</span>`;
                 i++;
-                if (i > (methodPrefix + value + methodSuffix).length) {
+                if (i > (methodPrefix + value + methodSuffix).length || !this.state.default) {
                     clearInterval(interval);
+                }
+                if (!this.state.default) {
+                    this.state.defaultContent = '';
                 }
                 this.#updateError();
             }, 100);
@@ -188,10 +194,12 @@ export default class extends HTMLElement {
                 }
                 this.state.helpContent = `<span class="pl-4">` + prefix + methodPrefix.substring(0, iMethod) + suffix + `<span class="text-green-700">${value.substring(0, iValue)}</span>` + prefix + methodSuffix.substring(0, i - methodPrefix.length - value.length) + suffix + `</span>`;
                 i++;
-                if (i > (methodPrefix + value + methodSuffix).length) {
+                if (i > (methodPrefix + value + methodSuffix).length || !this.state.help) {
                     clearInterval(interval);
                 }
-
+                if (!this.state.help) {
+                    this.state.helpContent = '';
+                }
             }, 100);
         } else {
             this.state.helpContent = '';
