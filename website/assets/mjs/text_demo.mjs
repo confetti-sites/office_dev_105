@@ -49,9 +49,9 @@ export default class extends HTMLElement {
     connectedCallback() {
         html`
             <div class="font-body overflow-x-hidden py-8 md:pt-12 pd:mb-4">
-                <div class="${() => `flex justify-center text-sm md:text-l ` + (this.state.count > 0 ? 'min-h-20' : '')}">
-                    <pre><code><div class="${() => this.state.count > 0 ? 'flex flex-col' : 'flex'}">${() => html`
-                        <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $header->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">)&nbsp;</span></span>${this.state.decorationContent + this.standardSuffix}`}</div></code></pre>
+                <div class="${() => `flex justify-center ` + (this.state.count > 0 ? 'min-h-20' : '')}">
+                    <pre><div class="text-sm md:text-base lg:text-lg xl:text-xl"><div class="${() => this.state.count > 0 ? 'flex flex-col' : 'flex'}">${() => html`
+                        <span><span class="text-blue-500">&lt;h1&gt;</span><span class="text-black">&lcub;&lcub; $header->text(</span><span class="text-green-700">'${this.state.alias}'</span><span class="text-black">)&nbsp;</span></span>${this.state.decorationContent + this.standardSuffix}`}</div></div></pre>
                 </div>
                 <div class="flex mt-2 justify-center">
                     <button @click="${() => this.#toggleRequired()}" class="${() => `mx-2 my-2 p-2 text-sm leading-5 cursor-pointer border border-blue-500 rounded-md ${this.state.required ? 'bg-blue-500 text-white' : 'text-blue-500'}`}">
@@ -65,13 +65,13 @@ export default class extends HTMLElement {
                     </button>
                 </div>
             </div>
-            <div class="mt-4 md:mt-1 mx-4 min-h-32">
+            <div class="mt-4 md:mt-1 mx-4 md:mx-auto md:w-2/3 min-h-32">
                 <div class="text-bold text-xl mt-2 mb-4 mx-2 h-4">
                     ${() => this.state.label}
                 </div>
                 <div class="px-5 py-3 mx-2 text-gray-700 border-2 border-gray-400 rounded-lg bg-white font-body">
                     ${() => this.state.bar ? html`Confetti
-                    <span class="${() => this.state.barTools?.length >= 3 ? `text-bold bg-blue-200 py-1` : ``}">CMS</span>` : this.state.value}&nbsp;</span>
+                    <span class="${() => this.state.bar ? `text-bold bg-blue-200 py-1` : ``}">CMS</span>` : this.state.value}&nbsp;</span>
                     ${() => this.state.barTools?.length >= 3 ? html`
                         <div class="absolute flex items-center space-x-1 p-1 border rounded-md w-fit bg-white">
                             <button class="font-bold text-blue-600 bg-blue-100 py-1 px-2 rounded">B</button>
