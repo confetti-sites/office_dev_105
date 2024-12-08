@@ -1,7 +1,7 @@
 @php($hero = newRoot(new \model\homepage\hero)->label('Hero'))
 
 <div class="md:flex md:items-center md:justify-center bg-white mt-4">
-        <div class="container md:w-1/2 mb-8 flex flex-col items-center justify-center">
+        <div class="container mb-8 flex flex-col items-center justify-center md:w-1/2">
             <h1 class="mt-4 text-xl dark:text-white text-gray-900">
                 The quickest way to create a CMS
             </h1>
@@ -22,8 +22,7 @@
                 </div>
             </div>
         </div>
-
-        <text-demo>
+        <text-demo class="bg-gray-50 md:bg-white px-2 pb-2 md:w-1/2 md:mr-10">
             <!-- skeleton loader -->
         </text-demo>
 </div>

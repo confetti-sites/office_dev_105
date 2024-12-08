@@ -1,7 +1,7 @@
 @php($usps = newRoot(new \model\homepage\usps))
 <div class="">
     <div
-            class="container pb-12 md:flex md:items-center pt-12"
+            class="container pb-12 md:flex md:items-center pt-12 md:bg-gray-50"
     >
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             @foreach($usps->list('usp')->columns(['title', 'description'])->max(3)->get() as $usp)
@@ -24,7 +24,7 @@
                                 ></path>
                             </svg>
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                                {{ $usp->text('title')->max(50) }}
+                                {{ $usp->text('title')->max(50)->bar(['b', 'i', 'u']) }}
                             </h3>
                         </div>
                         <p class="mt-2 text-base text-gray-500 dark:text-white font-body">
