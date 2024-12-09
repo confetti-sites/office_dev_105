@@ -123,12 +123,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <label class="m-2 h-10 block">
+                    <div class="m-2 h-10 block">
                         <button type="button" class="float-right justify-between px-2 py-1 m-2 ml-0 text-sm font-medium leading-5 cursor-pointer text-white bg-emerald-700 hover:bg-emerald-800 border border-transparent rounded-md"
                            @click="${() => this.#redirectToNew()}">
                             Add ${this.label}
                         </button>
-                    </label>
+                    </div>
                 `(this)
                 this.#renderedCallback();
             }

@@ -10,7 +10,7 @@
                 <h2 class="text-3xl title-font text-gray-900">{{ $steps->text('setup_title')->max(50) }}</h2>
             </div>
         </div>
-        @foreach($steps->list('step')->columns(['title'])->max(10)->get() as $i => $step)
+        @foreach($steps->list('step')->columns(['title'])->sortable()->max(10)->get() as $i => $step)
             <div class="flex relative py-10 sm:items-center md:w-2/3">
                 <div class="h-full w-6 absolute inset-0 flex items-center justify-center">
                     <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
