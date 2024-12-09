@@ -46,6 +46,24 @@ class ContentComponent extends ComponentStandard
         return 'Error: Can not render to string. Include all blocks instead. Example: @include(\'website.includes.blocks.index\', [\'model\' => $contentRow->content(\'content\')])';
     }
 
+    public function isEmpty(): bool
+    {
+        if (empty($this->get())) {
+            return true;
+        }
+
+        if (empty($this->get()['blocks'])) {
+            return true;
+        }
+
+        // When no text is set, the editor will save a null value
+        if (array_key_exists('text', $this->get()['blocks'][0]['data']) && $this->get()['blocks'][0]['data']['text'] === null) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getViewAdminInput(): string
     {
         return 'admin.components.content.input';

@@ -1,6 +1,6 @@
 import {html, reactive} from 'https://esm.sh/@arrow-js/core';
 
-export default class extends HTMLElement {
+export class TextDemo extends HTMLElement {
     standardSuffix = `<span><span class="text-black">&rcub;&rcub;</span><span class="text-blue-500">&lt;/h1&gt;</span></span>`;
     required = `->required()`;
 

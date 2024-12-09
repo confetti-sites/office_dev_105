@@ -48,6 +48,11 @@
          */
         import Table from 'https://esm.sh/@editorjs/table';
 
+        /**
+         * @see https://github.com/editor-js/code
+         */
+        import Code from 'https://esm.sh/@editorjs/code';
+
         /** Inline tools */
         import Underline from '/admin/components/content/tools/underline.mjs';
         import Bold from '/admin/components/content/tools/bold.mjs';
@@ -164,6 +169,7 @@
                             inlineToolbar: defaultInlineToolbar,
                         },
                         delimiter: Delimiter,
+                        code: Code,
                     },
 
                     // Set generalToolbar in a variable, so we can use it in the onChange event
