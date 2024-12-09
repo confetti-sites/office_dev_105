@@ -71,7 +71,7 @@ export default class extends HTMLElement {
                 </div>
                 <div class="px-5 py-3 mx-2 text-gray-700 border-2 border-gray-400 rounded-lg bg-white font-body">
                     ${() => this.state.bar ? html`Confetti
-                    <span class="${() => this.state.bar ? `text-bold bg-blue-200 py-1` : ``}">CMS</span>` : this.state.value}&nbsp;</span>
+                    <span class="${() => this.state.bar ? (this.state.barTools?.length >= 3 ? `font-bold bg-blue-200 py-1` : `bg-blue-200 py-1`) : ``}">CMS</span>` : this.state.value}&nbsp;</span>
                     ${() => this.state.barTools?.length >= 3 ? html`
                         <div class="absolute flex items-center space-x-1 p-1 border rounded-md w-fit bg-white">
                             <button class="font-bold text-blue-600 bg-blue-100 py-1 px-2 rounded">B</button>
@@ -169,7 +169,7 @@ export default class extends HTMLElement {
                     this.state.defaultContent = '';
                 }
                 this.#updateError();
-            }, 100);
+            }, 150);
         } else {
             this.state.defaultContent = '';
             this.state.value = '';
@@ -203,7 +203,7 @@ export default class extends HTMLElement {
                 if (!this.state.bar) {
                     this.state.barContent = '';
                 }
-            }, 100);
+            }, 200);
         } else {
             this.state.barContent = '';
             this.state.barTools = null;
