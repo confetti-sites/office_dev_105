@@ -112,10 +112,10 @@ export class TextDemo extends HTMLElement {
     #toggleRequired() {
         const isRequired = !this.state.required
         if (isRequired) {
-            const prefix = `<span class="text-black-500 pl-4">`;
+            const prefix = `<span class="text-black-500 pl-4">-`;
             const suffix = `</span>`;
-            const toType = `->required()`;
-            this.state.requiredContent = '';
+            const toType = `>required()`;
+            this.state.requiredContent = prefix + suffix;
             let i = 0;
             const interval = setInterval(() => {
                 this.state.requiredContent = prefix + toType.substring(0, i) + suffix;
@@ -126,7 +126,7 @@ export class TextDemo extends HTMLElement {
                 if (!this.state.required) {
                     this.state.requiredContent = '';
                 }
-            }, 100);
+            }, 150);
         } else {
             this.state.requiredContent = '';
             this.state.error = '';
@@ -135,7 +135,7 @@ export class TextDemo extends HTMLElement {
         this.state.count = this.#countDeclarations()
         setTimeout(() => {
             this.#updateError();
-        }, 1500);
+        }, 1800);
     }
 
     #toggleDefault() {
