@@ -5,7 +5,6 @@
 @section('content')
     @include('website.includes.hero')
     @include('website.includes.usps')
-{{--    @include('website.includes.demo')--}}
     @include('website.includes.compare')
-{{--    @include('website.includes.steps')--}}
+    @include('website.includes.steps')
 @endsection
