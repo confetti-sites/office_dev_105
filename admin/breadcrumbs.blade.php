@@ -1,6 +1,5 @@
 @php
-    use Confetti\Helpers\ComponentStandard;
-    use Confetti\Helpers\ContentStore;
+    use Confetti\Helpers\ComponentStandard;use Confetti\Helpers\ContentStore;
     /** @var string $currentId given value from parent view */
     // Calculate all breadcrumbs
     $ids = [];

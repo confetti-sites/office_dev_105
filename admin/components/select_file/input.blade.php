@@ -114,13 +114,16 @@
                 name="${this.id}"
                             @change="${(e) => this.data.value = e.target.value}"
                     >
-                        ${this.decorations.required !== undefined && this.decorations.required.required ? '' : html`<option selected>Nothing selected</option>`}
+                        ${this.decorations.required !== undefined && this.decorations.required.required ? '' : html`
+                    <option selected>Nothing selected</option>`}
                         ${this.options.map(option => html`
-                            <option value="${option.source_path}" ${this.data.value === option.source_path ? 'selected' : ''}
-                            >${option.label}</option>
-                        `)}
+                    <option value="${option.source_path}" ${this.data.value === option.source_path ? 'selected' : ''}
+                    >${option.label}
+                    </option>
+                `)}
                     </select>
-                    ${this.decorations.match.matches !== null ? '' : html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`match\` found. Please add \`->match(['/website/includes/*.blade.php'])\` in ${this.source}</p>`}
+                    ${this.decorations.match.matches !== null ? '' : html`
+                    <p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`match\` found. Please add \`->match(['/website/includes/*.blade.php'])\` in ${this.source}</p>`}
                 `(this)
 
                 new Toolbar(this).init([{

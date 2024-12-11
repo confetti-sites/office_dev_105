@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Src\Components;
 
 use Confetti\Helpers\ComponentStandard;
-use Random\RandomException;
 
 class ContentComponent extends ComponentStandard
 {
