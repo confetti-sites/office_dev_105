@@ -120,7 +120,7 @@
                             >${option.label}</option>
                         `)}
                     </select>
-                    ${this.decorations.match.matches !== null ? '' : html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`match\` found. Please add \`->match(['/view/a_directory/*.blade.php'])\` in ${this.source}</p>`}
+                    ${this.decorations.match.matches !== null ? '' : html`<p class="mt-2 text-sm text-red-500">Error for developer: ⚠ No decorator \`match\` found. Please add \`->match(['/website/includes/*.blade.php'])\` in ${this.source}</p>`}
                 `(this)
 
                 new Toolbar(this).init([{

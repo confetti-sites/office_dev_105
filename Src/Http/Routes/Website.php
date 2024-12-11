@@ -33,6 +33,8 @@ class Website
                 return new View('website.tmp.blog_overview');
             case str_starts_with(request()->uri(), '/blogs/'):
                 return new View('website.tmp.blog_detail');
+            case str_starts_with(request()->uri(), '/features'):
+                return new View('website.features');
             default:
                 return new View('website.404');
         }

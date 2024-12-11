@@ -38,12 +38,7 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
         }
 
         // Get saved value
-        $result = $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
-        if ($result === null) {
-            $result = $this->getComponent()->getDecoration('default', 'default');
-        }
-
-        return $result;
+        return $this->contentStore->findOneData($this->parentContentId, $this->relativeContentId);
     }
 
     public function getView(): ?string

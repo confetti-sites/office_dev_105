@@ -19,13 +19,16 @@
                 </div>
                 <div class="flex-grow pl-6 flex sm:items-center items-start flex-col sm:flex-row">
                     <div class="flex-shrink-0 w-24 h-24 bg-indigo-100 text-indigo-500 rounded-full inline-flex items-center justify-center">
-                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                             stroke-width="2" class="w-12 h-12" viewBox="0 0 24 24">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                        </svg>
+                        {{-- @todo Fix; load .svg files --}}
+                        {{-- @todo Fix; load files with - in the name --}}
+                        <h1 class="title-font text-gray-900 text-lg font-medium">{{ $step->text('title')->max(50) }}</h1>
+                        @php($icon = $step->selectFile('icon')->match(["/website/includes/icons/*.blade.php"]))
+                        @if($icon->getView())
+                            @include($icon->getView(), ['model' => $icon])
+                        @endif
                     </div>
                     <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
-                        <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">{{ $step->text('title')->max(50) }}</h2>
+                        <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">{{ $step->text('title2')->max(50) }}</h2>
                         <p class="leading-relaxed font-body">{{ $step->text('description')->max(400) }}</p>
                     </div>
                 </div>
