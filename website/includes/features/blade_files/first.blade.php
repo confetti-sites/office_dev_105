@@ -1,2 +1,4 @@
-@php($second = extendModel($model)->label('First'))
-@php($second->text('first_title'))
+@php($first = extendModel($model)->label('First'))
+{{ $first->text('in_selector_first') }}
+
+^ in_selector_first

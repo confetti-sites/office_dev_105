@@ -1,6 +1,8 @@
-@php($feature = extendModel($model)->label('Select basic'))
+@php($feature = extendModel($model)->label('Select file with other text'))
 
-{{ $feature->text('first_field') }}
+{{ $feature->text('up_selector') }}
+
 @php($file = $feature->selectFile('value')->match(['/website/includes/features/blade_files/*.blade.php']))
+@include($file->getView(), ['model' => $file])
 
-{{ $feature->text('second_field') }}
+{{ $feature->text('down_selector') }}

@@ -1,2 +1,3 @@
 @php($second = extendModel($model)->label('Second'))
-@php($second->text('second_title'))
+{{ $second->text('in_selector_second') }}
+^ in_selector_second

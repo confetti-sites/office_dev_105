@@ -80,6 +80,13 @@ class ContentStore
         $this->content = $this->mergeRecursive($this->content, $result);
     }
 
+    public function appendPointerValues(array $values): void
+    {
+        foreach ($values as $key => $value) {
+            $this->content['data'][$key] = $value;
+        }
+    }
+
     public function isFake(): bool
     {
         return $this->isFake;
@@ -243,6 +250,7 @@ class ContentStore
             'only_first'         => true,
             'use_cache'          => false,
         ]);
+
         $query->setSelect([$id])
             // In this case, we want to fetch the data without the old condition
             // because we already target one data with the correct id (in the 'from').
