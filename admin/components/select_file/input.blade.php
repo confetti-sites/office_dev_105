@@ -10,7 +10,7 @@
         ];
     }, $model->getOptions());
 @endphp
-        <!--suppress HtmlUnknownTag -->
+<!-- suppress HtmlUnknownTag -->
 <select-file-component
         data-component="{{ json_encode($model->getComponent()) }}"
         data-decorations='{{ json_encode($model->getComponent()->getDecorations()) }}'

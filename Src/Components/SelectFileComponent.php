@@ -10,6 +10,7 @@ use Confetti\Contracts\SelectFileInterface;
 use Confetti\Contracts\SelectModelInterface;
 use Confetti\Helpers\ComponentStandard;
 use Confetti\Helpers\ContentStore;
+use Confetti\Model\RawFile;
 
 class SelectFileComponent extends ComponentStandard implements SelectModelInterface, SelectFileInterface
 {
@@ -60,7 +61,7 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
         throw new \RuntimeException('This method `getOptions` should be overridden in the child class.');
     }
 
-    public function getSelected(): ?Map
+    public function getSelected(): Map|RawFile|null
     {
         $file = self::getPointerValues($this->getId(), $this->contentStore)[$this->getId()] ?? null;
 
