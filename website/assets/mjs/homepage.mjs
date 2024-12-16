@@ -14,6 +14,9 @@ export class TextDemo extends HTMLElement {
         bar: false,
         barContent: '',
         barTools: '',
+        bold: false,
+        italic: false,
+        underline: false,
         alias: '',
         label: '',
         error: '',
@@ -71,12 +74,16 @@ export class TextDemo extends HTMLElement {
                 </div>
                 <div class="px-5 py-3 mx-2 text-gray-700 border-2 border-gray-400 rounded-lg bg-white font-body">
                     ${() => this.state.bar ? html`Confetti
-                    <span class="${() => this.state.bar ? (this.state.barTools?.length >= 3 ? `font-bold bg-blue-200 py-1` : `bg-blue-200 py-1`) : ``}">CMS</span>` : this.state.value}&nbsp;</span>
+                    <span class="${() => this.getStyle()}">CMS</span>` : this.state.value}&nbsp;</span>
                     ${() => this.state.barTools?.length >= 3 ? html`
                         <div class="absolute flex items-center space-x-1 p-1 border rounded-md w-fit bg-white">
-                            <button class="font-bold text-blue-600 bg-blue-100 py-1 px-2 rounded">B</button>
-                            ${() => this.state.barTools?.length >= 8 ? html`<button class="italic text-black hover:bg-blue-100 py-1 px-3 rounded">/</button>` : ''}
-                            ${() => this.state.barTools?.length >= 13 ? html`<button class="underline text-black hover:bg-blue-100 py-1 px-2 rounded">U</button>` : ''}
+<!--                               when active-->
+<!--                             text-black hover:bg-blue-100when not active-->
+                            <button class="${() => `font-bold py-1 px-2 rounded ` + (this.state.bold ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleBold()}">B</button>
+                            ${() => this.state.barTools?.length >= 8 ? html`
+                                <button class="${() => `italic py-1 px-3 rounded ` + (this.state.italic ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleItalic()}">I</button>` : ''}
+                            ${() => this.state.barTools?.length >= 13 ? html`
+                                <button class="${() => `underline py-1 px-2 rounded ` + (this.state.underline ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleUnderline()}">U</button>` : ''}
                         </div>` : ''}
                 </div>
                 <p class="mx-2 mt-2 text-sm text-red-600 _error">${() => this.state.error}</p>
@@ -186,7 +193,7 @@ export class TextDemo extends HTMLElement {
             const methodPrefix = `->bar('`; // black
             const methodSuffix = `')`; // black
             const methodValue = '[\'b\', \'i\', \'u\']'; // green
-                this.state.barContent = '';
+            this.state.barContent = '';
             let i = 0;
             const interval = setInterval(() => {
                 let iMethod = i > methodPrefix.length ? methodPrefix.length : i;
@@ -195,6 +202,9 @@ export class TextDemo extends HTMLElement {
                     iValue = 0;
                 }
                 this.state.barTools = methodValue.substring(0, iValue);
+                if (this.state.barTools?.length >= 3) {
+                    this.state.bold = true;
+                }
                 this.state.barContent = `<span class="pl-4">` + prefix + methodPrefix.substring(0, iMethod) + suffix + `<span class="text-green-700">${methodValue.substring(0, iValue)}</span>` + prefix + methodSuffix.substring(0, i - methodPrefix.length - methodValue.length) + suffix + `</span>`;
                 i++;
                 if (i > (methodPrefix + methodValue + methodSuffix).length || !this.state.bar) {
@@ -203,12 +213,25 @@ export class TextDemo extends HTMLElement {
                 if (!this.state.bar) {
                     this.state.barContent = '';
                 }
+
             }, 200);
         } else {
             this.state.barContent = '';
             this.state.barTools = null;
         }
         this.state.count = this.#countDeclarations()
+    }
+
+    #toggleBold() {
+        this.state.bold = !this.state.bold;
+    }
+
+    #toggleItalic() {
+        this.state.italic = !this.state.italic;
+    }
+
+    #toggleUnderline() {
+        this.state.underline = !this.state.underline;
     }
 
     #updateDecorationContent() {
@@ -235,5 +258,27 @@ export class TextDemo extends HTMLElement {
         } else {
             this.state.error = '';
         }
+    }
+
+    getStyle() {
+        let result = ''
+
+        if (this.state.bar) {
+            result += ` bg-blue-200 py-1`
+        }
+
+        if (this.state.bold) {
+            result += ` font-bold`
+        }
+
+        if (this.state.italic) {
+            result += ` italic`
+        }
+
+        if (this.state.underline) {
+            result += ` underline`
+        }
+
+        return result
     }
 }
