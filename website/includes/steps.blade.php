@@ -1,6 +1,6 @@
 @php($steps = newRoot(new \model\homepage\steps)->label('Steps'))
 <section class="text-gray-600 body-font">
-    <div class="container py-24 mx-auto flex flex-wrap">
+    <div class="container pt-24 mx-auto flex flex-wrap">
         <div class="flex relative py-10 sm:items-center md:w-2/3">
             <div class="h-full w-6 absolute inset-0 flex items-center justify-center">
                 <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>

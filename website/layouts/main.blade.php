@@ -19,8 +19,8 @@
 
 @yield('content')
 
-{{--@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/website/includes/footers/*.blade.php'])->required()->default('/website/includes/footers/footer_small.blade.php'))--}}
-{{--@include($target->getView(), ['model' => $target])--}}
+@php($target = newRoot(new \model\footer)->selectFile('template')->match(['/website/includes/footers/*.blade.php'])->required()->default('/website/includes/footers/footer_small.blade.php'))
+@include($target->getView(), ['model' => $target])
 
 {{--    @endguest--}}
 

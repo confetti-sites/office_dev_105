@@ -4,9 +4,9 @@
     <!-- Start pricing -->
     <section class="relative pt-20">
         <div class="relative container mx-auto">
-            <div class="absolute mt-0 right-4 lg:left-40 w-32 h-32 md:w-48 md:h-48 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-            <div class="absolute mt-[400px] lg:mt-[500px] -left-4 lg:left-[500px] w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob "></div>
-            <div class="absolute mt-[600px] lg:mt-[700px] left-20 md:left-[300px] lg:left-[600px] w-64 h-64 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+            <div class="absolute mt-0 right-4 lg:left-40 w-32 h-32 md:w-48 md:h-48 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
+            <div class="absolute mt-[400px] lg:mt-[500px] -left-4 lg:left-[500px] w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
+            <div class="absolute mt-[600px] lg:mt-[700px] left-20 md:left-[300px] lg:left-[600px] w-64 h-64 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
             <div class="relative -mx-4 flex flex-wrap">
                 <div class="w-full px-4">
                     <div class="mx-auto max-w-[510px] text-center">

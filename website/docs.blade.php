@@ -12,9 +12,9 @@
 
 @section('content')
 <div class="relative mx-auto md:flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
-    <div class="absolute top-[20rem] -left-4 w-64 h-64 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob "></div>
-    <div class="absolute top-[30rem] right-0 w-72 h-72 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+    <div class="absolute top-[20rem] -left-4 w-64 h-64 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
+    <div class="absolute top-[30rem] right-0 w-72 h-72 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
     <div class="js-left-menu hidden md:relative md:relative md:block md:flex-none">
         <div class="sticky md:top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-6 md:py-16 ml-4 md:pl-0.5">
             <nav class="text-base lg:text-sm w-64 pr-8 xl:w-64 xl:pr-4">
