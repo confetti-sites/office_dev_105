@@ -1,2 +1,0 @@
-@php($icon = extendModel($model)->label('Shield'))
-<svg baseProfile="tiny" height="120" version="1.2" width="120" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"><defs /><path d="M60 10 C80 10, 100 30, 100 60 C100 90, 60 110, 60 110 C60 110, 20 90, 20 60 C20 30, 40 10, 60 10 Z" fill="none" stroke="#6366F1" stroke-width="5" /></svg>

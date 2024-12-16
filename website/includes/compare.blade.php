@@ -12,7 +12,7 @@
                     <!-- skeleton loader -->
                     <div class="flex items-center justify-center mt-4 mb-4 space-x-4 text-xl border-b border-gray-300">
                         @foreach($cases as $tapNr => $case)
-                            <div class="{{ $tapNr === 0 ? 'text-indigo-600 border-b border-indigo-600' : 'hover:text-indigo-600' }} px-2 py-2 cursor-pointer">
+                            <div class="{{ $tapNr === 0 ? 'text-blue-600 border-b border-blue-600' : 'hover:text-blue-600' }} px-2 py-2 cursor-pointer">
                                 <span>{{ $case->title }}</span>
                                 <span>{{ $case->description }}</span>
                             </div>
@@ -41,7 +41,7 @@
                 html`
             <div class="flex items-center justify-center mt-4 mb-4 space-x-4 text-xl border-b border-gray-300">
                 @foreach($cases as $tapNr => $case)
-                    <div class="${() => 'px-2 py-2 cursor-pointer ' + (this.state.tab === {{ $tapNr }} ? 'text-indigo-600 border-b border-indigo-600' : 'hover:text-indigo-600')}"
+                    <div class="${() => 'px-2 py-2 cursor-pointer ' + (this.state.tab === {{ $tapNr }} ? 'text-blue-600 border-b border-blue-600' : 'hover:text-blue-600')}"
                          @click="${() => this.state.tab={{ $tapNr }}}">
                         <span>{{ $case->text('title')->min(1)->max(20) }}</span>
                         <span>{{ $case->text('description')->min(1)->max(30) }}</span>

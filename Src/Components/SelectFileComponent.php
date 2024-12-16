@@ -46,7 +46,10 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
     {
         $file = $this->get();
         if (!str_ends_with($file, '.blade.php')) {
-            return null;
+            if ($file === null) {
+                return null;
+            }
+            return $file;
         }
         $file = str_replace('.blade.php', '', $file);
         $file = ltrim($file, '/');
@@ -54,14 +57,17 @@ class SelectFileComponent extends ComponentStandard implements SelectModelInterf
     }
 
     /**
-     * @return \Confetti\Components\Map[]
+     * @return \Confetti\Components\Map[]|\Confetti\Model\RawFile[]
      */
     public function getOptions(): array
     {
         throw new \RuntimeException('This method `getOptions` should be overridden in the child class.');
     }
 
-    public function getSelected(): Map|RawFile|null
+    /**
+     * @return Map|RawFile|null Return type is mixed because the return value will be narrowed down in the parent class.
+     */
+    public function getSelected(): mixed
     {
         $file = self::getPointerValues($this->getId(), $this->contentStore)[$this->getId()] ?? null;
 

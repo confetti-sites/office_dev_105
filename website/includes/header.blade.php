@@ -1,6 +1,5 @@
 @php($header = newRoot(new \model\homepage\header)->label('Header'))
-
-<header class="z-50 bg-white/80 backdrop-blur border-b border-gray-100 dark:border-gray-700/30 dark:bg-gray-900/80 w-full">
+<header class="lg:container lg:mx-auto z-50 bg-white/80 backdrop-blur border-b border-gray-100 dark:border-gray-700/30 dark:bg-gray-900/80 w-full">
     <nav class="relative">
         <div class="flex items-center justify-between px-4 py-2">
             <!-- Logo Container -->
@@ -38,7 +37,7 @@
                            class="relative ml-auto flex h-10 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-primaryLight px-4"
                         >
                         <span class="relative text-sm font-semibold text-white dark:text-gray-900">
-                            Join<span class="hidden sm:contents"> the waiting list</span>
+                            Join<span class="hidden sm:contents"> the Waiting List</span>
                         </span>
                         </a>
                     @endguest

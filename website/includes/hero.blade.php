@@ -1,4 +1,4 @@
-<div class="lg:container lg:mx-auto w-max md:flex md:items-center md:justify-center bg-white mt-4 lg:mb-10">
+<div class="lg:container lg:mx-auto md:flex md:items-center md:justify-center bg-white mt-4 lg:mb-10">
     <div class="container mb-8 flex flex-col items-center justify-center md:w-1/2">
         <h1 class="mt-4 text-2xl dark:text-white text-gray-900">
             <span>The quickest way</span> <span class="block">to create your own CMS</span>
