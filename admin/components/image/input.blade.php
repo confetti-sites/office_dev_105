@@ -9,7 +9,7 @@
         data-service_api="{{ getServiceApi() }}"
 ></image-component>
 
-@pushonce('styles_cropper')
+@pushonce('style_cropper')
     <link rel="stylesheet" href="/admin/components/image/cropper.css">
 @endpushonce
 @pushonce('end_of_body_image_component')

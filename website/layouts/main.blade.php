@@ -6,11 +6,9 @@
     <link rel="stylesheet" href="/resources/website__tailwind/tailwind.output.css"/>
     <link rel="stylesheet" href="/website/assets/css/fonts.css"/>
     <!-- Icons from: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-    <style>
-        @stack('style_*')
-    </style>
+    @stack('style_*')
 </head>
-<body class="text-md overflow-x-hidden">
+<body class="text-lg overflow-x-hidden">
 {{--@guest()--}}
 {{--    @include('website.under_construction')--}}
 {{--@else()--}}

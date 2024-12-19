@@ -55,7 +55,7 @@
                     <div class="block text-bold text-xl mt-8 mb-4">${this.decorations.labelPlural.labelPlural ?? this.label}</div>
                     <!-- border rounded -->
                     <div class="grid border text-gray-700 border-2 border-gray-200 rounded-lg bg-gray-50">
-                        <table class="table-auto">
+                        <table class="table-auto" style="overflow-wrap: anywhere">
                             ${this.columns.length > 1 ? html`
                                 <thead class="hidden sm:table-header-group text-left border-b border-gray-300">
                                 <tr>

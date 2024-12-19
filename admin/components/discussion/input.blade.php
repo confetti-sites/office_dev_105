@@ -8,7 +8,7 @@
         data-component='{{ json_encode($model->getComponent()) }}'
 ></discussion-component>
 
-@pushonce('styles_discussion_component')
+@pushonce('style_discussion_component')
     <link rel="stylesheet" href="/website/assets/css/github-light.css"/>
 @endpushonce
 @pushonce('end_of_body_discussion_component')

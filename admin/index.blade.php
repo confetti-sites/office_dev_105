@@ -59,7 +59,7 @@ if ($currentContentId === '') {
             </div>
         @endcan
     @endguest
-    @stack('styles_*')
+    @stack('style_*')
     @stack('end_of_body_*')
 </body>
 </html>

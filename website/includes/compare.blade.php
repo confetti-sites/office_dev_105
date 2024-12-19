@@ -1,6 +1,6 @@
 @php($compare = newRoot(new \model\homepage\compare)->label('Compare'))
 @php($cases = $compare->list('case')->sortable()->min(1)->max(4)->get())
-<div class="relative">
+<div class="relative mb-12">
     <div class="absolute top-0 right-0 w-14 md:w-72 h-14 md:h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
     <div class="absolute top-20 -left-4 w-14 md:w-72 h-14 md:h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
     <div class="absolute -bottom-32 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>

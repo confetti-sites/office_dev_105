@@ -9,7 +9,7 @@
         @stack('style_*')
     </script>
 </head>
-<body class="text-md overflow-x-hidden">
+<body class="text-base overflow-x-hidden">
 @stack('end_of_body_*')
 </body>
 </html>
