@@ -24,9 +24,7 @@
                 </a>
             </li>
             <li>
-                <a href="/contact" class="hover:underline">
-                    Contact
-                </a>
+                <a class="js-contact-e hover:underline"></a>
             </li>
         </ul>
     </div>

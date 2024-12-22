@@ -34,11 +34,11 @@
                 </div>
                 <div class="w-full md:w-1/2 px-4 mb-10 pt-8">
                     <div class="absolute text-center z-10 rotate-6 skew-y-6 right-0 py-2 px-4 bg-blue-500 items-center leading-none rounded-full flex inline-flex text-white shadow-lg">
-                            <span class="flex rounded-full border border-opacity-20 border-white uppercase px-2 py-1 text-sm font-bold mr-3">Beta</span>
-                            <div class="font-semibold mr-2 text-left flex-col">
-                                <div>Since Confetti is in beta</div>
-                                <div>all plans are currently free</div>
-                            </div>
+                        <span class="flex rounded-full border border-opacity-20 border-white uppercase px-2 py-1 text-sm font-bold mr-3">Beta</span>
+                        <div class="font-semibold mr-2 text-left flex-col">
+                            <div>Since Confetti is in beta</div>
+                            <div>all plans are currently free</div>
+                        </div>
                     </div>
                     <div class="relative h-full rounded-xl border border-blue-500 border-opacity-20 bg-white mb-16 p-8">
                         <h2 class="text-blue-500 mb-4 block text-lg font-semibold">
@@ -109,10 +109,10 @@
                     <svg class="flex-shrink-0 mr-2 w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
                     </svg>
-                    Can I reuse code over multiple websites?
+                    Are You Open to Partnering With Us?
                 </h3>
                 <p class="text-gray-500 font-body">
-                    You can clone repositories anywhere in your project. Similar to Git Submodules, but better. Or use Composer to include packages from Packagist.
+                    Yes, we would be delighted to partner with you. Whether your company needs assistance with technical challenges or wants to collaborate on building the fundament of new components, we’re here to help.
                 </p>
             </div>
             <div class="mb-4">
@@ -120,12 +120,24 @@
                     <svg class="flex-shrink-0 mr-2 w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
                     </svg>
-                    Do you offer dedicated support?
+                    Is Dedicated Support Available?
                 </h3>
                 <p class="text-gray-500 font-body">
-                    Is your company in need of dedicated technical support? <a href="/contact" class="text-blue-500">Contact us</a> to learn more about how we can help.
+                    Absolutely! We offer dedicated technical support tailored to your company’s needs. Contact us to learn more about how we can help by emailing us at <a href="#" class="js-contact-e text-blue-500"></a>.
+                </p>
+            </div>
+            <div class="mb-4">
+                <h3 class="flex items-center mb-4 text-lg font-medium">
+                    <svg class="flex-shrink-0 mr-2 w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                    </svg>
+                    Can I reuse code over multiple websites?
+                </h3>
+                <p class="text-gray-500 font-body">
+                    You can clone repositories anywhere in your project. Similar to Git Submodules, but better. Or use Composer to include packages from Packagist.
                 </p>
             </div>
         </div>
     </section>
 @endsection
+
