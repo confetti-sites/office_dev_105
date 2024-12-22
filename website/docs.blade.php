@@ -55,13 +55,8 @@
                         {!! $current->image('banner')->widthPx(900)->getPicture(class: 'mt-4 mb-4', alt: 'Example of of result of the ' . $current->content->getTitle() . ' Component') !!}
                     @endif
                     <div class="mt-4 mb-4 text-gray-800 font-body">{!! $current->discussion('content')->label('GitHub Discussion')->help('The URL to the GitHub Discussion')->getHtml() !!}</div>
-                    <label class="m-2 h-10 block">
-                        <a href="{{ $current->content->getUrl() }}" class="float-right justify-between px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white rounded-md">
-                            FAQ
-                        </a>
-                    </label>
                     @if(count($current->relatedLinks()->get()) > 0)
-                        <div class="pt-8 mb-4 text-gray-800 font-body">
+                        <div class="mb-4 py-8 text-gray-800 font-body">
                             <ul class="list-disc list-inside">
                                 @foreach($current->list('related_link')->sortable()->label('Related Link')->get() as $link)
                                     <li><a href="{{ $link->text('link') }}" class="text-blue-500">{{ $link->text('title') }}</a></li>
@@ -69,11 +64,16 @@
                             </ul>
                         </div>
                     @endif
+                    <label class="m-2 h-10 block">
+                        <a href="{{ $current->content->getUrl() }}" class="float-right justify-between px-3 py-2 m-2 ml-0 text-sm leading-5 cursor-pointer text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white rounded-md">
+                            FAQ
+                        </a>
+                    </label>
                 </div>
             </article>
 
             @guest
-                <a href="https://tally.so/r/mK5kgK" class="relative ml-auto flex h-10 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 px-4">
+                <a href="https://tally.so/r/mK5kgK" class="relative ml-auto flex h-10 w-full mt-20 items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 px-4">
                     <span class="relative text-sm font-semibold text-white">Stay updated by joining the waiting list</span>
                 </a>
             @endguest
