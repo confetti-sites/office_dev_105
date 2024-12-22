@@ -55,6 +55,10 @@ discussion {
         padding: 20px;
     }
 
+    & ul li {
+        list-style-type: disc;
+    }
+
     & ol {
         list-style-type: decimal;
         padding: 20px;

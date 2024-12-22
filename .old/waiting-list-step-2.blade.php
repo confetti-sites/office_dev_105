@@ -10,7 +10,7 @@
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">You are now on the waiting list!</h1>
                 <p class="mt-4 text-gray-700 text-base font-body font-bold">We send you an email when you can start using Confetti
                     CMS.</p>
-                <a href="/docs"
+                <a href="/docs/installation"
                    class="bg-primary border-primary block z-10 w-full lg:w-1/2 rounded-md border mt-8 p-4 text-center text-base font-semibold text-white transition hover:bg-opacity-90">
                     Take a look at the documentation
                 </a>

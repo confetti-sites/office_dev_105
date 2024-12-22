@@ -24,8 +24,8 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="hover:underline">
-                    {{ $footer->text('text_link_4')->default('Contact') }}
+                <a href="/contact" class="hover:underline">
+                    Contact
                 </a>
             </li>
         </ul>

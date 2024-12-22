@@ -41,6 +41,10 @@ export default class {
     }
 
     toHtml() {
+        if (this.value.crop === undefined) {
+            return '';
+        }
+
         let prefix = '/conf_api/confetti-cms/media/images/';
         let cl = '';
         let height = this.value.crop.height;

@@ -27,12 +27,12 @@ module.exports = {
                 orange: colors.orange,
                 gray: colors.gray,
                 'color-red': '#f06060',
-                'color-yellow': '#fcd04b',
+                'color-yellow': '#d69051',
                 'color-green': '#2ecc71',
                 primary: {
-                    DEFAULT: '#0e83cd',
-                    light: "#4c8dff",
-                    dark: "#3171e0",
+                    DEFAULT: '#d69051',
+                    light: "#d69051",
+                    dark: "#d69051",
                 },
                 secondary: {
                     DEFAULT: '#3dc2ff',

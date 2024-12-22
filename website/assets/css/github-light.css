@@ -60,6 +60,10 @@ discussion {
         padding: 20px;
     }
 
+    & ul li {
+        list-style-type: disc;
+    }
+
     & p {
         padding-bottom: 5px;
     }
