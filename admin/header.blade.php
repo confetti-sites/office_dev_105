@@ -1,7 +1,7 @@
 <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
     <div class="container flex items-center justify-between h-full px-3 mx-auto">
         <!-- Mobile hamburger -->
-        <button type="button" class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:ring"
+        <button type="button" class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-hidden focus:ring-3"
                 @click="toggleSideMenu" aria-label="Menu">
             <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd"
@@ -14,7 +14,7 @@
         </div>
 
         {{--            <li class="flex">--}}
-        {{--                <button class="rounded-md focus:outline-none focus:ring dark:text-gray-300"--}}
+        {{--                <button class="rounded-md focus:outline-hidden focus:ring-3 dark:text-gray-300"--}}
         {{--                        aria-label="Toggle color mode">--}}
         {{--                    <template x-if="!dark">--}}
         {{--                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">--}}
@@ -33,11 +33,11 @@
 
         <!-- Profile menu -->
         <div class="relative">
-            <button type="button" class="align-middle rounded-full focus:ring focus:outline-none pr-3">
+            <button type="button" class="align-middle rounded-full focus:ring-3 focus:outline-hidden pr-3">
                 <a href="/">confetti.com</a>
                 {{--                <a href="/" class="truncate">{{ $_SERVER['HTTP_HOST'] }}</a>--}}
             </button>
-            <button type="button" class="align-middle rounded-full focus:ring focus:outline-none pr-3"
+            <button type="button" class="align-middle rounded-full focus:ring-3 focus:outline-hidden pr-3"
                     @click="toggleProfileMenu" @keydown.escape="closeProfileMenu" aria-label="Account"
                     aria-haspopup="true">
                 <img class="object-cover w-8 h-8 rounded-full"

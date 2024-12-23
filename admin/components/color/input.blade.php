@@ -67,7 +67,7 @@
 
                 html`
                     <label class="block text-bold text-xl mt-8 mb-4">${this.label}</label>
-                    <input class="${() => ` block w-full ${this.data.value === this.original ? `border-gray-300` : `border-emerald-300`} outline-none text-gray-900 text-sm rounded-lg`}"
+                    <input class="${() => ` block w-full ${this.data.value === this.original ? `border-gray-300` : `border-emerald-300`} outline-hidden text-gray-900 text-sm rounded-lg`}"
                            type="color"
                            name="${this.id}"
                            value="${() => this.data.value}"

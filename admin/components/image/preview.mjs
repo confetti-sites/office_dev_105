@@ -68,10 +68,10 @@ export default class {
 
         if ((this.value.crop.width / this.value.crop.height) < 1.05) {
             // If the image is more square than landscape, we want to make it square
-            cl = `h-16 w-16 rounded-md shadow border border-gray-200 object-cover`;
+            cl = `h-16 w-16 rounded-md shadow-sm border border-gray-200 object-cover`;
         } else {
             // If the image is more landscape than square, we want to make the ratio 2:3
-            cl = `h-16 w-24 rounded-md shadow border border-gray-200 object-cover`;
+            cl = `h-16 w-24 rounded-md shadow-sm border border-gray-200 object-cover`;
         }
 
         // if this.value.crop.width < 100 blur very little bit

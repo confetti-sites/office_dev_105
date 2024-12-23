@@ -1,5 +1,5 @@
 @php($header = newRoot(new \model\homepage\header)->label('Header'))
-<header class="lg:container lg:mx-auto z-50 bg-white/80 backdrop-blur border-b border-gray-100 w-full">
+<header class="lg:container lg:mx-auto z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100 w-full">
     <nav class="relative">
         <div class="flex items-center justify-between px-4 py-2">
             <!-- Logo Container -->
@@ -12,7 +12,7 @@
             <div></div>
             <div class="flex justify-end  md:justify-end">
                 <!-- Hamburger Icon -->
-                <button id="menu-toggle" type="button" aria-label="Toggle Navigation" class="text-gray-600 focus:outline-none md:hidden">
+                <button id="menu-toggle" type="button" aria-label="Toggle Navigation" class="text-gray-600 focus:outline-hidden md:hidden">
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
                     </svg>

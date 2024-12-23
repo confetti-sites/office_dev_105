@@ -107,7 +107,7 @@
         </div>
     </div>
     @if(count($children) === 0)
-        <div class="flex items-center justify-center w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-emerald-800 border border-transparent rounded-lg active:bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:shadow-outline-emerald">
+        <div class="flex items-center justify-center w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-emerald-800 border border-transparent rounded-lg active:bg-emerald-700 hover:bg-emerald-800 focus:outline-hidden focus:shadow-outline-emerald">
             <a href="/admin/{{ $id . '/~' . newId() }}">Create your first page</a>
         </div>
     @endif

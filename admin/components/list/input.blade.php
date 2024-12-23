@@ -91,7 +91,7 @@
                                         </div>
                                     </td>` : ''}
                                         ${rowColumns.map((item) => html`
-                                            <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-sm` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
+                                            <td class="${() => `p-3 sm:pl-4` + (state.confirmDelete ? ` blur-xs` : ``) + (i++ >= 1 ? ` hidden sm:table-cell` : ``)}"
                                                 @click="${() => (window.innerWidth < 640) ? window.location.href = '/admin' + row.id : ''}">
                                                 ${(item !== undefined && item.component !== null ? this.#loadMjs(item.id, item.value, item.component) : this.#noComponentFound(item?.id) && '')}
                                             </td>`)}

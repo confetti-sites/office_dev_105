@@ -79,7 +79,7 @@
                         <!-- Canvas to Crop the image -->
                         <div class="${() => `${this.data.value['original'] === undefined ? `hidden` : ``} w-full h-64 border-2 border-gray-300 border-solid rounded-lg`}">
                             <div class="relative h-64" style="margin-left: -2px; margin-top: -2px;">
-                                <img class="absolute w-full h-64 object-cover blur-sm opacity-70 rounded-lg"
+                                <img class="absolute w-full h-64 object-cover blur-xs opacity-70 rounded-lg"
                                      src="${() => this.#getFullUrl(this.data.value['original'])}"
                                      alt="cropper-background">
                                 <img id="image" class="block rounded-lg w-full max-h-64 hidden"
