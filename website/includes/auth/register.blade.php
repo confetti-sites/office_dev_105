@@ -1,3 +1,5 @@
+<!-- You can test the result of this file in the CMS, but you need to copy the content of the file and paste it in Auth0 (Universal Login -> Advanced Options -> Login) -->
+
 <!DOCTYPE html>
 <html>
 <head>
