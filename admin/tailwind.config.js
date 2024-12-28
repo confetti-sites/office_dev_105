@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const colors = require('tailwindcss/colors')
 
 module.exports = {
     content: [
@@ -18,6 +19,9 @@ module.exports = {
             },
         }),
         extend: {
+            colors: {
+                // primary: colors.emerald,
+            },
             maxHeight: {
                 xl: '36rem',
             },
@@ -26,6 +30,7 @@ module.exports = {
             },
             boxShadow: {
                 xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
+                // outline: '0 0 0 3px rgba(66, 153, 225, 0.5)',
             },
         },
     },
