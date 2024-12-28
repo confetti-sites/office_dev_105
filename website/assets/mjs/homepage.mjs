@@ -79,11 +79,11 @@ export class TextDemo extends HTMLElement {
                         <div class="absolute flex items-center space-x-1 p-1 border rounded-md w-fit bg-white">
 <!--                               when active-->
 <!--                             text-black hover:bg-blue-100when not active-->
-                            <button class="${() => `font-bold py-1 px-2 rounded-sm ` + (this.state.bold ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleBold()}">B</button>
+                            <button class="${() => `font-bold py-1 px-2 rounded ` + (this.state.bold ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleBold()}">B</button>
                             ${() => this.state.barTools?.length >= 8 ? html`
-                                <button class="${() => `italic py-1 px-3 rounded-sm ` + (this.state.italic ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleItalic()}">I</button>` : ''}
+                                <button class="${() => `italic py-1 px-3 rounded ` + (this.state.italic ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleItalic()}">I</button>` : ''}
                             ${() => this.state.barTools?.length >= 13 ? html`
-                                <button class="${() => `underline py-1 px-2 rounded-sm ` + (this.state.underline ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleUnderline()}">U</button>` : ''}
+                                <button class="${() => `underline py-1 px-2 rounded ` + (this.state.underline ? 'text-blue-600 bg-blue-100' : 'text-black hover:bg-blue-100')}" @click="${() => this.#toggleUnderline()}">U</button>` : ''}
                         </div>` : ''}
                 </div>
                 <p class="mx-2 mt-2 text-sm text-red-600 _error">${() => this.state.error}</p>
