@@ -19,6 +19,8 @@ class Website
         switch (true) {
             case request()->uri() === '/':
                 return new View('website.homepage');
+            case request()->uri() === '/register_tmp':
+                return new View('website.includes.auth.register');
             case request()->uri() === '/auth/callback':
                 return new View('website.includes.auth.callback');
             case request()->uri() === '/waiting-list-step-1':
