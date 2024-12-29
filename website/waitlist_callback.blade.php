@@ -1,14 +1,13 @@
 @extends('website.layouts.blank')
-
 @guest()
     @include('website.waitlist')
 @else
     @section('content')
-        <div class="absolute top-0 left-0 w-full">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
             <div class="flex items-center justify-center w-full">
                 <dotlottie-player
                         id="confetti-animation"
-                        class="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] md:w-[1000px] md:h-[1000px] lg:w-[1200px] lg:h-[1200px]"
+                        class="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] md:w-[1000px] md:h-[1000px] lg:w-[1200px] lg:h-[1200px] z-50"
                         style="transition: opacity 2s;"
                         src="https://lottie.host/2d8ae4d0-8e58-4146-baed-91052b10d9d2/MN7dytT7L1.lottie" background="transparent" speed="1" autoplay></dotlottie-player>
             </div>
@@ -22,9 +21,9 @@
                     <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">You are now on the waitlist!</h1>
                     <p class="mt-4 text-gray-700 text-base font-body font-bold">We send you an email when you can start using Confetti
                         CMS.</p>
-                    <a href="/docs/installation"
+                    <a href="/docs/philosophy"
                        class="bg-primary border-primary block z-10 w-full lg:w-1/2 rounded-md border mt-8 p-4 text-center text-base font-semibold text-white transition hover:bg-opacity-90">
-                        Take a look at the documentation
+                        Why We Do What We Do
                     </a>
                 </div>
             </div>
@@ -34,8 +33,13 @@
         <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
         <script>
             setTimeout(() => {
-                document.getElementById("confetti-animation").style.opacity = 0;
-            }, 5500);
+                document.getElementById("confetti-animation").style.zIndex = 0;
+            }, 1500);
+            setTimeout(() => {
+                if (document.getElementById("confetti-animation").offsetHeight < window.innerHeight) {
+                    document.getElementById("confetti-animation").style.opacity = 0;
+                }
+            }, 5000);
         </script>
     @endpushonce
 @endguest

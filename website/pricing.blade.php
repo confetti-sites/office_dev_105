@@ -81,7 +81,7 @@
                     <li class="text-body-color mb-1 ">Test environments</li>
                     <li class="text-body-color mb-1 ">Secured with Auth0</li>
                 </ul>
-                <a href="javascript:void(0)" class="bg-primary border-primary block w-full lg:w-1/2 rounded-md border mt-8 p-4 text-center text-base font-semibold text-white transition hover:bg-opacity-90">
+                <a href="/waiting-list" class="bg-primary border-primary block w-full lg:w-1/2 rounded-md border mt-8 p-4 text-center text-base font-semibold text-white transition hover:bg-opacity-90">
                     Get started
                 </a>
             </div>

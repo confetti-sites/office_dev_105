@@ -8,7 +8,7 @@
                 <a href="/docs/installation" class="inline-block border-2 border-blue-500 bg-white text-blue-600 px-6 py-3 rounded-lg">Learn More</a>
             </div>
             <div class="mt-8 ml-4">
-                <a href="/docs/installation" class="inline-block border-2 border-primary bg-primary text-white px-6 py-3 rounded-lg">Get Started</a>
+                <a href="/waiting-list" class="inline-block border-2 border-primary bg-primary text-white px-6 py-3 rounded-lg">Get Started</a>
             </div>
         </div>
     </div>
