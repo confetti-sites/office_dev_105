@@ -73,8 +73,8 @@
             </article>
 
             @guest
-                <a href="https://tally.so/r/mK5kgK" class="relative ml-auto flex h-10 w-full mt-20 items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 px-4">
-                    <span class="relative text-sm font-semibold text-white">Stay updated by joining the waiting list</span>
+                <a href="/waiting-list" class="relative ml-auto flex h-10 w-full mt-20 items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 px-4">
+                    <span class="relative text-sm font-semibold text-white">Stay updated by joining the waitlist</span>
                 </a>
             @endguest
         </div>

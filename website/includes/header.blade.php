@@ -23,9 +23,9 @@
                     <a href="/pricing" class="block relative transition hover:text-primary px-4 py-2 md:py-2">Pricing</a>
                     <a href="/docs/installation" class="block transition hover:text-primary px-4 py-2 md:py-2">Docs</a>
                     @guest
-                        <a href="https://tally.so/r/mK5kgK" class="relative ml-auto flex h-10 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 px-4">
+                        <a href="/waiting-list" class="relative ml-auto flex h-10 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 px-4">
                             <span class="relative text-sm font-semibold text-white">
-                                Join<span class="hidden sm:contents"> the Waiting List</span>
+                                Join<span class="hidden sm:contents"> the Waitlist</span>
                             </span>
                         </a>
                     @endguest

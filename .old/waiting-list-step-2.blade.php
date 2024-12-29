@@ -7,7 +7,7 @@
                 <div class="absolute -mt-10 right-4 w-32 h-32 md:w-[400px] md:h-[400px] lg:w-[600px] lg:h-[600px] bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
                 <div class="absolute mt-[200px] -left-4 md:left-64 w-64 h-64 lg:w-[400px] lg:h-[400px] bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
                 <div class="absolute mt-[400px] left-20 md:left-32 w-64 h-64 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">You are now on the waiting list!</h1>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">You are now on the waitlist!</h1>
                 <p class="mt-4 text-gray-700 text-base font-body font-bold">We send you an email when you can start using Confetti
                     CMS.</p>
                 <a href="/docs/installation"

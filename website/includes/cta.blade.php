@@ -9,7 +9,7 @@
                 <a href="/docs/installation" class="inline-block border-2 border-blue-500 bg-white text-blue-600 px-6 py-3 rounded-lg">Show me how it works</a>
             </div>
             <div class="mt-8 md:ml-4">
-                <a href="/docs/installation" class="inline-block border-2 border-primary bg-primary text-white px-6 py-3 rounded-lg">Let's Join the Waitlist</a>
+                <a href="/waiting-list" class="inline-block border-2 border-primary bg-primary text-white px-6 py-3 rounded-lg">Let's Join the Waitlist</a>
             </div>
         </div>
     </div>
